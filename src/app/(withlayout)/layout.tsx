@@ -1,5 +1,6 @@
 "use client";
 import SideBarItems from "@/utils/SideBarItems";
+import "./layout";
 import React, { ReactNode } from "react";
 import { Container, Header, Sidenav, Content, Nav } from "rsuite";
 import CogIcon from "@rsuite/icons/legacy/Cog";
@@ -20,12 +21,14 @@ interface ILayoutProps {
 
 export default function layout({ children, expand, onChange }: ILayoutProps) {
   return (
-    <div className="show-fake-browser sidebar-page">
-      <Navbar></Navbar>
+    <div className="show-fake-browser sidebar-page min-h-[100vh]">
       <Container>
-        <Sidebar />
+        <Navbar></Navbar>
         <Container>
-          <Content className="min-h-[100vh]">{children}</Content>
+          <Sidebar />
+          <Container>
+            <Content className="min-h-[100vh]">{children}</Content>
+          </Container>
         </Container>
       </Container>
     </div>
