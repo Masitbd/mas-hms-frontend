@@ -1,128 +1,48 @@
-import {
-  Container,
-  Header,
-  Sidebar,
-  Sidenav,
-  Content,
-  Navbar,
-  Nav,
-} from "rsuite";
+import { Navbar as ResuiteNavber, Nav } from "rsuite";
+import HomeIcon from "@rsuite/icons/legacy/Home";
 import CogIcon from "@rsuite/icons/legacy/Cog";
-import AngleLeftIcon from "@rsuite/icons/legacy/AngleLeft";
-import AngleRightIcon from "@rsuite/icons/legacy/AngleRight";
-import GearCircleIcon from "@rsuite/icons/legacy/GearCircle";
-import DashboardIcon from "@rsuite/icons/Dashboard";
-import GroupIcon from "@rsuite/icons/legacy/Group";
-import MagicIcon from "@rsuite/icons/legacy/Magic";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 
-const headerStyles = {
-  padding: 18,
-  fontSize: 16,
-  height: 56,
-  background: "#34c3ff",
-  color: " #fff",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-};
-
-interface NavToggleProps {
-  expand: boolean;
-  onChange: () => void;
-}
-
-const NavToggle = ({ expand, onChange }: NavToggleProps) => {
+const CustomNavbar = ({
+  onSelect,
+  activeKey,
+  ...props
+}: {
+  onSelect: SyntheticEvent<Element, Event>;
+  activeKey: boolean;
+}) => {
   return (
-    <Navbar appearance="subtle" className="nav-toggle">
-      <Nav>
-        <Nav.Menu
-          noCaret
-          placement="topStart"
-          trigger="click"
-          title={<CogIcon style={{ width: 20, height: 20 }} />}
-        >
-          <Nav.Item>Help</Nav.Item>
-          <Nav.Item>Settings</Nav.Item>
-          <Nav.Item>Sign out</Nav.Item>
+    <ResuiteNavber {...props}>
+      <ResuiteNavber.Brand href="#">HMS</ResuiteNavber.Brand>
+      <Nav onSelect={onSelect} activeKey={activeKey}>
+        <Nav.Item eventKey="1" icon={<HomeIcon />}>
+          Home
+        </Nav.Item>
+        <Nav.Item eventKey="2">News</Nav.Item>
+        <Nav.Item eventKey="3">Products</Nav.Item>
+        <Nav.Menu title="About">
+          <Nav.Item eventKey="4">Company</Nav.Item>
+          <Nav.Item eventKey="5">Team</Nav.Item>
+          <Nav.Item eventKey="6">Contact</Nav.Item>
         </Nav.Menu>
       </Nav>
-
       <Nav pullRight>
-        <Nav.Item onClick={onChange} style={{ width: 56, textAlign: "center" }}>
-          {expand ? <AngleLeftIcon /> : <AngleRightIcon />}
-        </Nav.Item>
+        <Nav.Item icon={<CogIcon />}>Settings</Nav.Item>
       </Nav>
-    </Navbar>
+    </ResuiteNavber>
   );
 };
 
-export default function NavbarDefault() {
-  const [expand, setExpand] = useState(true);
-  return (
-    <div className="show-fake-browser sidebar-page">
-      <Container>
-        <Sidebar
-          style={{ display: "flex", flexDirection: "column" }}
-          width={expand ? 260 : 56}
-          collapsible
-        >
-          <Sidenav.Header>
-            <div style={headerStyles}>
-              <span style={{ marginLeft: 12 }}> BRAND</span>
-            </div>
-          </Sidenav.Header>
-          <Sidenav
-            expanded={expand}
-            defaultOpenKeys={["3"]}
-            appearance="subtle"
-          >
-            <Sidenav.Body>
-              <Nav>
-                <Nav.Item eventKey="1" active icon={<DashboardIcon />}>
-                  Dashboard
-                </Nav.Item>
-                <Nav.Item eventKey="2" icon={<GroupIcon />}>
-                  User Group
-                </Nav.Item>
-                <Nav.Menu
-                  eventKey="3"
-                  trigger="hover"
-                  title="Advanced"
-                  icon={<MagicIcon />}
-                  placement="rightStart"
-                >
-                  <Nav.Item eventKey="3-1">Geo</Nav.Item>
-                  <Nav.Item eventKey="3-2">Devices</Nav.Item>
-                  <Nav.Item eventKey="3-3">Brand</Nav.Item>
-                  <Nav.Item eventKey="3-4">Loyalty</Nav.Item>
-                  <Nav.Item eventKey="3-5">Visit Depth</Nav.Item>
-                </Nav.Menu>
-                <Nav.Menu
-                  eventKey="4"
-                  trigger="hover"
-                  title="Settings"
-                  icon={<GearCircleIcon />}
-                  placement="rightStart"
-                >
-                  <Nav.Item eventKey="4-1">Applications</Nav.Item>
-                  <Nav.Item eventKey="4-2">Websites</Nav.Item>
-                  <Nav.Item eventKey="4-3">Channels</Nav.Item>
-                  <Nav.Item eventKey="4-4">Tags</Nav.Item>
-                  <Nav.Item eventKey="4-5">Versions</Nav.Item>
-                </Nav.Menu>
-              </Nav>
-            </Sidenav.Body>
-          </Sidenav>
-          <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
-        </Sidebar>
+export const Navbar = () => {
+  const [activeKey, setActiveKey] = useState(null);
 
-        <Container>
-          <Header>
-            <h2>Page Title</h2>
-          </Header>
-          <Content>Content</Content>
-        </Container>
-      </Container>
-    </div>
+  return (
+    <>
+      <CustomNavbar
+        appearance="inverse"
+        activeKey={activeKey}
+        onSelect={setActiveKey}
+      />
+    </>
   );
-}
+};

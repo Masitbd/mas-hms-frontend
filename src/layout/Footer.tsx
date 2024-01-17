@@ -1,46 +1,22 @@
-import React from "react";
+import { Footer as RsuiteFooter, Grid, Row, Col } from "rsuite";
 
-export default function Footer() {
+export const Footer = () => {
   return (
-    <footer className="footer p-10 bg-base-300 text-base-content">
-      <nav className="px-10">
-        <header className="footer-title">Services</header>
-        <a className="link link-hover">Branding</a>
-        <a className="link link-hover">Design</a>
-        <a className="link link-hover">Marketing</a>
-        <a className="link link-hover">Advertisement</a>
-      </nav>
-      <nav>
-        <header className="footer-title">Company</header>
-        <a className="link link-hover">About us</a>
-        <a className="link link-hover">Contact</a>
-        <a className="link link-hover">Jobs</a>
-        <a className="link link-hover">Press kit</a>
-      </nav>
-      <nav>
-        <header className="footer-title">Legal</header>
-        <a className="link link-hover">Terms of use</a>
-        <a className="link link-hover">Privacy policy</a>
-        <a className="link link-hover">Cookie policy</a>
-      </nav>
-      <form className="pl-14">
-        <header className="footer-title">Newsletter</header>
-        <fieldset className="form-control w-80">
-          <label className="label">
-            <span className="label-text">Enter your email address</span>
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="username@site.com"
-              className="input input-bordered w-full pr-16"
-            />
-            <button className="btn btn-secondary absolute top-0 right-0 rounded-l-none">
-              Subscribe
-            </button>
-          </div>
-        </fieldset>
-      </form>
-    </footer>
+    <RsuiteFooter>
+      <Grid>
+        <Row>
+          <Col xs={24} sm={12}>
+            {/* Left side of the footer */}
+            <p>&copy; 2024 Your Company Name</p>
+          </Col>
+          <Col xs={24} sm={12}>
+            {/* Right side of the footer */}
+            <div style={{ textAlign: "right" }}>
+              <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+            </div>
+          </Col>
+        </Row>
+      </Grid>
+    </RsuiteFooter>
   );
-}
+};
