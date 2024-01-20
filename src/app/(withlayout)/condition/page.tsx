@@ -25,7 +25,6 @@ import {
 } from "rsuite";
 
 const Condition = () => {
-  // For post
   const [postModalOpen, setPostModalOpen] = useState(false);
   const [
     postCondition,
@@ -34,8 +33,6 @@ const Condition = () => {
   const cancelHandlerforPost = () => {
     setPostModalOpen(!postModalOpen);
   };
-
-  //  for Delete
 
   useEffect(() => {
     if (isSuccess) {
@@ -67,13 +64,15 @@ const Condition = () => {
   }, [conditionLoading, isError, isSuccess]);
   return (
     <div className="my-5 px-5">
-      <div className="my-2"></div>
-      <Button
-        appearance="primary"
-        onClick={() => setPostModalOpen(!postModalOpen)}
-      >
-        Add New Conditon
-      </Button>
+      <div className="my-4">
+        <Button
+          appearance="primary"
+          onClick={() => setPostModalOpen(!postModalOpen)}
+        >
+          Add New Conditon
+        </Button>
+      </div>
+
       <div>
         <NewConditionModal
           postCondition={postCondition}

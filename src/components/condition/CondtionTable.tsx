@@ -72,7 +72,7 @@ const CondtionTable = () => {
   return (
     <div>
       <Table
-        height={420}
+        height={600}
         data={data}
         loading={isLoading}
         bordered
