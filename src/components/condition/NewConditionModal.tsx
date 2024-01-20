@@ -43,10 +43,6 @@ const NewConditionModal = ({
     }
   };
   const loading = useAppSelector((state) => state.loading.loading);
-  const Textarea = React.forwardRef((props, ref) => (
-    <Input {...props} as="textarea" ref={ref} />
-  ));
-
   return (
     <>
       <Modal size={"xs"} open={open}>

@@ -6,7 +6,7 @@ import {
 } from "@/redux/api/condition/conditionSlice";
 import { setLoading } from "@/redux/features/loading/loading";
 import React, { useEffect, useState } from "react";
-import { Table, Pagination, Button } from "rsuite";
+import { Table, Pagination, Button, toaster, Message } from "rsuite";
 
 const { Column, HeaderCell, Cell } = Table;
 const CondtionTable = () => {
@@ -53,11 +53,19 @@ const CondtionTable = () => {
       setLoading();
     }
     if (deleteSuccess) {
-      alert("success");
-      setLoading();
+      toaster.push(<Message type="success">Deleted Successfully</Message>, {
+        duration: 3000,
+      });
     }
     if (deleteError) {
-      alert("success");
+      toaster.push(
+        <Message type="error">
+          Something went wrong. Please try again letter
+        </Message>,
+        {
+          duration: 3000,
+        }
+      );
       setLoading();
     }
   }, [deleteLoading, deleteError, deleteSuccess]);

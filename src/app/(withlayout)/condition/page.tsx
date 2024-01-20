@@ -21,6 +21,7 @@ import {
   Form,
   Loader,
   toaster,
+  Message,
 } from "rsuite";
 
 const Condition = () => {
@@ -38,7 +39,12 @@ const Condition = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      alert("done");
+      toaster.push(
+        <Message type="success">Condition Added Successfully</Message>,
+        {
+          duration: 3000,
+        }
+      );
       setPostModalOpen(!postModalOpen);
       setLoading();
     }
@@ -48,7 +54,14 @@ const Condition = () => {
 
     if (isError) {
       setLoading();
-      alert("error");
+      toaster.push(
+        <Message type="error">
+          Something went wrong please try again letter
+        </Message>,
+        {
+          duration: 3000,
+        }
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionLoading, isError, isSuccess]);
