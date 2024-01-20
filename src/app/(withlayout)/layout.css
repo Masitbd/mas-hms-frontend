@@ -1,0 +1,10 @@
+.show-fake-browser {
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
