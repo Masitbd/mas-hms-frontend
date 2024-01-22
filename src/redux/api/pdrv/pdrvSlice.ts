@@ -1,44 +1,44 @@
 import { baseApi } from "../baseApi";
 
-const conditioin = baseApi.injectEndpoints({
+const pdrv = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    postCondition: build.mutation({
+    postPdrv: build.mutation({
       query: (data: any) => ({
-        url: "/condition",
+        url: "/pdrv",
         method: "post",
         body: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["condition"],
+      invalidatesTags: ["pdrv"],
     }),
-    patchCondition: build.mutation({
+    patchPdrv: build.mutation({
       query: ({ data, id }) => ({
-        url: `/condition/${id}`,
+        url: `/pdrv/${id}`,
         method: "PATCH",
         body: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["condition"],
+      invalidatesTags: ["pdrv"],
     }),
-    deleteCondition: build.mutation({
+    deletePdrv: build.mutation({
       query: (data) => ({
-        url: `/condition/${data}`,
+        url: `/pdrv/${data}`,
         method: "delete",
         contentType: "application/json",
       }),
-      invalidatesTags: ["condition"],
+      invalidatesTags: ["pdrv"],
     }),
-    getCondition: build.query({
+    getPdrv: build.query({
       query: () => ({
-        url: "/condition",
+        url: "/pdrv",
         method: "get",
         contentType: "application/json",
       }),
-      providesTags: ["condition"],
+      providesTags: ["pdrv"],
     }),
-    getSingleCondition: build.mutation({
+    getSinglePdrv: build.mutation({
       query: (data: any) => ({
-        url: `/condition/${data}`,
+        url: `/pdrv/${data}`,
         method: "get",
         contentType: "application/json",
       }),
@@ -47,8 +47,8 @@ const conditioin = baseApi.injectEndpoints({
 });
 
 export const {
-  usePostConditionMutation,
-  useGetConditionQuery,
-  useDeleteConditionMutation,
-  usePatchConditionMutation,
-} = conditioin;
+  usePostPdrvMutation,
+  useGetPdrvQuery,
+  useDeletePdrvMutation,
+  usePatchPdrvMutation,
+} = pdrv;

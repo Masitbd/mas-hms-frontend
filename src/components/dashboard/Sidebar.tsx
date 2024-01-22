@@ -79,6 +79,15 @@ const Sidebar = () => {
               >
                 Condition
               </Nav.Item>
+              <Nav.Item
+                eventKey="1"
+                active
+                icon={<DashboardIcon />}
+                href={"/pdrv"}
+                as={NavLink}
+              >
+                Condition
+              </Nav.Item>
               <Nav.Item eventKey="2" icon={<GroupIcon />}>
                 User Group
               </Nav.Item>
