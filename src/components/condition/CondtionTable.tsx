@@ -3,10 +3,13 @@ import AlartDialog from "@/components/ui/AlertModal";
 import {
   useDeleteConditionMutation,
   useGetConditionQuery,
+  usePatchConditionMutation,
 } from "@/redux/api/condition/conditionSlice";
 import { setLoading } from "@/redux/features/loading/loading";
 import React, { useEffect, useState } from "react";
 import { Table, Pagination, Button, toaster, Message } from "rsuite";
+import PatchConditonModal from "./PatchConditionModal";
+import { IConditon } from "@/app/(withlayout)/condition/page";
 
 const { Column, HeaderCell, Cell } = Table;
 const CondtionTable = () => {
@@ -48,16 +51,46 @@ const CondtionTable = () => {
     setDeletModalOpen(!deletModalOpen);
     seDeletItemId(id);
   };
+
+  // For patch
+  const [patchModalOpen, setPatchModalOpen] = useState(false);
+  const [patchData, setPatchData] = useState<IConditon>();
+  const patchHandler = (data: IConditon) => {
+    setPatchData(data);
+    setPatchModalOpen(!patchModalOpen);
+  };
+  const patchCancelHandler = () => {
+    setPatchData(undefined);
+    setPatchModalOpen(!patchModalOpen);
+  };
+  const [
+    patchConditon,
+    { isError: patchError, isSuccess: patchSuccess, isLoading: patchLoading },
+  ] = usePatchConditionMutation();
+
   useEffect(() => {
-    if (deleteLoading) {
+    if (deleteLoading || patchLoading) {
       setLoading();
     }
-    if (deleteSuccess) {
-      toaster.push(<Message type="success">Deleted Successfully</Message>, {
-        duration: 3000,
-      });
+    if (deleteSuccess || patchSuccess) {
+      toaster.push(
+        <Message type="success">Operation Successfully Performed</Message>,
+        {
+          duration: 3000,
+        }
+      );
     }
-    if (deleteError) {
+    if (patchSuccess) {
+      toaster.push(
+        <Message type="success">Operation Successfully Performed</Message>,
+        {
+          duration: 3000,
+        }
+      );
+      setPatchModalOpen(!patchModalOpen);
+    }
+    if (deleteError || patchError) {
+      setPatchModalOpen(!patchModalOpen);
       toaster.push(
         <Message type="error">
           Something went wrong. Please try again letter
@@ -68,7 +101,26 @@ const CondtionTable = () => {
       );
       setLoading();
     }
-  }, [deleteLoading, deleteError, deleteSuccess]);
+    if (patchError) {
+      setPatchModalOpen(!patchModalOpen);
+      toaster.push(
+        <Message type="error">
+          Something went wrong. Please try again letter
+        </Message>,
+        {
+          duration: 3000,
+        }
+      );
+      setLoading();
+    }
+  }, [
+    deleteLoading,
+    deleteError,
+    deleteSuccess,
+    patchLoading,
+    patchSuccess,
+    patchError,
+  ]);
   return (
     <div>
       <Table
@@ -101,7 +153,12 @@ const CondtionTable = () => {
                 >
                   Delete
                 </Button>
-                <Button appearance="ghost" color="blue" className="ml-2">
+                <Button
+                  appearance="ghost"
+                  color="blue"
+                  className="ml-2"
+                  onClick={() => patchHandler(rowdate as IConditon)}
+                >
                   Edit
                 </Button>
               </>
@@ -138,6 +195,12 @@ const CondtionTable = () => {
           onOk={okHandler}
           onCancel={cancelHandler}
         ></AlartDialog>
+        <PatchConditonModal
+          open={patchModalOpen}
+          defalutValue={patchData as unknown as IConditon}
+          cancelHandler={patchCancelHandler}
+          patchCondition={patchConditon}
+        ></PatchConditonModal>
       </div>
     </div>
   );

@@ -13,13 +13,12 @@ const conditioin = baseApi.injectEndpoints({
     }),
     patchCondition: build.mutation({
       query: ({ data, id }) => ({
-        url: "/condition",
-        method: "patch",
+        url: `/condition/${id}`,
+        method: "PATCH",
         body: data,
-        data: data,
-        params: { id },
         contentType: "application/json",
       }),
+      invalidatesTags: ["condition"],
     }),
     deleteCondition: build.mutation({
       query: (data) => ({
@@ -53,4 +52,5 @@ export const {
   usePostConditionMutation,
   useGetConditionQuery,
   useDeleteConditionMutation,
+  usePatchConditionMutation,
 } = conditioin;
