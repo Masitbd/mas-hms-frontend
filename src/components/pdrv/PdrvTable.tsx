@@ -8,12 +8,17 @@ import {
 import { setLoading } from "@/redux/features/loading/loading";
 import React, { useEffect, useState } from "react";
 import { Table, Pagination, Button, toaster, Message } from "rsuite";
-import PatchConditonModal from "./PatchConditionModal";
 import { IConditon } from "@/app/(withlayout)/condition/page";
+import {
+  useDeletePdrvMutation,
+  useGetPdrvQuery,
+  usePatchPdrvMutation,
+} from "@/redux/api/pdrv/pdrvSlice";
+import PatchPdrv from "./PatchPdrvModal";
 
 const { Column, HeaderCell, Cell } = Table;
-const CondtionTable = () => {
-  const { data: defaultData, isLoading } = useGetConditionQuery(undefined);
+const PdrvTable = () => {
+  const { data: defaultData, isLoading } = useGetPdrvQuery(undefined);
 
   const [limit, setLimit] = React.useState(10);
   const [page, setPage] = React.useState(1);
@@ -38,7 +43,7 @@ const CondtionTable = () => {
       isLoading: deleteLoading,
       isError: deleteError,
     },
-  ] = useDeleteConditionMutation();
+  ] = useDeletePdrvMutation();
   const okHandler = () => {
     deleteItem(deletItemId);
     setDeletModalOpen(!deletModalOpen);
@@ -64,9 +69,9 @@ const CondtionTable = () => {
     setPatchModalOpen(!patchModalOpen);
   };
   const [
-    patchConditon,
+    patchPdrv,
     { isError: patchError, isSuccess: patchSuccess, isLoading: patchLoading },
-  ] = usePatchConditionMutation();
+  ] = usePatchPdrvMutation();
 
   useEffect(() => {
     if (deleteLoading || patchLoading) {
@@ -195,15 +200,15 @@ const CondtionTable = () => {
           onOk={okHandler}
           onCancel={cancelHandler}
         ></AlartDialog>
-        <PatchConditonModal
+        <PatchPdrv
           open={patchModalOpen}
           defalutValue={patchData as unknown as IConditon}
           cancelHandler={patchCancelHandler}
-          patchCondition={patchConditon}
-        ></PatchConditonModal>
+          patchPdrv={patchPdrv}
+        ></PatchPdrv>
       </div>
     </div>
   );
 };
 
-export default CondtionTable;
+export default PdrvTable;

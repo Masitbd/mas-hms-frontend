@@ -1,52 +1,30 @@
 "use client";
-import CondtionTable from "@/components/condition/CondtionTable";
-import NewConditionModal from "@/components/condition/NewConditionModal";
-import AlartDialog from "@/components/ui/AlertModal";
-import {
-  useDeleteConditionMutation,
-  useGetConditionQuery,
-  usePostConditionMutation,
-} from "@/redux/api/condition/conditionSlice";
-import { setCondition } from "@/redux/features/condition/conditionSlice";
-import { setdel } from "@/redux/features/delpopup/delpopuo";
+import NewPdrvModal from "@/components/pdrv/NewPdrvModal";
+import PdrvTable from "@/components/pdrv/PdrvTable";
+import { usePostConditionMutation } from "@/redux/api/condition/conditionSlice";
+import { usePostPdrvMutation } from "@/redux/api/pdrv/pdrvSlice";
 import { setLoading } from "@/redux/features/loading/loading";
-import { useAppDispatch } from "@/redux/hook";
 import React, { use, useEffect, useState } from "react";
-import {
-  Table,
-  Pagination,
-  Button,
-  Modal,
-  Schema,
-  Form,
-  Loader,
-  toaster,
-  Message,
-} from "rsuite";
+import { Button, toaster, Message } from "rsuite";
 export type IConditon = {
   _id?: string;
   label: string;
   value: string;
   description: string;
 };
-const Condition = () => {
+const Pdrv = () => {
   const [postModalOpen, setPostModalOpen] = useState(false);
-  const [
-    postCondition,
-    { isError, isLoading: conditionLoading, isSuccess, error },
-  ] = usePostConditionMutation();
+  const [postPdrv, { isError, isLoading: conditionLoading, isSuccess, error }] =
+    usePostPdrvMutation();
   const cancelHandlerforPost = () => {
     setPostModalOpen(!postModalOpen);
   };
 
   useEffect(() => {
     if (isSuccess) {
-      toaster.push(
-        <Message type="success">Condition Added Successfully</Message>,
-        {
-          duration: 3000,
-        }
-      );
+      toaster.push(<Message type="success">Pdrv Added Successfully</Message>, {
+        duration: 3000,
+      });
       setPostModalOpen(!postModalOpen);
       setLoading();
     }
@@ -74,20 +52,20 @@ const Condition = () => {
           appearance="primary"
           onClick={() => setPostModalOpen(!postModalOpen)}
         >
-          Add New Conditon
+          Add New P.Result value
         </Button>
       </div>
 
       <div>
-        <NewConditionModal
-          postCondition={postCondition}
+        <NewPdrvModal
+          postPdrv={postPdrv}
           open={postModalOpen}
           cancelHandler={cancelHandlerforPost}
-        ></NewConditionModal>
-        <CondtionTable></CondtionTable>
+        ></NewPdrvModal>
+        <PdrvTable></PdrvTable>
       </div>
     </div>
   );
 };
 
-export default Condition;
+export default Pdrv;

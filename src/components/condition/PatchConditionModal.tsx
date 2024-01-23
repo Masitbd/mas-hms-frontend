@@ -1,25 +1,26 @@
 "use client";
+import { IConditon } from "@/app/(withlayout)/condition/page";
 import { useAppSelector } from "@/redux/hook";
 import React, { useState } from "react";
 import { Button, Modal, Schema, Form, Loader, Input } from "rsuite";
-const NewConditionModal = ({
+const PatchConditonModal = ({
   open,
-  postCondition,
+  patchCondition,
   cancelHandler,
+  defalutValue,
 }: {
   open: boolean;
-  postCondition: ({
-    label,
-    description,
-    value,
+  patchCondition: ({
+    data: { label, description, value },
+    id,
   }: {
-    value: string;
-    label: string;
-    description: string;
+    data: IConditon;
+    id: string;
   }) => void;
   cancelHandler: () => void;
+  defalutValue: IConditon;
 }) => {
-  const { StringType, NumberType } = Schema.Types;
+  const { StringType } = Schema.Types;
   const formRef: React.MutableRefObject<any> = React.useRef();
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
@@ -30,19 +31,16 @@ const NewConditionModal = ({
     label: string;
     description: string;
     value: string;
-  }>({
-    label: "",
-    description: "",
-    value: "",
-  });
+  }>(defalutValue);
   const handleSubmit = () => {
     if (formRef.current.check()) {
       conditioData.value = conditioData.label.toLowerCase();
-      postCondition(conditioData);
+      patchCondition({ data: conditioData, id: defalutValue._id as string });
     } else {
     }
   };
   const loading = useAppSelector((state) => state.loading.loading);
+
   return (
     <>
       <Modal size={"xs"} open={open}>
@@ -51,6 +49,7 @@ const NewConditionModal = ({
         </Modal.Header>
         <Modal.Body className="p-5">
           <Form
+            formDefaultValue={defalutValue}
             onChange={(formValue, event) => {
               setConditioData({
                 label: formValue.label || "",
@@ -86,4 +85,4 @@ const NewConditionModal = ({
   );
 };
 
-export default NewConditionModal;
+export default PatchConditonModal;

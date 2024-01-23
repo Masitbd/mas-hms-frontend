@@ -15,6 +15,9 @@ import DashboardIcon from "@rsuite/icons/Dashboard";
 import GroupIcon from "@rsuite/icons/legacy/Group";
 import MagicIcon from "@rsuite/icons/legacy/Magic";
 import { useState } from "react";
+import { NavLink } from "@/utils/Navlink";
+import Link from "next/link";
+
 const headerStyles = {
   padding: 18,
   fontSize: 16,
@@ -67,8 +70,23 @@ const Sidebar = () => {
         <Sidenav expanded={expand} defaultOpenKeys={["3"]} appearance="subtle">
           <Sidenav.Body>
             <Nav>
-              <Nav.Item eventKey="1" active icon={<DashboardIcon />}>
-                Dashboard
+              <Nav.Item
+                eventKey="1"
+                active
+                icon={<DashboardIcon />}
+                href={"/condition"}
+                as={NavLink}
+              >
+                Condition
+              </Nav.Item>
+              <Nav.Item
+                eventKey="1"
+                active
+                icon={<DashboardIcon />}
+                href={"/pdrv"}
+                as={NavLink}
+              >
+                Condition
               </Nav.Item>
               <Nav.Item eventKey="2" icon={<GroupIcon />}>
                 User Group

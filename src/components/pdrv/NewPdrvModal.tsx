@@ -2,13 +2,13 @@
 import { useAppSelector } from "@/redux/hook";
 import React, { useState } from "react";
 import { Button, Modal, Schema, Form, Loader, Input } from "rsuite";
-const NewConditionModal = ({
+const NewPdrvModal = ({
   open,
-  postCondition,
+  postPdrv,
   cancelHandler,
 }: {
   open: boolean;
-  postCondition: ({
+  postPdrv: ({
     label,
     description,
     value,
@@ -26,7 +26,7 @@ const NewConditionModal = ({
     description: StringType().isRequired("This field is required."),
   });
 
-  const [conditioData, setConditioData] = useState<{
+  const [pdrvData, setPdrvData] = useState<{
     label: string;
     description: string;
     value: string;
@@ -37,8 +37,8 @@ const NewConditionModal = ({
   });
   const handleSubmit = () => {
     if (formRef.current.check()) {
-      conditioData.value = conditioData.label.toLowerCase();
-      postCondition(conditioData);
+      pdrvData.value = pdrvData.label.toLowerCase();
+      postPdrv(pdrvData);
     } else {
     }
   };
@@ -52,7 +52,7 @@ const NewConditionModal = ({
         <Modal.Body className="p-5">
           <Form
             onChange={(formValue, event) => {
-              setConditioData({
+              setPdrvData({
                 label: formValue.label || "",
                 description: formValue.description || "",
                 value: formValue.value || "",
@@ -86,4 +86,4 @@ const NewConditionModal = ({
   );
 };
 
-export default NewConditionModal;
+export default NewPdrvModal;
