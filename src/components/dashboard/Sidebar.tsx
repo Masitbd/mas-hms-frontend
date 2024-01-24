@@ -70,39 +70,22 @@ const Sidebar = () => {
         <Sidenav expanded={expand} defaultOpenKeys={["3"]} appearance="subtle">
           <Sidenav.Body>
             <Nav>
-              <Nav.Item
-                eventKey="1"
-                active
-                icon={<DashboardIcon />}
-                href={"/condition"}
-                as={NavLink}
-              >
-                Condition
-              </Nav.Item>
-              <Nav.Item
-                eventKey="1"
-                active
-                icon={<DashboardIcon />}
-                href={"/pdrv"}
-                as={NavLink}
-              >
-                Condition
-              </Nav.Item>
-              <Nav.Item eventKey="2" icon={<GroupIcon />}>
-                User Group
-              </Nav.Item>
               <Nav.Menu
                 eventKey="3"
                 trigger="hover"
-                title="Advanced"
+                title="Test Params"
                 icon={<MagicIcon />}
                 placement="rightStart"
               >
-                <Nav.Item eventKey="3-1">Geo</Nav.Item>
-                <Nav.Item eventKey="3-2">Devices</Nav.Item>
-                <Nav.Item eventKey="3-3">Brand</Nav.Item>
-                <Nav.Item eventKey="3-4">Loyalty</Nav.Item>
-                <Nav.Item eventKey="3-5">Visit Depth</Nav.Item>
+                <Nav.Item eventKey="3-1" href={"/pdrv"} as={NavLink}>
+                  Pdrv
+                </Nav.Item>
+                <Nav.Item eventKey="3-2" href={"/bacteria"} as={NavLink}>
+                  Bacteria
+                </Nav.Item>
+                <Nav.Item eventKey="3-3" href={"/condition"} as={NavLink}>
+                  Condition
+                </Nav.Item>
               </Nav.Menu>
               <Nav.Menu
                 eventKey="4"
