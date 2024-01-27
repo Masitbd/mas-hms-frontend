@@ -14,7 +14,9 @@ import {
   useGetBacteriaQuery,
   usePatchBacteriaMutation,
 } from "@/redux/api/bacteria/bacteriaSlice";
-import PatchBacteriaModel from "./PatchBacteriaModel";
+import PatchBacteriaModel from "./PatchBacteria";
+import PatchBacteria from "./PatchBacteria";
+import { IBacteria } from "@/app/(withlayout)/bacteria/page";
 
 const { Column, HeaderCell, Cell } = Table;
 const BacteriaTable = () => {
@@ -61,6 +63,7 @@ const BacteriaTable = () => {
   const [patchModalOpen, setPatchModalOpen] = useState(false);
   const [patchData, setPatchData] = useState<IConditon>();
   const patchHandler = (data: IConditon) => {
+    console.log(data);
     setPatchData(data);
     setPatchModalOpen(!patchModalOpen);
   };
@@ -200,12 +203,12 @@ const BacteriaTable = () => {
           onOk={okHandler}
           onCancel={cancelHandler}
         ></AlartDialog>
-        <PatchBacteriaModel
-          open={patchModalOpen}
-          defalutValue={patchData as unknown as IConditon}
+        <PatchBacteria
           cancelHandler={patchCancelHandler}
+          defalutValue={patchData as IBacteria}
+          open={patchModalOpen}
           patchBacteria={patchBacteria}
-        ></PatchBacteriaModel>
+        />
       </div>
     </div>
   );

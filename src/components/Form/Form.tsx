@@ -1,37 +1,38 @@
-"use client";
-import { useAppDispatch } from "@/redux/hook";
-import React, { useRef } from "react";
-import { Table, Pagination, Button, Modal, Form as ResuiteFrom } from "rsuite";
+// import React from "react";
+// import { Form } from "rsuite";
 
-const FormR = ({ model, reducer, submitFunction, children }) => {
-  const formRef = useRef();
+// const RForm = ({
+//   defaultValue,
+//   setFormData,
+//   model,
+//   forwardedRef,
+//   children,
+// }) => {
+//   return (
+//     <Form
+//       formDefaultValue={defaultValue !== undefined ? defaultValue : {}}
+//       onChange={(formValue, event) => {
+//         setFormData({
+//           label: formValue.label || "",
+//           description: formValue.description || "",
+//           value: formValue.value || "",
+//         });
 
-  const dispatch = useAppDispatch();
-  const handleSubmit = () => {
-    if (!formRef.current.check()) {
-      submitFunction();
-    } else {
-    }
-  };
-  const handleButtonClick = () => {
-    console.log("object");
-    if (children.props.onClick) {
-      children.props.onClick();
-      handleSubmit();
-    }
-  };
-  const childrenWithProps = React.cloneElement(children, {
-    onClick: handleButtonClick,
-  });
-  return (
-    <ResuiteFrom
-      onChange={() => dispatch(reducer())}
-      ref={formRef}
-      model={model}
-    >
-      {childrenWithProps}
-    </ResuiteFrom>
-  );
-};
+//         // Additional logic if needed
+//       }}
+//       ref={forwardedRef}
+//       model={model}
+//     >
+//       <Form.Group controlId="label">
+//         <Form.ControlLabel>Title</Form.ControlLabel>
+//         <Form.Control name="label" />
+//       </Form.Group>
+//       <Form.Group controlId="description">
+//         <Form.ControlLabel>Description</Form.ControlLabel>
+//         <Form.Control name="description" />
+//       </Form.Group>
+//     </Form>
+//   );
+// };
 
-export default FormR;
+// export default RForm;
