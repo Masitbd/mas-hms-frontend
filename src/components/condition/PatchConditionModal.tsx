@@ -1,6 +1,7 @@
 "use client";
-import { IConditon } from "@/app/(withlayout)/condition/page";
+
 import { useAppSelector } from "@/redux/hook";
+import { ICondition } from "@/types/allDepartmentInterfaces";
 import React, { useState } from "react";
 import { Button, Modal, Schema, Form, Loader, Input } from "rsuite";
 const PatchConditonModal = ({
@@ -14,11 +15,11 @@ const PatchConditonModal = ({
     data: { label, description, value },
     id,
   }: {
-    data: IConditon;
+    data: ICondition;
     id: string;
   }) => void;
   cancelHandler: () => void;
-  defalutValue: IConditon;
+  defalutValue: ICondition;
 }) => {
   const { StringType } = Schema.Types;
   const formRef: React.MutableRefObject<any> = React.useRef();

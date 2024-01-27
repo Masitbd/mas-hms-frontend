@@ -23,12 +23,7 @@ import {
   toaster,
   Message,
 } from "rsuite";
-export type IConditon = {
-  _id?: string;
-  label: string;
-  value: string;
-  description: string;
-};
+
 const Condition = () => {
   const [postModalOpen, setPostModalOpen] = useState(false);
   const [
