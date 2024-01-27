@@ -14,7 +14,7 @@ import {
   useGetPdrvQuery,
   usePatchPdrvMutation,
 } from "@/redux/api/pdrv/pdrvSlice";
-import PatchPdrv from "./PatchPdrvModal";
+import PatchPdrv from "./PatchPdrv";
 
 const { Column, HeaderCell, Cell } = Table;
 const PdrvTable = () => {

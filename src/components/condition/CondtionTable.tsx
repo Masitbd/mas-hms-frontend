@@ -9,7 +9,8 @@ import { setLoading } from "@/redux/features/loading/loading";
 import React, { useEffect, useState } from "react";
 import { Table, Pagination, Button, toaster, Message } from "rsuite";
 import PatchConditonModal from "./PatchConditionModal";
-import { IConditon } from "@/app/(withlayout)/condition/page";
+import { ICondition } from "@/types/allDepartmentInterfaces";
+
 
 const { Column, HeaderCell, Cell } = Table;
 const CondtionTable = () => {
@@ -54,8 +55,8 @@ const CondtionTable = () => {
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<IConditon>();
-  const patchHandler = (data: IConditon) => {
+  const [patchData, setPatchData] = useState<ICondition>();
+  const patchHandler = (data: ICondition) => {
     setPatchData(data);
     setPatchModalOpen(!patchModalOpen);
   };
@@ -113,14 +114,7 @@ const CondtionTable = () => {
       );
       setLoading();
     }
-  }, [
-    deleteLoading,
-    deleteError,
-    deleteSuccess,
-    patchLoading,
-    patchSuccess,
-    patchError,
-  ]);
+  }, [deleteLoading, deleteError, deleteSuccess, patchLoading, patchSuccess, patchError, patchModalOpen]);
   return (
     <div>
       <Table
@@ -157,7 +151,7 @@ const CondtionTable = () => {
                   appearance="ghost"
                   color="blue"
                   className="ml-2"
-                  onClick={() => patchHandler(rowdate as IConditon)}
+                  onClick={() => patchHandler(rowdate as ICondition)}
                 >
                   Edit
                 </Button>
@@ -197,7 +191,7 @@ const CondtionTable = () => {
         ></AlartDialog>
         <PatchConditonModal
           open={patchModalOpen}
-          defalutValue={patchData as unknown as IConditon}
+          defalutValue={patchData as unknown as ICondition}
           cancelHandler={patchCancelHandler}
           patchCondition={patchConditon}
         ></PatchConditonModal>
