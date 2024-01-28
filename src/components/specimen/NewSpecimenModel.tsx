@@ -1,5 +1,6 @@
 "use client";
 import { usePatchConditionMutation, usePostConditionMutation } from '@/redux/api/condition/conditionSlice';
+import { usePatchSpecimenMutation, usePostSpecimenMutation } from '@/redux/api/specimen/specimenSlice';
 import { useAppSelector } from '@/redux/hook';
 import { ISpecimen } from '@/types/allDepartmentInterfaces';
 import React, { useState } from 'react';
@@ -24,19 +25,17 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
     value: "",
   } || !defaultData);
   const [
-    postCondition,
-    { isError, isLoading: conditionLoading, isSuccess, error },
-  ] = usePostConditionMutation();
+    postSpecimen
+  ] = usePostSpecimenMutation();
   const [
-    patchConditon,
-    { isError: patchError, isSuccess: patchSuccess, isLoading: patchLoading },
-  ] = usePatchConditionMutation();
+    patchSpecimen,
+  ] = usePatchSpecimenMutation();
 
   const handleSubmit = async () => {
     if (formRef.current.check()) {
       specimenData.value = specimenData.label.toLowerCase();
       if (defaultData === undefined) {
-        const result = await postCondition(specimenData)
+        const result = await postSpecimen(specimenData)
         if ('data' in result) {
           const message = (result as { data: { message: string } })?.data.message;
           swal(`Done! ${message}!`, {
@@ -45,7 +44,7 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
           setPostModelOpen(false)
         }
       } else {
-        const result = await patchConditon({ data: specimenData, id: defaultData._id as string })
+        const result = await patchSpecimen({ data: specimenData, id: defaultData._id as string })
         if ('data' in result) {
           const message = (result as { data: { message: string } })?.data.message;
           swal(`Done! ${message}!`, {

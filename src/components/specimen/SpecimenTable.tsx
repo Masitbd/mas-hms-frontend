@@ -1,15 +1,14 @@
 "use client";
-
-import { useDeleteConditionMutation, useGetConditionQuery, usePatchConditionMutation } from "@/redux/api/condition/conditionSlice";
 import { ICondition, ISpecimen } from "@/types/allDepartmentInterfaces";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
 import NewSpecimenModel from "./NewSpecimenModel";
+import { useDeleteSpecimenMutation, useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 
 const { Column, HeaderCell, Cell } = Table;
 const SpecimenTable = () => {
-  const { data: defaultData, isLoading } = useGetConditionQuery(undefined);
+  const { data: defaultData, isLoading } = useGetSpecimenQuery(undefined);
   console.log(defaultData);
 
   const [limit, setLimit] = useState(10);
@@ -27,16 +26,9 @@ const SpecimenTable = () => {
   });
   console.log(data);
   //   For delete
-  const [deletItemId, seDeletItemId] = useState("");
-  const [deletModalOpen, setDeletModalOpen] = useState(false);
   const [
-    deleteItem,
-    {
-      isSuccess: deleteSuccess,
-      isLoading: deleteLoading,
-      isError: deleteError,
-    },
-  ] = useDeleteConditionMutation();
+    deleteItem
+  ] = useDeleteSpecimenMutation();
 
   const deleteHandler = async (id: string) => {
 
@@ -64,7 +56,7 @@ const SpecimenTable = () => {
           })
         }
       } else {
-        swal("Your imaginary specimen is safe!");
+        swal("Your specimen is safe!");
       }
     })
   };
@@ -72,9 +64,6 @@ const SpecimenTable = () => {
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
   const [patchData, setPatchData] = useState<ISpecimen>();
-  const patchCancelHandler = () => {
-    setPatchModalOpen(!patchModalOpen);
-  };
 
 
 
