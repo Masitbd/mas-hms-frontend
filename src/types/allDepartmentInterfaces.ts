@@ -17,3 +17,12 @@ export type IVacuumTube = {
   price: number;
   description: string;
 };
+export type IDepartment = {
+  _id?: string;
+  label: string;
+  value: string;
+  commissionParcentage: number;
+  fixedCommission: number;
+  isCommissionFiexed: boolean;
+  description?: string;
+};
