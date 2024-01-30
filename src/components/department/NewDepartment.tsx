@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { Button, Form, Loader, Modal, Schema, Toggle } from 'rsuite';
 import swal from 'sweetalert';
 
-const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
+const NewDepartmentTable = ({ open, setPostModelOpen, defaultData }: {
     open: boolean;
     setPostModelOpen: (postModelOpen: boolean) => void;
     defaultData?: IDepartment
@@ -17,6 +17,8 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
     const model = Schema.Model({
         label: StringType().isRequired("This field is required."),
         description: StringType().isRequired("This field is required."),
+        fixedCommission: NumberType().isRequired("This field is required."),
+        commissionParcentage: NumberType().isRequired("This field is required."),
     });
 
     const [departmentData, setDepartmentData] = useState<IDepartment>({
@@ -71,7 +73,7 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
         <>
             <Modal size={"xs"} open={open}>
                 <Modal.Header>
-                    <Modal.Title>Add New Specimen</Modal.Title>
+                    <Modal.Title>Add New Department</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="p-5">
                     <Form
@@ -81,8 +83,8 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
                                 label: formValue.label || "",
                                 description: formValue.description || "",
                                 value: formValue.value || "",
-                                commissionParcentage: formValue.commissionPercentage || 0,
-                                fixedCommission: formValue.fixedCommision || 0,
+                                commissionParcentage: formValue.commissionParcentage || 0,
+                                fixedCommission: formValue.fixedCommission || 0,
                                 isCommissionFiexed: fixedCommissionEnabled
                             });
 
@@ -128,4 +130,4 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
     );
 };
 
-export default NewSpecimenModel;
+export default NewDepartmentTable;
