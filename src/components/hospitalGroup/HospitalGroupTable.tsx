@@ -1,14 +1,17 @@
 "use client";
-import { ICondition, ISpecimen } from "@/types/allDepartmentInterfaces";
+
+import {  IHospitalGroup } from "@/types/allDepartmentInterfaces";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
-import NewSpecimenModel from "./NewSpecimenModel";
-import { useDeleteSpecimenMutation, useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
+
+import { useDeleteHospitalGroupMutation, useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
+import NewHospitalGroup from "./NewHospitalGroup";
+
 
 const { Column, HeaderCell, Cell } = Table;
-const SpecimenTable = () => {
-  const { data: defaultData, isLoading } = useGetSpecimenQuery(undefined);
+const HospitalGroupTable = () => {
+  const { data: defaultData, isLoading } = useGetHospitalGroupQuery(undefined);
   console.log(defaultData);
 
   const [limit, setLimit] = useState(10);
@@ -28,13 +31,13 @@ const SpecimenTable = () => {
   //   For delete
   const [
     deleteItem
-  ] = useDeleteSpecimenMutation();
+  ] = useDeleteHospitalGroupMutation();
 
   const deleteHandler = async (id: string) => {
 
     swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this Specimen!",
+      text: "Once deleted, you will not be able to recover this Hospital Group!",
       icon: "warning",
       buttons: ["Cancel", "Delete"],
       dangerMode: true,
@@ -56,14 +59,14 @@ const SpecimenTable = () => {
           })
         }
       } else {
-        swal("Your specimen is safe!");
+        swal("Your hospital group is safe!");
       }
     })
   };
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<ISpecimen>();
+  const [patchData, setPatchData] = useState<IHospitalGroup>();
 
 
 
@@ -82,7 +85,6 @@ const SpecimenTable = () => {
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
-
         <Column flexGrow={4}>
           <HeaderCell>Description</HeaderCell>
           <Cell dataKey="description" />
@@ -104,7 +106,7 @@ const SpecimenTable = () => {
                   color="blue"
                   className="ml-2"
                   onClick={() => {
-                    setPatchData(rowdate as ISpecimen);
+                    setPatchData(rowdate as IHospitalGroup);
                     setPatchModalOpen(!patchModalOpen)
                   }}
                 >
@@ -135,7 +137,7 @@ const SpecimenTable = () => {
         />
       </div>
       <div>
-        <NewSpecimenModel
+        <NewHospitalGroup
           defaultData={patchData}
           open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
         />
@@ -144,4 +146,4 @@ const SpecimenTable = () => {
   );
 };
 
-export default SpecimenTable;
+export default HospitalGroupTable;

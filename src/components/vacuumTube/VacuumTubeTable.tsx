@@ -1,14 +1,15 @@
 "use client";
-import { ICondition, ISpecimen } from "@/types/allDepartmentInterfaces";
+import { useDeleteVacuumTubeMutation, useGetVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
+import {IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
-import NewSpecimenModel from "./NewSpecimenModel";
-import { useDeleteSpecimenMutation, useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
+import NewVacuumTube from "./NewVacuumTube";
+
 
 const { Column, HeaderCell, Cell } = Table;
-const SpecimenTable = () => {
-  const { data: defaultData, isLoading } = useGetSpecimenQuery(undefined);
+const VacuumTubeTable = () => {
+  const { data: defaultData, isLoading } = useGetVacuumTubeQuery(undefined);
   console.log(defaultData);
 
   const [limit, setLimit] = useState(10);
@@ -28,13 +29,13 @@ const SpecimenTable = () => {
   //   For delete
   const [
     deleteItem
-  ] = useDeleteSpecimenMutation();
+  ] = useDeleteVacuumTubeMutation();
 
   const deleteHandler = async (id: string) => {
 
     swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this Specimen!",
+      text: "Once deleted, you will not be able to recover this Vacuum Tube!",
       icon: "warning",
       buttons: ["Cancel", "Delete"],
       dangerMode: true,
@@ -56,14 +57,14 @@ const SpecimenTable = () => {
           })
         }
       } else {
-        swal("Your specimen is safe!");
+        swal("Your Vacuum Tube is safe!");
       }
     })
   };
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<ISpecimen>();
+  const [patchData, setPatchData] = useState<IVacuumTube>();
 
 
 
@@ -81,6 +82,10 @@ const SpecimenTable = () => {
         <Column flexGrow={1}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
+        </Column>
+        <Column flexGrow={1}>
+          <HeaderCell>Price</HeaderCell>
+          <Cell dataKey="price" />
         </Column>
 
         <Column flexGrow={4}>
@@ -104,7 +109,7 @@ const SpecimenTable = () => {
                   color="blue"
                   className="ml-2"
                   onClick={() => {
-                    setPatchData(rowdate as ISpecimen);
+                    setPatchData(rowdate as IVacuumTube);
                     setPatchModalOpen(!patchModalOpen)
                   }}
                 >
@@ -135,7 +140,7 @@ const SpecimenTable = () => {
         />
       </div>
       <div>
-        <NewSpecimenModel
+        <NewVacuumTube
           defaultData={patchData}
           open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
         />
@@ -144,4 +149,4 @@ const SpecimenTable = () => {
   );
 };
 
-export default SpecimenTable;
+export default VacuumTubeTable;

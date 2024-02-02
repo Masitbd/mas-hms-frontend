@@ -16,7 +16,5 @@ export const baseApi = createApi({
     // },
   }),
   endpoints: () => ({}),
-  tagTypes: ["condition", "pdrv", "bacteria"],
-
-  // tagTypes: tagTypes,
+  tagTypes: ["condition", "pdrv", "bacteria", "specimen", "vacuumTube", "department", "hospitalGroup"],
 });
