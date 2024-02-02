@@ -1,14 +1,15 @@
 "use client";
-import { ICondition, ISpecimen } from "@/types/allDepartmentInterfaces";
+import { useDeleteDepartmentMutation, useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
+import { IDepartment } from "@/types/allDepartmentInterfaces";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
-import NewSpecimenModel from "./NewSpecimenModel";
-import { useDeleteSpecimenMutation, useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
+import NewDepartment from "./NewDepartment";
+
 
 const { Column, HeaderCell, Cell } = Table;
-const SpecimenTable = () => {
-  const { data: defaultData, isLoading } = useGetSpecimenQuery(undefined);
+const DepartmentTable = () => {
+  const { data: defaultData, isLoading } = useGetDepartmentQuery(undefined);
   console.log(defaultData);
 
   const [limit, setLimit] = useState(10);
@@ -28,13 +29,13 @@ const SpecimenTable = () => {
   //   For delete
   const [
     deleteItem
-  ] = useDeleteSpecimenMutation();
+  ] = useDeleteDepartmentMutation();
 
   const deleteHandler = async (id: string) => {
 
     swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this Specimen!",
+      text: "Once deleted, you will not be able to recover this Department!",
       icon: "warning",
       buttons: ["Cancel", "Delete"],
       dangerMode: true,
@@ -56,14 +57,14 @@ const SpecimenTable = () => {
           })
         }
       } else {
-        swal("Your specimen is safe!");
+        swal("Your department is safe!");
       }
     })
   };
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<ISpecimen>();
+  const [patchData, setPatchData] = useState<IDepartment>();
 
 
 
@@ -82,7 +83,14 @@ const SpecimenTable = () => {
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
-
+        <Column flexGrow={1}>
+          <HeaderCell>Commission Percentage</HeaderCell>
+          <Cell dataKey="commissionParcentage" />
+        </Column>
+        <Column flexGrow={1}>
+          <HeaderCell>fixed Commission</HeaderCell>
+          <Cell dataKey="fixedCommission" />
+        </Column>
         <Column flexGrow={4}>
           <HeaderCell>Description</HeaderCell>
           <Cell dataKey="description" />
@@ -104,7 +112,7 @@ const SpecimenTable = () => {
                   color="blue"
                   className="ml-2"
                   onClick={() => {
-                    setPatchData(rowdate as ISpecimen);
+                    setPatchData(rowdate as IDepartment);
                     setPatchModalOpen(!patchModalOpen)
                   }}
                 >
@@ -135,7 +143,7 @@ const SpecimenTable = () => {
         />
       </div>
       <div>
-        <NewSpecimenModel
+        <NewDepartment
           defaultData={patchData}
           open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
         />
@@ -144,4 +152,4 @@ const SpecimenTable = () => {
   );
 };
 
-export default SpecimenTable;
+export default DepartmentTable;

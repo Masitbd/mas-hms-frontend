@@ -1,13 +1,13 @@
 "use client";
-import { usePatchConditionMutation, usePostConditionMutation } from '@/redux/api/condition/conditionSlice';
-import { usePatchSpecimenMutation, usePostSpecimenMutation } from '@/redux/api/specimen/specimenSlice';
+
+import { usePatchVacuumTubeMutation, usePostVacuumTubeMutation } from '@/redux/api/vacuumTube/vacuumTubeSlice';
 import { useAppSelector } from '@/redux/hook';
-import { ISpecimen } from '@/types/allDepartmentInterfaces';
+import { ISpecimen, IVacuumTube } from '@/types/allDepartmentInterfaces';
 import React, { useState } from 'react';
 import { Button, Form, Loader, Modal, Schema } from 'rsuite';
 import swal from 'sweetalert';
 
-const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
+const NewVacuumTube = ({ open, setPostModelOpen, defaultData }: {
   open: boolean;
   setPostModelOpen: (postModelOpen: boolean) => void;
   defaultData?: ISpecimen
@@ -17,25 +17,27 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
     description: StringType().isRequired("This field is required."),
+    price: NumberType().isRequired("This field is required."),
   });
 
-  const [specimenData, setSpecimenData] = useState<ISpecimen>({
+  const [vacuumTube, setVacuumTube] = useState<IVacuumTube>({
     label: "",
-    description: "",
     value: "",
+    price: 0,
+    description: "",
   } || !defaultData);
   const [
-    postSpecimen
-  ] = usePostSpecimenMutation();
+    postVacuumTube
+  ] = usePostVacuumTubeMutation();
   const [
-    patchSpecimen,
-  ] = usePatchSpecimenMutation();
+    patchVacuumTube,
+  ] = usePatchVacuumTubeMutation();
 
   const handleSubmit = async () => {
     if (formRef.current.check()) {
-      specimenData.value = specimenData.label.toLowerCase();
+      vacuumTube.value = vacuumTube.label.toLowerCase();
       if (defaultData === undefined) {
-        const result = await postSpecimen(specimenData)
+        const result = await postVacuumTube(vacuumTube)
         if ('data' in result) {
           const message = (result as { data: { message: string } })?.data.message;
           swal(`Done! ${message}!`, {
@@ -44,7 +46,7 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
           setPostModelOpen(false)
         }
       } else {
-        const result = await patchSpecimen({ data: specimenData, id: defaultData._id as string })
+        const result = await patchVacuumTube({ data: vacuumTube, id: defaultData._id as string })
         if ('data' in result) {
           const message = (result as { data: { message: string } })?.data.message;
           swal(`Done! ${message}!`, {
@@ -63,22 +65,23 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
   //patch
 
 
-  // const [specimenDataPatch, setSpecimenDataPatch] = useState<ISpecimen>(defaultData);
+  // const [vacuumTubePatch, setvacuumTubePatch] = useState<ISpecimen>(defaultData);
 
   return (
     <>
       <Modal size={"xs"} open={open}>
         <Modal.Header>
-          <Modal.Title>Add New Specimen</Modal.Title>
+          <Modal.Title>Add New Vacuum Tube</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-5">
           <Form
             formDefaultValue={defaultData}
             onChange={(formValue, event) => {
-              setSpecimenData({
+              setVacuumTube({
                 label: formValue.label || "",
-                description: formValue.description || "",
                 value: formValue.value || "",
+                price: formValue.price || 0,
+                description: formValue.description || "",
               });
 
               // Additional logic if needed
@@ -89,6 +92,10 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
             <Form.Group controlId="label">
               <Form.ControlLabel>Title</Form.ControlLabel>
               <Form.Control name="label" />
+            </Form.Group>
+            <Form.Group controlId="price">
+              <Form.ControlLabel>Price</Form.ControlLabel>
+              <Form.Control name="price" />
             </Form.Group>
             <Form.Group controlId="description">
               <Form.ControlLabel>Description</Form.ControlLabel>
@@ -109,4 +116,4 @@ const NewSpecimenModel = ({ open, setPostModelOpen, defaultData }: {
   );
 };
 
-export default NewSpecimenModel;
+export default NewVacuumTube;

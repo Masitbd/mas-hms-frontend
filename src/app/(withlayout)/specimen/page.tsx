@@ -1,8 +1,6 @@
 "use client";
 import NewSpecimenModel from '@/components/specimen/NewSpecimenModel';
 import SpecimenTable from '@/components/specimen/SpecimenTable';
-import { usePostConditionMutation } from '@/redux/api/condition/conditionSlice';
-import { setLoading } from '@/redux/features/loading/loading';
 import { useState } from 'react';
 
 import { Button, Message, toaster } from 'rsuite';
