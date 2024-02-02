@@ -15,7 +15,7 @@ import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
 import AlartDialog from "../ui/AlertModal";
 
 const { Cell, Column, HeaderCell } = Table;
-const ForDescriptiveBased = ({
+const ForParameterBased = ({
   testFromData,
   setTestFromData,
 }: {
@@ -66,7 +66,7 @@ const ForDescriptiveBased = ({
     setModalOpen(!modalOpen);
     setfromData(undefined);
   };
-  // For delete
+  // Fro delete
   const [deleteData, setDeleteData] = useState();
   const [alertModalOpen, setAlertModal] = useState(false);
   const deleteButtonFunction = (data) => {
@@ -89,15 +89,17 @@ const ForDescriptiveBased = ({
   };
   const { StringType, NumberType } = Schema.Types;
   const model = Schema.Model({
-    title: StringType().isRequired("This field is required."),
-    description: StringType().isRequired("This field is required."),
+    investigation: StringType().isRequired("This field is required."),
+    test: StringType().isRequired("This field is required."),
+    unit: StringType().isRequired("This field is required."),
+    normalUnit: StringType().isRequired("This field is required."),
   });
 
   const { data: pdrvData, isLoading: pdrvLoading } = useGetPdrvQuery(undefined);
 
   return (
     <div>
-      <div>
+      <div className="my-5">
         <Button
           appearance="primary"
           color="blue"
@@ -106,14 +108,30 @@ const ForDescriptiveBased = ({
           Add Test Params
         </Button>
       </div>
-      <Table height={420} data={testFromData?.resultFields}>
-        <Column width={50} align="center">
-          <HeaderCell>Title</HeaderCell>
-          <Cell dataKey="titel" />
+      <Table
+        height={420}
+        data={testFromData?.resultFields}
+        rowHeight={60}
+        bordered
+        cellBordered
+      >
+        <Column flexGrow={3} align="center" fixed>
+          <HeaderCell>Investigation</HeaderCell>
+          <Cell dataKey="investigation" />
         </Column>
-        <Column width={200} flexGrow={1}>
-          <HeaderCell>Description</HeaderCell>
-          <Cell dataKey="description" />
+
+        <Column flexGrow={4} width={100} fixed>
+          <HeaderCell>Test</HeaderCell>
+          <Cell dataKey="test" />
+        </Column>
+
+        <Column flexGrow={1} width={200}>
+          <HeaderCell>Unit</HeaderCell>
+          <Cell dataKey="unit" />
+        </Column>
+        <Column flexGrow={1} width={200}>
+          <HeaderCell>Normal Unit</HeaderCell>
+          <Cell dataKey="normalUnit" />
         </Column>
         <Column flexGrow={2}>
           <HeaderCell>Action</HeaderCell>
@@ -162,13 +180,40 @@ const ForDescriptiveBased = ({
             model={model}
             ref={formRef}
           >
-            <Form.Group controlId="title">
-              <Form.ControlLabel>Title</Form.ControlLabel>
-              <Form.Control name="title" />
+            <Form.Group controlId="investigation">
+              <Form.ControlLabel>Investigation</Form.ControlLabel>
+              <Form.Control name="investigation" />
             </Form.Group>
-            <Form.Group controlId="description">
-              <Form.ControlLabel>Description</Form.ControlLabel>
-              <Form.Control name="description" />
+            <Form.Group controlId="test">
+              <Form.ControlLabel>Test</Form.ControlLabel>
+              <Form.Control name="test" />
+            </Form.Group>
+            <Form.Group controlId="unit">
+              <Form.ControlLabel>Unit</Form.ControlLabel>
+              <Form.Control name="unit" />
+            </Form.Group>
+            <Form.Group controlId="normalUnit">
+              <Form.ControlLabel>Normal Unit</Form.ControlLabel>
+              <Form.Control name="normalUnit" />
+            </Form.Group>
+            <Form.Group controlId="hasPdrv">
+              <Form.ControlLabel>Result Values</Form.ControlLabel>
+              <Form.Control name="hasPdrv" accepter={Toggle} />
+            </Form.Group>
+            <Form.Group controlId="pdrvValues">
+              <Form.ControlLabel>Values</Form.ControlLabel>
+              {pdrvLoading ? (
+                <Loader />
+              ) : (
+                <Form.Control
+                  name="values"
+                  accepter={TagPicker}
+                  data={pdrvData?.data.map((data) => {
+                    return { label: data.label, value: data._id };
+                  })}
+                  disabled={!fromData?.hasPdrv}
+                />
+              )}
             </Form.Group>
           </Form>
         </RModal>
@@ -187,4 +232,4 @@ const ForDescriptiveBased = ({
   );
 };
 
-export default ForDescriptiveBased;
+export default ForParameterBased;

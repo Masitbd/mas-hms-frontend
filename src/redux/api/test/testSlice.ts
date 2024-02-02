@@ -9,6 +9,7 @@ const testSlice = baseApi.injectEndpoints({
         contentType: "application/json",
         body: data,
       }),
+      invalidatesTags: ["test"],
     }),
     patchTest: build.mutation({
       query: ({ data, id }) => ({
@@ -17,6 +18,7 @@ const testSlice = baseApi.injectEndpoints({
         contentType: "application/json",
         body: data,
       }),
+      invalidatesTags: ["test"],
     }),
     deleteTest: build.mutation({
       query: (id) => ({
@@ -24,20 +26,22 @@ const testSlice = baseApi.injectEndpoints({
         method: "DELETE",
         contentType: "application/json",
       }),
+      invalidatesTags: ["test"],
     }),
     getTest: build.query({
       query: (id) => ({
         url: `/test/${id}`,
-        method: "DELETE",
+        method: "GET",
         contentType: "application/json",
       }),
     }),
     getTests: build.query({
       query: () => ({
         url: `/test`,
-        method: "DELETE",
+        method: "GET",
         contentType: "application/json",
       }),
+      providesTags: ["test"],
     }),
   }),
 });
