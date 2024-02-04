@@ -79,7 +79,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData }: {
     }
     const [uploading, setUploading] = React.useState(false);
     const [fileInfo, setFileInfo] = React.useState(null);
-    console.log(fileInfo)
+    // console.log(fileInfo)
 
     // const handleImageUpload = async (file: any) => {
 
