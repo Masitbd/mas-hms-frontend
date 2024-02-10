@@ -26,3 +26,13 @@ export type IDepartment = {
   isCommissionFiexed: boolean;
   description?: string;
 };
+
+export type IDoctor = {
+  _id?: string;
+  name: string;
+  fatherName: string;
+  designation: string;
+  phone: string;
+  image: string;
+  defaultImage?: string;
+};

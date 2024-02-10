@@ -1,7 +1,7 @@
 "use client";
-import { useDeleteDepartmentMutation, useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { IDoctor, } from "@/types/allDepartmentInterfaces";
 
+import { useDeleteDoctorMutation, useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
@@ -11,7 +11,7 @@ import NewDoctor from "./NewDoctor";
 
 const { Column, HeaderCell, Cell } = Table;
 const DoctorsTable = () => {
-    const { data: defaultData, isLoading } = useGetDepartmentQuery(undefined);
+    const { data: defaultData, isLoading } = useGetDoctorQuery(undefined);
     console.log(defaultData);
 
     const [limit, setLimit] = useState(10);
@@ -31,7 +31,7 @@ const DoctorsTable = () => {
     //   For delete
     const [
         deleteItem
-    ] = useDeleteDepartmentMutation();
+    ] = useDeleteDoctorMutation();
 
     const deleteHandler = async (id: string) => {
 
@@ -67,8 +67,6 @@ const DoctorsTable = () => {
     // For patch
     const [patchModalOpen, setPatchModalOpen] = useState(false);
     const [patchData, setPatchData] = useState<IDoctor>();
-
-
 
     return (
         <div>
