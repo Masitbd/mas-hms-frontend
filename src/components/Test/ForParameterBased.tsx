@@ -1,33 +1,50 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Button,
   Form,
   Loader,
+  Message,
   Modal,
   Schema,
   SelectPicker,
   Table,
   TagPicker,
   Toggle,
+  toaster,
 } from "rsuite";
 import RModal from "../ui/Modal";
 import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
 import AlartDialog from "../ui/AlertModal";
-
+import { IResultField, ITest } from "@/types/allDepartmentInterfaces";
+import { IPdrv } from "@/app/(withlayout)/pdrv/page";
+type NewITestType = IResultField & { gid: number };
 const { Cell, Column, HeaderCell } = Table;
 const ForParameterBased = ({
   testFromData,
   setTestFromData,
+  defaultMode,
 }: {
   testFromData: any;
   setTestFromData: (data: any) => void;
+  defaultMode: string;
 }) => {
   let resultFieldData = testFromData.resultFields;
   const formRef: React.MutableRefObject<any> = React.useRef();
   const [modalOpen, setModalOpen] = useState(false);
-  const [fromData, setfromData] = useState();
+  const initialValue = {
+    title: "",
+    test: "",
+    unit: "",
+    normalValue: "",
+    hasPdrv: false,
+    gid: 0,
+    defaultValues: [],
+  };
+  const [fromData, setfromData] = useState<NewITestType & Record<string, any>>(
+    initialValue
+  );
   const [mode, setMode] = useState("");
-  const patchOpenHandler = (data) => {
+  const patchOpenHandler = (data: NewITestType) => {
     setMode("patch");
     setModalOpen(!modalOpen);
     setfromData(data);
@@ -50,32 +67,32 @@ const ForParameterBased = ({
         }
 
         setTestFromData(testFromData);
-        setfromData(undefined);
+        setfromData(initialValue);
       } else {
         const newDate = resultFieldData.filter(
-          (data) => data.gid !== fromData.gid
+          (data: NewITestType) => data.gid !== fromData.gid
         );
         testFromData.resultFields = [...newDate, fromData];
         setTestFromData(testFromData);
         setModalOpen(!modalOpen);
-        setfromData(undefined);
+        setfromData(initialValue);
       }
     }
   };
   const cancelHandler = () => {
     setModalOpen(!modalOpen);
-    setfromData(undefined);
+    setfromData(initialValue);
   };
   // Fro delete
-  const [deleteData, setDeleteData] = useState();
+  const [deleteData, setDeleteData] = useState<NewITestType>();
   const [alertModalOpen, setAlertModal] = useState(false);
-  const deleteButtonFunction = (data) => {
+  const deleteButtonFunction = (data: NewITestType) => {
     setDeleteData(data);
     setAlertModal(true);
   };
   const deleteHanldler = () => {
     const newData = testFromData.resultFields.filter(
-      (data) => data.gid !== deleteData.gid
+      (data: NewITestType) => data.gid !== deleteData?.gid
     );
     testFromData.resultFields = newData;
 
@@ -89,10 +106,10 @@ const ForParameterBased = ({
   };
   const { StringType, NumberType } = Schema.Types;
   const model = Schema.Model({
-    investigation: StringType().isRequired("This field is required."),
+    title: StringType().isRequired("This field is required."),
     test: StringType().isRequired("This field is required."),
     unit: StringType().isRequired("This field is required."),
-    normalUnit: StringType().isRequired("This field is required."),
+    normalValue: StringType().isRequired("This field is required."),
   });
 
   const { data: pdrvData, isLoading: pdrvLoading } = useGetPdrvQuery(undefined);
@@ -110,14 +127,14 @@ const ForParameterBased = ({
       </div>
       <Table
         height={420}
-        data={testFromData?.resultFields}
+        data={testFromData?.resultFields as NewITestType[]}
         rowHeight={60}
         bordered
         cellBordered
       >
         <Column flexGrow={3} align="center" fixed>
           <HeaderCell>Investigation</HeaderCell>
-          <Cell dataKey="investigation" />
+          <Cell dataKey="title" />
         </Column>
 
         <Column flexGrow={4} width={100} fixed>
@@ -141,7 +158,7 @@ const ForParameterBased = ({
                 <Button
                   appearance="ghost"
                   color="red"
-                  onClick={() => deleteButtonFunction(rowdate)}
+                  onClick={() => deleteButtonFunction(rowdate as NewITestType)}
                 >
                   Delete
                 </Button>
@@ -149,7 +166,7 @@ const ForParameterBased = ({
                   appearance="ghost"
                   color="blue"
                   className="ml-2"
-                  onClick={() => patchOpenHandler(rowdate)}
+                  onClick={() => patchOpenHandler(rowdate as NewITestType)}
                 >
                   Edit
                 </Button>
@@ -173,16 +190,18 @@ const ForParameterBased = ({
           cancelHandler={cancelHandler}
         >
           <Form
-            onChange={setfromData}
+            onChange={(formValue: any, event?: React.SyntheticEvent) =>
+              setfromData(formValue)
+            }
             formDefaultValue={fromData}
             className="grid grid-cols-2 gap-5 "
             fluid
             model={model}
             ref={formRef}
           >
-            <Form.Group controlId="investigation">
+            <Form.Group controlId="title">
               <Form.ControlLabel>Investigation</Form.ControlLabel>
-              <Form.Control name="investigation" />
+              <Form.Control name="title" />
             </Form.Group>
             <Form.Group controlId="test">
               <Form.ControlLabel>Test</Form.ControlLabel>
@@ -192,9 +211,9 @@ const ForParameterBased = ({
               <Form.ControlLabel>Unit</Form.ControlLabel>
               <Form.Control name="unit" />
             </Form.Group>
-            <Form.Group controlId="normalUnit">
+            <Form.Group controlId="normalValue">
               <Form.ControlLabel>Normal Unit</Form.ControlLabel>
-              <Form.Control name="normalUnit" />
+              <Form.Control name="normalValue" />
             </Form.Group>
             <Form.Group controlId="hasPdrv">
               <Form.ControlLabel>Result Values</Form.ControlLabel>
@@ -206,9 +225,9 @@ const ForParameterBased = ({
                 <Loader />
               ) : (
                 <Form.Control
-                  name="values"
+                  name="defaultValues"
                   accepter={TagPicker}
-                  data={pdrvData?.data.map((data) => {
+                  data={pdrvData?.data.map((data: IPdrv) => {
                     return { label: data.label, value: data._id };
                   })}
                   disabled={!fromData?.hasPdrv}

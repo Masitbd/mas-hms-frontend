@@ -3,39 +3,41 @@ import { Button, Table } from "rsuite";
 import RModal from "../ui/Modal";
 import { useGetTestsQuery } from "@/redux/api/test/testSlice";
 import AlartDialog from "../ui/AlertModal";
+import { IResultField, ITest } from "@/types/allDepartmentInterfaces";
 
-const ForGroupTest = ({ fromData, setFormData }) => {
+const ForGroupTest = ({
+  fromData,
+  setFormData,
+}: {
+  fromData: ITest;
+  setFormData: (data: ITest) => void;
+}) => {
   const [modal, setModal] = useState(false);
   const { data: sData, isLoading } = useGetTestsQuery(undefined);
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
-  const addTestHandler = (data) => {
-    console.log("1");
+  const addTestHandler = (data: ITest) => {
     if (fromData.groupTests) {
       fromData.groupTests = [...fromData.groupTests, data];
-      console.log("2");
     } else {
       fromData.groupTests = [data];
-      console.log("3");
     }
 
     setFormData(fromData);
   };
 
   const okHandler = () => {
-    console.log("4");
     setModal(!modal);
   };
 
   const cancelHandler = () => {
     setModal(!modal);
-    console.log("5");
   };
   // For remove
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteData, setDeleteData] = useState(null);
+  const [deleteData, setDeleteData] = useState<ITest | null>(null);
   const removeTestHandler = () => {
     fromData.groupTests = fromData.groupTests.filter(
-      (data) => deleteData._id !== data._id
+      (data) => deleteData?._id !== data._id
     );
     setFormData(fromData);
     setDeleteOpen(!deleteOpen);
@@ -44,7 +46,7 @@ const ForGroupTest = ({ fromData, setFormData }) => {
     setDeleteOpen(!deleteOpen);
     setDeleteData(null);
   };
-  const setHandler = (data) => {
+  const setHandler = (data: ITest) => {
     setDeleteData(data);
     setDeleteOpen(!deleteOpen);
   };
@@ -68,7 +70,13 @@ const ForGroupTest = ({ fromData, setFormData }) => {
           </Button>
         </div>
         <div>
-          <Table height={420} data={fromData?.groupTests}>
+          <Table
+            height={420}
+            data={fromData?.groupTests}
+            rowHeight={50}
+            bordered
+            cellBordered
+          >
             <Column flexGrow={1} align="center" fixed>
               <HeaderCell>Sl No.</HeaderCell>
               <Cell dataKey="id" />
@@ -92,7 +100,7 @@ const ForGroupTest = ({ fromData, setFormData }) => {
                     appearance="ghost"
                     color="red"
                     className="ml-2"
-                    onClick={() => setHandler(rowdate)}
+                    onClick={() => setHandler(rowdate as ITest)}
                   >
                     Remove
                   </Button>
@@ -109,7 +117,7 @@ const ForGroupTest = ({ fromData, setFormData }) => {
             okHandler={okHandler}
             cancelHandler={cancelHandler}
           >
-            <Table height={420} data={sData?.data?.data}>
+            <Table height={420} data={sData?.data?.data} rowHeight={60}>
               <Column flexGrow={2} fixed>
                 <HeaderCell>Title</HeaderCell>
                 <Cell dataKey="label" />
@@ -131,7 +139,7 @@ const ForGroupTest = ({ fromData, setFormData }) => {
                       appearance="ghost"
                       color="blue"
                       className="ml-2"
-                      onClick={() => addTestHandler(rowdate)}
+                      onClick={() => addTestHandler(rowdate as ITest)}
                     >
                       Add
                     </Button>

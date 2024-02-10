@@ -13,6 +13,7 @@ import {
 import RModal from "../ui/Modal";
 import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
 import AlartDialog from "../ui/AlertModal";
+import { IResultField } from "@/types/allDepartmentInterfaces";
 
 const { Cell, Column, HeaderCell } = Table;
 const ForDescriptiveBased = ({
@@ -22,12 +23,18 @@ const ForDescriptiveBased = ({
   testFromData: any;
   setTestFromData: (data: any) => void;
 }) => {
+  const initialValue = {
+    title: "",
+    resultDescripton: "",
+  };
+  type INewType = IResultField & { gid: number };
   let resultFieldData = testFromData.resultFields;
   const formRef: React.MutableRefObject<any> = React.useRef();
   const [modalOpen, setModalOpen] = useState(false);
-  const [fromData, setfromData] = useState();
+
+  const [fromData, setfromData] = useState<Partial<IResultField>>(initialValue);
   const [mode, setMode] = useState("");
-  const patchOpenHandler = (data) => {
+  const patchOpenHandler = (data: Partial<IResultField>) => {
     setMode("patch");
     setModalOpen(!modalOpen);
     setfromData(data);
@@ -50,32 +57,32 @@ const ForDescriptiveBased = ({
         }
 
         setTestFromData(testFromData);
-        setfromData(undefined);
+        setfromData(initialValue);
       } else {
         const newDate = resultFieldData.filter(
-          (data) => data.gid !== fromData.gid
+          (data: INewType) => data.gid !== fromData.gid
         );
         testFromData.resultFields = [...newDate, fromData];
         setTestFromData(testFromData);
         setModalOpen(!modalOpen);
-        setfromData(undefined);
+        setfromData(initialValue);
       }
     }
   };
   const cancelHandler = () => {
     setModalOpen(!modalOpen);
-    setfromData(undefined);
+    setfromData(initialValue);
   };
   // For delete
-  const [deleteData, setDeleteData] = useState();
+  const [deleteData, setDeleteData] = useState<INewType>();
   const [alertModalOpen, setAlertModal] = useState(false);
-  const deleteButtonFunction = (data) => {
+  const deleteButtonFunction = (data: INewType) => {
     setDeleteData(data);
     setAlertModal(true);
   };
   const deleteHanldler = () => {
     const newData = testFromData.resultFields.filter(
-      (data) => data.gid !== deleteData.gid
+      (data: INewType) => data.gid !== deleteData?.gid
     );
     testFromData.resultFields = newData;
 
@@ -90,7 +97,7 @@ const ForDescriptiveBased = ({
   const { StringType, NumberType } = Schema.Types;
   const model = Schema.Model({
     title: StringType().isRequired("This field is required."),
-    description: StringType().isRequired("This field is required."),
+    resultDescripton: StringType().isRequired("This field is required."),
   });
 
   const { data: pdrvData, isLoading: pdrvLoading } = useGetPdrvQuery(undefined);
@@ -106,14 +113,20 @@ const ForDescriptiveBased = ({
           Add Test Params
         </Button>
       </div>
-      <Table height={420} data={testFromData?.resultFields}>
-        <Column width={50} align="center">
+      <Table
+        height={420}
+        data={testFromData?.resultFields}
+        cellBordered
+        bordered
+        rowHeight={55}
+      >
+        <Column flexGrow={1} align="center">
           <HeaderCell>Title</HeaderCell>
-          <Cell dataKey="titel" />
+          <Cell dataKey="title" />
         </Column>
-        <Column width={200} flexGrow={1}>
+        <Column flexGrow={3}>
           <HeaderCell>Description</HeaderCell>
-          <Cell dataKey="description" />
+          <Cell dataKey="resultDescripton" />
         </Column>
         <Column flexGrow={2}>
           <HeaderCell>Action</HeaderCell>
@@ -123,7 +136,7 @@ const ForDescriptiveBased = ({
                 <Button
                   appearance="ghost"
                   color="red"
-                  onClick={() => deleteButtonFunction(rowdate)}
+                  onClick={() => deleteButtonFunction(rowdate as INewType)}
                 >
                   Delete
                 </Button>
@@ -166,9 +179,9 @@ const ForDescriptiveBased = ({
               <Form.ControlLabel>Title</Form.ControlLabel>
               <Form.Control name="title" />
             </Form.Group>
-            <Form.Group controlId="description">
+            <Form.Group controlId="resultDescripton">
               <Form.ControlLabel>Description</Form.ControlLabel>
-              <Form.Control name="description" />
+              <Form.Control name="resultDescripton" />
             </Form.Group>
           </Form>
         </RModal>

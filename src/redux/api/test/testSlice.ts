@@ -36,8 +36,9 @@ const testSlice = baseApi.injectEndpoints({
       }),
     }),
     getTests: build.query({
-      query: () => ({
+      query: (data?: any) => ({
         url: `/test`,
+        params: data,
         method: "GET",
         contentType: "application/json",
       }),

@@ -1,60 +1,51 @@
-import React, { useState } from "react";
-import { Button, Form, InputPicker, Table, TagPicker, Toggle } from "rsuite";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Form,
+  InputPicker,
+  Message,
+  Schema,
+  Table,
+  TagPicker,
+  Toggle,
+  toaster,
+} from "rsuite";
 import ToggleButton from "rsuite/esm/Picker/ToggleButton";
 import ForParameterBased from "./ForParameterBased";
 import ForDescriptiveBased from "./TestForDescriptive";
 import ForMicroBiology from "./ForMicroBiology";
 import ForGroupTest from "./ForGroupTest";
+import { useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
+import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
+import { useGetVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
+import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
+import {
+  IDepartment,
+  IHospitalGroup,
+  ISpecimen,
+  IVacuumTube,
+} from "@/types/allDepartmentInterfaces";
 
 const TestForm = ({
   defaultValue,
   forwardedRef,
   formData,
   setfromData,
+  mode,
+  model,
 }: {
   defaultValue?: any;
   forwardedRef: any;
   formData: any;
   setfromData: (data: any) => void;
+  mode: string;
+  model: any;
 }) => {
-  // Dummy value for input picker
-  const dDataForInputPicker = [
-    {
-      label: "Radiology",
-      value: "65b55642f84e13eee7ceb54b",
-    },
-    {
-      label: "microbiology",
-      value: "microbiology",
-    },
-
-    {
-      label: "Parameter",
-      value: "65aac4f7c406d9452cc4ee1f",
-    },
-
-    {
-      label: "Gino",
-      value: "some",
-    },
-  ];
-  const dDataForSpecimen = [
-    {
-      label: "BLood with id",
-      value: "659e264ea03cbc0b47594a58",
-    },
-    {
-      label: "BLood",
-      value: "bloeod",
-    },
-
-    {
-      label: "BLood",
-      value: "bqlood",
-    },
-  ];
-
-  const testCode = "1100de";
+  const { StringType, NumberType, ArrayType } = Schema.Types;
+  const { data: departmentData } = useGetDepartmentQuery(undefined);
+  const { data: specimenData } = useGetSpecimenQuery(undefined);
+  const { data: vaccumeTubeData } = useGetVacuumTubeQuery(undefined);
+  const { data: hospitalGroupData } = useGetHospitalGroupQuery(undefined);
   const testType = [
     {
       label: "Signle",
@@ -63,20 +54,6 @@ const TestForm = ({
     {
       label: "Group",
       value: "group",
-    },
-  ];
-  const dDataForTestTube = [
-    {
-      label: "Red with id",
-      value: "65b54da3f84e13eee7ceb545",
-    },
-    {
-      label: "Red",
-      value: "refd",
-    },
-    {
-      label: "Red",
-      value: "reed",
     },
   ];
   const dDataForReportGroup = [
@@ -97,41 +74,24 @@ const TestForm = ({
       value: "Some vwwwalue",
     },
   ];
-  const dDataForHospitalGroup = [
+  const testResultType = [
     {
-      label: "SOme Group with id",
-      value: "65b54df9f84e13eee7ceb547",
+      label: "Parameter Based",
+      value: "parameter",
     },
     {
-      label: "SOme Group",
-      value: "Some valeeeue",
+      label: "Descriptive",
+      value: "descriptive",
     },
     {
-      label: "SOme Group",
-      value: "Some vaeeefelue",
+      label: "Bacterial",
+      value: "bacterial",
     },
     {
-      label: "SOme Group",
-      value: "Some vwwwaslue",
+      label: "Group",
+      value: "group",
     },
   ];
-
-  const initialData = {
-    title: "",
-    department: "",
-    testCode: "",
-    specimen: "",
-    testType: "",
-    hasTestTube: "",
-    testTube: [],
-    reportGroup: "",
-    hospitalGroup: "",
-    price: 0,
-    vatRate: 0,
-    processTime: 0,
-    resultFields: [],
-  };
-  //   Form handler
   return (
     <div className=" px-5 ">
       <div className="my-5">
@@ -142,24 +102,55 @@ const TestForm = ({
       <Form
         onChange={setfromData}
         ref={forwardedRef}
-        // model={model}
+        model={model}
         className="grid grid-cols-3 gap-5 justify-center w-full"
         fluid
-        formDefaultValue={defaultValue}
+        formValue={defaultValue}
+        readOnly={mode === "watch"}
       >
         <Form.Group controlId="label">
           <Form.ControlLabel>Title</Form.ControlLabel>
           <Form.Control name="label" htmlSize={100} />
+        </Form.Group>
+        <Form.Group controlId="description">
+          <Form.ControlLabel>Title</Form.ControlLabel>
+          <Form.Control name="description" htmlSize={100} />
+        </Form.Group>
+        <Form.Group controlId="type">
+          <Form.ControlLabel>Test Type</Form.ControlLabel>
+          <Form.Control
+            name="type"
+            accepter={InputPicker}
+            data={testType}
+            className="w-full"
+          />
+        </Form.Group>
+        <Form.Group controlId="testResultType">
+          <Form.ControlLabel>Test ResultType</Form.ControlLabel>
+          <Form.Control
+            name="testResultType"
+            accepter={InputPicker}
+            data={testResultType}
+            className="w-full"
+          />
+        </Form.Group>
+        <Form.Group controlId="department">
+          <Form.ControlLabel>Department</Form.ControlLabel>
+          <Form.Control
+            name="department"
+            accepter={InputPicker}
+            data={departmentData?.data.map((data: IDepartment) => ({
+              label: data.label,
+              value: data._id,
+            }))}
+            className="w-full"
+          />
         </Form.Group>
         <Form.Group controlId="price">
           <Form.ControlLabel>Price</Form.ControlLabel>
           <Form.Control name="price" type="number" />
         </Form.Group>
 
-        <Form.Group controlId="testCode">
-          <Form.ControlLabel>Test Code</Form.ControlLabel>
-          <Form.Control name="testCode" defaultValue={testCode} disabled />
-        </Form.Group>
         <Form.Group controlId="vatRate">
           <Form.ControlLabel>Vat Rate</Form.ControlLabel>
           <Form.Control name="vatRate" type="number" />
@@ -175,25 +166,16 @@ const TestForm = ({
             className="w-full"
             name="specimen"
             accepter={TagPicker}
-            data={dDataForSpecimen}
+            data={specimenData?.data.map((data: ISpecimen) => ({
+              label: data.label,
+              value: data._id,
+            }))}
           />
         </Form.Group>
-        <Form.Group controlId="type">
-          <Form.ControlLabel>Test Type</Form.ControlLabel>
-          <Form.Control
-            name="type"
-            accepter={InputPicker}
-            data={testType}
-            className="w-full"
-          />
-        </Form.Group>
+
         <Form.Group controlId="hasTestTube">
           <Form.ControlLabel>Include Test Tube</Form.ControlLabel>
-          <Form.Control
-            name="hasTestTube"
-            accepter={Toggle}
-            // value={!formData.hasTestTube}
-          />
+          <Form.Control name="hasTestTube" accepter={Toggle} />
         </Form.Group>
         <Form.Group controlId="testTube">
           <Form.ControlLabel>Test Tube</Form.ControlLabel>
@@ -201,7 +183,10 @@ const TestForm = ({
             className="w-full"
             name="testTube"
             accepter={TagPicker}
-            data={dDataForTestTube}
+            data={vaccumeTubeData?.data.map((data: IVacuumTube) => ({
+              label: data.label,
+              value: data._id,
+            }))}
             disabled={!formData?.hasTestTube}
           />
         </Form.Group>
@@ -220,7 +205,10 @@ const TestForm = ({
             className="w-full"
             name="hospitalGroup"
             accepter={InputPicker}
-            data={dDataForHospitalGroup}
+            data={hospitalGroupData?.data.map((data: IHospitalGroup) => ({
+              label: data.label,
+              value: data._id,
+            }))}
           />
         </Form.Group>
       </Form>
@@ -233,9 +221,12 @@ const TestForm = ({
             <hr></hr>
           </div>
           <div>
-            {formData?.type == "single" &&
-            formData.department == "65aac4f7c406d9452cc4ee1f" ? (
+            {(formData?.type == "single" &&
+              formData.testResultType == "parameter") ||
+            (defaultValue?.type == "single" &&
+              defaultValue.testResultType == "parameter") ? (
               <ForParameterBased
+                defaultMode={mode}
                 testFromData={formData}
                 setTestFromData={setfromData}
               />
@@ -243,7 +234,7 @@ const TestForm = ({
               ""
             )}{" "}
             {formData?.type == "single" &&
-            formData.department == "65b55642f84e13eee7ceb54b" ? (
+            formData.testResultType == "descriptive" ? (
               <ForDescriptiveBased
                 testFromData={formData}
                 setTestFromData={setfromData}
@@ -252,10 +243,11 @@ const TestForm = ({
               ""
             )}
             {formData?.type == "single" &&
-            formData.department == "microbiology" ? (
+            formData.testResultType == "bacterial" ? (
               <ForMicroBiology
                 testFromData={formData}
                 setTestFromData={setfromData}
+                mode={mode}
               ></ForMicroBiology>
             ) : (
               ""

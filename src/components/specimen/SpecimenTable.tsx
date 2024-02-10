@@ -4,7 +4,10 @@ import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
 import NewSpecimenModel from "./NewSpecimenModel";
-import { useDeleteSpecimenMutation, useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
+import {
+  useDeleteSpecimenMutation,
+  useGetSpecimenQuery,
+} from "@/redux/api/specimen/specimenSlice";
 
 const { Column, HeaderCell, Cell } = Table;
 const SpecimenTable = () => {
@@ -26,12 +29,9 @@ const SpecimenTable = () => {
   });
   console.log(data);
   //   For delete
-  const [
-    deleteItem
-  ] = useDeleteSpecimenMutation();
+  const [deleteItem] = useDeleteSpecimenMutation();
 
   const deleteHandler = async (id: string) => {
-
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this Specimen!",
@@ -40,32 +40,32 @@ const SpecimenTable = () => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-
-        const result = await deleteItem(id)
-        console.log(result, 'delete result')
-        if ('error' in result) {
-          const errorMessage = (result as { error: { data: { message: string } } })?.error.data.message;
+        const result = await deleteItem(id);
+        console.log(result, "delete result");
+        if ("error" in result) {
+          const errorMessage = (
+            result as { error: { data: { message: string } } }
+          )?.error.data.message;
           swal(errorMessage, {
             icon: "warning",
           });
         }
-        if ('data' in result) {
-          const message = (result as { data: { message: string } })?.data.message;
+        if ("data" in result) {
+          const message = (result as { data: { message: string } })?.data
+            .message;
           swal(`Done! ${message}!`, {
             icon: "success",
-          })
+          });
         }
       } else {
         swal("Your specimen is safe!");
       }
-    })
+    });
   };
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
   const [patchData, setPatchData] = useState<ISpecimen>();
-
-
 
   return (
     <div>
@@ -105,7 +105,7 @@ const SpecimenTable = () => {
                   className="ml-2"
                   onClick={() => {
                     setPatchData(rowdate as ISpecimen);
-                    setPatchModalOpen(!patchModalOpen)
+                    setPatchModalOpen(!patchModalOpen);
                   }}
                 >
                   Edit
@@ -137,7 +137,8 @@ const SpecimenTable = () => {
       <div>
         <NewSpecimenModel
           defaultData={patchData}
-          open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
+          open={patchModalOpen}
+          setPostModelOpen={setPatchModalOpen}
         />
       </div>
     </div>

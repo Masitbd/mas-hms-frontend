@@ -2,54 +2,54 @@ import { IDepartment } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
 const department = baseApi.injectEndpoints({
-    endpoints: (build) => ({
-      postDepartment: build.mutation({
-        query: (data: IDepartment) => ({
-          url: "/depertments",
-          method: "POST",
-          body: data,
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["department"],
+  endpoints: (build) => ({
+    postDepartment: build.mutation({
+      query: (data: IDepartment) => ({
+        url: "/departments",
+        method: "POST",
+        body: data,
+        contentType: "application/json",
       }),
-      patchDepartment: build.mutation({
-        query: ({ data, id }) => ({
-          url: `/depertments/${id}`,
-          method: "PATCH",
-          body: data,
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["department"],
+      invalidatesTags: ["department"],
+    }),
+    patchDepartment: build.mutation({
+      query: ({ data, id }) => ({
+        url: `/departments/${id}`,
+        method: "PATCH",
+        body: data,
+        contentType: "application/json",
       }),
-      deleteDepartment: build.mutation({
-        query: (id: string) => ({
-          url: `/depertments/${id}`,
-          method: "DELETE",
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["department"],
+      invalidatesTags: ["department"],
+    }),
+    deleteDepartment: build.mutation({
+      query: (id: string) => ({
+        url: `/departments/${id}`,
+        method: "DELETE",
+        contentType: "application/json",
       }),
-      getDepartment: build.query({
-        query: () => ({
-          url: "/depertments",
-          method: "GET",
-          contentType: "application/json",
-        }),
-        providesTags: ["department"],
+      invalidatesTags: ["department"],
+    }),
+    getDepartment: build.query({
+      query: () => ({
+        url: "/departments",
+        method: "GET",
+        contentType: "application/json",
       }),
-      getSingleDepartment: build.mutation({
-        query: (id: string) => ({
-          url: `/depertments/${id}`,
-          method: "GET",
-          contentType: "application/json",
-        }),
+      providesTags: ["department"],
+    }),
+    getSingleDepartment: build.mutation({
+      query: (id: string) => ({
+        url: `/departments/${id}`,
+        method: "GET",
+        contentType: "application/json",
       }),
     }),
-  });
+  }),
+});
 
-  export const {
-    usePostDepartmentMutation,
-    useGetDepartmentQuery,
-    useDeleteDepartmentMutation,
-    usePatchDepartmentMutation,
-  } = department;
+export const {
+  usePostDepartmentMutation,
+  useGetDepartmentQuery,
+  useDeleteDepartmentMutation,
+  usePatchDepartmentMutation,
+} = department;

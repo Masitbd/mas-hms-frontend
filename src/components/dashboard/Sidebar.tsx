@@ -86,6 +86,24 @@ const Sidebar = () => {
                 <Nav.Item eventKey="3-3" href={"/condition"} as={NavLink}>
                   Condition
                 </Nav.Item>
+                <Nav.Item eventKey="3-3" href={"/department"} as={NavLink}>
+                  Department
+                </Nav.Item>
+                <Nav.Item eventKey="3-3" href={"/hospitalGroup"} as={NavLink}>
+                  Hospital Group
+                </Nav.Item>
+                <Nav.Item eventKey="3-3" href={"/specimen"} as={NavLink}>
+                  Specimen
+                </Nav.Item>
+                <Nav.Item eventKey="3-3" href={"/vacuumTube"} as={NavLink}>
+                  Vacumme Tube
+                </Nav.Item>
+                <Nav.Item eventKey="3-3" href={"/test"} as={NavLink}>
+                  Test
+                </Nav.Item>
+                <Nav.Item eventKey="3-3" href={"/doctor"} as={NavLink}>
+                  Doctor
+                </Nav.Item>
               </Nav.Menu>
               <Nav.Menu
                 eventKey="4"

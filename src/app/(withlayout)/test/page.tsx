@@ -8,12 +8,42 @@ import {
   usePatchTestMutation,
   usePostTestMutation,
 } from "@/redux/api/test/testSlice";
-import React, { useRef, useState } from "react";
-import { Button } from "rsuite";
+import {
+  IDepartment,
+  IHospitalGroup,
+  ISpecimen,
+  ITest,
+  IVacuumTube,
+} from "@/types/allDepartmentInterfaces";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Message, Schema, toaster } from "rsuite";
 
 const Test = () => {
-  const [defaultValue, setDefaultValue] = useState();
-  const [formData, setfromData] = useState(defaultValue);
+  const { StringType, NumberType, ArrayType } = Schema.Types;
+  const [defaultValue, setDefaultValue] = useState<ITest | null>();
+  const [formData, setfromData] = useState<any | null>({
+    label: "",
+    department: "",
+    testCode: "",
+    specimen: [],
+    testType: "",
+    hasTestTube: true,
+    testTube: "",
+    reportGroup: "",
+    hospitalGroup: "",
+    price: 0,
+    vatRate: 0,
+    processTime: 0,
+    resultFields: [],
+    groupTests: [],
+    isGroupTest: false,
+    testResulType: "",
+    type: "",
+    value: "",
+    _id: "",
+    description: "",
+  });
+
   const [modalOpen, setModalOpen] = useState(false);
   const [mode, setMode] = useState("new");
   const [
@@ -22,26 +52,77 @@ const Test = () => {
   ] = usePostTestMutation();
   const { data: testData, isLoading: testDataLoading } =
     useGetTestsQuery(undefined);
-  const [patchTest, {}] = usePatchTestMutation();
-  const ref = useRef();
+  const [patchTest, { isSuccess: patchSuccess }] = usePatchTestMutation();
+  const ref: React.MutableRefObject<any> = useRef();
   // For new test
   const okHandler = () => {
-    setModalOpen(!modalOpen);
-    formData.value = formData.label.toLowerCase();
-    formData.description = "aomeifjeijiji";
-    formData.price = Number(formData.price);
-    formData.isGroupTest = false;
-    formData.vatRate = Number(formData.vatRate);
-    formData.processTime = Number(formData.processTime);
-    if (formData.groupTests) {
-      formData.groupTests = formData.groupTests.map((data) => data._id);
-      formData.resultFields = [];
-    }
-    if (mode === "new") {
-      postTest(formData);
-    }
-    if (mode === "patch") {
-      patchTest({ data: formData, id: formData._id });
+    if (ref.current.check()) {
+      setModalOpen(!modalOpen);
+      formData.value = formData?.label.toLowerCase();
+      formData.price = Number(formData.price);
+      formData.isGroupTest = false;
+      formData.vatRate = Number(formData.vatRate);
+      formData.processTime = Number(formData.processTime);
+      if (formData.type == "group") {
+        formData.groupTests = formData.groupTests.map(
+          (data: ITest) => data._id
+        );
+        formData.resultFields = [];
+        formData.isGroupTest = true;
+      }
+      if (mode === "new") {
+        postTest(formData);
+      }
+      if (mode === "patch") {
+        patchTest({ data: formData, id: formData._id });
+        setfromData({
+          label: "",
+          department: "",
+          testCode: "",
+          specimen: [],
+          testType: "",
+          hasTestTube: true,
+          testTube: "",
+          reportGroup: "",
+          hospitalGroup: "",
+          price: 0,
+          vatRate: 0,
+          processTime: 0,
+          resultFields: [],
+          groupTests: [],
+          isGroupTest: false,
+          testResulType: "",
+          type: "",
+          value: "",
+          _id: "",
+          description: "",
+        });
+        setDefaultValue(undefined);
+      }
+      if (mode === "watch") {
+        setfromData({
+          label: "",
+          department: "",
+          testCode: "",
+          specimen: [],
+          testType: "",
+          hasTestTube: true,
+          testTube: "",
+          reportGroup: "",
+          hospitalGroup: "",
+          price: 0,
+          vatRate: 0,
+          processTime: 0,
+          resultFields: [],
+          description: "",
+        });
+      }
+    } else {
+      toaster.push(
+        <Message type="error" title="Error !!!">
+          Fill out all the fields of the form{" "}
+        </Message>
+      );
     }
   };
   const cancelHandler = () => {
@@ -54,13 +135,44 @@ const Test = () => {
     setMode("new");
   };
   // For patch
+  const patchHandler = ({ data, mode }: { data: ITest; mode: string }) => {
+    let newData: ITest = Object.assign({}, data);
+    newData.department = data.department?._id as unknown as IDepartment;
+    newData.specimen = newData?.specimen.map(
+      (data: ISpecimen) => data?._id
+    ) as unknown as ISpecimen[];
+    newData.testTube = newData?.testTube.map(
+      (data: IVacuumTube) => data?._id
+    ) as unknown as IVacuumTube[];
+    newData.hospitalGroup = newData.hospitalGroup
+      ?._id as unknown as IHospitalGroup;
 
-  const patchHandler = (data) => {
     setModalOpen(!modalOpen);
-    setMode("patch");
-    setDefaultValue(data);
+    setMode(mode);
+    setDefaultValue(newData);
+    setfromData(newData);
   };
 
+  useEffect(() => {
+    if (testSuccess) {
+      toaster.push(<Message type="success">Test crated Successfully</Message>);
+    }
+    if (patchSuccess) {
+      toaster.push(<Message type="success">Test Edited Successfully</Message>);
+    }
+  }, [testSuccess, patchSuccess]);
+  const model = Schema.Model({
+    description: StringType().isRequired("This field is required."),
+    label: StringType().isRequired("This field is required."),
+    type: StringType().isRequired("This field is required."),
+    testResultType: StringType().isRequired("This field is required."),
+    department: StringType().isRequired("This field is required."),
+    price: NumberType().isRequired("This field is required."),
+    processTime: NumberType().isRequired("This field is required."),
+    specimen: ArrayType().isRequired("This field is required."),
+    hospitalGroup: StringType().isRequired("This field is required."),
+    reportGroup: StringType().isRequired("This field is required."),
+  });
   return (
     <div>
       <div>
@@ -72,10 +184,12 @@ const Test = () => {
           title={mode === "new" ? "Add New Test" : "Edit Test Fields"}
         >
           <TestForm
+            model={model}
             defaultValue={defaultValue}
             formData={formData}
             setfromData={setfromData}
             forwardedRef={ref}
+            mode={mode}
           ></TestForm>
         </RModal>
       </div>

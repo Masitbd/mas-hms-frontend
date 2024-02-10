@@ -2,24 +2,24 @@ import {
   useDeleteTestMutation,
   useGetTestsQuery,
 } from "@/redux/api/test/testSlice";
-import React, { useEffect, useState } from "react";
-import { Button, Message, Table, toaster } from "rsuite";
+import React, { SyntheticEvent, useEffect, useState } from "react";
+import { Button, Form, Message, Table, toaster } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
+import VisibleIcon from "@rsuite/icons/Visible";
+import { ITest } from "@/types/allDepartmentInterfaces";
 
 const { Column, HeaderCell, Cell } = Table;
-const TestTable = ({ patchHandler }) => {
-  const {
-    data: testData,
-    isLoading: testLoading,
-    isError: TesError,
-  } = useGetTestsQuery(undefined);
-
+const TestTable = ({
+  patchHandler,
+}: {
+  patchHandler: (data: { data: ITest; mode: string }) => void;
+}) => {
   // For delete
-  const [deleteData, setDeleteData] = useState();
-  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteData, setDeleteData] = useState<string>();
+  const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleteTest, { isSuccess: deleteSuccess, isError: deleteError }] =
     useDeleteTestMutation();
-  const handleDeletOpen = (id) => {
+  const handleDeletOpen = (id: string) => {
     setDeleteOpen(!deleteOpen);
     setDeleteData(id);
   };
@@ -46,19 +46,33 @@ const TestTable = ({ patchHandler }) => {
       );
     }
   }, [deleteSuccess, deleteError]);
-
-  // For patch
-  const [patchData, setPatchData] = useState();
-  const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const pachOpenHandler = (data) => {
-    patchHandler(data);
-  };
+  // For search
+  const [searchData, setSearchData] = useState({ searchTerm: "" });
+  const {
+    data: testData,
+    isLoading: testLoading,
+    isError: TesError,
+  } = useGetTestsQuery(searchData);
 
   return (
     <div>
+      <div className="my-5">
+        <Form
+          onChange={(formValue: Record<string, any>) =>
+            setSearchData({ searchTerm: formValue.searchTerm })
+          }
+          className="grid grid-cols-1 gap-5 justify-center w-full"
+          fluid
+        >
+          <Form.Group controlId="searchTerm">
+            <Form.ControlLabel>Search</Form.ControlLabel>
+            <Form.Control name="searchTerm" htmlSize={100} />
+          </Form.Group>
+        </Form>
+      </div>
       <Table
-        height={420}
-        data={testData?.data.data}
+        height={650}
+        data={testData?.data.data as ITest[]}
         loading={testLoading}
         className="w-full"
         bordered
@@ -73,6 +87,10 @@ const TestTable = ({ patchHandler }) => {
         <Column resizable flexGrow={4}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
+        </Column>
+        <Column resizable flexGrow={1}>
+          <HeaderCell>Department</HeaderCell>
+          <Cell dataKey="department.label" />
         </Column>
         <Column resizable flexGrow={1}>
           <HeaderCell>Price</HeaderCell>
@@ -99,24 +117,24 @@ const TestTable = ({ patchHandler }) => {
                   appearance="ghost"
                   color="blue"
                   className="ml-2"
-                  onClick={() => patchHandler(rowdate)}
+                  onClick={() =>
+                    patchHandler({ data: rowdate as ITest, mode: "patch" })
+                  }
                 >
                   Edit
                 </Button>
+                <Button
+                  // appearance="transparent"
+                  className="ml-2"
+                  startIcon={<VisibleIcon />}
+                  onClick={() => {
+                    patchHandler({ data: rowdate as ITest, mode: "watch" });
+                  }}
+                />
               </>
             )}
           </Cell>
         </Column>
-
-        {/* <Column width={200} resizable>
-          <HeaderCell>City</HeaderCell>
-          <Cell dataKey="city" />
-        </Column>
-
-        <Column width={200} resizable>
-          <HeaderCell>Email</HeaderCell>
-          <Cell dataKey="email" />
-        </Column> */}
       </Table>
       <div>
         <AlartDialog
