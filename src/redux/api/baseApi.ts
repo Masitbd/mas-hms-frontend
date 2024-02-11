@@ -23,7 +23,8 @@ export const baseApi = createApi({
     "specimen",
     "vacuumTube",
     "department",
-    "doctor"
+    "doctor",
+    "hospitalGroup"
   ]
 
   // tagTypes: tagTypes,

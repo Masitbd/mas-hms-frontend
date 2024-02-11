@@ -5,7 +5,7 @@ const department = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postDepartment: build.mutation({
       query: (data: IDepartment) => ({
-        url: "/depertments",
+        url: "/departments",
         method: "POST",
         body: data,
         contentType: "application/json"
@@ -14,7 +14,7 @@ const department = baseApi.injectEndpoints({
     }),
     patchDepartment: build.mutation({
       query: ({ data, id }) => ({
-        url: `/depertments/${id}`,
+        url: `/departments/${id}`,
         method: "PATCH",
         body: data,
         contentType: "application/json"
@@ -23,7 +23,7 @@ const department = baseApi.injectEndpoints({
     }),
     deleteDepartment: build.mutation({
       query: (id: string) => ({
-        url: `/depertments/${id}`,
+        url: `/departments/${id}`,
         method: "DELETE",
         contentType: "application/json"
       }),
@@ -31,7 +31,7 @@ const department = baseApi.injectEndpoints({
     }),
     getDepartment: build.query({
       query: () => ({
-        url: "/depertments",
+        url: "/departments",
         method: "GET",
         contentType: "application/json"
       }),
@@ -39,7 +39,7 @@ const department = baseApi.injectEndpoints({
     }),
     getSingleDepartment: build.mutation({
       query: (id: string) => ({
-        url: `/depertments/${id}`,
+        url: `/department/${id}`,
         method: "GET",
         contentType: "application/json"
       })
