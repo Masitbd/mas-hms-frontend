@@ -1,3 +1,6 @@
+import { IBacteria } from "@/app/(withlayout)/bacteria/page";
+import { IPdrv } from "@/app/(withlayout)/pdrv/page";
+
 export type ICondition = {
   _id?: string;
   label: string;
@@ -31,4 +34,47 @@ export type IHospitalGroup = {
   label: string;
   value: string;
   description?: string;
+};
+export type ISensitivity = {
+  _id?: string;
+  label: string;
+  value: string;
+  description?: string;
+};
+
+export type IResultField = {
+  title?: string;
+  test?: string;
+  unit?: string;
+  normalValue?: string;
+  defaultValue?: IPdrv[];
+  resultDescription?: string;
+  sensitivityOptions?: ISensitivity[];
+  conditons?: ICondition[];
+  bacterias?: IBacteria[];
+  hasPdrv: boolean;
+  description?: string;
+} & Record<string, any>;
+
+export type ITest = {
+  _id?: string;
+  label: string;
+  value: string;
+  description?: string;
+  testResulType: string;
+  department: IDepartment;
+  testCode: string;
+  specimen: ISpecimen[];
+  type: string;
+  testType: string;
+  hasTestTube: boolean;
+  testTube: IVacuumTube[];
+  reportGroup: string;
+  hospitalGroup: IHospitalGroup;
+  price: number;
+  isGroupTest: boolean;
+  groupTests: ITest[];
+  vatRate: number;
+  processTime: number;
+  resultFields: IResultField[];
 };
