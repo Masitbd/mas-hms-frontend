@@ -1,3 +1,4 @@
+
 import { IDepartment } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
