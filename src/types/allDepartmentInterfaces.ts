@@ -33,10 +33,10 @@ export type IDoctor = {
   _id?: string;
   name: string;
   fatherName: string;
+  email: string;
   designation: string;
   phone: string;
-  image: string;
-  defaultImage?: string;
+  image?: string;
 };
 export type IHospitalGroup = {
   _id?: string;

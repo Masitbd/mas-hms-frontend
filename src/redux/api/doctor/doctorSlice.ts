@@ -1,3 +1,4 @@
+import { ISearchTermType } from "@/components/doctor/DoctorsTable";
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
@@ -30,9 +31,10 @@ const doctor = baseApi.injectEndpoints({
       invalidatesTags: ["doctor"]
     }),
     getDoctor: build.query({
-      query: () => ({
-        url: "/doctor",
+      query: (data?: ISearchTermType) => ({
+        url: `/doctor`,
         method: "GET",
+        params: data,
         contentType: "application/json"
       }),
       providesTags: ["doctor"]

@@ -2,17 +2,28 @@
 import { IDoctor, } from "@/types/allDepartmentInterfaces";
 
 import { useDeleteDoctorMutation, useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
+import VisibleIcon from "@rsuite/icons/Visible";
 import { useState } from "react";
-import { Button, Pagination, Table } from "rsuite";
+import { Button, Form, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
-import NewDoctor from "./NewDoctor";
 
-
+export type ISearchTermType = {
+    searchTerm: string;
+}
 
 const { Column, HeaderCell, Cell } = Table;
-const DoctorsTable = () => {
-    const { data: defaultData, isLoading } = useGetDoctorQuery(undefined);
+const DoctorsTable = ({ setPatchData, setMode, mode, open, setPostModelOpen }: {
+    setPostModelOpen: (postModelOpen: boolean) => void;
+    open: boolean;
+    setPatchData: (patchData: IDoctor) => void;
+    setMode: (modes: string) => void;
+    mode: string;
+}) => {
+    const [searchData, setSearchData] = useState<ISearchTermType>({ searchTerm: '' });
+    const { data: defaultData, isLoading } = useGetDoctorQuery(searchData);
+
     console.log(defaultData);
+    // console.log(searchData);
 
     const [limit, setLimit] = useState(10);
     const [page, setPage] = useState(1);
@@ -64,12 +75,28 @@ const DoctorsTable = () => {
         })
     };
 
-    // For patch
-    const [patchModalOpen, setPatchModalOpen] = useState(false);
-    const [patchData, setPatchData] = useState<IDoctor>();
+
+
+
 
     return (
         <div>
+            <div className="my-5">
+                <Form
+                    onChange={(formValue: Record<string, any>) => {
+
+                        setSearchData({ searchTerm: formValue.searchTerm })
+                    }
+                    }
+                    className="grid grid-cols-1 gap-5 justify-center w-full"
+                    fluid
+                >
+                    <Form.Group controlId="searchTerm">
+                        <Form.ControlLabel>Search</Form.ControlLabel>
+                        <Form.Control name="searchTerm" htmlSize={100} />
+                    </Form.Group>
+                </Form>
+            </div>
             <Table
                 height={600}
                 data={data}
@@ -79,11 +106,11 @@ const DoctorsTable = () => {
                 rowHeight={65}
                 className="text-md"
             >
-                <Column flexGrow={1}>
+                <Column flexGrow={2}>
                     <HeaderCell>{"Doctor's name"}</HeaderCell>
                     <Cell dataKey="name" />
                 </Column>
-                <Column flexGrow={1}>
+                <Column flexGrow={2}>
                     <HeaderCell>{"Doctor's father name"}</HeaderCell>
                     <Cell dataKey="fatherName" />
                 </Column>
@@ -91,7 +118,11 @@ const DoctorsTable = () => {
                     <HeaderCell>{"Doctor's Designation"}</HeaderCell>
                     <Cell dataKey="designation" />
                 </Column>
-                <Column flexGrow={4}>
+                <Column flexGrow={2}>
+                    <HeaderCell>{"Doctor's Email"}</HeaderCell>
+                    <Cell dataKey="email" />
+                </Column>
+                <Column flexGrow={3}>
                     <HeaderCell>{"Doctor's phone number"}</HeaderCell>
                     <Cell dataKey="phone" />
                 </Column>
@@ -113,11 +144,22 @@ const DoctorsTable = () => {
                                     className="ml-2"
                                     onClick={() => {
                                         setPatchData(rowdate as IDoctor);
-                                        setPatchModalOpen(!patchModalOpen)
+                                        setPostModelOpen(!open);
+                                        setMode("patch")
                                     }}
                                 >
                                     Edit
                                 </Button>
+                                <Button
+                                    // appearance="transparent"
+                                    className="ml-2"
+                                    startIcon={<VisibleIcon />}
+                                    onClick={() => {
+                                        setPatchData(rowdate as IDoctor);
+                                        setPostModelOpen(!open);
+                                        setMode("watch")
+                                    }}
+                                />
                             </>
                         )}
                     </Cell>
@@ -140,12 +182,6 @@ const DoctorsTable = () => {
                     activePage={page}
                     onChangePage={setPage}
                     onChangeLimit={handleChangeLimit}
-                />
-            </div>
-            <div>
-                <NewDoctor
-                    defaultData={patchData}
-                    open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
                 />
             </div>
         </div>
