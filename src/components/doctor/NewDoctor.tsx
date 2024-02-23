@@ -7,15 +7,19 @@ import React, { useRef, useState } from 'react';
 import { Button, ButtonToolbar, Col, Form, Grid, Row, Schema } from 'rsuite';
 import swal from 'sweetalert';
 
-const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
+type NewDoctorType = {
     open: boolean;
     setPostModelOpen: (postModelOpen: boolean) => void;
-    defaultData?: IDoctor;
+    defaultData: IDoctor;
+    setMode: (mode: string) => void;
     mode: string
-}) => {
+}
+
+const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDoctorType) => {
     const fileInput = useRef<HTMLInputElement>(null)
     const { StringType, NumberType } = Schema.Types;
     const formRef: React.MutableRefObject<any> = useRef();
+
 
     const model = Schema.Model({
         name: StringType().isRequired("This field is required."),
@@ -31,14 +35,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
         }, "Phone number must be 11 digits.")
     });
 
-    const [doctorData, setDoctorData] = useState<IDoctor>({
-        name: "",
-        fatherName: "",
-        email: "",
-        designation: "",
-        phone: "",
-        image: "",
-    } || !defaultData);
+    const [doctorData, setDoctorData] = useState<IDoctor>(defaultData);
     const [urlInfo, setUrlInfo] = useState<string>("");
     console.log(urlInfo)
     const [
@@ -48,9 +45,11 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
         patchDoctor,
     ] = usePatchDoctorMutation();
 
+
+
     const handleSubmit = async () => {
         if (formRef.current.check()) {
-            if (defaultData === undefined) {
+            if (mode == "new") {
                 const result = await postDoctor(doctorData)
                 if ('data' in result) {
                     const message = (result as { data: { message: string } })?.data.message;
@@ -66,7 +65,8 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
                     swal(`Done! ${message}!`, {
                         icon: "success",
                     })
-                    setPostModelOpen(false)
+                    setPostModelOpen(false);
+                    setMode("new")
                 }
 
             }
@@ -75,6 +75,8 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
     }
 
     console.log(mode)
+    console.log(urlInfo)
+    console.log(doctorData)
 
 
     return (
@@ -89,12 +91,12 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
                     formDefaultValue={defaultData}
                     onChange={(formValue, event) => {
                         setDoctorData({
-                            name: formValue.name || "",
-                            fatherName: formValue.fatherName || "",
-                            email: formValue.email || "",
-                            designation: formValue.designation || "",
-                            phone: formValue.phone || "",
-                            image: urlInfo || 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg'
+                            name: formValue.name,
+                            fatherName: formValue.fatherName,
+                            email: formValue.email,
+                            designation: formValue.designation,
+                            phone: formValue.phone,
+                            image: urlInfo ? urlInfo : 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg'
                         });
 
                         // Additional logic if needed
@@ -102,7 +104,6 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
                     ref={formRef}
                     model={model}
                     readOnly={mode === "watch"}
-
                 >
                     <Grid fluid>
                         <Row>
@@ -144,6 +145,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
                                         <input type='file' onChange={() => {
                                             ImageUpload(fileInput.current?.files?.[0]
                                                 , value => {
+                                                    console.log(value)
                                                     return setUrlInfo(value as string);
                                                 }
                                             );
@@ -157,14 +159,25 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode }: {
                         <ButtonToolbar>
                             {
                                 mode !== "watch" &&
-                                <Button appearance="primary" onClick={handleSubmit} className="mr-5">Submit</Button>
+                                <Button appearance="primary" type='submit' onClick={handleSubmit} className="mr-5">Submit</Button>
                             }
-                            <Button appearance="default" onClick={() => setPostModelOpen(!open)}>Cancel</Button>
+                            <Button appearance="default" onClick={() => {
+                                setMode("new")
+                                setPostModelOpen(!open);
+                                setDoctorData({
+                                    name: "",
+                                    fatherName: "",
+                                    email: "",
+                                    designation: "",
+                                    phone: "",
+                                    image: "",
+                                })
+                            }}>Cancel</Button>
                         </ButtonToolbar>
                     </Form.Group>
                 </Form>
             </div>
-        </div>
+        </div >
     );
 };
 

@@ -16,7 +16,7 @@ const DoctorsTable = ({ setPatchData, setMode, mode, open, setPostModelOpen }: {
     setPostModelOpen: (postModelOpen: boolean) => void;
     open: boolean;
     setPatchData: (patchData: IDoctor) => void;
-    setMode: (modes: string) => void;
+    setMode: (mode: string) => void;
     mode: string;
 }) => {
     const [searchData, setSearchData] = useState<ISearchTermType>({ searchTerm: '' });
