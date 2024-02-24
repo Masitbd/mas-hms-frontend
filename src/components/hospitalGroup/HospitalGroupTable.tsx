@@ -1,6 +1,5 @@
 "use client";
-
-import {  IHospitalGroup } from "@/types/allDepartmentInterfaces";
+import { IHospitalGroup } from "@/types/allDepartmentInterfaces";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";

@@ -1,171 +1,185 @@
 "use client";
-import { usePatchDepartmentMutation, usePostDepartmentMutation } from '@/redux/api/department/departmentSlice';
-import { useAppSelector } from '@/redux/hook';
+import ImageUpload from '@/lib/AllReusableFunctions/ImageUploader';
+import { usePatchDoctorMutation, usePostDoctorMutation } from '@/redux/api/doctor/doctorSlice';
 import { IDoctor } from '@/types/allDepartmentInterfaces';
-import React, { useState } from 'react';
-import { Button, Col, Form, Grid, Loader, Modal, Row, Schema, Uploader } from 'rsuite';
+import Image from 'next/image';
+import React, { useRef, useState } from 'react';
+import { Button, ButtonToolbar, Col, Form, Grid, Row, Schema } from 'rsuite';
+import swal from 'sweetalert';
 
-
-async function previewFile(file: Blob | undefined) {
-    // const reader = new FileReader();
-    // reader.onloadend = () => {
-    //     callback(reader.result);
-    // };
-    const formData = new FormData();
-    formData.append('file', file)
-    formData.append('upload_preset', 'myUploads')
-    const result = await fetch('https://api.cloudinary.com/v1_1/deildnpys/image/upload', {
-        method: "POST",
-        body: formData
-    }).then(r => r.json())
-    console.log('result', result);
-    // reader.readAsDataURL(file);
-}
-
-const NewDoctor = ({ open, setPostModelOpen, defaultData }: {
+type NewDoctorType = {
     open: boolean;
     setPostModelOpen: (postModelOpen: boolean) => void;
-    defaultData?: IDoctor
-}) => {
+    defaultData: IDoctor;
+    setMode: (mode: string) => void;
+    mode: string
+}
 
+const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDoctorType) => {
+    const fileInput = useRef<HTMLInputElement>(null)
     const { StringType, NumberType } = Schema.Types;
-    const formRef: React.MutableRefObject<any> = React.useRef();
+    const formRef: React.MutableRefObject<any> = useRef();
+
+
     const model = Schema.Model({
         name: StringType().isRequired("This field is required."),
         fatherName: StringType().isRequired("This field is required."),
+        email: StringType().isEmail("This field is Required for email").isRequired("This field is required."),
         designation: StringType().isRequired("This field is required."),
-        phone: StringType().isRequired("This field is required."),
+        phone: NumberType().isRequired("This field is required.").addRule((value: string | number): boolean => {
+            const phoneNumber = value.toString();
+            if (phoneNumber.length <= 10) {
+                return false
+            }
+            return true;
+        }, "Phone number must be 11 digits.")
     });
 
-    const [doctorData, setDoctorData] = useState<IDoctor>({
-        name: "",
-        fatherName: "",
-        designation: "",
-        phone: "",
-        image: "",
-    } || !defaultData);
-    const [doctorImageUrl, setDoctorImageUrl] = useState<string>("")
+    const [doctorData, setDoctorData] = useState<IDoctor>(defaultData);
+    const [urlInfo, setUrlInfo] = useState<string>("");
+    console.log(urlInfo)
     const [
-        postDepartment
-    ] = usePostDepartmentMutation();
+        postDoctor
+    ] = usePostDoctorMutation();
     const [
-        patchDepartment,
-    ] = usePatchDepartmentMutation();
+        patchDoctor,
+    ] = usePatchDoctorMutation();
+
+
+
 
     const handleSubmit = async () => {
+        console.log(fileInput.current?.files?.[0])
         if (formRef.current.check()) {
-            if (defaultData === undefined) {
-                // const result = await postDepartment(doctorData)
-                // if ('data' in result) {
-                //     const message = (result as { data: { message: string } })?.data.message;
-                //     swal(`Done! ${message}!`, {
-                //         icon: "success",
-                //     })
-                //     setPostModelOpen(false)
-                // }
+            await ImageUpload(fileInput.current?.files?.[0]
+                , value => {
+                    return doctorData.image = value as string
+                })
+            if (mode == "new") {
+                doctorData.image = doctorData.image || 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg';
+                const result = await postDoctor(doctorData)
+                console.log(doctorData, 'doctorData')
+                if ('data' in result) {
+                    const message = (result as { data: { message: string } })?.data.message;
+                    swal(`Done! ${message}!`, {
+                        icon: "success",
+                    })
+                    setPostModelOpen(false)
+                }
             } else {
-                // const result = await patchDepartment({ data: departmentData, id: defaultData._id as string })
-                // if ('data' in result) {
-                //     const message = (result as { data: { message: string } })?.data.message;
-                //     swal(`Done! ${message}!`, {
-                //         icon: "success",
-                //     })
-                //     setPostModelOpen(false)
-                // }
+                doctorData.image = doctorData.image || defaultData.image;
+                const result = await patchDoctor({ data: doctorData, id: defaultData._id as string })
+                if ('data' in result) {
+                    const message = (result as { data: { message: string } })?.data.message;
+                    swal(`Done! ${message}!`, {
+                        icon: "success",
+                    })
+                    setPostModelOpen(false);
+                    setMode("new")
+                }
 
             }
 
         }
     }
-    const [uploading, setUploading] = React.useState(false);
-    const [fileInfo, setFileInfo] = React.useState(null);
-    console.log(fileInfo)
 
-    // const handleImageUpload = async (file: any) => {
-
-    //     
-
-    // };
-
-
-    const loading = useAppSelector((state) => state.loading.loading);
+    console.log(mode)
+    console.log(urlInfo)
+    console.log(doctorData)
 
 
     return (
-        <>
-            <Modal size={"md"} open={open}>
-                <Modal.Header>
-                    <Modal.Title>Add New Doctor</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="p-5">
-                    <Form
-                        formDefaultValue={defaultData}
-                        onChange={(formValue, event) => {
-                            setDoctorData({
-                                name: formValue.name || "",
-                                fatherName: formValue.fatherName || "",
-                                designation: formValue.designation || "",
-                                phone: formValue.phone || "",
-                                image: doctorImageUrl
-                            });
+        <div>
+            <div>
+                {
+                    mode === "watch" && defaultData?.image ? (
+                        <Image src={defaultData?.image} alt='profile' width={300} height={250} />
+                    ) : null
+                }
+                <Form
+                    formDefaultValue={defaultData}
+                    onChange={(formValue, event) => {
+                        setDoctorData({
+                            name: formValue.name,
+                            fatherName: formValue.fatherName,
+                            email: formValue.email,
+                            designation: formValue.designation,
+                            phone: formValue.phone,
+                            image: ""
+                            // image: urlInfo ? urlInfo : 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg'
+                        });
 
-                            // Additional logic if needed
-                        }}
-                        ref={formRef}
-                        model={model}
-                    >
-                        <Grid fluid>
-                            <Row>
-                                <Col sm={12} className="mt-6">
-                                    <Form.Group controlId="name">
-                                        <Form.ControlLabel>Doctor Name</Form.ControlLabel>
-                                        <Form.Control name="name" />
-                                    </Form.Group>
-                                </Col>
-                                <Col sm={12} className="mt-6">
-                                    <Form.Group controlId="fatherName">
-                                        <Form.ControlLabel>{`Doctor's Father Name`}</Form.ControlLabel>
-                                        <Form.Control name="fatherName" />
-                                    </Form.Group>
-                                </Col>
-                                <Col sm={12} className="mt-6">
-                                    <Form.Group controlId="designation">
-                                        <Form.ControlLabel>{`Doctor's designation`}</Form.ControlLabel>
-                                        <Form.Control name="designation" />
-                                    </Form.Group>
-                                </Col>
-                                <Col sm={12} className="mt-6">
-                                    <Form.Group controlId="phone">
-                                        <Form.ControlLabel>{`Doctor's Phone number`}</Form.ControlLabel>
-                                        <Form.Control name="phone" />
-                                    </Form.Group>
-                                </Col>
+                    }}
+                    ref={formRef}
+                    model={model}
+                    readOnly={mode === "watch"}
+                >
+                    <Grid fluid>
+                        <Row>
+                            <Col sm={12} className="mt-6">
+                                <Form.Group controlId="name">
+                                    <Form.ControlLabel>Doctor Name</Form.ControlLabel>
+                                    <Form.Control name="name" />
+                                </Form.Group>
+                            </Col>
+                            <Col sm={12} className="mt-6">
+                                <Form.Group controlId="fatherName">
+                                    <Form.ControlLabel>{`Doctor's Father Name`}</Form.ControlLabel>
+                                    <Form.Control name="fatherName" />
+                                </Form.Group>
+                            </Col>
+                            <Col sm={12} className="mt-6">
+                                <Form.Group controlId="email">
+                                    <Form.ControlLabel>{`Doctor's Email`}</Form.ControlLabel>
+                                    <Form.Control name="email" />
+                                </Form.Group>
+                            </Col>
+                            <Col sm={12} className="mt-6">
+                                <Form.Group controlId="designation">
+                                    <Form.ControlLabel>{`Doctor's designation`}</Form.ControlLabel>
+                                    <Form.Control name="designation" />
+                                </Form.Group>
+                            </Col>
+                            <Col sm={12} className="mt-6">
+                                <Form.Group controlId="phone">
+                                    <Form.ControlLabel>{`Doctor's Phone number`}</Form.ControlLabel>
+                                    <Form.Control name="phone" />
+                                </Form.Group>
+                            </Col>
+                            {
+                                mode !== "watch" &&
                                 <Col sm={24} className="mt-6">
-                                    <Form.Group controlId="image">
-                                        <Uploader action='' onUpload={file => {
-                                            setUploading(true);
-                                            previewFile(file.blobFile);
-                                        }} draggable>
-                                            <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                <span>Click or Drag image to this area to upload</span>
-                                            </div>
-                                        </Uploader>
+                                    <Form.Group controlId="file">
+                                        <Form.ControlLabel>{`Please Select image`}</Form.ControlLabel>
+                                        <input type="file" ref={fileInput} />
                                     </Form.Group>
                                 </Col>
-                            </Row>
-                        </Grid>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button onClick={() => setPostModelOpen(!open)} appearance="subtle">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleSubmit} appearance="primary">
-                        {loading ? <Loader></Loader> : "OK"}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </>
+                            }
+                        </Row>
+                    </Grid>
+                    <Form.Group className="mt-5">
+                        <ButtonToolbar>
+                            {
+                                mode !== "watch" &&
+                                <Button appearance="primary" type='submit' onClick={handleSubmit} className="mr-5">Submit</Button>
+                            }
+                            <Button appearance="default" onClick={() => {
+                                setMode("new")
+                                setPostModelOpen(!open);
+                                setDoctorData({
+                                    name: "",
+                                    fatherName: "",
+                                    email: "",
+                                    designation: "",
+                                    phone: "",
+                                    image: "",
+                                })
+                            }}>Cancel</Button>
+                        </ButtonToolbar>
+                    </Form.Group>
+                </Form>
+            </div>
+        </div >
     );
 };
 
