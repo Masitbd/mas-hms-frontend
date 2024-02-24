@@ -47,10 +47,18 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
 
 
 
+
     const handleSubmit = async () => {
+        console.log(fileInput.current?.files?.[0])
         if (formRef.current.check()) {
+            await ImageUpload(fileInput.current?.files?.[0]
+                , value => {
+                    return doctorData.image = value as string
+                })
             if (mode == "new") {
+                doctorData.image = doctorData.image || 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg';
                 const result = await postDoctor(doctorData)
+                console.log(doctorData, 'doctorData')
                 if ('data' in result) {
                     const message = (result as { data: { message: string } })?.data.message;
                     swal(`Done! ${message}!`, {
@@ -59,6 +67,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
                     setPostModelOpen(false)
                 }
             } else {
+                doctorData.image = doctorData.image || defaultData.image;
                 const result = await patchDoctor({ data: doctorData, id: defaultData._id as string })
                 if ('data' in result) {
                     const message = (result as { data: { message: string } })?.data.message;
@@ -84,7 +93,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
             <div>
                 {
                     mode === "watch" && defaultData?.image ? (
-                        <Image src={defaultData?.image} alt='profile' width="200" height="150" />
+                        <Image src={defaultData?.image} alt='profile' width={300} height={250} />
                     ) : null
                 }
                 <Form
@@ -96,10 +105,10 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
                             email: formValue.email,
                             designation: formValue.designation,
                             phone: formValue.phone,
-                            image: urlInfo ? urlInfo : 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg'
+                            image: ""
+                            // image: urlInfo ? urlInfo : 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg'
                         });
 
-                        // Additional logic if needed
                     }}
                     ref={formRef}
                     model={model}
@@ -142,14 +151,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
                                 <Col sm={24} className="mt-6">
                                     <Form.Group controlId="file">
                                         <Form.ControlLabel>{`Please Select image`}</Form.ControlLabel>
-                                        <input type='file' onChange={() => {
-                                            ImageUpload(fileInput.current?.files?.[0]
-                                                , value => {
-                                                    console.log(value)
-                                                    return setUrlInfo(value as string);
-                                                }
-                                            );
-                                        }} placeholder="Please select Image" ref={fileInput} />
+                                        <input type="file" ref={fileInput} />
                                     </Form.Group>
                                 </Col>
                             }
