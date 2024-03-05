@@ -44,7 +44,7 @@ const HospitalGroup = () => {
                 <HospitalGroupTable setPatchData={setPatchData} setMode={setMode} open={postModelOpen} setPostModelOpen={setPostModelOpen} />
             </div>
         </div>
-    );
-};
+    
+  )};
 
 export default HospitalGroup;
