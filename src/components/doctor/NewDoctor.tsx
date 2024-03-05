@@ -2,20 +2,15 @@
 import ImageUpload from '@/lib/AllReusableFunctions/ImageUploader';
 import { usePatchDoctorMutation, usePostDoctorMutation } from '@/redux/api/doctor/doctorSlice';
 import { IDoctor } from '@/types/allDepartmentInterfaces';
+import { NewFormType } from '@/types/componentsType';
 import Image from 'next/image';
 import React, { useRef, useState } from 'react';
-import { Button, ButtonToolbar, Col, Form, Grid, Row, Schema } from 'rsuite';
+import { Avatar, Button, ButtonToolbar, Col, Form, Grid, Row, Schema } from 'rsuite';
 import swal from 'sweetalert';
 
-type NewDoctorType = {
-    open: boolean;
-    setPostModelOpen: (postModelOpen: boolean) => void;
-    defaultData: IDoctor;
-    setMode: (mode: string) => void;
-    mode: string
-}
 
-const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDoctorType) => {
+
+const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFormType<IDoctor>) => {
     const fileInput = useRef<HTMLInputElement>(null)
     const { StringType, NumberType } = Schema.Types;
     const formRef: React.MutableRefObject<any> = useRef();
@@ -28,7 +23,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
         designation: StringType().isRequired("This field is required."),
         phone: NumberType().isRequired("This field is required.").addRule((value: string | number): boolean => {
             const phoneNumber = value.toString();
-            if (phoneNumber.length <= 10) {
+            if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
                 return false
             }
             return true;
@@ -36,7 +31,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
     });
 
     const [doctorData, setDoctorData] = useState<IDoctor>(defaultData);
-    const [urlInfo, setUrlInfo] = useState<string>("");
+    const [urlInfo, setUrlInfo] = useState({ src: '' });
     console.log(urlInfo)
     const [
         postDoctor
@@ -82,11 +77,11 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
 
         }
     }
+    const [selected, setSelected] = useState<ArrayBuffer | string | undefined>('')
 
     console.log(mode)
-    console.log(urlInfo)
     console.log(doctorData)
-
+    console.log(selected)
 
     return (
         <div>
@@ -148,12 +143,43 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
                             </Col>
                             {
                                 mode !== "watch" &&
-                                <Col sm={24} className="mt-6">
-                                    <Form.Group controlId="file">
-                                        <Form.ControlLabel>{`Please Select image`}</Form.ControlLabel>
-                                        <input type="file" ref={fileInput} />
-                                    </Form.Group>
-                                </Col>
+                                (
+                                    <>
+                                        <Col sm={24} className="mt-6">
+                                            <Form.Group controlId="file">
+                                                <Form.ControlLabel>{`Please Select image`}</Form.ControlLabel>
+                                                <input type="file" accept="image/jpeg, image/png" onChange={() => {
+                                                    const reader = new FileReader();
+                                                    const file = fileInput.current?.files?.[0];
+                                                    if (!file) {
+                                                        console.log('no file selected')
+                                                        return;
+                                                    }
+                                                    if (!file.type.startsWith('image/')) {
+                                                        swal(`InValid file type. please select on image`, {
+                                                            icon: "warning",
+                                                        })
+                                                        return;
+                                                    }
+                                                    reader.readAsDataURL(file as Blob)
+                                                    reader.onload = (e) => {
+                                                        setSelected(e.target?.result ?? '')
+                                                    }
+
+                                                }} ref={fileInput} />
+                                            </Form.Group>
+                                            {
+                                                selected && (
+                                                    <Avatar
+                                                        size='lg'
+                                                        src={selected as string}
+                                                        alt="@SevenOutman"
+                                                    />
+                                                )
+                                            }
+                                        </Col>
+                                    </>
+                                )
                             }
                         </Row>
                     </Grid>
@@ -163,7 +189,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewDo
                                 mode !== "watch" &&
                                 <Button appearance="primary" type='submit' onClick={handleSubmit} className="mr-5">Submit</Button>
                             }
-                            <Button appearance="default" onClick={() => {
+                            <Button appearance="default" className='ml-5' onClick={() => {
                                 setMode("new")
                                 setPostModelOpen(!open);
                                 setDoctorData({

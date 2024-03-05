@@ -5,11 +5,12 @@ import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
 
 import { useDeleteHospitalGroupMutation, useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
-import NewHospitalGroup from "./NewHospitalGroup";
+import { TableType } from "@/types/componentsType";
+
 
 
 const { Column, HeaderCell, Cell } = Table;
-const HospitalGroupTable = () => {
+const HospitalGroupTable = ({ setMode, open, setPatchData, setPostModelOpen }: TableType<IHospitalGroup>) => {
   const { data: defaultData, isLoading } = useGetHospitalGroupQuery(undefined);
   console.log(defaultData);
 
@@ -63,10 +64,6 @@ const HospitalGroupTable = () => {
     })
   };
 
-  // For patch
-  const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<IHospitalGroup>();
-
 
 
   return (
@@ -106,7 +103,8 @@ const HospitalGroupTable = () => {
                   className="ml-2"
                   onClick={() => {
                     setPatchData(rowdate as IHospitalGroup);
-                    setPatchModalOpen(!patchModalOpen)
+                    setPostModelOpen(!open)
+                    setMode("patch")
                   }}
                 >
                   Edit
@@ -133,12 +131,6 @@ const HospitalGroupTable = () => {
           activePage={page}
           onChangePage={setPage}
           onChangeLimit={handleChangeLimit}
-        />
-      </div>
-      <div>
-        <NewHospitalGroup
-          defaultData={patchData}
-          open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
         />
       </div>
     </div>

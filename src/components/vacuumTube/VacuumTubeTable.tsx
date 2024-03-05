@@ -1,14 +1,20 @@
 "use client";
 import { useDeleteVacuumTubeMutation, useGetVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
-import {IVacuumTube } from "@/types/allDepartmentInterfaces";
+import { IVacuumTube } from "@/types/allDepartmentInterfaces";
+import { TableType } from "@/types/componentsType";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
-import NewVacuumTube from "./NewVacuumTube";
 
+type VacuumTubeType = {
+  setPostModelOpen: (postModelOpen: boolean) => void;
+  open: boolean;
+  setPatchData: (patchData: IVacuumTube) => void;
+  setMode: (mode: string) => void;
+}
 
 const { Column, HeaderCell, Cell } = Table;
-const VacuumTubeTable = () => {
+const VacuumTubeTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableType<IVacuumTube>) => {
   const { data: defaultData, isLoading } = useGetVacuumTubeQuery(undefined);
   console.log(defaultData);
 
@@ -62,12 +68,6 @@ const VacuumTubeTable = () => {
     })
   };
 
-  // For patch
-  const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<IVacuumTube>();
-
-
-
   return (
     <div>
       <Table
@@ -110,7 +110,8 @@ const VacuumTubeTable = () => {
                   className="ml-2"
                   onClick={() => {
                     setPatchData(rowdate as IVacuumTube);
-                    setPatchModalOpen(!patchModalOpen)
+                    setPostModelOpen(!open)
+                    setMode("patch")
                   }}
                 >
                   Edit
@@ -137,12 +138,6 @@ const VacuumTubeTable = () => {
           activePage={page}
           onChangePage={setPage}
           onChangeLimit={handleChangeLimit}
-        />
-      </div>
-      <div>
-        <NewVacuumTube
-          defaultData={patchData}
-          open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
         />
       </div>
     </div>

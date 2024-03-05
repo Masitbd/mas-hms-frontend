@@ -14,8 +14,8 @@ const RModal = ({
   open: boolean;
   title: string;
   children: React.ReactElement;
-  okHandler: <T>(data: T) => void;
-  cancelHandler: <T>(data: T) => void;
+  okHandler?: <T>(data: T) => void;
+  cancelHandler?: <T>(data: T) => void;
 }) => {
   const loading = useAppSelector((state) => state.loading.loading);
   return (
@@ -25,14 +25,16 @@ const RModal = ({
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-5">{children}</Modal.Body>
-        <Modal.Footer>
-          <Button onClick={cancelHandler} appearance="subtle">
-            Cancel
-          </Button>
-          <Button onClick={okHandler} appearance="primary">
-            {loading ? <Loader></Loader> : "OK"}
-          </Button>
-        </Modal.Footer>
+        {
+          (okHandler && cancelHandler) && (<Modal.Footer>
+            <Button onClick={cancelHandler} appearance="subtle">
+              Cancel
+            </Button>
+            <Button onClick={okHandler} appearance="primary">
+              {loading ? <Loader></Loader> : "OK"}
+            </Button>
+          </Modal.Footer>)
+        }
       </Modal>
     </div>
   );

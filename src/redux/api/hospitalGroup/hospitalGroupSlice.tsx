@@ -2,54 +2,54 @@ import { IHospitalGroup } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
 const hospitalGroup = baseApi.injectEndpoints({
-    endpoints: (build) => ({
-      postHospitalGroup: build.mutation({
-        query: (data: IHospitalGroup) => ({
-          url: "/hospitalGroup",
-          method: "POST",
-          body: data,
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["hospitalGroup"],
+  endpoints: (build) => ({
+    postHospitalGroup: build.mutation({
+      query: (data: IHospitalGroup) => ({
+        url: "/hospitalGroup/create-hospitalGroup",
+        method: "POST",
+        body: data,
+        contentType: "application/json",
       }),
-      patchHospitalGroup: build.mutation({
-        query: ({ data, id }) => ({
-          url: `/hospitalGroup/${id}`,
-          method: "PATCH",
-          body: data,
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["hospitalGroup"],
+      invalidatesTags: ["hospitalGroup"],
+    }),
+    patchHospitalGroup: build.mutation({
+      query: ({ data, id }) => ({
+        url: `/hospitalGroup/${id}`,
+        method: "PATCH",
+        body: data,
+        contentType: "application/json",
       }),
-      deleteHospitalGroup: build.mutation({
-        query: (id: string) => ({
-          url: `/hospitalGroup/${id}`,
-          method: "DELETE",
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["hospitalGroup"],
+      invalidatesTags: ["hospitalGroup"],
+    }),
+    deleteHospitalGroup: build.mutation({
+      query: (id: string) => ({
+        url: `/hospitalGroup/${id}`,
+        method: "DELETE",
+        contentType: "application/json",
       }),
-      getHospitalGroup: build.query({
-        query: () => ({
-          url: "/hospitalGroup",
-          method: "GET",
-          contentType: "application/json",
-        }),
-        providesTags: ["hospitalGroup"],
+      invalidatesTags: ["hospitalGroup"],
+    }),
+    getHospitalGroup: build.query({
+      query: () => ({
+        url: "/hospitalGroup",
+        method: "GET",
+        contentType: "application/json",
       }),
-      getSingleHospitalGroup: build.mutation({
-        query: (id: string) => ({
-          url: `/hospitalGroup/${id}`,
-          method: "GET",
-          contentType: "application/json",
-        }),
+      providesTags: ["hospitalGroup"],
+    }),
+    getSingleHospitalGroup: build.mutation({
+      query: (id: string) => ({
+        url: `/hospitalGroup/${id}`,
+        method: "GET",
+        contentType: "application/json",
       }),
     }),
-  });
+  }),
+});
 
-  export const {
-    usePostHospitalGroupMutation,
-    useGetHospitalGroupQuery,
-    useDeleteHospitalGroupMutation,
-    usePatchHospitalGroupMutation,
-  } = hospitalGroup;
+export const {
+  usePostHospitalGroupMutation,
+  useGetHospitalGroupQuery,
+  useDeleteHospitalGroupMutation,
+  usePatchHospitalGroupMutation,
+} = hospitalGroup;
