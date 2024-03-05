@@ -2,7 +2,7 @@
 
 import DoctorsTable from '@/components/doctor/DoctorsTable';
 import NewDoctor from '@/components/doctor/NewDoctor';
-import RModal2 from '@/components/ui/Model2';
+import RModal from '@/components/ui/Modal';
 import { IDoctor } from '@/types/allDepartmentInterfaces';
 
 import { useEffect, useState } from 'react';
@@ -41,14 +41,14 @@ const Doctor = () => {
                 </Button>
             </div>
             <div>
-                <RModal2
+                <RModal
                     open={postModelOpen}
                     size="md"
                     title={mode === "new" ? "Add New Doctor" : mode === "patch" ? "Edit Doctor's Fields" : "Doctor's Details"}
                 >
                     <NewDoctor defaultData={patchData} setMode={setMode} mode={mode} open={postModelOpen} setPostModelOpen={setPostModelOpen} />
-                </RModal2>
-                <DoctorsTable open={postModelOpen} setPostModelOpen={setPostModelOpen} setPatchData={setPatchData} setMode={setMode} mode={mode} />
+                </RModal>
+                <DoctorsTable open={postModelOpen} setPostModelOpen={setPostModelOpen} setPatchData={setPatchData} setMode={setMode} />
             </div>
         </div>
     );

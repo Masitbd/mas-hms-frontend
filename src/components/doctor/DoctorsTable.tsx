@@ -2,6 +2,7 @@
 import { IDoctor, } from "@/types/allDepartmentInterfaces";
 
 import { useDeleteDoctorMutation, useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
+import { TableType } from "@/types/componentsType";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { useState } from "react";
 import { Button, Form, Pagination, Table } from "rsuite";
@@ -12,13 +13,7 @@ export type ISearchTermType = {
 }
 
 const { Column, HeaderCell, Cell } = Table;
-const DoctorsTable = ({ setPatchData, setMode, mode, open, setPostModelOpen }: {
-    setPostModelOpen: (postModelOpen: boolean) => void;
-    open: boolean;
-    setPatchData: (patchData: IDoctor) => void;
-    setMode: (mode: string) => void;
-    mode: string;
-}) => {
+const DoctorsTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableType<IDoctor>) => {
     const [searchData, setSearchData] = useState<ISearchTermType>({ searchTerm: '' });
     const { data: defaultData, isLoading } = useGetDoctorQuery(searchData);
 
