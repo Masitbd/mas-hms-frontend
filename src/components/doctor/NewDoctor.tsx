@@ -1,6 +1,6 @@
 "use client";
 import ImageUpload from '@/lib/AllReusableFunctions/ImageUploader';
-import { usePatchDoctorMutation, usePostDoctorMutation } from '@/redux/api/doctor/doctorSlice';
+import { useGetSingleDoctorQuery, usePatchDoctorMutation, usePostDoctorMutation } from '@/redux/api/doctor/doctorSlice';
 import { IDoctor } from '@/types/allDepartmentInterfaces';
 import { NewFormType } from '@/types/componentsType';
 import Image from 'next/image';
@@ -14,6 +14,9 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
     const fileInput = useRef<HTMLInputElement>(null)
     const { StringType, NumberType } = Schema.Types;
     const formRef: React.MutableRefObject<any> = useRef();
+
+    const { data: account, isLoading } = useGetSingleDoctorQuery(defaultData._id as string);
+    console.log();
 
 
     const model = Schema.Model({
@@ -135,12 +138,29 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                                     <Form.Control name="designation" />
                                 </Form.Group>
                             </Col>
-                            <Col sm={12} className="mt-6">
-                                <Form.Group controlId="phone">
-                                    <Form.ControlLabel>{`Doctor's Phone number`}</Form.ControlLabel>
-                                    <Form.Control name="phone" />
-                                </Form.Group>
-                            </Col>
+                            {mode === 'watch' && (
+                                <>
+
+                                    <Col sm={12} className="mt-6">
+                                        <Form.Group controlId="">
+                                            <Form.ControlLabel>{`Doctor's UUID`}</Form.ControlLabel>
+                                            <Form.Control name='' value={account?.data?.account_id["uuid"]} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm={12} className="mt-6">
+                                        <Form.Group controlId="">
+                                            <Form.ControlLabel>{`Doctor's Balance`}</Form.ControlLabel>
+                                            <Form.Control name='' value={account?.data?.account_id["balance"]} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col sm={12} className="mt-6">
+                                        <Form.Group controlId="">
+                                            <Form.ControlLabel>{`Doctor's Balance Type`}</Form.ControlLabel>
+                                            <Form.Control name='' value={account?.data?.account_id["balanceType"]} />
+                                        </Form.Group>
+                                    </Col>
+                                </>
+                            )}
                             {
                                 mode !== "watch" &&
                                 (
@@ -183,11 +203,20 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                             }
                         </Row>
                     </Grid>
+                    {/* {
+                                mode !== "watch" &&
+                                (
+
+                                )
+                                 } */}
+
+
+
                     <Form.Group className="mt-5">
                         <ButtonToolbar>
                             {
-                                mode !== "watch" &&
-                                <Button appearance="primary" type='submit' onClick={handleSubmit} className="mr-5">Submit</Button>
+                                mode !== "watch" ?
+                                    <Button appearance="primary" type='submit' onClick={handleSubmit} className="mr-5">Submit</Button> : <Button appearance="primary" type='submit' onClick={handleSubmit} className="mr-5">Pay</Button>
                             }
                             <Button appearance="default" className='ml-5' onClick={() => {
                                 setMode("new")
