@@ -37,6 +37,16 @@ export type IDoctor = {
   designation: string;
   phone: string;
   image?: string;
+  account_number?: string; // as account.uuid
+  account_id?: IAccount; // as account_.id
+};
+export type ITransaction = {
+  _id?: string;
+  ref?: string;
+  amount: number;
+  description: string;
+  transactionType: string;
+  uuid: string;
 };
 export type IHospitalGroup = {
   _id?: string;
@@ -86,4 +96,10 @@ export type ITest = {
   vatRate: number;
   processTime: number;
   resultFields: IResultField[];
+};
+export type IAccount = {
+  _id: string;
+  uuid: string;
+  balanceType: string;
+  balance: number;
 };
