@@ -1,14 +1,15 @@
 "use client";
 import { useDeleteDepartmentMutation, useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { IDepartment } from "@/types/allDepartmentInterfaces";
+import { TableType } from "@/types/componentsType";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
-import NewDepartment from "./NewDepartment";
-
 
 const { Column, HeaderCell, Cell } = Table;
-const DepartmentTable = () => {
+
+const DepartmentTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableType<IDepartment>) => {
+
   const { data: defaultData, isLoading } = useGetDepartmentQuery(undefined);
   console.log(defaultData);
 
@@ -19,6 +20,7 @@ const DepartmentTable = () => {
     setPage(1);
     setLimit(dataKey);
   };
+
 
   const data = defaultData?.data.filter((v: any, i: number) => {
     const start = limit * (page - 1);
@@ -62,9 +64,6 @@ const DepartmentTable = () => {
     })
   };
 
-  // For patch
-  const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<IDepartment>();
 
 
 
@@ -113,7 +112,8 @@ const DepartmentTable = () => {
                   className="ml-2"
                   onClick={() => {
                     setPatchData(rowdate as IDepartment);
-                    setPatchModalOpen(!patchModalOpen)
+                    setPostModelOpen(!open);
+                    setMode("patch")
                   }}
                 >
                   Edit
@@ -140,12 +140,6 @@ const DepartmentTable = () => {
           activePage={page}
           onChangePage={setPage}
           onChangeLimit={handleChangeLimit}
-        />
-      </div>
-      <div>
-        <NewDepartment
-          defaultData={patchData}
-          open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
         />
       </div>
     </div>

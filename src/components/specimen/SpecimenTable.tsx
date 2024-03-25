@@ -1,16 +1,17 @@
 "use client";
-import { ICondition, ISpecimen } from "@/types/allDepartmentInterfaces";
-import { useState } from "react";
-import { Button, Pagination, Table } from "rsuite";
-import swal from "sweetalert";
-import NewSpecimenModel from "./NewSpecimenModel";
 import {
   useDeleteSpecimenMutation,
   useGetSpecimenQuery,
 } from "@/redux/api/specimen/specimenSlice";
+import { ISpecimen } from "@/types/allDepartmentInterfaces";
+import { TableType } from "@/types/componentsType";
+import { useState } from "react";
+import { Button, Pagination, Table } from "rsuite";
+import swal from "sweetalert";
 
 const { Column, HeaderCell, Cell } = Table;
-const SpecimenTable = () => {
+
+const SpecimenTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableType<ISpecimen>) => {
   const { data: defaultData, isLoading } = useGetSpecimenQuery(undefined);
   console.log(defaultData);
 
@@ -63,10 +64,6 @@ const SpecimenTable = () => {
     });
   };
 
-  // For patch
-  const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<ISpecimen>();
-
   return (
     <div>
       <Table
@@ -105,7 +102,8 @@ const SpecimenTable = () => {
                   className="ml-2"
                   onClick={() => {
                     setPatchData(rowdate as ISpecimen);
-                    setPatchModalOpen(!patchModalOpen);
+                    setPostModelOpen(!open)
+                    setMode("patch")
                   }}
                 >
                   Edit
@@ -132,13 +130,6 @@ const SpecimenTable = () => {
           activePage={page}
           onChangePage={setPage}
           onChangeLimit={handleChangeLimit}
-        />
-      </div>
-      <div>
-        <NewSpecimenModel
-          defaultData={patchData}
-          open={patchModalOpen}
-          setPostModelOpen={setPatchModalOpen}
         />
       </div>
     </div>

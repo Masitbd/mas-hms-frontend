@@ -8,7 +8,6 @@ import {
 import { setLoading } from "@/redux/features/loading/loading";
 import React, { useEffect, useState } from "react";
 import { Table, Pagination, Button, toaster, Message } from "rsuite";
-import { IConditon } from "@/app/(withlayout)/condition/page";
 import {
   useDeleteBacteriaMutation,
   useGetBacteriaQuery,
@@ -17,6 +16,7 @@ import {
 import PatchBacteriaModel from "./PatchBacteria";
 import PatchBacteria from "./PatchBacteria";
 import { IBacteria } from "@/app/(withlayout)/bacteria/page";
+import { ICondition } from "@/types/allDepartmentInterfaces";
 
 const { Column, HeaderCell, Cell } = Table;
 const BacteriaTable = () => {
@@ -61,8 +61,8 @@ const BacteriaTable = () => {
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<IConditon>();
-  const patchHandler = (data: IConditon) => {
+  const [patchData, setPatchData] = useState<ICondition>();
+  const patchHandler = (data: ICondition) => {
     console.log(data);
     setPatchData(data);
     setPatchModalOpen(!patchModalOpen);
@@ -165,7 +165,7 @@ const BacteriaTable = () => {
                   appearance="ghost"
                   color="blue"
                   className="ml-2"
-                  onClick={() => patchHandler(rowdate as IConditon)}
+                  onClick={() => patchHandler(rowdate as ICondition)}
                 >
                   Edit
                 </Button>

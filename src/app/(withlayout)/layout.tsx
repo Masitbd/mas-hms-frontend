@@ -21,13 +21,13 @@ interface ILayoutProps {
 
 export default function layout({ children, expand, onChange }: ILayoutProps) {
   return (
-    <div className="show-fake-browser sidebar-page min-h-[100vh]">
+    <div className=" sidebar-page min-h-[90vh]">
       <Container>
-        <Navbar></Navbar>
-        <Container>
+        <Navbar />
+        <Container className="rs-container-has-sidebar">
           <Sidebar />
           <Container>
-            <Content className="min-h-[100vh]">{children}</Content>
+            <Content className="">{children}</Content>
           </Container>
         </Container>
       </Container>

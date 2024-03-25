@@ -1,32 +1,11 @@
-import {
-  Container,
-  Header,
-  Sidebar as ResuiteSidebar,
-  Sidenav,
-  Content,
-  Navbar,
-  Nav,
-} from "rsuite";
+import { Sidebar as ResuiteSidebar, Sidenav, Navbar, Nav } from "rsuite";
 import CogIcon from "@rsuite/icons/legacy/Cog";
 import AngleLeftIcon from "@rsuite/icons/legacy/AngleLeft";
 import AngleRightIcon from "@rsuite/icons/legacy/AngleRight";
 import GearCircleIcon from "@rsuite/icons/legacy/GearCircle";
-import DashboardIcon from "@rsuite/icons/Dashboard";
-import GroupIcon from "@rsuite/icons/legacy/Group";
 import MagicIcon from "@rsuite/icons/legacy/Magic";
 import { useState } from "react";
 import { NavLink } from "@/utils/Navlink";
-import Link from "next/link";
-
-const headerStyles = {
-  padding: 18,
-  fontSize: 16,
-  height: 56,
-  background: "#34c3ff",
-  color: " #fff",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-};
 
 interface NavToggleProps {
   expand: boolean;
@@ -58,12 +37,30 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
   );
 };
 
+const testMenuItem = [
+  { key: "1", title: "Pdrv", href: "/pdrv" },
+  { key: "2", title: "Bacteria", href: "/bacteria" },
+  { key: "3", title: "Condition", href: "/condition" },
+  { key: "4", title: "Department", href: "/department" },
+  { key: "5", title: "Hospital Group", href: "/hospitalGroup" },
+  { key: "6", title: "Specimen", href: "/specimen" },
+  { key: "7", title: "Vacumme Tube", href: "/vacuumTube" },
+  { key: "8", title: "Test", href: "/test" },
+  { key: "9", title: "Doctor", href: "/doctor" },
+];
+
 const Sidebar = () => {
   const [expand, setExpand] = useState(true);
+  const [selectedItem, setSelectedItem] = useState("");
   return (
     <div>
       <ResuiteSidebar
-        style={{ display: "flex", flexDirection: "column" }}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "90vh",
+          justifyContent: "space-between",
+        }}
         width={expand ? 260 : 56}
         collapsible
       >
@@ -77,33 +74,28 @@ const Sidebar = () => {
                 icon={<MagicIcon />}
                 placement="rightStart"
               >
-                <Nav.Item eventKey="3-1" href={"/pdrv"} as={NavLink}>
-                  Pdrv
-                </Nav.Item>
-                <Nav.Item eventKey="3-2" href={"/bacteria"} as={NavLink}>
-                  Bacteria
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/condition"} as={NavLink}>
-                  Condition
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/department"} as={NavLink}>
-                  Department
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/hospitalGroup"} as={NavLink}>
-                  Hospital Group
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/specimen"} as={NavLink}>
-                  Specimen
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/vacuumTube"} as={NavLink}>
-                  Vacumme Tube
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/test"} as={NavLink}>
-                  Test
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/doctor"} as={NavLink}>
-                  Doctor
-                </Nav.Item>
+                {testMenuItem.map((item) => (
+                  <Nav.Item
+                    eventKey={`3-${item.key}`}
+                    href={item.href}
+                    as={NavLink}
+                    key={item.key}
+                    onClick={() => setSelectedItem(item.href)}
+                    style={
+                      selectedItem === item.href
+                        ? {
+                            backgroundColor: "#3498ff",
+                            color: "white",
+                            borderRadius: "5px",
+                          }
+                        : {
+                            color: "black",
+                          }
+                    }
+                  >
+                    {item.title}
+                  </Nav.Item>
+                ))}
               </Nav.Menu>
               <Nav.Menu
                 eventKey="4"
@@ -112,10 +104,6 @@ const Sidebar = () => {
                 icon={<GearCircleIcon />}
                 placement="rightStart"
               >
-                <Nav.Item eventKey="4-1">Applications</Nav.Item>
-                <Nav.Item eventKey="4-2">Websites</Nav.Item>
-                <Nav.Item eventKey="4-3">Channels</Nav.Item>
-                <Nav.Item eventKey="4-4">Tags</Nav.Item>
                 <Nav.Item eventKey="4-5">Versions</Nav.Item>
               </Nav.Menu>
             </Nav>

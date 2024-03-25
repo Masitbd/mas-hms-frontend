@@ -1,11 +1,11 @@
 "use client";
-import { IConditon } from "@/app/(withlayout)/condition/page";
 import { useAppSelector } from "@/redux/hook";
 import React, { useState } from "react";
 import { Button, Modal, Schema, Form, Loader, Input } from "rsuite";
 import RModal from "../ui/Modal";
 import BacteriaForm from "./BacteriaForm";
 import { IBacteria } from "@/app/(withlayout)/bacteria/page";
+import { ICondition } from "@/types/allDepartmentInterfaces";
 const PatchBacteria = ({
   open,
   patchBacteria,
@@ -15,7 +15,7 @@ const PatchBacteria = ({
   open: boolean;
   patchBacteria: ({ data, id }: { data: IBacteria; id: string }) => void;
   cancelHandler: () => void;
-  defalutValue: IConditon;
+  defalutValue: ICondition;
 }) => {
   const { StringType } = Schema.Types;
   const formRef: React.MutableRefObject<any> = React.useRef();

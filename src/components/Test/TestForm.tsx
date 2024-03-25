@@ -113,7 +113,7 @@ const TestForm = ({
           <Form.Control name="label" htmlSize={100} />
         </Form.Group>
         <Form.Group controlId="description">
-          <Form.ControlLabel>Title</Form.ControlLabel>
+          <Form.ControlLabel>Description</Form.ControlLabel>
           <Form.Control name="description" htmlSize={100} />
         </Form.Group>
         <Form.Group controlId="type">

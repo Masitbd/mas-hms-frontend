@@ -29,6 +29,15 @@ export type IDepartment = {
   isCommissionFiexed: boolean;
   description?: string;
 };
+export type IDoctor = {
+  _id?: string;
+  name: string;
+  fatherName: string;
+  email: string;
+  designation: string;
+  phone: string;
+  image?: string;
+};
 export type IHospitalGroup = {
   _id?: string;
   label: string;
