@@ -20,21 +20,21 @@ const RModal = ({
   const loading = useAppSelector((state) => state.loading.loading);
   return (
     <div>
-      <Modal size={size} open={open}>
+      <Modal size={size} open={open} backdrop="static" onClose={cancelHandler}>
         <Modal.Header>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-5">{children}</Modal.Body>
-        {
-          (okHandler && cancelHandler) && (<Modal.Footer>
+        {okHandler && cancelHandler && (
+          <Modal.Footer>
             <Button onClick={cancelHandler} appearance="subtle">
               Cancel
             </Button>
             <Button onClick={okHandler} appearance="primary">
               {loading ? <Loader></Loader> : "OK"}
             </Button>
-          </Modal.Footer>)
-        }
+          </Modal.Footer>
+        )}
       </Modal>
     </div>
   );

@@ -29,7 +29,7 @@ const patient = baseApi.injectEndpoints({
       }),
       providesTags: ["patient"],
     }),
-    getSinglePatient: build.mutation({
+    getSinglePatient: build.query({
       query: (data: any) => ({
         url: `/patient/${data}`,
         method: "get",
@@ -42,6 +42,7 @@ const patient = baseApi.injectEndpoints({
 export const {
   usePostPatientMutation,
   useGetPatientQuery,
-
+  useGetSinglePatientQuery,
   usePatchPatientMutation,
+  useLazyGetSinglePatientQuery,
 } = patient;
