@@ -39,12 +39,13 @@ const doctor = baseApi.injectEndpoints({
       }),
       providesTags: ["doctor"]
     }),
-    getSingleDoctor: build.mutation({
+    getSingleDoctor: build.query({
       query: (id: string) => ({
         url: `/doctor/${id}`,
         method: "GET",
         contentType: "application/json"
-      })
+      }),
+      providesTags: ["doctor"]
     })
   })
 });
@@ -53,5 +54,6 @@ export const {
   usePostDoctorMutation,
   useGetDoctorQuery,
   useDeleteDoctorMutation,
-  usePatchDoctorMutation
+  usePatchDoctorMutation,
+  useGetSingleDoctorQuery
 } = doctor;
