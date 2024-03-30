@@ -27,7 +27,7 @@ export default function PrimaryLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="">{children}</div>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );
