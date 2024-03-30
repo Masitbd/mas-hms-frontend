@@ -44,7 +44,8 @@ const doctor = baseApi.injectEndpoints({
         url: `/doctor/${id}`,
         method: "GET",
         contentType: "application/json"
-      })
+      }),
+      providesTags: ["doctor"]
     })
   })
 });

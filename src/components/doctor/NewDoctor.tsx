@@ -1,12 +1,13 @@
 "use client";
 import ImageUpload from '@/lib/AllReusableFunctions/ImageUploader';
-import { useGetSingleDoctorQuery, usePatchDoctorMutation, usePostDoctorMutation } from '@/redux/api/doctor/doctorSlice';
+import { usePatchDoctorMutation, usePostDoctorMutation } from '@/redux/api/doctor/doctorSlice';
 import { useGetSingleByUuidTransactionQuery } from '@/redux/api/transaction/transactionSlice';
 
+import { useGetSingleAccountQuery } from '@/redux/api/account/accountSlice';
 import { IDoctor } from '@/types/allDepartmentInterfaces';
 import { NewFormType } from '@/types/componentsType';
 import Image from 'next/image';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Avatar, Button, ButtonToolbar, Col, Form, Grid, Row, Schema, Table } from 'rsuite';
 import swal from 'sweetalert';
 import RModal from '../ui/Modal';
@@ -20,10 +21,12 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
     const { StringType, NumberType } = Schema.Types;
     const formRef: React.MutableRefObject<any> = useRef();
 
-    const { data: account } = useGetSingleDoctorQuery(defaultData._id as string);
-    console.log(account);
-    const { data: transaction, isLoading } = useGetSingleByUuidTransactionQuery(account?.data?.account_id["uuid"] as string);
+    const { data: account, refetch } = useGetSingleAccountQuery
+        (defaultData.account_number as string);
+
+    const { data: transaction, isLoading } = useGetSingleByUuidTransactionQuery(defaultData.account_number as string);
     console.log(transaction?.data, "transaction");
+    console.log(account?.data[0], "account");
 
 
     const model = Schema.Model({
@@ -50,7 +53,9 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
         patchDoctor,
     ] = usePatchDoctorMutation();
 
-
+    useEffect(() => {
+        refetch()
+    }, [refetch])
 
 
     const handleSubmit = async () => {
@@ -101,8 +106,8 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                 <div>
                     {
 
-                        mode === "watch" && defaultData?.image ? (
-                            <Image src={defaultData?.image} alt='profile' width={300} height={250} />
+                        mode === "watch" && defaultData.image ? (
+                            <Image src={defaultData.image} alt='profile' width={300} height={250} />
                         ) : null
                     }
                     <Form
@@ -160,19 +165,19 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                                         <Col sm={12} className="mt-6">
                                             <Form.Group controlId="">
                                                 <Form.ControlLabel>{`Doctor's UUID`}</Form.ControlLabel>
-                                                <Form.Control name='' value={account?.data?.account_id["uuid"]} />
+                                                <Form.Control name='' value={account?.data[0].uuid} />
                                             </Form.Group>
                                         </Col>
                                         <Col sm={12} className="mt-6">
                                             <Form.Group controlId="">
                                                 <Form.ControlLabel>{`Doctor's Balance`}</Form.ControlLabel>
-                                                <Form.Control name='' value={account?.data?.account_id["balance"]} />
+                                                <Form.Control name='' value={account?.data[0].balance} />
                                             </Form.Group>
                                         </Col>
                                         <Col sm={12} className="mt-6">
                                             <Form.Group controlId="">
                                                 <Form.ControlLabel>{`Doctor's Balance Type`}</Form.ControlLabel>
-                                                <Form.Control name='' value={account?.data?.account_id["balanceType"]} />
+                                                <Form.Control name='' value={account?.data[0].balanceType} />
                                             </Form.Group>
                                         </Col>
 
@@ -283,7 +288,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                 size="md"
                 title={"Pay Doctor Commission"}
             >
-                <PayModel uuid={account?.data?.account_id["uuid"] as string} setPayModel={setPayModel} />
+                <PayModel uuid={account?.data[0]?.uuid as string} setPayModel={setPayModel} />
             </RModal>
         </>
     );

@@ -19,7 +19,6 @@ const PayModel = ({ uuid, setPayModel }: { uuid: string, setPayModel: (payModel:
         description: "",
         transactionType: "",
         uuid: "",
-        ref: "",
     });
     const [postTransaction] = usePostTransactionMutation();
     console.log(payData)
@@ -36,6 +35,12 @@ const PayModel = ({ uuid, setPayModel }: { uuid: string, setPayModel: (payModel:
                         icon: "success",
                     });
                     setPayModel(false);
+                }
+                if ('error' in result) {
+                    const errorMessage = (result as { error: { data: { message: string } } })?.error.data.message;
+                    swal(errorMessage, {
+                        icon: "warning",
+                    });
                 }
             }
         }
@@ -61,7 +66,6 @@ const PayModel = ({ uuid, setPayModel }: { uuid: string, setPayModel: (payModel:
                         description: formValue.description,
                         transactionType: formValue.transactionType,
                         uuid: formValue.uuid,
-                        ref: formValue.ref,
                     });
 
                 }}
@@ -92,12 +96,6 @@ const PayModel = ({ uuid, setPayModel }: { uuid: string, setPayModel: (payModel:
                             <Form.Group controlId="transactionType">
                                 <Form.ControlLabel>transactionType</Form.ControlLabel>
                                 <Form.Control accepter={InputPicker} data={transactionType} name="transactionType" />
-                            </Form.Group>
-                        </Col>
-                        <Col sm={12} className="mt-5">
-                            <Form.Group controlId="ref">
-                                <Form.ControlLabel>Ref</Form.ControlLabel>
-                                <Form.Control name="ref" />
                             </Form.Group>
                         </Col>
                     </Row>

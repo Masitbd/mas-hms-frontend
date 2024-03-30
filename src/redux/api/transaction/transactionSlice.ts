@@ -5,26 +5,28 @@ const transaction = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postTransaction: build.mutation({
       query: (data: ITransaction) => ({
-        url: "/transaction",
-        method: "post",
+        url: "/transaction/",
+        method: "POST",
         body: data,
         contentType: "application/json"
       }),
-      invalidatesTags: ["transaction"]
+      // refetchQueries: ['getSingleTransaction'],
+      invalidatesTags: ["transaction", "account"]
     }),
     getSingleTransaction: build.mutation({
       query: (id: string) => ({
         url: `/transaction/${id}`,
-        method: "get",
+        method: "GET",
         contentType: "application/json"
       })
     }),
     getSingleByUuidTransaction: build.query({
       query: (uuid: string) => ({
         url: `/transaction/uuid/${uuid}`,
-        method: "get",
+        method: "GET",
         contentType: "application/json"
-      })
+      }),
+      providesTags: ["transaction", "account"]
     })
   })
 });

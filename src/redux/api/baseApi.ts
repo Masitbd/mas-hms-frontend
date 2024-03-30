@@ -26,6 +26,7 @@ export const baseApi = createApi({
     "doctor",
     "hospitalGroup",
     "test",
+    "account",
     "transaction"
   ]
 
