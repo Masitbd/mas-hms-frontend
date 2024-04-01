@@ -22,35 +22,35 @@ const ForRegistered = (param: paramType) => {
         <div className="grid grid-cols-3">
           <div className="flex flex-col">
             <h2 className="font-bold">Name</h2>
-            {param.patient.name}
+            {param.formData.patient.name}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Age</h2>
-            {param.patient.age}
+            {param.formData.patient.age}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Gender</h2>
-            {param.patient.gender}
+            {param.formData.patient.gender}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Address</h2>
-            {param.patient.address}
+            {param.formData.patient.address}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Ref By</h2>
-            {param.patient?.ref_by}
+            {param.formData.patient?.ref_by}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Consultent</h2>
-            {param.patient.consultant}
+            {param.formData.patient.consultant}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Phone</h2>
-            {param.patient.phone}
+            {param.formData.patient.phone}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Email</h2>
-            {param.patient.email}
+            {param.formData.patient.email}
           </div>
         </div>
 
@@ -65,6 +65,7 @@ const ForRegistered = (param: paramType) => {
               }));
             }}
             className="grid grid-cols-3"
+            formValue={param.formData}
           >
             <Form.Group controlId="refBy">
               <Form.ControlLabel className="font-bold">
@@ -76,6 +77,7 @@ const ForRegistered = (param: paramType) => {
                 data={param.doctors.map((data: IDoctor) => {
                   return { label: data.name, value: data._id };
                 })}
+                value={param.formData.refBy._id}
               />
             </Form.Group>
             <Form.Group controlId="consultant">
@@ -88,6 +90,7 @@ const ForRegistered = (param: paramType) => {
                 data={param.doctors.map((data: IDoctor) => {
                   return { label: data.name, value: data._id };
                 })}
+                value={param.formData?.patient?.consultant}
               />
             </Form.Group>
             <Form.Group controlId="deliveryDate">
@@ -97,6 +100,7 @@ const ForRegistered = (param: paramType) => {
                 accepter={DatePicker}
                 placement="top"
                 format="dd MMM yyyy hh:mm aa"
+                value={new Date(param.formData.deliveryTime)}
                 showMeridian
                 cleanable
               />

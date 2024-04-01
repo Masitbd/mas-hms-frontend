@@ -24,7 +24,7 @@ type IFormData = {
   test: ITest;
   hasDiscount: boolean;
   discount: number;
-  deliveryDate: string;
+  deliveryDate: Date;
   remark: string;
   pirceAfterDiscount: number;
   discountAmount: number;
@@ -33,13 +33,14 @@ const initialFromData = {
   test: {} as ITest,
   hasDiscount: false,
   discount: 0,
-  deliveryDate: "",
+  deliveryDate: new Date(),
   remark: "",
   pirceAfterDiscount: 0,
   discountAmount: 0,
 };
 
 const TestInformation = (params: IParams) => {
+  console.log(params.formData);
   const ref: React.MutableRefObject<any> = useRef();
   const { StringType, NumberType, ObjectType } = Schema.Types;
   const [isTestModalOpen, setTestModalOpen] = useState(false);
@@ -54,7 +55,16 @@ const TestInformation = (params: IParams) => {
 
   const handleAddTest = (rowData: ITest) => {
     setMode("new");
-    setFormData({ ...data, pirceAfterDiscount: rowData.price, test: rowData });
+    const estimatedDeliveryDate = new Date();
+    estimatedDeliveryDate.setHours(
+      estimatedDeliveryDate.getHours() + Number(rowData.processTime)
+    );
+    setFormData({
+      ...data,
+      pirceAfterDiscount: rowData.price,
+      test: rowData,
+      deliveryDate: estimatedDeliveryDate,
+    });
 
     toggleTestOrderInfo();
   };
@@ -69,7 +79,6 @@ const TestInformation = (params: IParams) => {
         ...data,
         pirceAfterDiscount: newPrice,
         discountAmount,
-        discount: discountValue,
       });
     }
   };
@@ -95,13 +104,7 @@ const TestInformation = (params: IParams) => {
 
         const tests = newObject.tests ? newObject.tests : [];
         const newTestArray = [...tests, data];
-        // newObject.totalDIscount =
-        //   (newObject.totalDIscount ? newObject.totalDIscount : 0) +
-        //   data.discountAmount;
-        // newObject.totalPrice =
-        //   (newObject.totalPrice ? newObject.totalPrice : 0) + data.test.price;
-        // newObject.netPrice = newObject.netPrice
-        //   ? newObject.netPrice
+
         //   : 0 + data.pirceAfterDiscount;
         newObject.tests = newTestArray;
 
@@ -115,14 +118,7 @@ const TestInformation = (params: IParams) => {
         const updatedTest = newObject.tests.filter(
           (fdata: IFormData) => fdata.test._id !== data.test._id
         );
-        // newObject.totalDIscount =
-        //   (newObject.totalDIscount ? newObject.totalDIscount : 0) -
-        //   data.discountAmount;
-        // newObject.totalPrice =
-        //   (newObject.totalPrice ? newObject.totalPrice : 0) - data.test.price;
-        // newObject.netPrice =
-        //   (newObject.netPrice ? newObject.netPrice : 0) -
-        //   data.pirceAfterDiscount;
+
         newObject.tests = updatedTest;
         params.setFormData(newObject);
       }

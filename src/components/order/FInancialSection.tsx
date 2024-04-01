@@ -74,6 +74,8 @@ const FInancialSection = ({ setData }: { setData(arg0: any): void }) => {
             <CheckIcon color="white" fill="blue" />
           </InputGroup.Button>
           <Input
+            type="number"
+            value={amounts.cashDisocunt}
             placeholder="Cash Discount"
             name="cashDiscount"
             onChange={(value, event) => {
