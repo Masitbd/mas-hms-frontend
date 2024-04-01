@@ -3,7 +3,15 @@ import {
   useGetTestsQuery,
 } from "@/redux/api/test/testSlice";
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { Button, Form, InputPicker, Message, Table, toaster } from "rsuite";
+import {
+  Button,
+  Form,
+  InputPicker,
+  Message,
+  Pagination,
+  Table,
+  toaster,
+} from "rsuite";
 import AlartDialog from "../ui/AlertModal";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest } from "@/types/allDepartmentInterfaces";
@@ -49,7 +57,12 @@ const OrderTable = ({
     }
   }, [deleteSuccess, deleteError]);
   // For search
-  const [searchData, setSearchData] = useState({ searchTerm: "" });
+  const [searchData, setSearchData] = useState({
+    sortBy: "createdAt",
+    sortOrder: -1,
+    patientType: "all",
+    limit: 10,
+  });
   const {
     data: testData,
     isLoading: testLoading,
@@ -59,8 +72,8 @@ const OrderTable = ({
     <div>
       <div className="my-5">
         <Form
-          onChange={(formValue: Record<string, any>) =>
-            setSearchData({ searchTerm: formValue.searchTerm })
+          onChange={(formValue, event) =>
+            setSearchData((preValue) => ({ ...preValue, ...formValue }))
           }
           className="grid grid-cols-4 gap-5 justify-center w-full"
           fluid
@@ -69,15 +82,18 @@ const OrderTable = ({
             <Form.ControlLabel>Search</Form.ControlLabel>
             <Form.Control name="searchTerm" />
           </Form.Group>
+
           <Form.Group controlId="patientType">
-            <Form.ControlLabel>Patien Type</Form.ControlLabel>
+            <Form.ControlLabel>Patient Type</Form.ControlLabel>
             <Form.Control
               name="patientType"
               accepter={InputPicker}
               data={[
                 { label: "Registered", value: "registered" },
                 { label: "Not Registered", value: "notRegistered" },
+                { label: "All", value: "all" },
               ]}
+              defaultValue={"all"}
             />
           </Form.Group>
           <Form.Group controlId="sortBy">
@@ -86,12 +102,13 @@ const OrderTable = ({
               name="sortBy"
               accepter={InputPicker}
               data={[
-                { label: "Creation Date", value: "cDate" },
-                { label: "Delivery Date", value: "dDate" },
+                { label: "Creation Date", value: "createdAt" },
+                { label: "Delivery Date", value: "deliveryTime" },
 
                 { label: "Due Amount", value: "dueAmount" },
                 { label: "Total Price", value: "totalPrice" },
               ]}
+              defaultValue={"createdAt"}
             />
           </Form.Group>
           <Form.Group controlId="sortOrder">
@@ -100,15 +117,16 @@ const OrderTable = ({
               name="sortOrder"
               accepter={InputPicker}
               data={[
-                { label: "Aescending", value: "aesc" },
-                { label: "Descending", value: "desc" },
+                { label: "Aescending", value: 1 },
+                { label: "Descending", value: -1 },
               ]}
+              defaultValue={-1}
             />
           </Form.Group>
         </Form>
       </div>
       <Table
-        height={650}
+        height={500}
         data={testData?.data}
         loading={testLoading}
         className="w-full"
@@ -120,10 +138,13 @@ const OrderTable = ({
           <HeaderCell>Order Id</HeaderCell>
           <Cell dataKey="oid" />
         </Column>
-
-        <Column resizable flexGrow={4}>
-          <HeaderCell>User </HeaderCell>
+        <Column resizable flexGrow={2}>
+          <HeaderCell>UUID</HeaderCell>
           <Cell dataKey="uuid" />
+        </Column>
+        <Column resizable flexGrow={2}>
+          <HeaderCell>Name </HeaderCell>
+          <Cell dataKey="patient.name" />
         </Column>
         <Column resizable flexGrow={2}>
           <HeaderCell>Patient Type</HeaderCell>
@@ -136,6 +157,10 @@ const OrderTable = ({
         <Column resizable flexGrow={1}>
           <HeaderCell>Due Amount</HeaderCell>
           <Cell dataKey="dueAmount" className="text-red-600" />
+        </Column>
+        <Column resizable flexGrow={1}>
+          <HeaderCell>Total Price</HeaderCell>
+          <Cell dataKey="totalPrice" className="text-red-600" />
         </Column>
         <Column resizable flexGrow={1}>
           <HeaderCell>Status</HeaderCell>
@@ -192,6 +217,29 @@ const OrderTable = ({
           </Cell>
         </Column>
       </Table>
+      <div className="w-[90%] mt-5 mx-auto">
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={5}
+          size="xs"
+          layout={["total", "-", "limit", "|", "pager", "skip"]}
+          total={testData?.meta.total}
+          limitOptions={[10, 30, 50]}
+          limit={testData?.meta?.limit}
+          activePage={testData?.meta?.page}
+          onChangePage={(page: number) =>
+            setSearchData((prevData) => ({ ...prevData, page: page }))
+          }
+          onChangeLimit={(limit: number) =>
+            setSearchData((prevData) => ({ ...prevData, limit: limit }))
+          }
+        />
+      </div>
       <div>
         <AlartDialog
           description="Are you sure you want to delete this code "

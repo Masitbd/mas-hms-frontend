@@ -38,7 +38,7 @@ const initialData = {
     uuid: "",
   },
   refBy: "",
-  deliveryTime: "",
+  deliveryTime: new Date(),
 };
 
 type ItestInformaiton = {
@@ -49,13 +49,14 @@ type ItestInformaiton = {
   test: ITest;
   priceAfterDiscount: number;
   discountAmount: number;
+  deliveryDate: Date;
 };
 export type IOrderData = {
   uuid?: string;
   patient?: Partial<IPatient>;
   refBy: string;
   status: string;
-  deliveryTime: string;
+  deliveryTime: Date;
   tests: {
     status: string;
     discount: string;
@@ -105,24 +106,30 @@ const Order = () => {
   let vatAmount = 0;
   let discountAmount = 0;
   let totalPrice = 0;
+  let estimatedDeliveryDate = new Date();
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
       totalPrice = totalPrice + param.test.price;
-
+      if (param.deliveryDate > data.deliveryTime) {
+        setData((preValue) => ({
+          ...preValue,
+          deliveryTime: param.deliveryDate,
+        }));
+      }
       if (param.hasDiscount || Number(param.discount) > 0) {
-        const discount = Math.ceil(
-          (Number(param.discount) / 100) * param.test.price
+        const discount = Number(
+          ((Number(param.discount) / 100) * param.test.price).toFixed(2)
         );
-        console.log(discount);
-        discountAmount = discountAmount + discount;
+
+        discountAmount = Number((discountAmount + discount).toFixed(2));
       }
     });
 
   data.tests?.length > 0 &&
     data.vatParcent > 0 &&
     data.tests.map((test) => {
-      vatAmount = Math.ceil((data.vatParcent / 100) * totalPrice);
+      vatAmount = Number(((data.vatParcent / 100) * totalPrice).toFixed(2));
     });
 
   data.parcentDiscount > 0 &&
@@ -130,10 +137,10 @@ const Order = () => {
       if (param.hasDiscount || Number(param.discount) > 0) {
         return;
       } else {
-        const discount = Math.ceil(
-          (data.parcentDiscount / 100) * Number(param.test.price)
+        const discount = Number(
+          ((data.parcentDiscount / 100) * Number(param.test.price)).toFixed(2)
         );
-        discountAmount = discountAmount + discount;
+        discountAmount = Number((discountAmount + discount).toFixed(2));
       }
     });
 
@@ -145,22 +152,25 @@ const Order = () => {
       tests: data.tests.map((testdata: ItestInformaiton) => {
         return {
           status: "pending",
-          discount: testdata?.discount,
+          discount: Number(testdata?.discount),
           test: testdata.test._id,
         };
       }),
-      totalPrice: data.totalPrice,
+      totalPrice: totalPrice,
       cashDiscount: data.cashDiscount ? data.cashDiscount : 0,
       parcentDiscount: data.parcentDiscount ? data.parcentDiscount : 0,
-      dueAmount: Math.ceil(
-        totalPrice -
+      dueAmount: Number(
+        (
+          totalPrice -
           discountAmount +
           vatAmount -
           (data.cashDiscount ? data.cashDiscount : 0) -
           (data.paid ? data.paid : 0)
+        ).toFixed(2)
       ),
       paid: data.paid ? data.paid : 0,
       patientType: data.patientType,
+      vat: vatAmount,
     };
     if (data.patientType == "registered" && data.patient._id) {
       orderData.uuid = data.patient.uuid;
@@ -168,6 +178,7 @@ const Order = () => {
     if (data.patientType === "notRegistered") {
       orderData.patient = data.patient;
     }
+    console.log(orderData);
     postOrder(orderData);
   };
 
@@ -190,7 +201,10 @@ const Order = () => {
         <Button
           appearance="primary"
           color="blue"
-          onClick={() => setModalOpen(!modalOpen)}
+          onClick={() => {
+            setModalOpen(!modalOpen);
+            setMode("new");
+          }}
         >
           Generate New Bill
         </Button>
@@ -248,11 +262,11 @@ const Order = () => {
 
             <div className="mt-5">
               {data.patientType === "registered" &&
-                (SearchData?.data ? (
+                (SearchData?.data || data.patient.name ? (
                   <ForRegistered
                     doctors={doctorData.data}
                     formData={data}
-                    patient={SearchData.data}
+                    patient={SearchData?.data ? SearchData.data : data}
                     setFormData={setData}
                   />
                 ) : (

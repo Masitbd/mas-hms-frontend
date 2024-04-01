@@ -14,9 +14,11 @@ const order = baseApi.injectEndpoints({
     }),
 
     getOrder: build.query({
-      query: () => ({
+      query: (data) => ({
         url: "/order",
-        method: "get",
+        method: "GET",
+        params: data,
+
         contentType: "application/json",
       }),
       providesTags: ["order"],

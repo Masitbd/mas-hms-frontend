@@ -11,6 +11,7 @@ const PriceSection = ({
   discountAmount: number;
   vatAmount: number;
 }) => {
+  console.log();
   return (
     <div>
       <div className="mt-10">
@@ -40,18 +41,20 @@ const PriceSection = ({
 
         <div className=" flex justify-between">
           <div className="font-bold">Vat</div>
-          <div className="text-red-600"> {vatAmount} </div>
+          <div className="text-green-600">
+            {data.vat ? data.vat : vatAmount}{" "}
+          </div>
         </div>
         <hr />
         <div className=" flex justify-between">
           <div className="font-bold">Net Price</div>
           <div className="font-bold">
-            {Math.ceil(
+            {(
               totalPrice -
-                discountAmount +
-                vatAmount -
-                (data.cashDiscount ? data.cashDiscount : 0)
-            )}
+              discountAmount +
+              (data.vat ? data.vat : vatAmount) -
+              (data.cashDiscount ? data.cashDiscount : 0)
+            ).toFixed(2)}
           </div>
         </div>
         <div className=" flex justify-between">
@@ -64,13 +67,14 @@ const PriceSection = ({
         <div className=" flex justify-between">
           <div className="font-bold">Due Amount</div>
           <div className="font-bold  text-red-600">
-            {Math.ceil(
+            {(
               totalPrice -
-                discountAmount -
-                vatAmount -
-                (data.cashDiscount ? data.cashDiscount : 0) -
-                (data.paid ? data.paid : 0)
-            )}
+              discountAmount +
+              vatAmount -
+              (data.cashDiscount ? data.cashDiscount : 0) -
+              (data.paid ? data.paid : 0) +
+              (data.vat ? data.vat : 0)
+            ).toFixed(2)}
           </div>
         </div>
       </div>

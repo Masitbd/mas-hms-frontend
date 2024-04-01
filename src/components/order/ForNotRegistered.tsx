@@ -94,6 +94,7 @@ const ForNotRegistered = (param: param) => {
               accepter={DatePicker}
               placement="top"
               format="dd MMM yyyy hh:mm aa"
+              value={param.data.deliveryTime}
               showMeridian
               cleanable
             />
