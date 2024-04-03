@@ -1,36 +1,30 @@
 import React, { useState } from "react";
-import { Input, InputGroup } from "rsuite";
+import { Input, InputGroup, Message, toaster } from "rsuite";
 import CheckIcon from "@rsuite/icons/Check";
 
-const FInancialSection = ({ setData }: { setData(arg0: any): void }) => {
-  const [amounts, setAmounts] = useState({
-    vat: 0,
-    cashDisocunt: 0,
-    parcentDiscount: 0,
-    paid: 0,
-  });
+const FInancialSection = ({
+  setData,
+  dueAmount,
+  data,
+}: {
+  setData(arg0: any): void;
+  dueAmount: string;
+  data: any;
+}) => {
   return (
     <div className="grid grid-cols-4 mt-5 gap-16">
       {/* For financial seciton */}
       <div>
         <h5 className="font-bold">Vat</h5>
         <InputGroup>
-          <InputGroup.Button
-            appearance="subtle"
-            onClick={() => {
-              setData((prevData: any) => ({
-                ...prevData,
-                vatParcent: amounts.vat,
-              }));
-            }}
-          >
-            <CheckIcon color="white" fill="blue" />
-          </InputGroup.Button>
           <Input
             placeholder="Vat"
             name="vat"
             onChange={(value, event) => {
-              setAmounts({ ...amounts, vat: Number(value) });
+              setData((prevData: any) => ({
+                ...prevData,
+                vat: Number(value),
+              }));
             }}
           />
         </InputGroup>
@@ -38,24 +32,14 @@ const FInancialSection = ({ setData }: { setData(arg0: any): void }) => {
       <div>
         <h5 className="font-bold">Discount Parcent</h5>
         <InputGroup>
-          <InputGroup.Button
-            onClick={() =>
-              setData((prevData: any) => ({
-                ...prevData,
-                parcentDiscount: amounts.parcentDiscount,
-              }))
-            }
-          >
-            <CheckIcon color="white" fill="blue" />
-          </InputGroup.Button>
           <Input
             name="parcentDiscount"
-            onChange={(value, event) => {
-              setAmounts({
-                ...amounts,
+            onChange={(value, event) =>
+              setData((prevData: any) => ({
+                ...prevData,
                 parcentDiscount: Number(value),
-              });
-            }}
+              }))
+            }
             placeholder="Parcent Discount"
           />
         </InputGroup>
@@ -63,23 +47,31 @@ const FInancialSection = ({ setData }: { setData(arg0: any): void }) => {
       <div>
         <h5 className="font-bold">Cash Discount</h5>
         <InputGroup>
-          <InputGroup.Button
-            onClick={() =>
-              setData((prevData: any) => ({
-                ...prevData,
-                cashDiscount: amounts.cashDisocunt,
-              }))
-            }
-          >
-            <CheckIcon color="white" fill="blue" />
-          </InputGroup.Button>
+          <InputGroup.Addon>0.</InputGroup.Addon>
           <Input
             type="number"
-            value={amounts.cashDisocunt}
             placeholder="Cash Discount"
             name="cashDiscount"
+            value={data.cashDiscount}
             onChange={(value, event) => {
-              setAmounts({ ...amounts, cashDisocunt: Number(value) });
+              const dueValue = parseFloat(dueAmount).toString();
+
+              if (
+                (value.includes(".") || Number(value) === 0) &&
+                Number("." + dueValue.split(".")[1]) >= Number(value)
+              ) {
+                setData((prevData: any) => ({
+                  ...prevData,
+                  cashDiscount: Number(value),
+                }));
+              } else {
+                toaster.push(
+                  <Message type="error">
+                    Cash Discount cannot be more then decimal point{" "}
+                    {dueAmount.split(".")}
+                  </Message>
+                );
+              }
             }}
           />
         </InputGroup>
@@ -87,21 +79,14 @@ const FInancialSection = ({ setData }: { setData(arg0: any): void }) => {
       <div>
         <h5 className="font-bold">Cash Paid</h5>
         <InputGroup>
-          <InputGroup.Button
-            onClick={() =>
-              setData((prevData: any) => ({
-                ...prevData,
-                paid: amounts.paid,
-              }))
-            }
-          >
-            <CheckIcon color="white" fill="blue" />
-          </InputGroup.Button>
           <Input
             placeholder="Cash Paid"
             name="cash"
             onChange={(value, event) => {
-              setAmounts({ ...amounts, paid: Number(value) });
+              setData((prevData: any) => ({
+                ...prevData,
+                paid: Number(value),
+              }));
             }}
           />
         </InputGroup>

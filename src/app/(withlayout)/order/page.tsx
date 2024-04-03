@@ -1,8 +1,17 @@
 "use client";
 import OrderTable from "@/components/order/OrderTable";
 import RModal from "@/components/ui/Modal";
-import React, { useEffect, useState } from "react";
-import { Button, Form, Input, InputGroup, InputPicker, Table } from "rsuite";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Form,
+  Input,
+  InputGroup,
+  InputPicker,
+  Message,
+  Table,
+  toaster,
+} from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
 import FormControl from "rsuite/esm/FormControl";
 import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
@@ -21,14 +30,25 @@ import { ITest } from "@/types/allDepartmentInterfaces";
 import FInancialSection from "@/components/order/FInancialSection";
 import PriceSection from "@/components/order/PriceSection";
 import ForDewCollection from "@/components/order/ForDewCollection";
-const initialData = {
+
+type InitialData = {
+  totalPrice: number;
+  parcentDiscount: number;
+  cashDiscount: number;
+  vat: number;
+  paid: number;
+  tests: ItestInformaiton[]; // Define the appropriate type for tests
+  patientType: string;
+  patient: IPatient;
+  refBy?: string; // Make refBy optional
+  deliveryTime: Date;
+};
+
+const initialData: InitialData = {
   totalPrice: 0,
   parcentDiscount: 0,
   cashDiscount: 0,
-  totalDIscount: 0,
-  netPrice: 0,
-  vatParcent: 0,
-  vatAmount: 0,
+  vat: 0,
   paid: 0,
   tests: [],
   patientType: "",
@@ -36,20 +56,22 @@ const initialData = {
     _id: "",
     name: "",
     uuid: "",
+    age: "",
+    gender: "",
+    address: "",
+    phone: "",
+    image: "",
   },
   refBy: "",
   deliveryTime: new Date(),
 };
 
 type ItestInformaiton = {
-  _id: any;
   discount: string;
-  hasDiscount: boolean;
   ramark: string;
   test: ITest;
-  priceAfterDiscount: number;
-  discountAmount: number;
-  deliveryDate: Date;
+  deliveryTime: Date;
+  remark: string;
 };
 export type IOrderData = {
   uuid?: string;
@@ -59,8 +81,8 @@ export type IOrderData = {
   deliveryTime: Date;
   tests: {
     status: string;
-    discount: string;
-    test: string;
+    discount: number;
+    test: string | undefined;
   }[];
   totalPrice: number;
   cashDiscount: number;
@@ -68,8 +90,11 @@ export type IOrderData = {
   dueAmount: number;
   patientType: string;
   paid: number;
+  vat: number;
 };
 const Order = () => {
+  const refForUnregistered: React.MutableRefObject<any> = useRef();
+  const patientTypeRef: React.MutableRefObject<any> = useRef();
   const [data, setData] = useState(initialData);
   const [search, { data: SearchData }] = useLazyGetSinglePatientQuery();
   const [postOrder, { isSuccess, isError }] = usePostOrderMutation();
@@ -83,7 +108,7 @@ const Order = () => {
     setData(initialData);
   };
   const okHandler = () => {
-    setModalOpen(!modalOpen);
+    handlePostORder();
     setData(initialData);
   };
 
@@ -94,30 +119,28 @@ const Order = () => {
     { label: "Not Registered", value: "notRegistered" },
   ];
 
-  //   For patient search
-  const [svalue, setsvalue] = useState();
-
-  const handleSearchFunction = async () => {
-    const sdata = await search(svalue);
-
+  const handleSearchFunction = async (value: string) => {
+    const sdata = await search(value);
     setData({ ...data, patient: sdata.data.data });
+    if (sdata.data.data.ref_by) {
+      setData({ ...data, refBy: sdata.data.data.ref_by });
+    }
   };
   // Handling discount and vat functionality
   let vatAmount = 0;
   let discountAmount = 0;
   let totalPrice = 0;
-  let estimatedDeliveryDate = new Date();
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
       totalPrice = totalPrice + param.test.price;
-      if (param.deliveryDate > data.deliveryTime) {
+      if (param.deliveryTime > data.deliveryTime) {
         setData((preValue) => ({
           ...preValue,
-          deliveryTime: param.deliveryDate,
+          deliveryTime: param.deliveryTime,
         }));
       }
-      if (param.hasDiscount || Number(param.discount) > 0) {
+      if (Number(param.discount) > 0) {
         const discount = Number(
           ((Number(param.discount) / 100) * param.test.price).toFixed(2)
         );
@@ -127,14 +150,12 @@ const Order = () => {
     });
 
   data.tests?.length > 0 &&
-    data.vatParcent > 0 &&
-    data.tests.map((test) => {
-      vatAmount = Number(((data.vatParcent / 100) * totalPrice).toFixed(2));
-    });
+    data.vat > 0 &&
+    (vatAmount = Number(((data.vat / 100) * totalPrice).toFixed(2)));
 
   data.parcentDiscount > 0 &&
     data.tests.map((param: ItestInformaiton) => {
-      if (param.hasDiscount || Number(param.discount) > 0) {
+      if (Number(param.discount) > 0) {
         return;
       } else {
         const discount = Number(
@@ -145,8 +166,13 @@ const Order = () => {
     });
 
   const handlePostORder = async () => {
+    if (data.tests.length === 0) {
+      toaster.push(
+        <Message type="error">No test added in the order list</Message>
+      );
+      return;
+    }
     const orderData: IOrderData = {
-      refBy: data.refBy,
       status: "pending",
       deliveryTime: data.deliveryTime,
       tests: data.tests.map((testdata: ItestInformaiton) => {
@@ -154,6 +180,8 @@ const Order = () => {
           status: "pending",
           discount: Number(testdata?.discount),
           test: testdata.test._id,
+          deliveryTime: testdata.deliveryTime,
+          remark: testdata.remark,
         };
       }),
       totalPrice: totalPrice,
@@ -170,21 +198,41 @@ const Order = () => {
       ),
       paid: data.paid ? data.paid : 0,
       patientType: data.patientType,
-      vat: vatAmount,
+      vat: data.vat,
+      refBy: "",
     };
-    if (data.patientType == "registered" && data.patient._id) {
-      orderData.uuid = data.patient.uuid;
+    if (data.refBy.length > 5) {
+      orderData.refBy = data.refBy as string;
     }
-    if (data.patientType === "notRegistered") {
-      orderData.patient = data.patient;
+
+    if (data.patientType.length > 5) {
+      if (data.patientType == "registered") {
+        if (data.patient?._id) {
+          orderData.uuid = data.patient.uuid;
+          postOrder(orderData);
+        } else {
+          toaster.push(<Message type="error">Patient UUID is wrong</Message>);
+        }
+      }
+      if (data.patientType === "notRegistered") {
+        if (refForUnregistered.current.check()) {
+          orderData.patient = data.patient;
+          postOrder(orderData);
+        } else {
+          toaster.push(
+            <Message type="error">Please Fill out all the fields</Message>
+          );
+        }
+      }
+    } else {
+      toaster.push(<Message type="error">Select Patient type</Message>);
     }
-    console.log(orderData);
-    postOrder(orderData);
   };
 
   useEffect(() => {
     if (isSuccess) {
-      alert("success");
+      toaster.push(<Message type="success">Order posted Successfully</Message>);
+      setModalOpen(!modalOpen);
     }
   }, [isSuccess]);
 
@@ -192,7 +240,7 @@ const Order = () => {
   const patchAndViewHandler = (data: { mode: string; data: IOrderData }) => {
     setModalOpen(!modalOpen);
     setMode(data.mode);
-    setData(data.data);
+    setData(data.data as IOrderData);
   };
 
   return (
@@ -231,6 +279,7 @@ const Order = () => {
               fluid
               className="grid grid-cols-2"
               formValue={data}
+              ref={patientTypeRef}
             >
               <Form.Group controlId="patientType">
                 <Form.ControlLabel>Patient Type</Form.ControlLabel>
@@ -247,13 +296,11 @@ const Order = () => {
                   <div className="mt-5">
                     <h1 className="font-bold">Patient UUID</h1>
                     <InputGroup>
-                      <Input name="value" onChange={setsvalue} width={50} />
-                      <InputGroup.Button
-                        type="submit"
-                        onClick={handleSearchFunction}
-                      >
-                        <SearchIcon />
-                      </InputGroup.Button>
+                      <Input
+                        name="value"
+                        onChange={handleSearchFunction}
+                        width={50}
+                      />
                     </InputGroup>
                   </div>
                 </>
@@ -262,7 +309,7 @@ const Order = () => {
 
             <div className="mt-5">
               {data.patientType === "registered" &&
-                (SearchData?.data || data.patient.name ? (
+                (data?.patient?._id ? (
                   <ForRegistered
                     doctors={doctorData.data}
                     formData={data}
@@ -281,6 +328,7 @@ const Order = () => {
                   doctorData={doctorData.data}
                   setFromData={setData}
                   data={data}
+                  forwardedRef={refForUnregistered}
                 />
               )}
             </div>
@@ -289,7 +337,16 @@ const Order = () => {
               <TestInformation formData={data} setFormData={setData} />
             </div>
             <div>
-              <FInancialSection setData={setData} />
+              <FInancialSection
+                setData={setData}
+                dueAmount={(
+                  totalPrice -
+                  discountAmount +
+                  vatAmount -
+                  (data.paid ? data.paid : 0)
+                ).toFixed(2)}
+                data={data}
+              />
             </div>
             <div>
               <ForDewCollection
@@ -309,21 +366,11 @@ const Order = () => {
                 <Button
                   appearance="primary"
                   color="green"
-                  className={`mx-5`}
                   size="lg"
                   disabled={mode == "new"}
                   onClick={() => setDewMOdalOpen(!dewModalOpen)}
                 >
                   Collect Due Ammount
-                </Button>
-                <Button
-                  size="lg"
-                  appearance="primary"
-                  color="blue"
-                  onClick={handlePostORder}
-                  disabled={mode !== "new"}
-                >
-                  Post
                 </Button>
               </div>
             </div>

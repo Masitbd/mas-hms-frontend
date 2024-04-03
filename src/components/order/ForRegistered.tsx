@@ -1,6 +1,6 @@
 import { IDoctor, IPatient } from "@/types/allDepartmentInterfaces";
 import React from "react";
-import { DatePicker, Form, InputPicker } from "rsuite";
+import { DatePicker, Form, InputPicker, Schema } from "rsuite";
 
 type paramType = {
   patient: IPatient;
@@ -10,6 +10,25 @@ type paramType = {
 };
 
 const ForRegistered = (param: paramType) => {
+  const { StringType, NumberType } = Schema.Types;
+
+  const model = Schema.Model({
+    name: StringType().isRequired("This field is required."),
+    fatherName: StringType().isRequired("This field is required."),
+    email: StringType()
+      .isEmail("This field is Required for email")
+      .isRequired("This field is required."),
+    designation: StringType().isRequired("This field is required."),
+    phone: NumberType()
+      .isRequired("This field is required.")
+      .addRule((value: string | number): boolean => {
+        const phoneNumber = value.toString();
+        if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
+          return false;
+        }
+        return true;
+      }, "Phone number must be 11 digits."),
+  });
   return (
     <div>
       <div>
@@ -77,7 +96,7 @@ const ForRegistered = (param: paramType) => {
                 data={param.doctors.map((data: IDoctor) => {
                   return { label: data.name, value: data._id };
                 })}
-                value={param.formData.refBy._id}
+                value={param.formData.refBy ? param.formData.refBy._id : ""}
               />
             </Form.Group>
             <Form.Group controlId="consultant">
@@ -93,7 +112,7 @@ const ForRegistered = (param: paramType) => {
                 value={param.formData?.patient?.consultant}
               />
             </Form.Group>
-            <Form.Group controlId="deliveryDate">
+            <Form.Group controlId="deliveryTime">
               <Form.ControlLabel>Delivery Date </Form.ControlLabel>
               <Form.Control
                 name="deliveryTime"

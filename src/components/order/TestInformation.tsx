@@ -24,7 +24,7 @@ type IFormData = {
   test: ITest;
   hasDiscount: boolean;
   discount: number;
-  deliveryDate: Date;
+  deliveryTime: Date;
   remark: string;
   pirceAfterDiscount: number;
   discountAmount: number;
@@ -33,14 +33,13 @@ const initialFromData = {
   test: {} as ITest,
   hasDiscount: false,
   discount: 0,
-  deliveryDate: new Date(),
+  deliveryTime: new Date(),
   remark: "",
   pirceAfterDiscount: 0,
   discountAmount: 0,
 };
 
 const TestInformation = (params: IParams) => {
-  console.log(params.formData);
   const ref: React.MutableRefObject<any> = useRef();
   const { StringType, NumberType, ObjectType } = Schema.Types;
   const [isTestModalOpen, setTestModalOpen] = useState(false);
@@ -63,7 +62,7 @@ const TestInformation = (params: IParams) => {
       ...data,
       pirceAfterDiscount: rowData.price,
       test: rowData,
-      deliveryDate: estimatedDeliveryDate,
+      deliveryTime: estimatedDeliveryDate,
     });
 
     toggleTestOrderInfo();
@@ -85,7 +84,7 @@ const TestInformation = (params: IParams) => {
 
   const handleFormChange = (formValue: any) => {
     setFormData({
-      deliveryDate: formValue.deliveryDate,
+      deliveryTime: formValue.deliveryTime,
       discount: formValue.discount,
       hasDiscount: formValue.hasDiscount,
       remark: formValue.remark,
@@ -96,6 +95,11 @@ const TestInformation = (params: IParams) => {
   };
 
   const okHandlerForOrderInfo = () => {
+    if (mode === "view") {
+      setFormData(initialFromData);
+      toggleTestOrderInfo();
+      return;
+    }
     if (ref.current.check()) {
       if (mode === "new") {
         const newObject = {
@@ -110,9 +114,7 @@ const TestInformation = (params: IParams) => {
 
         params.setFormData(newObject);
       }
-      if (mode === "view") {
-        setFormData(initialFromData);
-      }
+
       if (mode === "delete") {
         const newObject = { ...params.formData };
         const updatedTest = newObject.tests.filter(
@@ -159,7 +161,7 @@ const TestInformation = (params: IParams) => {
   };
 
   const singleTestModel = Schema.Model({
-    deliveryDate: ObjectType().isRequired("This field is required."),
+    deliveryTime: ObjectType().isRequired("This field is required."),
     discount: NumberType().addRule((value: string | number): boolean => {
       const discount = Number(value);
       if (discount < 0 || discount > 99) {
@@ -269,6 +271,7 @@ const TestInformation = (params: IParams) => {
                   {[
                     ["Title", data.test.label],
                     ["Price", data.test.price],
+
                     [
                       "Specimen",
                       data.test?.specimen
@@ -348,10 +351,11 @@ const TestInformation = (params: IParams) => {
                       onChange={(value, event) => handleDiscountChange(value)}
                     />
                   </Form.Group>
-                  <Form.Group controlId="deliveryDate">
+                  <Form.Group controlId="deliveryTime">
                     <Form.ControlLabel>Delivery Date </Form.ControlLabel>
                     <Form.Control
-                      name="deliveryDate"
+                      value={new Date(data.deliveryTime)}
+                      name="deliveryTime"
                       accepter={DatePicker}
                       format="dd MMM yyyy hh:mm aa"
                       showMeridian

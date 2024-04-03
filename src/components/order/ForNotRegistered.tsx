@@ -1,10 +1,11 @@
 import { IDoctor } from "@/types/allDepartmentInterfaces";
-import React from "react";
-import { DatePicker, Form, InputPicker } from "rsuite";
+import React, { forwardRef } from "react";
+import { DatePicker, Form, InputPicker, Schema } from "rsuite";
 type param = {
   setFromData: (params: any) => void;
   doctorData: IDoctor[];
   data: any;
+  forwardedRef: React.MutableRefObject<any>;
 };
 const ForNotRegistered = (param: param) => {
   const genderType = [
@@ -12,6 +13,26 @@ const ForNotRegistered = (param: param) => {
     { label: "Female", value: "Female" },
     { label: "Other", value: "other" },
   ];
+
+  const { StringType, NumberType } = Schema.Types;
+  const model = Schema.Model({
+    name: StringType().isRequired("This field is required."),
+    age: StringType().isRequired("This field is required."),
+    gender: StringType().isRequired("This field is required."),
+    address: StringType().isRequired("This field is required."),
+    email: StringType()
+      .isEmail("This field is Required for email")
+      .isRequired("This field is required."),
+    phone: NumberType()
+      .isRequired("This field is required.")
+      .addRule((value: string | number): boolean => {
+        const phoneNumber = value.toString();
+        if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
+          return false;
+        }
+        return true;
+      }, "Phone number must be 11 digits."),
+  });
   return (
     <div>
       <h2 className="text-xl font-bold">Patient Information</h2>
@@ -35,6 +56,8 @@ const ForNotRegistered = (param: param) => {
             }));
           }}
           formValue={param.data.patient}
+          model={model}
+          ref={param.forwardedRef}
         >
           <Form.Group controlId="name">
             <Form.ControlLabel>Name</Form.ControlLabel>
@@ -87,7 +110,7 @@ const ForNotRegistered = (param: param) => {
               className="w-full"
             />
           </Form.Group>
-          <Form.Group controlId="deliveryDate">
+          <Form.Group controlId="deliveryTime">
             <Form.ControlLabel>Delivery Date </Form.ControlLabel>
             <Form.Control
               name="deliveryTime"

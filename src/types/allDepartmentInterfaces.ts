@@ -89,6 +89,7 @@ export type ITest = {
 };
 
 export type IPatient = {
+  _id: any;
   name: string;
   age: string;
   gender: string;

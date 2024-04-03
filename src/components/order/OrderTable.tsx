@@ -17,12 +17,13 @@ import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
+import { IOrderData } from "@/app/(withlayout)/order/page";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
   patchHandler,
 }: {
-  patchHandler?: (data: { data: ITest; mode: string }) => void;
+  patchHandler?: (data: { data: IOrderData; mode: string }) => void;
 }) => {
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
@@ -151,7 +152,7 @@ const OrderTable = ({
           <Cell dataKey="patientType" />
         </Column>
         <Column resizable flexGrow={1}>
-          <HeaderCell>Delivary Date</HeaderCell>
+          <HeaderCell>Delivery Date</HeaderCell>
           <Cell dataKey="deliveryTime" />
         </Column>
         <Column resizable flexGrow={1}>
@@ -194,22 +195,16 @@ const OrderTable = ({
                 >
                   Delete
                 </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() =>
-                    patchHandler({ data: rowdate as ITest, mode: "patch" })
-                  }
-                >
-                  Edit
-                </Button>
+
                 <Button
                   // appearance="transparent"
                   className="ml-2"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
-                    patchHandler({ data: rowdate as ITest, mode: "watch" });
+                    patchHandler({
+                      data: rowdate as IOrderData,
+                      mode: "watch",
+                    });
                   }}
                 />
               </>

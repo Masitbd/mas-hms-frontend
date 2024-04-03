@@ -42,7 +42,7 @@ const PriceSection = ({
         <div className=" flex justify-between">
           <div className="font-bold">Vat</div>
           <div className="text-green-600">
-            {data.vat ? data.vat : vatAmount}{" "}
+            {data.vat ? vatAmount : vatAmount}{" "}
           </div>
         </div>
         <hr />
@@ -52,7 +52,7 @@ const PriceSection = ({
             {(
               totalPrice -
               discountAmount +
-              (data.vat ? data.vat : vatAmount) -
+              (data.vat ? vatAmount : vatAmount) -
               (data.cashDiscount ? data.cashDiscount : 0)
             ).toFixed(2)}
           </div>
@@ -69,11 +69,10 @@ const PriceSection = ({
           <div className="font-bold  text-red-600">
             {(
               totalPrice -
-              discountAmount +
-              vatAmount -
+              discountAmount -
               (data.cashDiscount ? data.cashDiscount : 0) -
               (data.paid ? data.paid : 0) +
-              (data.vat ? data.vat : 0)
+              (data.vat ? vatAmount : 0)
             ).toFixed(2)}
           </div>
         </div>
