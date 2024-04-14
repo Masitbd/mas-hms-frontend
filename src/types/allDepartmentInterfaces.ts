@@ -97,14 +97,13 @@ export type ITest = {
   processTime: number;
   resultFields: IResultField[];
 };
-<<<<<<< HEAD
+
 export type IAccount = {
   _id: string;
   uuid: string;
   balanceType: string;
   balance: number;
-=======
-
+};
 export type IPatient = {
   name: string;
   age: string;
@@ -116,5 +115,4 @@ export type IPatient = {
   phone: string;
   email?: string;
   image: string;
->>>>>>> 623f00e605f36dc9efc003a20ebd19766a5969de
 };

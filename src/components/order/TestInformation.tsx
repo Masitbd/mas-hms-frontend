@@ -1,3 +1,5 @@
+import { useGetTestsQuery } from "@/redux/api/test/testSlice";
+import { IDepartment, IHospitalGroup, ITest } from "@/types/allDepartmentInterfaces";
 import React, { useRef, useState } from "react";
 import {
   Button,
@@ -9,9 +11,9 @@ import {
   Table,
   toaster,
 } from "rsuite";
+
+import TestReportForm from "../testReport/TestReportForm";
 import RModal from "../ui/Modal";
-import { useGetTestsQuery } from "@/redux/api/test/testSlice";
-import { ITest } from "@/types/allDepartmentInterfaces";
 
 const { Cell, Column, HeaderCell } = Table;
 
@@ -29,6 +31,7 @@ type IFormData = {
   pirceAfterDiscount: number;
   discountAmount: number;
 };
+
 const initialFromData = {
   test: {} as ITest,
   hasDiscount: false,
@@ -38,6 +41,34 @@ const initialFromData = {
   pirceAfterDiscount: 0,
   discountAmount: 0,
 };
+
+const initialFormTestData = {
+  label: "",
+  department: {} as IDepartment,
+  testCode: "",
+  specimen: [],
+  testType: "",
+  hasTestTube: true,
+  testTube: [],
+  reportGroup: "",
+  hospitalGroup: {} as IHospitalGroup,
+  price: 0,
+  vatRate: 0,
+  processTime: 0,
+  resultFields: [],
+  groupTests: [],
+  isGroupTest: false,
+  testResulType: "",
+  type: "",
+  value: "",
+  _id: "",
+  description: "",
+}
+
+export type ITestGenerateType = {
+  modeSingleType: string; modeType: string; id: string
+}
+
 
 const TestInformation = (params: IParams) => {
   console.log(params.formData);
@@ -169,6 +200,14 @@ const TestInformation = (params: IParams) => {
     }, "Discount Cannot be more then 99%"),
   });
 
+  const [reportGenerate, setReportGenerate] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '' });
+  const [reportGenerateModal, setReportGenerateModal] = useState<boolean>(false);
+
+  const reportGenerateHandler = (data: ITestGenerateType) => {
+    setReportGenerate({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id })
+    setReportGenerateModal(!reportGenerateModal)
+  }
+
   return (
     <div>
       <h2 className="font-bold text-xl">Test Information</h2>
@@ -227,13 +266,13 @@ const TestInformation = (params: IParams) => {
                           onClick={() => handleAddTest(rowdata as ITest)}
                           color="green"
                           appearance="primary"
-                          //   disabled={
-                          //     rowdata?.test?.testCode ===
-                          //     params.formData?.tests?.find(
-                          //       (tdata) =>
-                          //         tdata.test._id === rowdata.test.testCode
-                          //     )
-                          //   } for next
+                        //   disabled={
+                        //     rowdata?.test?.testCode ===
+                        //     params.formData?.tests?.find(
+                        //       (tdata) =>
+                        //         tdata.test._id === rowdata.test.testCode
+                        //     )
+                        //   } for next
                         >
                           Add
                         </Button>
@@ -255,8 +294,8 @@ const TestInformation = (params: IParams) => {
               mode == "edit"
                 ? "Edit Test Info"
                 : mode == "view"
-                ? "View Test Info"
-                : "Add new test"
+                  ? "View Test Info"
+                  : "Add new test"
             }
           >
             <>
@@ -367,6 +406,19 @@ const TestInformation = (params: IParams) => {
             </>
           </RModal>
         </div>
+        {
+          reportGenerateModal && (
+            <RModal
+              open={reportGenerateModal}
+              size="xxl"
+              title={
+                "Test Report Generate"
+              }
+            >
+              <TestReportForm reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
+            </RModal>
+          )
+        }
         <Table
           height={200}
           data={params?.formData?.tests}
@@ -421,6 +473,15 @@ const TestInformation = (params: IParams) => {
                     color="green"
                   >
                     View
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type })
+                    }}
+                    appearance="primary"
+                    color="orange"
+                  >
+                    report
                   </Button>
                 </>
               )}

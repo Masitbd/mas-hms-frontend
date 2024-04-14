@@ -1,4 +1,3 @@
-
 import { IDepartment } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
@@ -38,7 +37,7 @@ const department = baseApi.injectEndpoints({
       }),
       providesTags: ["department"]
     }),
-    getSingleDepartment: build.mutation({
+    getSingleDepartment: build.query({
       query: (id: string) => ({
         url: `/department/${id}`,
         method: "GET",
@@ -51,6 +50,7 @@ const department = baseApi.injectEndpoints({
 export const {
   usePostDepartmentMutation,
   useGetDepartmentQuery,
+  useGetSingleDepartmentQuery,
   useDeleteDepartmentMutation,
   usePatchDepartmentMutation
 } = department;

@@ -6,7 +6,7 @@ export const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
     //baseUrl: "https://city-clean-aps.vercel.app/api/v1",
-    baseUrl: "http://localhost:5000/api/v1",
+    baseUrl: "http://localhost:5000/api/v1"
     // prepareHeaders: (headers, { getState }) => {
     //   /*  const accessToken = getFromLocalStorage("accessToken");
     //   if (accessToken) {
@@ -26,15 +26,11 @@ export const baseApi = createApi({
     "doctor",
     "hospitalGroup",
     "test",
-<<<<<<< HEAD
     "account",
-    "transaction"
-  ]
-=======
+    "transaction",
     "patient",
-    "order",
-  ],
->>>>>>> 623f00e605f36dc9efc003a20ebd19766a5969de
+    "order"
+  ]
 
   // tagTypes: tagTypes,
 });

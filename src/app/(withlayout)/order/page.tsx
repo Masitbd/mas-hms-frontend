@@ -1,26 +1,21 @@
 "use client";
-import OrderTable from "@/components/order/OrderTable";
-import RModal from "@/components/ui/Modal";
-import React, { useEffect, useState } from "react";
-import { Button, Form, Input, InputGroup, InputPicker, Table } from "rsuite";
-import SearchIcon from "@rsuite/icons/Search";
-import FormControl from "rsuite/esm/FormControl";
-import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
-import { IDoctor, IPatient } from "@/types/allDepartmentInterfaces";
-import {
-  useGetSinglePatientQuery,
-  useLazyGetSinglePatientQuery,
-} from "@/redux/api/patient/patientSlice";
-import { useGetTestQuery, useGetTestsQuery } from "@/redux/api/test/testSlice";
-import TestInformation from "@/components/order/TestInformation";
-import CheckIcon from "@rsuite/icons/Check";
-import { usePostOrderMutation } from "@/redux/api/order/orderSlice";
-import ForRegistered from "@/components/order/ForRegistered";
-import ForNotRegistered from "@/components/order/ForNotRegistered";
-import { ITest } from "@/types/allDepartmentInterfaces";
 import FInancialSection from "@/components/order/FInancialSection";
-import PriceSection from "@/components/order/PriceSection";
 import ForDewCollection from "@/components/order/ForDewCollection";
+import ForNotRegistered from "@/components/order/ForNotRegistered";
+import ForRegistered from "@/components/order/ForRegistered";
+import OrderTable from "@/components/order/OrderTable";
+import PriceSection from "@/components/order/PriceSection";
+import TestInformation from "@/components/order/TestInformation";
+import RModal from "@/components/ui/Modal";
+import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
+import { usePostOrderMutation } from "@/redux/api/order/orderSlice";
+import {
+  useLazyGetSinglePatientQuery
+} from "@/redux/api/patient/patientSlice";
+import { IPatient, ITest } from "@/types/allDepartmentInterfaces";
+import SearchIcon from "@rsuite/icons/Search";
+import { useEffect, useState } from "react";
+import { Button, Form, Input, InputGroup, InputPicker } from "rsuite";
 const initialData = {
   totalPrice: 0,
   parcentDiscount: 0,
@@ -38,7 +33,7 @@ const initialData = {
     uuid: "",
   },
   refBy: "",
-  deliveryTime: new Date(),
+  deliveryTime: "",
 };
 
 type ItestInformaiton = {
@@ -49,14 +44,13 @@ type ItestInformaiton = {
   test: ITest;
   priceAfterDiscount: number;
   discountAmount: number;
-  deliveryDate: Date;
 };
 export type IOrderData = {
   uuid?: string;
   patient?: Partial<IPatient>;
   refBy: string;
   status: string;
-  deliveryTime: Date;
+  deliveryTime: string;
   tests: {
     status: string;
     discount: string;
@@ -106,30 +100,24 @@ const Order = () => {
   let vatAmount = 0;
   let discountAmount = 0;
   let totalPrice = 0;
-  let estimatedDeliveryDate = new Date();
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
       totalPrice = totalPrice + param.test.price;
-      if (param.deliveryDate > data.deliveryTime) {
-        setData((preValue) => ({
-          ...preValue,
-          deliveryTime: param.deliveryDate,
-        }));
-      }
-      if (param.hasDiscount || Number(param.discount) > 0) {
-        const discount = Number(
-          ((Number(param.discount) / 100) * param.test.price).toFixed(2)
-        );
 
-        discountAmount = Number((discountAmount + discount).toFixed(2));
+      if (param.hasDiscount || Number(param.discount) > 0) {
+        const discount = Math.ceil(
+          (Number(param.discount) / 100) * param.test.price
+        );
+        console.log(discount);
+        discountAmount = discountAmount + discount;
       }
     });
 
   data.tests?.length > 0 &&
     data.vatParcent > 0 &&
     data.tests.map((test) => {
-      vatAmount = Number(((data.vatParcent / 100) * totalPrice).toFixed(2));
+      vatAmount = Math.ceil((data.vatParcent / 100) * totalPrice);
     });
 
   data.parcentDiscount > 0 &&
@@ -137,10 +125,10 @@ const Order = () => {
       if (param.hasDiscount || Number(param.discount) > 0) {
         return;
       } else {
-        const discount = Number(
-          ((data.parcentDiscount / 100) * Number(param.test.price)).toFixed(2)
+        const discount = Math.ceil(
+          (data.parcentDiscount / 100) * Number(param.test.price)
         );
-        discountAmount = Number((discountAmount + discount).toFixed(2));
+        discountAmount = discountAmount + discount;
       }
     });
 
@@ -152,25 +140,22 @@ const Order = () => {
       tests: data.tests.map((testdata: ItestInformaiton) => {
         return {
           status: "pending",
-          discount: Number(testdata?.discount),
+          discount: testdata?.discount,
           test: testdata.test._id,
         };
       }),
-      totalPrice: totalPrice,
+      totalPrice: data.totalPrice,
       cashDiscount: data.cashDiscount ? data.cashDiscount : 0,
       parcentDiscount: data.parcentDiscount ? data.parcentDiscount : 0,
-      dueAmount: Number(
-        (
-          totalPrice -
-          discountAmount +
-          vatAmount -
-          (data.cashDiscount ? data.cashDiscount : 0) -
-          (data.paid ? data.paid : 0)
-        ).toFixed(2)
+      dueAmount: Math.ceil(
+        totalPrice -
+        discountAmount +
+        vatAmount -
+        (data.cashDiscount ? data.cashDiscount : 0) -
+        (data.paid ? data.paid : 0)
       ),
       paid: data.paid ? data.paid : 0,
       patientType: data.patientType,
-      vat: vatAmount,
     };
     if (data.patientType == "registered" && data.patient._id) {
       orderData.uuid = data.patient.uuid;
@@ -178,7 +163,6 @@ const Order = () => {
     if (data.patientType === "notRegistered") {
       orderData.patient = data.patient;
     }
-    console.log(orderData);
     postOrder(orderData);
   };
 
@@ -201,10 +185,7 @@ const Order = () => {
         <Button
           appearance="primary"
           color="blue"
-          onClick={() => {
-            setModalOpen(!modalOpen);
-            setMode("new");
-          }}
+          onClick={() => setModalOpen(!modalOpen)}
         >
           Generate New Bill
         </Button>
@@ -262,11 +243,11 @@ const Order = () => {
 
             <div className="mt-5">
               {data.patientType === "registered" &&
-                (SearchData?.data || data.patient.name ? (
+                (SearchData?.data ? (
                   <ForRegistered
                     doctors={doctorData.data}
                     formData={data}
-                    patient={SearchData?.data ? SearchData.data : data}
+                    patient={SearchData.data}
                     setFormData={setData}
                   />
                 ) : (
