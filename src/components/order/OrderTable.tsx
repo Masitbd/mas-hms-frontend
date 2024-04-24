@@ -201,10 +201,12 @@ const OrderTable = ({
                   className="ml-2"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
-                    patchHandler({
-                      data: rowdate as IOrderData,
-                      mode: "watch",
-                    });
+                    if (patchHandler) {
+                      patchHandler({
+                        data: rowdate as IOrderData,
+                        mode: "watch",
+                      });
+                    }
                   }}
                 />
               </>

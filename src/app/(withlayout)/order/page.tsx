@@ -1,7 +1,7 @@
 "use client";
 import OrderTable from "@/components/order/OrderTable";
 import RModal from "@/components/ui/Modal";
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import {
   Button,
   Form,
@@ -23,7 +23,10 @@ import {
 import { useGetTestQuery, useGetTestsQuery } from "@/redux/api/test/testSlice";
 import TestInformation from "@/components/order/TestInformation";
 import CheckIcon from "@rsuite/icons/Check";
-import { usePostOrderMutation } from "@/redux/api/order/orderSlice";
+import {
+  useLazyGetInvoiceQuery,
+  usePostOrderMutation,
+} from "@/redux/api/order/orderSlice";
 import ForRegistered from "@/components/order/ForRegistered";
 import ForNotRegistered from "@/components/order/ForNotRegistered";
 import { ITest } from "@/types/allDepartmentInterfaces";
@@ -74,6 +77,7 @@ type ItestInformaiton = {
   remark: string;
 };
 export type IOrderData = {
+  _id: string;
   uuid?: string;
   patient?: Partial<IPatient>;
   refBy: string;
@@ -229,6 +233,18 @@ const Order = () => {
     }
   };
 
+  // Manage pdf
+  const [getInvoice] = useLazyGetInvoiceQuery();
+  const handlePdf = async (id: string) => {
+    const invoice = await getInvoice(id);
+    const buffer = Buffer.from(invoice.data.data.data);
+    const blob = new Blob([buffer], { type: "application/pdf" });
+
+    const fileName = URL.createObjectURL(blob);
+    // const pdfwindow = window.open();
+    // pdfwindow.location.href = fileName;
+    window.open(fileName)?.print();
+  };
   useEffect(() => {
     if (isSuccess) {
       toaster.push(<Message type="success">Order posted Successfully</Message>);
@@ -314,7 +330,9 @@ const Order = () => {
                     doctors={doctorData.data}
                     formData={data}
                     patient={SearchData?.data ? SearchData.data : data}
-                    setFormData={setData}
+                    setFormData={
+                      setData as unknown as SetStateAction<IOrderData>
+                    }
                   />
                 ) : (
                   <>
@@ -371,6 +389,13 @@ const Order = () => {
                   onClick={() => setDewMOdalOpen(!dewModalOpen)}
                 >
                   Collect Due Ammount
+                </Button>
+                <Button
+                  appearance="primary"
+                  color="blue"
+                  onClick={() => handlePdf(data.oid)}
+                >
+                  Invoice
                 </Button>
               </div>
             </div>

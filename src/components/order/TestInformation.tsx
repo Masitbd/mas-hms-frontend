@@ -1,16 +1,25 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import SearchIcon from "@rsuite/icons/Search";
 import {
   Button,
   Checkbox,
   DatePicker,
   Form,
+  Input,
+  InputGroup,
+  InputPicker,
   Message,
+  Modal,
   Schema,
   Table,
   toaster,
 } from "rsuite";
 import RModal from "../ui/Modal";
-import { useGetTestsQuery } from "@/redux/api/test/testSlice";
+import {
+  useGetTestsQuery,
+  useLazyGetTestQuery,
+  useLazyGetTestsQuery,
+} from "@/redux/api/test/testSlice";
 import { ITest } from "@/types/allDepartmentInterfaces";
 
 const { Cell, Column, HeaderCell } = Table;
@@ -53,19 +62,31 @@ const TestInformation = (params: IParams) => {
   const toggleTestOrderInfo = () => setTestOrderInfoOpen(!isTestOrderInfoOpen);
 
   const handleAddTest = (rowData: ITest) => {
-    setMode("new");
     const estimatedDeliveryDate = new Date();
     estimatedDeliveryDate.setHours(
       estimatedDeliveryDate.getHours() + Number(rowData.processTime)
     );
-    setFormData({
-      ...data,
-      pirceAfterDiscount: rowData.price,
+
+    const newObject = {
+      ...params.formData,
+    };
+
+    const tests = newObject.tests ? newObject.tests : [];
+    var sl = Number(tests.length) + 1;
+    const testDataForOrder = {
       test: rowData,
       deliveryTime: estimatedDeliveryDate,
-    });
+      status: "pending",
+      remark: "",
+      discount: 0,
+      SL: sl,
+    };
 
-    toggleTestOrderInfo();
+    const newTestArray = [...tests, testDataForOrder];
+
+    newObject.tests = newTestArray;
+
+    params.setFormData(newObject);
   };
 
   const handleDiscountChange = (value: string) => {
@@ -171,19 +192,57 @@ const TestInformation = (params: IParams) => {
     }, "Discount Cannot be more then 99%"),
   });
 
+  // For handeling searching the single tests
+  const [
+    search,
+    {
+      data: testSearchData,
+      isLoading: testSearchLoading,
+      isError: testSearchError,
+    },
+  ] = useLazyGetTestsQuery();
+  const handleTestSearch = async (value: string) => {
+    const data = await search({ searchTerm: value });
+  };
+
+  // editable Cell
+  const [state, setState] = useState("");
+  const EditableCell = ({ rowData, dataKey, onChange, type, ...props }) => {
+    return (
+      <Cell {...props}>
+        <input
+          type={type}
+          className="rs-input"
+          defaultValue={rowData[dataKey]}
+          onChange={(event) => {
+            onChange && onChange(rowData, dataKey, event.target.value);
+          }}
+        />
+      </Cell>
+    );
+  };
+  const handleCellEdit = (id, key, value) => {
+    params.formData.tests.find((testInfo) => testInfo.SL === id.SL)[key] =
+      value;
+    setState("1");
+  };
+  // useEffect(() => {
+  //   alert("c");
+  // }, [params.formData.tests]);
+
   return (
     <div>
       <h2 className="font-bold text-xl">Test Information</h2>
       <div>
         <div>
-          <Button
+          {/* <Button
             onClick={toggleTestModal}
             appearance="primary"
             color="green"
             className="my-2"
           >
             Add Tests
-          </Button>
+          </Button> */}
           <RModal
             open={isTestModalOpen}
             size="lg"
@@ -197,6 +256,22 @@ const TestInformation = (params: IParams) => {
                   All Availabel Tests
                 </h2>
               </div>
+              {/* <div>
+                <InputPicker
+                  searchable={true}
+                  data={testSearchData?.data?.data.map((test) => {
+                    return { label: test.label, value: test };
+                  })}
+                  onSearch={(value, event) => {
+                    handleTestSearch(value);
+                  }}
+                  onSelect={(value, event) => {
+                    setMode("new");
+                    handleAddTest(value);
+                    okHandlerForOrderInfo();
+                  }}
+                />
+              </div> */}
               <Table
                 height={500}
                 rowHeight={60}
@@ -371,47 +446,93 @@ const TestInformation = (params: IParams) => {
             </>
           </RModal>
         </div>
-        <Table
-          height={200}
-          data={params?.formData?.tests}
-          className="w-full"
-          bordered
-          cellBordered
-          rowHeight={60}
-        >
-          <Column align="center" resizable flexGrow={2}>
-            <HeaderCell>Test ID</HeaderCell>
-            <Cell dataKey="test.testCode" />
-          </Column>
-          <Column align="center" resizable flexGrow={3}>
-            <HeaderCell>Title</HeaderCell>
-            <Cell dataKey="test.label" />
-          </Column>
-          <Column align="center" resizable flexGrow={1.5}>
-            <HeaderCell>Original Price</HeaderCell>
-            <Cell dataKey="test.price" />
-          </Column>
-          <Column align="center" resizable flexGrow={1.5}>
-            <HeaderCell>Discount %</HeaderCell>
-            <Cell dataKey="discount" />
-          </Column>
-          <Column align="center" resizable flexGrow={1.5}>
-            <HeaderCell>Discounted Price</HeaderCell>
-            <Cell dataKey="pirceAfterDiscount" />
-          </Column>
-          <Column align="center" resizable flexGrow={3.5}>
-            <HeaderCell>Action</HeaderCell>
-            <Cell>
-              {(rowData) => (
-                <>
-                  <Button
-                    onClick={() => deleteButtonHandler(rowData as IFormData)}
-                    appearance="primary"
-                    color="red"
-                  >
-                    Delete
-                  </Button>
-                  <Button
+        <div className="grid grid-cols-4 gap-2">
+          <div className="col-span-3">
+            <Table
+              data={params?.formData?.tests}
+              className="w-full"
+              bordered
+              cellBordered
+              rowHeight={100}
+              wordWrap={"break-word"}
+              height={500}
+            >
+              <Column align="center" resizable flexGrow={0.5}>
+                <HeaderCell>SL.</HeaderCell>
+                <Cell dataKey="SL" />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Test ID</HeaderCell>
+                <Cell dataKey="test.testCode" />
+              </Column>
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Title</HeaderCell>
+                <Cell dataKey="test.label" />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Original Price</HeaderCell>
+                <Cell dataKey="test.price" />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Discount %</HeaderCell>
+                <EditableCell
+                  dataKey={"discount"}
+                  onChange={handleCellEdit}
+                  type={"number"}
+                />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Discounted Price</HeaderCell>
+                <Cell>
+                  {(rowData) => {
+                    const priceAfterDiscount =
+                      rowData.discount > 0
+                        ? rowData.test.price -
+                          (rowData.test.price * rowData.discount) / 100
+                        : rowData.test.price;
+
+                    return `${priceAfterDiscount}`;
+                  }}
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={1.5}>
+                <HeaderCell>Delivery Date</HeaderCell>
+                <Cell>
+                  {(rowData) => {
+                    return (
+                      <>
+                        <DatePicker
+                          value={new Date(rowData.deliveryTime)}
+                          onChange={(event, value) =>
+                            handleCellEdit(rowData, "deliveryTime", event)
+                          }
+                        />
+                      </>
+                    );
+                  }}
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Remark</HeaderCell>
+                <Cell>
+                  <Input as="textarea" style={{ scrollbarWidth: "none" }} />
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Action</HeaderCell>
+                <Cell>
+                  {(rowData) => (
+                    <>
+                      <Button
+                        onClick={() =>
+                          deleteButtonHandler(rowData as IFormData)
+                        }
+                        appearance="primary"
+                        color="red"
+                      >
+                        Delete
+                      </Button>
+                      {/* <Button
                     appearance="primary"
                     color="blue"
                     onClick={() => editButtonHandler(rowData as IFormData)}
@@ -425,12 +546,81 @@ const TestInformation = (params: IParams) => {
                     color="green"
                   >
                     View
-                  </Button>
-                </>
-              )}
-            </Cell>
-          </Column>
-        </Table>
+                  </Button> */}
+                    </>
+                  )}
+                </Cell>
+              </Column>
+            </Table>
+          </div>
+          <div className=" p-2 bg-stone-100 rounded-lg">
+            <h3 className="text-center font-bold text-2xl">Available Tests</h3>
+            <div className="mt-5">
+              <InputPicker
+                onSearch={async (value, event) => {
+                  await search({ searchTerm: value });
+                }}
+                data={testSearchData?.data?.data.map((test: ITest) => ({
+                  label: test.label,
+                  value: test,
+                }))}
+                onSelect={(value, event) => {
+                  handleAddTest(value);
+                }}
+                placeholder={"Search"}
+                className="w-full"
+                caretAs={SearchIcon}
+                loading={testSearchLoading}
+                block={true}
+              />
+            </div>
+            <Table
+              height={500}
+              rowHeight={60}
+              bordered
+              cellBordered
+              data={testSetData?.data?.data}
+              wordWrap={"break-all"}
+            >
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Test ID</HeaderCell>
+                <Cell dataKey="testCode" />
+              </Column>
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Title</HeaderCell>
+                <Cell dataKey="label" />
+              </Column>
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Price</HeaderCell>
+                <Cell dataKey="price" />
+              </Column>
+
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Actions</HeaderCell>
+                <Cell>
+                  {(rowdata) => (
+                    <>
+                      <Button
+                        onClick={() => handleAddTest(rowdata as ITest)}
+                        color="green"
+                        appearance="primary"
+                        //   disabled={
+                        //     rowdata?.test?.testCode ===
+                        //     params.formData?.tests?.find(
+                        //       (tdata) =>
+                        //         tdata.test._id === rowdata.test.testCode
+                        //     )
+                        //   } for next
+                      >
+                        Add
+                      </Button>
+                    </>
+                  )}
+                </Cell>
+              </Column>
+            </Table>
+          </div>
+        </div>
       </div>
     </div>
   );

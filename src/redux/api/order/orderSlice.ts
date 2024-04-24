@@ -32,8 +32,21 @@ const order = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["order"],
     }),
+    getInvoice: build.query({
+      query: (data) => ({
+        url: `/order/invoice/${data}`,
+        method: "GET",
+
+        contentType: "application/json",
+      }),
+      providesTags: ["order"],
+    }),
   }),
 });
 
-export const { usePostOrderMutation, useGetOrderQuery, usePatchOrderMutation } =
-  order;
+export const {
+  usePostOrderMutation,
+  useGetOrderQuery,
+  usePatchOrderMutation,
+  useLazyGetInvoiceQuery,
+} = order;
