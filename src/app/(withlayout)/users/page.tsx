@@ -29,7 +29,7 @@ const ManageUsers = () => {
           />
         </div>
       </div>
-      <UserTable />
+      <UserTable mode={mode} setMode={setMode} />
     </div>
   );
 };

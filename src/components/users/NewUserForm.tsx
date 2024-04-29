@@ -69,7 +69,7 @@ const UserForm = ({
           <Form.ControlLabel>Email</Form.ControlLabel>
           <Form.Control name="email" type="email" />
         </Form.Group>
-        {mode !== "view" && (
+        {mode !== "edit" && (
           <Form.Group controlId="password">
             <InputGroup inside>
               <Form.Control

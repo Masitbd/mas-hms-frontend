@@ -2,8 +2,15 @@
 import React, { useEffect, useState } from "react";
 import { Button, InputPicker, SelectPicker, Table } from "rsuite";
 import RModal from "../ui/Modal";
+import UserForm from "./NewUserForm";
 
-const UserTable = () => {
+const UserTable = ({
+  mode,
+  setMode,
+}: {
+  mode: string;
+  setMode: (prop: string) => void;
+}) => {
   const { HeaderCell, Cell, Column } = Table;
   const [users, setUsers] = useState([]);
   useEffect(() => {
@@ -105,8 +112,14 @@ const UserTable = () => {
           open={singleUserModel}
           size="md"
           title="User Info"
-          okHandler={() => setSingleUserModel(!singleUserModel)}
-          cancelHandler={() => setSingleUserModel(!singleUserModel)}
+          okHandler={() => {
+            setSingleUserModel(!singleUserModel);
+            setMode("new");
+          }}
+          cancelHandler={() => {
+            setSingleUserModel(!singleUserModel);
+            setMode("new");
+          }}
         >
           <div>
             <div className="mb-5">
@@ -114,21 +127,33 @@ const UserTable = () => {
                 Personal Information <br />
                 <hr />
               </h2>
-              <div className="grid grid-cols-2 gap-5">
-                {user &&
-                  Object.keys(user).map((key) => {
-                    if (key == "permissions") return;
-                    return (
-                      <>
-                        <div className="flex flex-col">
-                          <div className="capitalize text-md font-bold">
-                            {key}
-                          </div>
-                          <div>{user[key]}</div>
-                        </div>
-                      </>
-                    );
-                  })}
+
+              {mode == "edit" ? (
+                <UserForm defaultValue={user} mode={mode} />
+              ) : (
+                <>
+                  {" "}
+                  <div className="grid grid-cols-2 gap-5">
+                    {user &&
+                      Object.keys(user).map((key) => {
+                        if (key == "permissions") return;
+                        return (
+                          <>
+                            <div className="flex flex-col">
+                              <div className="capitalize text-md font-bold">
+                                {key}
+                              </div>
+                              <div>{user[key]}</div>
+                            </div>
+                          </>
+                        );
+                      })}
+                  </div>
+                </>
+              )}
+
+              <div>
+                <Button onClick={() => setMode("edit")}>Edit</Button>
               </div>
             </div>
             <div>
