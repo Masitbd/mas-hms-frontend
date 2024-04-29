@@ -22,8 +22,12 @@ import { IOrderData } from "@/app/(withlayout)/order/page";
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
   patchHandler,
+  mode,
+  setMode,
 }: {
   patchHandler?: (data: { data: IOrderData; mode: string }) => void;
+  mode?: string;
+  setMode?: (data: string) => void;
 }) => {
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
@@ -189,14 +193,6 @@ const OrderTable = ({
             {(rowdate) => (
               <>
                 <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => handleDeletOpen(rowdate._id)}
-                >
-                  Delete
-                </Button>
-
-                <Button
                   // appearance="transparent"
                   className="ml-2"
                   startIcon={<VisibleIcon />}
@@ -204,7 +200,7 @@ const OrderTable = ({
                     if (patchHandler) {
                       patchHandler({
                         data: rowdate as IOrderData,
-                        mode: "watch",
+                        mode: "view",
                       });
                     }
                   }}

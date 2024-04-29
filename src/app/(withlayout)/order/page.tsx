@@ -75,6 +75,7 @@ type ItestInformaiton = {
   test: ITest;
   deliveryTime: Date;
   remark: string;
+  SL: number;
 };
 export type IOrderData = {
   _id: string;
@@ -84,6 +85,7 @@ export type IOrderData = {
   status: string;
   deliveryTime: Date;
   tests: {
+    SL: number;
     status: string;
     discount: number;
     test: string | undefined;
@@ -116,6 +118,7 @@ const Order = () => {
     setData(initialData);
   };
 
+  console.log(data);
   //   for search
 
   const patientType = [
@@ -170,6 +173,11 @@ const Order = () => {
     });
 
   const handlePostORder = async () => {
+    if (mode === "view") {
+      setData(initialData);
+      setModalOpen(!modalOpen);
+      return;
+    }
     if (data.tests.length === 0) {
       toaster.push(
         <Message type="error">No test added in the order list</Message>
@@ -181,6 +189,7 @@ const Order = () => {
       deliveryTime: data.deliveryTime,
       tests: data.tests.map((testdata: ItestInformaiton) => {
         return {
+          SL: testdata.SL,
           status: "pending",
           discount: Number(testdata?.discount),
           test: testdata.test._id,
@@ -403,7 +412,11 @@ const Order = () => {
         </RModal>
       </div>
       <div>
-        <OrderTable patchHandler={patchAndViewHandler} />
+        <OrderTable
+          patchHandler={patchAndViewHandler}
+          mode={mode}
+          setMode={setMode}
+        />
       </div>
     </div>
   );

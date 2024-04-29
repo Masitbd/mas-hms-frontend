@@ -51,8 +51,10 @@ const ForNotRegistered = (param: param) => {
                 email: value.email,
                 consultant: value.consultant,
               },
-              refBy: value.refBy,
-              deliveryTime: value.deliveryTime,
+              refBy: value.refBy ? value.refBy : param.data.refBy,
+              deliveryTime: value.deliveryTime
+                ? value.deliveryTime
+                : param.data.deliveryTime,
             }));
           }}
           formValue={param.data.patient}
@@ -117,7 +119,7 @@ const ForNotRegistered = (param: param) => {
               accepter={DatePicker}
               placement="top"
               format="dd MMM yyyy hh:mm aa"
-              value={param.data.deliveryTime}
+              value={new Date(param.data.deliveryTime)}
               showMeridian
               cleanable
             />

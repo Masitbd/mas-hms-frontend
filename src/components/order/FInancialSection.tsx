@@ -47,31 +47,15 @@ const FInancialSection = ({
       <div>
         <h5 className="font-bold">Cash Discount</h5>
         <InputGroup>
-          <InputGroup.Addon>0.</InputGroup.Addon>
           <Input
             type="number"
             placeholder="Cash Discount"
             name="cashDiscount"
-            value={data.cashDiscount}
             onChange={(value, event) => {
-              const dueValue = parseFloat(dueAmount).toString();
-
-              if (
-                (value.includes(".") || Number(value) === 0) &&
-                Number("." + dueValue.split(".")[1]) >= Number(value)
-              ) {
-                setData((prevData: any) => ({
-                  ...prevData,
-                  cashDiscount: Number(value),
-                }));
-              } else {
-                toaster.push(
-                  <Message type="error">
-                    Cash Discount cannot be more then decimal point{" "}
-                    {dueAmount.split(".")}
-                  </Message>
-                );
-              }
+              setData((prevData: any) => ({
+                ...prevData,
+                cashDiscount: Number(value),
+              }));
             }}
           />
         </InputGroup>
