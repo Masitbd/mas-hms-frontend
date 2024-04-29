@@ -1,0 +1,154 @@
+[
+  {
+    "uuid": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+    "name": "John Doe",
+    "phone": "123-456-7890",
+    "email": "john.doe@example.com",
+    "address": "123 Main St, City, Country",
+    "needsPasswordChange": true,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Read Access"
+      },
+      {
+        "code": 1,
+        "label": "Write Access"
+      }
+    ]
+  },
+  {
+    "uuid": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+    "name": "Jane Smith",
+    "phone": "987-654-3210",
+    "email": "jane.smith@example.com",
+    "address": "456 Elm St, City, Country",
+    "needsPasswordChange": false,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Read Access"
+      }
+    ]
+  },
+  {
+    "uuid": "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+    "name": "Alice Johnson",
+    "phone": "555-555-5555",
+    "email": "alice.johnson@example.com",
+    "address": "789 Oak St, City, Country",
+    "needsPasswordChange": true,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Read Access"
+      }
+    ]
+  },
+  {
+    "uuid": "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
+    "name": "Bob Brown",
+    "phone": "222-333-4444",
+    "email": "bob.brown@example.com",
+    "address": "321 Pine St, City, Country",
+    "needsPasswordChange": false,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Write Access"
+      }
+    ]
+  },
+  {
+    "uuid": "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
+    "name": "Emily Davis",
+    "phone": "777-888-9999",
+    "email": "emily.davis@example.com",
+    "address": "654 Cedar St, City, Country",
+    "needsPasswordChange": true,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Read Access"
+      },
+      {
+        "code": 1,
+        "label": "Write Access"
+      }
+    ]
+  },
+  {
+    "uuid": "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
+    "name": "Michael Wilson",
+    "phone": "444-555-6666",
+    "email": "michael.wilson@example.com",
+    "address": "987 Maple St, City, Country",
+    "needsPasswordChange": false,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Read Access"
+      }
+    ]
+  },
+  {
+    "uuid": "7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v",
+    "name": "Sarah Lee",
+    "phone": "666-777-8888",
+    "email": "sarah.lee@example.com",
+    "address": "147 Walnut St, City, Country",
+    "needsPasswordChange": true,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Write Access"
+      }
+    ]
+  },
+  {
+    "uuid": "8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w",
+    "name": "David Martinez",
+    "phone": "999-888-7777",
+    "email": "david.martinez@example.com",
+    "address": "369 Birch St, City, Country",
+    "needsPasswordChange": false,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Read Access"
+      }
+    ]
+  },
+  {
+    "uuid": "9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x",
+    "name": "Karen Taylor",
+    "phone": "111-222-3333",
+    "email": "karen.taylor@example.com",
+    "address": "258 Cherry St, City, Country",
+    "needsPasswordChange": true,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Admin Access"
+      }
+    ]
+  },
+  {
+    "uuid": "0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y",
+    "name": "James White",
+    "phone": "333-222-1111",
+    "email": "james.white@example.com",
+    "address": "852 Poplar St, City, Country",
+    "needsPasswordChange": false,
+    "permissions": [
+      {
+        "code": 1,
+        "label": "Read Access"
+      },
+      {
+        "code": 1,
+        "label": "Write Access"
+      }
+    ]
+  }
+]

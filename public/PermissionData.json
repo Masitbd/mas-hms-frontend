@@ -1,0 +1,8 @@
+[
+  { "label": "Admin", "code": 1 },
+  { "label": "Change Password", "code": 3 },
+  { "label": "Create User", "code": 4},
+  { "label": "Edit User", "code": 5 },
+  { "label": "Create Test", "code": 6 },
+  { "label": "Pay Doctor Commission", "code": 7 }
+]
