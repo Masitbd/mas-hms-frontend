@@ -118,7 +118,6 @@ const Order = () => {
     setData(initialData);
   };
 
-  console.log(data);
   //   for search
 
   const patientType = [
