@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button, InputPicker, SelectPicker, Table } from "rsuite";
 import RModal from "../ui/Modal";
 import UserForm from "./NewUserForm";
+import { useGetAllUsersQuery } from "@/redux/api/users/usersSlice";
 
 const UserTable = ({
   mode,
@@ -11,13 +12,10 @@ const UserTable = ({
   mode: string;
   setMode: (prop: string) => void;
 }) => {
+  const { data: users, isLoading: usersLoading } =
+    useGetAllUsersQuery(undefined);
+
   const { HeaderCell, Cell, Column } = Table;
-  const [users, setUsers] = useState([]);
-  useEffect(() => {
-    fetch("/DummyUserData.json")
-      .then((res) => res.json())
-      .then((data) => setUsers(data));
-  }, []);
 
   //   Handling signle user view
   const [user, setUser] = useState();
@@ -64,12 +62,13 @@ const UserTable = ({
     <>
       <div>
         <Table
-          data={users}
+          data={users?.data}
           className="w-full"
           bordered
           cellBordered
           rowHeight={60}
           height={800}
+          loading={usersLoading}
         >
           <Column align="center" flexGrow={2}>
             <HeaderCell>UUID</HeaderCell>
@@ -183,9 +182,9 @@ const UserTable = ({
                               appearance="primary"
                               className="mx-5"
                               color="green"
-                              disabled={user.permissions
-                                .map((permission) => permission.code)
-                                .includes(item.value)}
+                              disabled={user.permissions.permissions.includes(
+                                item.value
+                              )}
                               onClick={() =>
                                 handlePermissionChange({
                                   label: label,
@@ -193,18 +192,16 @@ const UserTable = ({
                                 })
                               }
                             >
-                              {user.permissions
-                                .map((permission) => permission.code)
-                                .includes(item.value)
+                              {user.permissions.permissions.includes(item.value)
                                 ? "Granted"
                                 : "Grant"}
                             </Button>
                             <Button
                               appearance="primary"
                               color="red"
-                              disabled={user.permissions
-                                .map((permission) => permission.code)
-                                .includes(!item.value)}
+                              disabled={user.permissions.permissions.includes(
+                                !item.value
+                              )}
                               onClick={() =>
                                 handlePermissionChange({
                                   label: label,
@@ -243,21 +240,19 @@ const UserTable = ({
                             appearance="primary"
                             className="mx-5"
                             color="green"
-                            disabled={user.permissions
-                              .map((permission) => permission.code)
-                              .includes(rowData.code)}
+                            disabled={user.permissions.permissions.includes(
+                              rowData.code
+                            )}
                             onClick={() => handlePermissionChange(rowData)}
                           >
-                            {user.permissions
-                              .map((permission) => permission.code)
-                              .includes(rowData.code)
+                            {user.permissions.permissions.includes(rowData.code)
                               ? "Granted"
                               : "Grant"}
                           </Button>
                           <Button
                             appearance="primary"
                             color="red"
-                            disabled={user.permissions
+                            disabled={user.permissions.permissions
                               .map((permission) => permission.code)
                               .includes(!rowData.code)}
                             onClick={() => handlePermissionChange(rowData)}

@@ -1,7 +1,9 @@
+import { Loader } from "rsuite";
+
 const Loading = () => {
   return (
-    <div>
-      <h1>Loading....</h1>
+    <div className="h-[100vh] flex items-center justify-center">
+      <Loader size="lg" />
     </div>
   );
 };

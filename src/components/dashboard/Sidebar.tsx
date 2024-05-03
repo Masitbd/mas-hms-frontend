@@ -36,6 +36,11 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
     </Navbar>
   );
 };
+const userMenuItem = [
+  { key: "1", title: "Users", href: "/users" },
+  { key: "2", title: "Prifile", href: "/profile" },
+  { key: "2", title: "Permissions", href: "/permissions" },
+];
 
 const testMenuItem = [
   { key: "1", title: "Pdrv", href: "/pdrv" },
@@ -84,9 +89,47 @@ const Sidebar = () => {
                 icon={<MagicIcon />}
                 placement="rightStart"
               >
-                {testMenuItem.map((item) => (
+                <Nav.Menu
+                  eventKey="3"
+                  trigger="hover"
+                  title="Test Params"
+                  icon={<MagicIcon />}
+                  placement="rightStart"
+                >
+                  {testMenuItem.map((item) => (
+                    <Nav.Item
+                      eventKey={`3-${item.key}`}
+                      href={item.href}
+                      as={NavLink}
+                      key={item.key}
+                      onClick={() => setSelectedItem(item.href)}
+                      style={
+                        selectedItem === item.href
+                          ? {
+                              backgroundColor: "#3498ff",
+                              color: "white",
+                              borderRadius: "5px",
+                            }
+                          : {
+                              color: "black",
+                            }
+                      }
+                    >
+                      {item.title}
+                    </Nav.Item>
+                  ))}
+                </Nav.Menu>
+              </Nav.Menu>
+              <Nav.Menu
+                eventKey="4"
+                trigger="hover"
+                title="Settings"
+                icon={<GearCircleIcon />}
+                placement="rightStart"
+              >
+                {userMenuItem.map((item) => (
                   <Nav.Item
-                    eventKey={`3-${item.key}`}
+                    eventKey={`4-${item.key}`}
                     href={item.href}
                     as={NavLink}
                     key={item.key}
@@ -106,15 +149,6 @@ const Sidebar = () => {
                     {item.title}
                   </Nav.Item>
                 ))}
-              </Nav.Menu>
-              <Nav.Menu
-                eventKey="4"
-                trigger="hover"
-                title="Settings"
-                icon={<GearCircleIcon />}
-                placement="rightStart"
-              >
-                <Nav.Item eventKey="4-5">Versions</Nav.Item>
               </Nav.Menu>
             </Nav>
           </Sidenav.Body>

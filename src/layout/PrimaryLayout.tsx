@@ -12,7 +12,6 @@ export default function PrimaryLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-
   const noNav = ["/signup", "/signin"];
 
   if (noNav.includes(pathname)) {

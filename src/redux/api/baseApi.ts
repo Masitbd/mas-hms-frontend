@@ -7,13 +7,16 @@ export const baseApi = createApi({
   baseQuery: fetchBaseQuery({
     //baseUrl: "https://city-clean-aps.vercel.app/api/v1",
     baseUrl: "http://localhost:5000/api/v1",
-    // prepareHeaders: (headers, { getState }) => {
-    //   /*  const accessToken = getFromLocalStorage("accessToken");
-    //   if (accessToken) {
-    //     headers.set("Authorization", accessToken);
-    //   }
-    //   return headers; */
-    // },
+    prepareHeaders: (headers, { getState }) => {
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        headers.set("Authorization", accessToken);
+      }
+
+      headers.append("Access-Control-Allow-Origin", "http://localhost:5000");
+      headers.append("Access-Control-Allow-Credentials", "true");
+      return headers;
+    },
   }),
   endpoints: () => ({}),
   tagTypes: [
