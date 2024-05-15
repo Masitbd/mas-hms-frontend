@@ -2,13 +2,16 @@ import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
 import {
   useDeleteTestMutation
 } from "@/redux/api/test/testSlice";
+import { setId } from "@/redux/features/IdStore/idSlice";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Button, Form, InputPicker, Message, Table, toaster } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
-
 const { Column, HeaderCell, Cell } = Table;
+
+
 const OrderTable = ({
   patchHandler,
 }: {
@@ -31,6 +34,7 @@ const OrderTable = ({
     setDeleteOpen(!deleteOpen);
     setDeleteData(undefined);
   };
+
 
   useEffect(() => {
     if (deleteSuccess) {
@@ -55,11 +59,14 @@ const OrderTable = ({
   } = useGetOrderQuery(searchData);
 
 
+  const dispatch = useDispatch()
+
+
 
 
 
   return (
-    <div>
+    <div >
       <div className="my-5">
         <Form
           onChange={(formValue: Record<string, any>) =>
@@ -124,7 +131,7 @@ const OrderTable = ({
           <Cell dataKey="oid" />
         </Column>
 
-        <Column resizable flexGrow={4}>
+        <Column resizable flexGrow={3}>
           <HeaderCell>User </HeaderCell>
           <Cell dataKey="uuid" />
         </Column>
@@ -160,7 +167,7 @@ const OrderTable = ({
           </Cell>
         </Column>
 
-        <Column flexGrow={2} resizable>
+        <Column flexGrow={3} resizable>
           <HeaderCell>Action</HeaderCell>
           <Cell>
             {(rowdate) => (
@@ -187,10 +194,10 @@ const OrderTable = ({
                   className="ml-2"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
+                    dispatch(setId(rowdate._id));
                     patchHandler({ data: rowdate as ITest, mode: "watch" });
                   }}
                 />
-
               </>
             )}
           </Cell>

@@ -1,54 +1,69 @@
-
-import { useGetDepartmentQuery, useGetSingleDepartmentQuery } from "@/redux/api/department/departmentSlice";
+import { ITestGenerateType } from "@/components/order/TestInformation";
+import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
 import { useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 import { useGetSingleTestQuery } from "@/redux/api/test/testSlice";
 import { IDepartment, IHospitalGroup, ISpecimen } from "@/types/allDepartmentInterfaces";
-import { Form, InputPicker, SelectPicker, TagPicker } from "rsuite";
-import { ITestGenerateType } from "../order/TestInformation";
-import TestDescriptive from "./TestDescriptive";
-import TestReportBacterial from "./TestReportBacterial";
-import TestReportGroup from "./TestReportGroup";
-import TestReportParameter from "./TestReportParameter";
+import axios from "axios";
+import { Button, Form, InputPicker, SelectPicker, TagPicker } from "rsuite";
+import TestViewB from "./TestViewB";
+import TestViewD from "./TestViewD";
+import TestViewP from "./TestViewP";
 
-
-export type ITestReportForm = {
+export type ITestReportView = {
     reportGenerate: ITestGenerateType,
     setReportGenerate: (data: ITestGenerateType) => void,
-    setReportGenerateModal: (modal: boolean) => void,
-    updateReportGenerate?: (modal: boolean) => void,
-    setUpdateReportGenerate?: boolean;
+    setReportGenerateModal: (modal: boolean) => void
 }
 
 
-const TestReportForm = ({ reportGenerate, setReportGenerate, setReportGenerateModal }: ITestReportForm) => {
+const TestView = ({ reportGenerate, setReportGenerate, setReportGenerateModal }: ITestReportView) => {
     const { data: testQueryData, isLoading } = useGetSingleTestQuery(reportGenerate.id);
     const { data: departmentData } = useGetDepartmentQuery(undefined);
     const { data: specimenData } = useGetSpecimenQuery(undefined);
     const { data: hospitalData } = useGetHospitalGroupQuery(undefined);
+
+
     if (isLoading) {
         return <div>Loading ....</div>
     }
-    let departmentQueryData: IDepartment | null = null;
-    if (testQueryData?.department) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const { data } = useGetSingleDepartmentQuery(testQueryData?.department);
-        departmentQueryData = data
+    // const [formData, setFromData] = useState<>();
+    console.log(testQueryData, 'testData', reportGenerate.modeSingleType)
+    const handlePrint = async (id: string) => {
+        try {
+            console.log(id)
+            const response = await axios.get(`http://localhost:5000/api/v1/testReport/print/${id}`);
+            console.log(response.data)
+
+            // const dataUrl = URL.createObjectURL(response.data.data)
+            // console.log(dataUrl)
+            // const base64String = response.data.data.data!.toString('base64');
+
+            const buffer = Buffer.from(response.data.data.data)
+            const pdfBlob = new Blob([buffer], { type: 'application/pdf' });
+
+            // Create a URL for the Blob
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            window.open(pdfUrl);
+
+            // printJS({ printable: base64String, type: 'pdf', base64: true })
+            // printJS({
+            //   printable: pdfUrl,
+            //   type: 'pdf',
+            //   header: 'Print PDF',
+            //   documentTitle: 'Print Example',
+            //   base64: false
+            // });
+        } catch (error) { }
     }
 
-    console.log(departmentQueryData);
-
-    // const [formData, setFromData] = useState<>();
-    console.log(reportGenerate.id, "departemt")
-    console.log(testQueryData, "departemt")
-    console.log(testQueryData, 'testData', reportGenerate.status)
 
     return (
         <div>
             <Form
                 className="grid grid-cols-3 gap-5 justify-center w-full"
                 fluid
-                formValue={testQueryData.data}
+                formValue={testQueryData?.data}
             >
                 <Form.Group controlId="label">
                     <Form.ControlLabel>Test Name</Form.ControlLabel>
@@ -125,28 +140,27 @@ const TestReportForm = ({ reportGenerate, setReportGenerate, setReportGenerateMo
                     </div>
                     <div>
                         {
-                            // reportGenerate.status === "completed" ?
-                            //     (reportGenerate.modeType == "single" ? reportGenerate.modeSingleType == "bacterial" ? (<>
-                            //         <TestViewB reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} setUpdateReportGenerate={setUpdateReportGenerate} updateReportGenerate={updateReportGenerate} />
-                            //     </>)
-                            //         : reportGenerate.modeSingleType == "parameter" ? (<>
-                            //             <TestViewP reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} setUpdateReportGenerate={setUpdateReportGenerate} updateReportGenerate={updateReportGenerate} />
-                            //         </>) : (<>
-                            //             <TestViewD reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} setUpdateReportGenerate={setUpdateReportGenerate} updateReportGenerate={updateReportGenerate} />
-                            //         </>) : (<>
-                            //             <h1></h1>
-                            //         </>))
-                            //     :
                             (reportGenerate.modeType == "single" ? reportGenerate.modeSingleType == "bacterial" ? (<>
-                                <TestReportBacterial reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
-                            </>) : reportGenerate.modeSingleType == "parameter" ? (<>
-                                <TestReportParameter reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
-                            </>) : (<>
-                                <TestDescriptive reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
-                            </>) : (<>
-                                <TestReportGroup reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
-                            </>))
+                                <TestViewB reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
+                            </>)
+                                : reportGenerate.modeSingleType == "parameter" ? (<>
+                                    <TestViewP reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
+                                </>) : (<>
+                                    <TestViewD reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
+                                </>) : (<>
+                                    <h1></h1>
+                                </>))
                         }
+                        <Button
+                            className="ml-2"
+                            onClick={() => {
+                                handlePrint(testQueryData.data._id);
+                            }}
+                            appearance="ghost"
+                            color="blue"
+                        >
+                            Print
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -154,4 +168,4 @@ const TestReportForm = ({ reportGenerate, setReportGenerate, setReportGenerateMo
     );
 };
 
-export default TestReportForm;
+export default TestView;

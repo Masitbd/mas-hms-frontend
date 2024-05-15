@@ -39,7 +39,7 @@ const department = baseApi.injectEndpoints({
     }),
     getSingleDepartment: build.query({
       query: (id: string) => ({
-        url: `/department/${id}`,
+        url: `/departments/${id}`,
         method: "GET",
         contentType: "application/json"
       })

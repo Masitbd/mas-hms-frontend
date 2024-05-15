@@ -26,10 +26,13 @@ export const baseApi = createApi({
     "doctor",
     "hospitalGroup",
     "test",
+    "testReport",
     "account",
     "transaction",
     "patient",
-    "order"
+    "order",
+    "reportGroup",
+    "sensitivity"
   ]
 
   // tagTypes: tagTypes,

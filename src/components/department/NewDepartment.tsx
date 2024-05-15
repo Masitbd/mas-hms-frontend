@@ -23,6 +23,7 @@ const NewDepartmentTable = ({
   const formRef: React.MutableRefObject<any> = React.useRef();
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
+    reportGroupName: StringType().isRequired("This field is required."),
     // description: StringType().isRequired("This field is required."),
     // fixedCommission: NumberType().isRequired("This field is required."),
     // commissionParcentage: NumberType().isRequired("This field is required."),
@@ -75,6 +76,7 @@ const NewDepartmentTable = ({
         onChange={(formValue, event) => {
           setDepartmentData({
             label: formValue.label,
+            reportGroupName: formValue.reportGroupName,
             description: formValue.description,
             value: formValue.value,
             commissionParcentage: formValue.commissionParcentage,
@@ -88,8 +90,12 @@ const NewDepartmentTable = ({
         model={model}
       >
         <Form.Group controlId="label">
-          <Form.ControlLabel>Title</Form.ControlLabel>
+          <Form.ControlLabel>Department Name</Form.ControlLabel>
           <Form.Control name="label" />
+        </Form.Group>
+        <Form.Group controlId="reportGroupName">
+          <Form.ControlLabel>Report Group Name</Form.ControlLabel>
+          <Form.Control name="reportGroupName" />
         </Form.Group>
         <Form.Group>
           <Form.ControlLabel>
@@ -125,6 +131,7 @@ const NewDepartmentTable = ({
           setPostModelOpen(!open);
           setDepartmentData({
             label: "",
+            reportGroupName: "",
             description: "",
             value: "",
             commissionParcentage: 0,

@@ -30,22 +30,22 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
 
 
     const model = Schema.Model({
+        title: StringType().isRequired("This field is required."),
         name: StringType().isRequired("This field is required."),
-        fatherName: StringType().isRequired("This field is required."),
-        email: StringType().isEmail("This field is Required for email").isRequired("This field is required."),
-        designation: StringType().isRequired("This field is required."),
-        phone: NumberType().isRequired("This field is required.").addRule((value: string | number): boolean => {
-            const phoneNumber = value.toString();
-            if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
-                return false
-            }
-            return true;
-        }, "Phone number must be 11 digits.")
+        // fatherName: StringType().isRequired("This field is required."),
+        // email: StringType().isEmail("This field is Required for email").isRequired("This field is required."),
+        // designation: StringType().isRequired("This field is required."),
+        // phone: NumberType().isRequired("This field is required.").addRule((value: string | number): boolean => {
+        //     const phoneNumber = value.toString();
+        //     if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
+        //         return false
+        //     }
+        //     return true;
+        // }, "Phone number must be 11 digits.")
     });
 
     const [doctorData, setDoctorData] = useState<IDoctor>(defaultData);
-    const [urlInfo, setUrlInfo] = useState({ src: '' });
-    console.log(urlInfo)
+
     const [
         postDoctor
     ] = usePostDoctorMutation();
@@ -114,6 +114,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                         formDefaultValue={defaultData}
                         onChange={(formValue, event) => {
                             setDoctorData({
+                                title: formValue.title,
                                 name: formValue.name,
                                 fatherName: formValue.fatherName,
                                 email: formValue.email,
@@ -130,6 +131,12 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                     >
                         <Grid fluid>
                             <Row>
+                                <Col sm={12} className="mt-6">
+                                    <Form.Group controlId="title">
+                                        <Form.ControlLabel>Title</Form.ControlLabel>
+                                        <Form.Control name="title" />
+                                    </Form.Group>
+                                </Col>
                                 <Col sm={12} className="mt-6">
                                     <Form.Group controlId="name">
                                         <Form.ControlLabel>Doctor Name</Form.ControlLabel>
@@ -270,6 +277,7 @@ const NewDoctor = ({ open, setPostModelOpen, defaultData, mode, setMode }: NewFo
                                     setMode("new")
                                     setPostModelOpen(!open);
                                     setDoctorData({
+                                        title: "",
                                         name: "",
                                         fatherName: "",
                                         email: "",

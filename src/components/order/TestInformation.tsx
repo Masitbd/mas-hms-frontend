@@ -13,6 +13,7 @@ import {
 } from "rsuite";
 
 import TestReportForm from "../testReport/TestReportForm";
+import TestView from "../testReport/TestView/TestView";
 import RModal from "../ui/Modal";
 
 const { Cell, Column, HeaderCell } = Table;
@@ -66,8 +67,9 @@ const initialFormTestData = {
 }
 
 export type ITestGenerateType = {
-  modeSingleType: string; modeType: string; id: string
+  modeSingleType: string; modeType: string; id: string, status: string;
 }
+
 
 
 const TestInformation = (params: IParams) => {
@@ -200,13 +202,30 @@ const TestInformation = (params: IParams) => {
     }, "Discount Cannot be more then 99%"),
   });
 
-  const [reportGenerate, setReportGenerate] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '' });
+  const [reportGenerate, setReportGenerate] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '', status: "" });
+
+  const [reportGenerate2, setReportGenerate2] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '', status: "" });
+
+
+
   const [reportGenerateModal, setReportGenerateModal] = useState<boolean>(false);
 
   const reportGenerateHandler = (data: ITestGenerateType) => {
-    setReportGenerate({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id })
+    setReportGenerate({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id, status: data.status })
     setReportGenerateModal(!reportGenerateModal)
   }
+  const [reportGenerateModal2, setReportGenerateModal2] = useState<boolean>(false);
+
+  const reportGenerateHandler2 = (data: ITestGenerateType) => {
+    setReportGenerate2({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id, status: data.status })
+    setReportGenerateModal2(!reportGenerateModal2)
+  }
+
+
+
+
+
+
 
   return (
     <div>
@@ -419,6 +438,20 @@ const TestInformation = (params: IParams) => {
             </RModal>
           )
         }
+        {
+          reportGenerateModal2 && (
+            <RModal
+              open={reportGenerateModal2}
+              size="xxl"
+              title={
+                "Test Report View"
+              }
+            >
+              <TestView reportGenerate={reportGenerate2} setReportGenerate={setReportGenerate2} setReportGenerateModal={setReportGenerateModal2} />
+            </RModal>
+          )
+        }
+
         <Table
           height={200}
           data={params?.formData?.tests}
@@ -474,21 +507,38 @@ const TestInformation = (params: IParams) => {
                   >
                     View
                   </Button>
+
                   <Button
+                    className="ml-2"
                     onClick={() => {
-                      reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type })
+                      reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
                     }}
                     appearance="primary"
                     color="orange"
                   >
-                    report
+                    Report
                   </Button>
+                  {
+                    rowData.status === 'completed' &&
+                    <Button
+                      className="ml-2"
+                      onClick={() => {
+                        reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                      }}
+                      appearance="primary"
+                      color="blue"
+                    >
+                      Report View
+                    </Button>
+                  }
+
                 </>
               )}
             </Cell>
           </Column>
         </Table>
       </div>
+
     </div>
   );
 };

@@ -3,43 +3,43 @@ import { baseApi } from "../baseApi";
 
 const reportGroup = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    postSpecimen: build.mutation({
+    postReportGroup: build.mutation({
       query: (data: ISpecimen) => ({
-        url: "/specimen",
+        url: "/reportGroup",
         method: "post",
         body: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["specimen"],
+      invalidatesTags: ["reportGroup"],
     }),
-    patchSpecimen: build.mutation({
+    patchReportGroup: build.mutation({
       query: ({ data, id }) => ({
-        url: `/specimen/${id}`,
+        url: `/reportGroup/${id}`,
         method: "PATCH",
         body: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["specimen"],
+      invalidatesTags: ["reportGroup"],
     }),
-    deleteSpecimen: build.mutation({
+    deleteReportGroup: build.mutation({
       query: (id: string) => ({
-        url: `/specimen/${id}`,
+        url: `/reportGroup/${id}`,
         method: "DELETE",
         contentType: "application/json",
       }),
-      invalidatesTags: ["specimen"],
+      invalidatesTags: ["reportGroup"],
     }),
-    getSpecimen: build.query({
+    getReportGroup: build.query({
       query: () => ({
-        url: "/specimen",
+        url: "/reportGroup",
         method: "GET",
         contentType: "application/json",
       }),
-      providesTags: ["specimen"],
+      providesTags: ["reportGroup"],
     }),
     getSingleSpecimen: build.mutation({
       query: (id: string) => ({
-        url: `/specimen/${id}`,
+        url: `/reportGroup/${id}`,
         method: "GET",
         contentType: "application/json",
       }),
@@ -48,8 +48,8 @@ const reportGroup = baseApi.injectEndpoints({
 });
 
 export const {
-  usePostSpecimenMutation,
-  useGetSpecimenQuery,
-  useDeleteSpecimenMutation,
-  usePatchSpecimenMutation,
+  usePostReportGroupMutation,
+  useGetReportGroupQuery,
+  useDeleteReportGroupMutation,
+  usePatchReportGroupMutation,
 } = specimen;

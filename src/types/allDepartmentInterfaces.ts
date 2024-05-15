@@ -24,6 +24,7 @@ export type IDepartment = {
   _id?: string;
   label: string;
   value: string;
+  reportGroupName: string;
   commissionParcentage: number;
   fixedCommission: number;
   isCommissionFiexed: boolean;
@@ -31,6 +32,7 @@ export type IDepartment = {
 };
 export type IDoctor = {
   _id?: string;
+  title: string;
   name: string;
   fatherName: string;
   email: string;

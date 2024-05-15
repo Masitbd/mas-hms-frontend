@@ -103,11 +103,11 @@ const Order = () => {
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
-      totalPrice = totalPrice + param.test.price;
+      totalPrice = totalPrice + param?.test?.price;
 
       if (param.hasDiscount || Number(param.discount) > 0) {
         const discount = Math.ceil(
-          (Number(param.discount) / 100) * param.test.price
+          (Number(param.discount) / 100) * param?.test?.price
         );
         console.log(discount);
         discountAmount = discountAmount + discount;
