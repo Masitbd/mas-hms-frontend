@@ -52,4 +52,4 @@ export const {
   useGetReportGroupQuery,
   useDeleteReportGroupMutation,
   usePatchReportGroupMutation,
-} = specimen;
+} = reportGroup;

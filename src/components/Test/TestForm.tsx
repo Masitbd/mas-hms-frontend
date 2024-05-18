@@ -1,5 +1,6 @@
 import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
+
 import { useGetReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 import { useGetVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
@@ -192,7 +193,7 @@ const TestForm = ({
             className="w-full"
             name="reportGroup"
             accepter={InputPicker}
-            data={reportGroupData?.data.map((data:any) => ({
+            data={reportGroupData?.data.map((data: any) => ({
               label: data.label,
               value: data._id,
             }))}
@@ -222,8 +223,8 @@ const TestForm = ({
           <div>
             {(formData?.type == "single" &&
               formData.testResultType == "parameter") ||
-            (defaultValue?.type == "single" &&
-              defaultValue.testResultType == "parameter") ? (
+              (defaultValue?.type == "single" &&
+                defaultValue.testResultType == "parameter") ? (
               <ForParameterBased
                 defaultMode={mode}
                 testFromData={formData}
@@ -233,7 +234,7 @@ const TestForm = ({
               ""
             )}{" "}
             {formData?.type == "single" &&
-            formData.testResultType == "descriptive" ? (
+              formData.testResultType == "descriptive" ? (
               <ForDescriptiveBased
                 testFromData={formData}
                 setTestFromData={setfromData}
@@ -242,7 +243,7 @@ const TestForm = ({
               ""
             )}
             {formData?.type == "single" &&
-            formData.testResultType == "bacterial" ? (
+              formData.testResultType == "bacterial" ? (
               <ForMicroBiology
                 testFromData={formData}
                 setTestFromData={setfromData}

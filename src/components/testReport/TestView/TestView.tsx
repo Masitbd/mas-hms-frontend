@@ -3,6 +3,7 @@ import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
 import { useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 import { useGetSingleTestQuery } from "@/redux/api/test/testSlice";
+import { useAppSelector } from "@/redux/hook";
 import { IDepartment, IHospitalGroup, ISpecimen } from "@/types/allDepartmentInterfaces";
 import axios from "axios";
 import { Button, Form, InputPicker, SelectPicker, TagPicker } from "rsuite";
@@ -23,16 +24,19 @@ const TestView = ({ reportGenerate, setReportGenerate, setReportGenerateModal }:
     const { data: specimenData } = useGetSpecimenQuery(undefined);
     const { data: hospitalData } = useGetHospitalGroupQuery(undefined);
 
+    const docxContent = useAppSelector((state) => state.docxContent.docxContent);
 
     if (isLoading) {
         return <div>Loading ....</div>
     }
     // const [formData, setFromData] = useState<>();
+
+    console.log(docxContent)
     console.log(testQueryData, 'testData', reportGenerate.modeSingleType)
     const handlePrint = async (id: string) => {
         try {
-            console.log(id)
-            const response = await axios.get(`http://localhost:5000/api/v1/testReport/print/${id}`);
+            console.log(docxContent)
+            const response = await axios.post(`http://localhost:5000/api/v1/testReport/print/${id}`, { docx: docxContent });
             console.log(response.data)
 
             // const dataUrl = URL.createObjectURL(response.data.data)
