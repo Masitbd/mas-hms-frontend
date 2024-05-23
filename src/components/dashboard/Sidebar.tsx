@@ -39,7 +39,7 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
 const userMenuItem = [
   { key: "1", title: "Users", href: "/users" },
   { key: "2", title: "Prifile", href: "/profile" },
-  { key: "2", title: "Permissions", href: "/permissions" },
+  { key: "3", title: "Permissions", href: "/permission" },
 ];
 
 const testMenuItem = [
@@ -89,50 +89,42 @@ const Sidebar = () => {
                 icon={<MagicIcon />}
                 placement="rightStart"
               >
-                <Nav.Menu
-                  eventKey="3"
-                  trigger="hover"
-                  title="Test Params"
-                  icon={<MagicIcon />}
-                  placement="rightStart"
-                >
-                  {testMenuItem.map((item) => (
-                    <Nav.Item
-                      eventKey={`3-${item.key}`}
-                      href={item.href}
-                      as={NavLink}
-                      key={item.key}
-                      onClick={() => setSelectedItem(item.href)}
-                      style={
-                        selectedItem === item.href
-                          ? {
-                              backgroundColor: "#3498ff",
-                              color: "white",
-                              borderRadius: "5px",
-                            }
-                          : {
-                              color: "black",
-                            }
-                      }
-                    >
-                      {item.title}
-                    </Nav.Item>
-                  ))}
-                </Nav.Menu>
+                {testMenuItem.map((item) => (
+                  <Nav.Item
+                    eventKey={`3-${item.key}`}
+                    href={item.href}
+                    as={NavLink}
+                    key={item.key}
+                    onClick={() => setSelectedItem(item.href)}
+                    style={
+                      selectedItem === item.href
+                        ? {
+                            backgroundColor: "#3498ff",
+                            color: "white",
+                            borderRadius: "5px",
+                          }
+                        : {
+                            color: "black",
+                          }
+                    }
+                  >
+                    {item.title}
+                  </Nav.Item>
+                ))}
               </Nav.Menu>
               <Nav.Menu
-                eventKey="4"
+                eventKey="5"
                 trigger="hover"
-                title="Settings"
+                title="Manage Users"
                 icon={<GearCircleIcon />}
                 placement="rightStart"
               >
                 {userMenuItem.map((item) => (
                   <Nav.Item
-                    eventKey={`4-${item.key}`}
+                    eventKey={`5-${item.key}`}
                     href={item.href}
                     as={NavLink}
-                    key={item.key}
+                    key={Number(item.key) + 20}
                     onClick={() => setSelectedItem(item.href)}
                     style={
                       selectedItem === item.href

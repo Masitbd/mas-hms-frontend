@@ -9,7 +9,7 @@ const ManageUsers = () => {
   const [mode, setMode] = useState("");
   return (
     <div>
-      <div>
+      <div className="my-5">
         <Button
           onClick={() => {
             setNewUserModal(!newUserModal);

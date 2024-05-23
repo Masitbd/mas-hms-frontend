@@ -1,16 +1,18 @@
 import { ISpecimen } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
+import { INewUserData } from "@/components/users/interfacesAndInitalData";
 
 const usersSlice = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postUser: build.mutation({
-      query: (data: ISpecimen) => ({
+      query: (data: INewUserData) => ({
         url: "/user",
         method: "post",
         body: data,
+        data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["specimen"],
+      invalidatesTags: ["users"],
     }),
     patchUser: build.mutation({
       query: ({ data, uuid }) => ({
@@ -28,7 +30,7 @@ const usersSlice = baseApi.injectEndpoints({
         method: "GET",
         contentType: "application/json",
       }),
-      providesTags: ["specimen"],
+      providesTags: ["users"],
     }),
     getSingleUser: build.query({
       query: (uuid: string) => ({
@@ -36,6 +38,7 @@ const usersSlice = baseApi.injectEndpoints({
         method: "GET",
         contentType: "application/json",
       }),
+      providesTags: ["user"],
     }),
   }),
 });
@@ -45,4 +48,5 @@ export const {
   usePostUserMutation,
   usePatchUserMutation,
   useGetSingleUserQuery,
+  useLazyGetSingleUserQuery,
 } = usersSlice;

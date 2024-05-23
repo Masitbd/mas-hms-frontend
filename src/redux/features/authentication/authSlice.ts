@@ -2,7 +2,23 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   loggedIn: false,
-  user: {},
+  user: {
+    uuid: "",
+    profile: {
+      name: "",
+
+      fatherName: "",
+      motherName: "",
+      phone: "",
+      email: "",
+      address: "",
+      uuid: "",
+    },
+    needsPasswordChange: false,
+    _id: "",
+    role: "",
+  },
+  token: "",
 };
 
 const authSlice = createSlice({
@@ -12,6 +28,7 @@ const authSlice = createSlice({
     setAuthStatus: (state, { payload }) => {
       state.loggedIn = payload.loggedIn;
       state.user = payload.user;
+      state.token = payload.token;
     },
   },
 });

@@ -7,18 +7,20 @@ const authenticaiton = baseApi.injectEndpoints({
         url: "/auth/login",
         method: "POST",
         body: data,
+        data: data,
         contentType: "application/json",
       }),
     }),
-
-    getSingleBacteria: build.mutation({
+    changePassword: build.mutation({
       query: (data: any) => ({
-        url: `/bacteria/${data}`,
-        method: "get",
+        url: "/auth/change-password",
+        method: "POST",
+        body: data,
+        data: data,
         contentType: "application/json",
       }),
     }),
   }),
 });
 
-export const { useLoginMutation } = authenticaiton;
+export const { useLoginMutation, useChangePasswordMutation } = authenticaiton;

@@ -19,9 +19,12 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setLoading } from "@/redux/features/loading/loading";
 import { useLazyGetProfileQuery } from "@/redux/api/profile/profileSlice";
 import { setAuthStatus } from "@/redux/features/authentication/authSlice";
+import Loading from "../loading";
+import { FormSetValueFunction } from "@/types/componentsType";
 
 const LoginPage = () => {
-  const [getProfile] = useLazyGetProfileQuery();
+  const [getProfile, { data: profileData, isSuccess: profileRequestSuccess }] =
+    useLazyGetProfileQuery();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { StringType } = Schema.Types;
@@ -83,6 +86,9 @@ const LoginPage = () => {
     }
   };
 
+  const userLoggedIn = useAppSelector((state) => state.auth.loggedIn);
+  const loading = useAppSelector((state) => state.loading.loading);
+
   // Using use effect
 
   useEffect(() => {
@@ -90,29 +96,53 @@ const LoginPage = () => {
       dispatch(setLoading(true));
     }
     if (loginSuccess) {
-      toaster.push(<Message type="success">Logged In successfully</Message>);
+      const data = getProfile(undefined);
+
       localStorage.setItem("accessToken", loginSuccessData.data.accessToken);
-      dispatch(setAuthStatus({ loggedIn: true }));
+
       dispatch(setLoading(false));
     }
     if (loginError) {
-      toaster.push(<Message type="success">Logged In Failed</Message>);
+      toaster.push(
+        <Message type="error">
+          Logged In Failed. Check you password and try again letter
+        </Message>
+      );
       dispatch(setLoading(false));
     }
-  }, [loginSuccess, loginError]);
 
-  const userLoggedIn = useAppSelector((state) => state.auth.loggedIn);
-  const loading = useAppSelector((state) => state.loading.loading);
+    if (profileRequestSuccess) {
+      dispatch(
+        setAuthStatus({
+          loggedIn: true,
+          token: loginSuccessData.accessToken,
+          user: profileData.data[0],
+        })
+      );
+
+      toaster.push(<Message type="success">Logged In successfully</Message>);
+    }
+  }, [loginSuccess, loginError, profileRequestSuccess]);
 
   if (loading) {
     return (
       <>
-        <div>...loading</div>
+        <div>
+          <Loading />
+        </div>
       </>
     );
   }
+
+  // All the form handle funciton
+  const handleLoginFormData: FormSetValueFunction = (formValue, event) => {
+    setLoginData(formValue as ILoginData);
+  };
+  const handleResetFormData: FormSetValueFunction = (formValue, event) => {
+    setResetFromData(formValue as IResetFromData);
+  };
   if (!loading && userLoggedIn) {
-    router.push("/");
+    router.push("/profile");
   }
   if (!loading && !userLoggedIn) {
     return (
@@ -159,9 +189,10 @@ const LoginPage = () => {
               <Form
                 fluid
                 className="w-full"
-                onChange={setLoginData}
+                onChange={handleLoginFormData}
                 ref={formRef}
                 model={model}
+                formValue={loginData}
               >
                 <Form.Group controlId="uuid">
                   <Form.Control name="uuid" placeholder="USER ID" />
@@ -203,7 +234,7 @@ const LoginPage = () => {
                 fluid
                 model={resetModel}
                 ref={resetFormRef}
-                onChange={setResetFromData}
+                onChange={handleResetFormData}
               >
                 <Form.Group controlId="uuid">
                   <Form.Control name="uuid" type="text" placeholder="UUID" />

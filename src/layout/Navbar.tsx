@@ -6,6 +6,7 @@ import { NavLink } from "@/utils/Navlink";
 import { useAppDispatch } from "@/redux/hook";
 import { setAuthStatus } from "@/redux/features/authentication/authSlice";
 import { redirect } from "next/navigation";
+import { baseApi } from "@/redux/api/baseApi";
 
 const CustomNavbar = ({
   onSelect,
@@ -19,6 +20,7 @@ const CustomNavbar = ({
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     dispatch(setAuthStatus({ loggedIn: false, user: {} }));
+    dispatch(baseApi.util.resetApiState());
     redirect("/signin");
   };
   return (

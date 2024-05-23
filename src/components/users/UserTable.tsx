@@ -1,9 +1,34 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Button, InputPicker, SelectPicker, Table } from "rsuite";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Button,
+  InputPicker,
+  Message,
+  SelectPicker,
+  Table,
+  toaster,
+} from "rsuite";
 import RModal from "../ui/Modal";
 import UserForm from "./NewUserForm";
-import { useGetAllUsersQuery } from "@/redux/api/users/usersSlice";
+import {
+  useGetAllUsersQuery,
+  useLazyGetSingleUserQuery,
+} from "@/redux/api/users/usersSlice";
+import { useGetpermissionQuery } from "@/redux/api/permission/permissonSlice";
+import { usePatchUserPermissionMutation } from "@/redux/api/userPermission/userPermissonSlice";
+import Loading from "@/app/loading";
+import UserPermissionsTable from "./userPermissionTable";
+import {
+  INewUserData,
+  IProfile,
+  IUserData,
+  initialFormDataForNewUser,
+  patchProfileModel,
+  profileDispalyableFields,
+} from "./interfacesAndInitalData";
+import { usePatchProfileMutation } from "@/redux/api/profile/profileSlice";
+import { useAppSelector } from "@/redux/hook";
+import PatchProfile from "./PatchProfile";
 
 const UserTable = ({
   mode,
@@ -12,52 +37,68 @@ const UserTable = ({
   mode: string;
   setMode: (prop: string) => void;
 }) => {
+  const loggedInUser: IUserData = useAppSelector((state) => state.auth.user);
   const { data: users, isLoading: usersLoading } =
     useGetAllUsersQuery(undefined);
 
   const { HeaderCell, Cell, Column } = Table;
 
-  //   Handling signle user view
+  //   Handling signle user view;
+  const [
+    getSingleUser,
+    { isLoading: singleUserLoading, data: singleUserdata },
+  ] = useLazyGetSingleUserQuery();
   const [user, setUser] = useState();
   const [singleUserModel, setSingleUserModel] = useState(false);
   const handleSingleUserView = (user: any) => {
     setUser(user);
+    getSingleUser(user.uuid);
     setSingleUserModel(true);
   };
 
-  // ALl the permissions stored in the server
+  //! Handling the search function is disable for now It will be used
+  // const [searchData, setSearchData] = useState();
+  // const handleSearch = (prop: string) => {
+  //   const data = permissions.filter((permission) =>
+  //     permission.label.includes(prop)
+  //   );
+  //   setSearchData(data);
+  // };
 
-  const [permissions, setPermissions] = useState([]);
-  useEffect(() => {
-    fetch("/PermissionData.json")
-      .then((res) => res.json())
-      .then((data) => setPermissions(data));
-  }, [user]);
+  // for patching new user
+  const patchFromRef: React.MutableRefObject<any> = useRef();
+  const [userData, setUserData] = useState<Partial<IProfile>>();
+  const [
+    patchUserProfile,
+    {
+      isLoading: patchUserProfileLoading,
+      isSuccess: patchUserProfileSuccess,
+      isError: patchUserProfileError,
+    },
+  ] = usePatchProfileMutation();
 
-  // Handeling permisison onChange
-  const handlePermissionChange = (data) => {
-    const selscted = users.find((data) => data.uuid === user.uuid);
-    const permissionCodes = selscted.permissions.map(
-      (permission) => permission
-    );
-    if (permissionCodes.includes(data.code)) {
-      selscted.permissions.filter(
-        (permission) => permission.code !== data.code
-      );
+  const patchHandler = () => {
+    if (patchFromRef.current.check()) {
+      patchUserProfile({
+        profileData: userData as IProfile,
+        uuid: singleUserdata.data[0].uuid,
+      });
+      setUserData(undefined);
     } else {
-      selscted.permissions.push(data);
+      toaster.push(
+        <Message type="error">Do Not leave any Field Empty</Message>
+      );
     }
-    setUser(selscted);
   };
 
-  // Handling the search function
-  const [searchData, setSearchData] = useState();
-  const handleSearch = (prop: string) => {
-    const data = permissions.filter((permission) =>
-      permission.label.includes(prop)
-    );
-    setSearchData(data);
-  };
+  useEffect(() => {
+    if (patchUserProfileSuccess) {
+      toaster.push(<Message type="success">User Updated successfully</Message>);
+      setMode("new");
+    }
+    if (patchUserProfileError) {
+    }
+  }, [patchUserProfileError, patchUserProfileSuccess]);
   return (
     <>
       <div>
@@ -96,9 +137,6 @@ const UserTable = ({
                     <Button onClick={() => handleSingleUserView(rowData)}>
                       View
                     </Button>
-                    <Button onClick={() => handleSingleUserView(rowData)}>
-                      Edit
-                    </Button>
                   </>
                 );
               }}
@@ -114,10 +152,12 @@ const UserTable = ({
           okHandler={() => {
             setSingleUserModel(!singleUserModel);
             setMode("new");
+            setUser(undefined);
           }}
           cancelHandler={() => {
             setSingleUserModel(!singleUserModel);
             setMode("new");
+            setUser(undefined);
           }}
         >
           <div>
@@ -128,38 +168,61 @@ const UserTable = ({
               </h2>
 
               {mode == "edit" ? (
-                <UserForm defaultValue={user} mode={mode} />
+                <>
+                  <PatchProfile
+                    defaultValue={singleUserdata.data[0].profile}
+                    mode={mode}
+                    setMode={setMode}
+                    key={105}
+                  />
+                </>
               ) : (
                 <>
                   {" "}
-                  <div className="grid grid-cols-2 gap-5">
-                    {user &&
-                      Object.keys(user).map((key) => {
-                        if (key == "permissions") return;
+                  <div className="grid grid-cols-2 gap-5" key={19}>
+                    {singleUserLoading ? (
+                      <Loading />
+                    ) : (
+                      user &&
+                      profileDispalyableFields.map((key, index) => {
                         return (
                           <>
-                            <div className="flex flex-col">
+                            <div className="flex flex-col" key={index + 100}>
                               <div className="capitalize text-md font-bold">
                                 {key}
                               </div>
-                              <div>{user[key]}</div>
+                              <div>{singleUserdata.data[0].profile[key]}</div>
                             </div>
                           </>
                         );
-                      })}
+                      })
+                    )}
                   </div>
                 </>
               )}
 
-              <div>
-                <Button onClick={() => setMode("edit")}>Edit</Button>
-              </div>
+              {mode !== "edit" && (
+                <div className="my-5">
+                  <Button
+                    onClick={() => {
+                      setMode("edit");
+                    }}
+                    appearance="primary"
+                    color="green"
+                  >
+                    Edit
+                  </Button>
+                </div>
+              )}
             </div>
             <div>
               <h2>
                 Permissions Information <br />
                 <hr />
               </h2>
+
+              {/* 
+              //! THis code is for searching permisison and will be used
               <div>
                 <InputPicker
                   className="w-full"
@@ -217,55 +280,30 @@ const UserTable = ({
                     );
                   }}
                 />
-              </div>
-              <Table
-                data={permissions}
-                bordered
-                cellBordered
-                rowHeight={60}
-                height={600}
-              >
-                <Column flexGrow={2}>
-                  <HeaderCell>Permisson Name</HeaderCell>
-                  <Cell dataKey="label" />
-                </Column>
-
-                <Column flexGrow={1}>
-                  <HeaderCell>...</HeaderCell>
-                  <Cell>
-                    {(rowData) => {
-                      return (
-                        <>
-                          <Button
-                            appearance="primary"
-                            className="mx-5"
-                            color="green"
-                            disabled={user.permissions.permissions.includes(
-                              rowData.code
-                            )}
-                            onClick={() => handlePermissionChange(rowData)}
-                          >
-                            {user.permissions.permissions.includes(rowData.code)
-                              ? "Granted"
-                              : "Grant"}
-                          </Button>
-                          <Button
-                            appearance="primary"
-                            color="red"
-                            disabled={user.permissions.permissions
-                              .map((permission) => permission.code)
-                              .includes(!rowData.code)}
-                            onClick={() => handlePermissionChange(rowData)}
-                          >
-                            Revoke
-                          </Button>
-                        </>
-                      );
-                    }}
-                  </Cell>
-                </Column>
-              </Table>
+              </div> */}
             </div>
+            <fieldset
+              className={`${
+                loggedInUser.uuid == singleUserdata?.data[0].uuid
+                  ? "cursor-not-allowed"
+                  : ""
+              }`}
+              disabled={loggedInUser.uuid == singleUserdata?.data[0].uuid}
+            >
+              <div
+                title={`${
+                  loggedInUser.uuid == singleUserdata?.data[0].uuid
+                    ? "Your are not allowed to TO change your own permissions."
+                    : ""
+                }`}
+              >
+                {user ? (
+                  <UserPermissionsTable param={user as unknown as IAUth} />
+                ) : (
+                  ""
+                )}
+              </div>
+            </fieldset>
           </div>
         </RModal>
       </div>
