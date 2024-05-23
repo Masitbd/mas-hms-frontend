@@ -13,6 +13,12 @@ export type ISpecimen = {
   value: string;
   description: string;
 };
+export type IReportGroup = {
+  _id?: string;
+  label: string;
+  value: string;
+  description: string;
+};
 export type IVacuumTube = {
   _id?: string;
   label: string;

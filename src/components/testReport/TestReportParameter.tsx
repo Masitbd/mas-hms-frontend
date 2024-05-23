@@ -4,9 +4,10 @@ import { FormEvent, useRef } from 'react';
 import { Button, Form, Input, SelectPicker, Table } from 'rsuite';
 
 import { useGetSingleDepartmentQuery } from '@/redux/api/department/departmentSlice';
+import { useGetReportGroupQuery } from '@/redux/api/reportGroup/reportGroupSlice';
 import { usePostTestReportMutation } from '@/redux/api/testReport/testReportSlice';
 import { useAppSelector } from '@/redux/hook';
-import { ITest } from '@/types/allDepartmentInterfaces';
+import { IReportGroup, ITest } from '@/types/allDepartmentInterfaces';
 import { ITestReportForm } from './TestReportForm';
 
 
@@ -27,6 +28,7 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
 
     console.log(testQueryData.data.department)
     const { data: departmentQueryData } = useGetSingleDepartmentQuery(testQueryData.data.department);
+    const { data: reportGroupQueryData } = useGetReportGroupQuery(testQueryData.data.department);
     console.log(departmentQueryData)
 
     // const [formData, setFromData] = useState<>();
@@ -105,7 +107,13 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
         },
     ];
 
-    console.log(departmentQueryData?.data?.value === 'immunology')
+    console.log(departmentQueryData?.data?.reportGroupName.toLowerCase())
+
+    const reportGroupNames = reportGroupQueryData?.data?.find((group: IReportGroup) => group.value === departmentQueryData?.data?.reportGroupName.toLowerCase())
+
+    console.log(reportGroupNames.value)
+
+
 
     return (
         <div>
@@ -137,7 +145,7 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
                     <Column flexGrow={3} width={200}>
                         <HeaderCell>Result</HeaderCell>
                         <Cell >{rowData =>
-                            departmentQueryData?.data?.value === 'immunology report' ? (<SelectPicker
+                            departmentQueryData?.data?.reportGroupName.toLowerCase() !== reportGroupNames.value ? (<SelectPicker
                                 data={testType}
                                 searchable={false}
                                 style={{ width: 224 }}
@@ -146,7 +154,7 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
                             />) : (<Input ref={formRef} type="text" name="result" defaultValue={rowData.result} onBlur={(e) => handleSubmit(e, rowData as ITest)} />)}</Cell>
                     </Column>
                     {
-                        departmentQueryData?.data?.value === 'haematological report' && (
+                        departmentQueryData?.data?.reportGroupName.toLowerCase() === reportGroupNames.value && (
                             <Column flexGrow={3} width={200}>
                                 <HeaderCell>Comment</HeaderCell>
                                 <Cell >{rowData => <Input ref={formRef} type="text" name="comment" defaultValue={rowData.comment} onBlur={(e) => handleSubmit(e, rowData as ITest)} />}</Cell>

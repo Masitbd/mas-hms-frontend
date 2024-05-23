@@ -1,55 +1,55 @@
-import { ISpecimen } from "@/types/allDepartmentInterfaces";
+import { IReportGroup } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
 const reportGroup = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postReportGroup: build.mutation({
-      query: (data: ISpecimen) => ({
+      query: (data: IReportGroup) => ({
         url: "/reportGroup",
         method: "post",
         body: data,
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      invalidatesTags: ["reportGroup"],
+      invalidatesTags: ["reportGroup"]
     }),
     patchReportGroup: build.mutation({
       query: ({ data, id }) => ({
         url: `/reportGroup/${id}`,
         method: "PATCH",
         body: data,
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      invalidatesTags: ["reportGroup"],
+      invalidatesTags: ["reportGroup"]
     }),
     deleteReportGroup: build.mutation({
       query: (id: string) => ({
         url: `/reportGroup/${id}`,
         method: "DELETE",
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      invalidatesTags: ["reportGroup"],
+      invalidatesTags: ["reportGroup"]
     }),
     getReportGroup: build.query({
       query: () => ({
         url: "/reportGroup",
         method: "GET",
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      providesTags: ["reportGroup"],
+      providesTags: ["reportGroup"]
     }),
     getSingleSpecimen: build.mutation({
       query: (id: string) => ({
         url: `/reportGroup/${id}`,
         method: "GET",
-        contentType: "application/json",
-      }),
-    }),
-  }),
+        contentType: "application/json"
+      })
+    })
+  })
 });
 
 export const {
   usePostReportGroupMutation,
   useGetReportGroupQuery,
   useDeleteReportGroupMutation,
-  usePatchReportGroupMutation,
+  usePatchReportGroupMutation
 } = reportGroup;

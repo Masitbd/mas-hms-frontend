@@ -21,7 +21,7 @@ const TestViewB = ({ reportGenerate, setReportGenerate, setReportGenerateModal }
             <div>
                 <Form
                     fluid
-                    formValue={reportData?.data?.microbiology}
+                    formValue={reportData?.data?.microbiology[0]}
                     className="grid grid-cols-1 gap"
                     readOnly={true}
                 >

@@ -6,7 +6,7 @@ import { usePostTestReportMutation } from '@/redux/api/testReport/testReportSlic
 import { useAppSelector } from '@/redux/hook';
 import { ICondition } from '@/types/allDepartmentInterfaces';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Button, Form, Schema, SelectPicker, Table, TagPicker, Toggle } from 'rsuite';
 import RModal from '../ui/Modal';
 
@@ -121,17 +121,18 @@ const TestReportBacterial = ({ reportGenerate, setReportGenerate, setReportGener
     const { data: conditionData } = useGetConditionQuery(undefined);
     const { data: bacteriaData } = useGetBacteriaQuery(undefined);
     console.log(testQueryData)
-    const formRef: React.MutableRefObject<any> = useRef();
-    const model = Schema.Model({
-        duration: StringType().isRequired("This field is required."),
-        temperatures: StringType().isRequired("This field is required."),
-        condition: StringType().isRequired("This field is required."),
-    });
+    // const formRef: React.MutableRefObject<any> = useRef();
+    // const model = Schema.Model({
+    //     duration: StringType().isRequired("This field is required."),
+    //     temperatures: StringType().isRequired("This field is required."),
+    //     condition: StringType().isRequired("This field is required."),
+    // });
     const [
         postTestReport
     ] = usePostTestReportMutation(); // post create a reportTest
     const id = useAppSelector((state: { id: { id: string; }; }) => state.id.id);
     console.log(reportGenerate.modeSingleType)
+    microbiology.sensitivityOptions = sensitivityData
     const handleSubmit = async () => {
 
         const testId = reportGenerate.id;
@@ -209,7 +210,7 @@ const TestReportBacterial = ({ reportGenerate, setReportGenerate, setReportGener
 
     const [sensitivityModal, setSensitivityModal] = useState<boolean>(false);
 
-    microbiology.sensitivityOptions = sensitivityData
+
 
     console.log(microbiology);
 
