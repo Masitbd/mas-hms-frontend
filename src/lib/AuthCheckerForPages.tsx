@@ -10,13 +10,11 @@ type IAuthState = {
 };
 export function withAuth(
   Components: JSX.ElementType,
-  requiredPermission: number
+  ...requiredPermission: number[]
 ) {
   return function WithAuth(props: JSX.IntrinsicAttributes) {
     const router = useRouter();
 
-    // Add your authentication logic here
-    // For example, check if the user is authenticated
     const authData: IAuthState = useAppSelector(
       (state) => state.auth as IAuthState
     );
@@ -24,8 +22,12 @@ export function withAuth(
     // Check if the user has the required permission
 
     const hasPermission =
+      authData.user.permissions.permissions.some(
+        (value: number, index: number, array: number[]) =>
+          requiredPermission.includes(value)
+      ) ||
       authData.user.permissions.permissions.includes(
-        Number(requiredPermission)
+        ENUM_USER_PEMISSION.SUPER_ADMIN
       ) ||
       authData.user.permissions.permissions.includes(
         ENUM_USER_PEMISSION.SUPER_ADMIN

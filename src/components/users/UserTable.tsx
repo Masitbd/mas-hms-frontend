@@ -29,6 +29,8 @@ import {
 import { usePatchProfileMutation } from "@/redux/api/profile/profileSlice";
 import { useAppSelector } from "@/redux/hook";
 import PatchProfile from "./PatchProfile";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const UserTable = ({
   mode,
@@ -202,26 +204,38 @@ const UserTable = ({
               )}
 
               {mode !== "edit" && (
-                <div className="my-5">
-                  <Button
-                    onClick={() => {
-                      setMode("edit");
-                    }}
-                    appearance="primary"
-                    color="green"
-                  >
-                    Edit
-                  </Button>
-                </div>
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_USER]}
+                >
+                  <div className="my-5">
+                    <Button
+                      onClick={() => {
+                        setMode("edit");
+                      }}
+                      appearance="primary"
+                      color="green"
+                    >
+                      Edit
+                    </Button>
+                  </div>
+                </AuthCheckerForComponent>
               )}
             </div>
-            <div>
-              <h2>
-                Permissions Information <br />
-                <hr />
-              </h2>
+            <AuthCheckerForComponent
+              requiredPermission={[
+                ENUM_USER_PEMISSION.MANAGE_USER,
+                ENUM_USER_PEMISSION.MANAGE_USER_PERMISSIONS,
+                ENUM_USER_PEMISSION.GET_USER_PERMISSIONS,
+              ]}
+            >
+              <>
+                <div>
+                  <h2>
+                    Permissions Information <br />
+                    <hr />
+                  </h2>
 
-              {/* 
+                  {/* 
               //! THis code is for searching permisison and will be used
               <div>
                 <InputPicker
@@ -281,29 +295,31 @@ const UserTable = ({
                   }}
                 />
               </div> */}
-            </div>
-            <fieldset
-              className={`${
-                loggedInUser.uuid == singleUserdata?.data[0].uuid
-                  ? "cursor-not-allowed"
-                  : ""
-              }`}
-              disabled={loggedInUser.uuid == singleUserdata?.data[0].uuid}
-            >
-              <div
-                title={`${
-                  loggedInUser.uuid == singleUserdata?.data[0].uuid
-                    ? "Your are not allowed to TO change your own permissions."
-                    : ""
-                }`}
-              >
-                {user ? (
-                  <UserPermissionsTable param={user as unknown as IAUth} />
-                ) : (
-                  ""
-                )}
-              </div>
-            </fieldset>
+                </div>
+                <fieldset
+                  className={`${
+                    loggedInUser.uuid == singleUserdata?.data[0].uuid
+                      ? "cursor-not-allowed"
+                      : ""
+                  }`}
+                  disabled={loggedInUser.uuid == singleUserdata?.data[0].uuid}
+                >
+                  <div
+                    title={`${
+                      loggedInUser.uuid == singleUserdata?.data[0].uuid
+                        ? "Your are not allowed to TO change your own permissions."
+                        : ""
+                    }`}
+                  >
+                    {user ? (
+                      <UserPermissionsTable param={user as unknown as IAUth} />
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </fieldset>
+              </>
+            </AuthCheckerForComponent>
           </div>
         </RModal>
       </div>

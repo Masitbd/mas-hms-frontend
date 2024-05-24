@@ -2,18 +2,22 @@ import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { useAppSelector } from "@/redux/hook";
 import React from "react";
 
-const AuthCkeckerForComponent = ({
+const AuthCheckerForComponent = ({
   children,
   requiredPermission,
 }: {
   children: React.ReactElement;
-  requiredPermission: number;
+  requiredPermission: number[];
 }) => {
   const auth: IAUth = useAppSelector((state) => state.auth.user as IAUth);
   if (
     auth.permissions.permissions.includes(
       Number(ENUM_USER_PEMISSION.SUPER_ADMIN)
-    )
+    ) ||
+    auth.permissions.permissions.some((permission) =>
+      requiredPermission.includes(permission)
+    ) ||
+    auth.permissions.permissions.includes(ENUM_USER_PEMISSION.ADMIN)
   ) {
     return children;
   }
@@ -24,4 +28,4 @@ const AuthCkeckerForComponent = ({
   }
 };
 
-export default AuthCkeckerForComponent;
+export default AuthCheckerForComponent;

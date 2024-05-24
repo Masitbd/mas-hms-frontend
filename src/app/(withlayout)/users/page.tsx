@@ -1,6 +1,9 @@
 "use client";
 import NewUserModal from "@/components/users/NewUserModal";
 import UserTable from "@/components/users/UserTable";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import { withAuth } from "@/lib/AuthCheckerForPages";
+import AuthCkeckerForComponent from "@/lib/AuthCkeckerForComponent";
 import React, { useState } from "react";
 import { Button } from "rsuite";
 
@@ -10,16 +13,20 @@ const ManageUsers = () => {
   return (
     <div>
       <div className="my-5">
-        <Button
-          onClick={() => {
-            setNewUserModal(!newUserModal);
-            setMode("new");
-          }}
-          appearance="primary"
-          color="blue"
+        <AuthCkeckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_USER]}
         >
-          Add new user
-        </Button>
+          <Button
+            onClick={() => {
+              setNewUserModal(!newUserModal);
+              setMode("new");
+            }}
+            appearance="primary"
+            color="blue"
+          >
+            Add new user
+          </Button>
+        </AuthCkeckerForComponent>
         <div>
           <NewUserModal
             open={newUserModal}
@@ -34,4 +41,8 @@ const ManageUsers = () => {
   );
 };
 
-export default ManageUsers;
+export default withAuth(
+  ManageUsers,
+  ENUM_USER_PEMISSION.GET_ALL_USER,
+  ENUM_USER_PEMISSION.MANAGE_USER
+);

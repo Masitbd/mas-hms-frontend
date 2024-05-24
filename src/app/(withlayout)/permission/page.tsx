@@ -3,6 +3,7 @@ import PdrvTable from "@/components/pdrv/PdrvTable";
 import NewPermission from "@/components/permissions/NewPermission";
 import PermissionTable from "@/components/permissions/PermissionTable";
 import UserTable from "@/components/users/UserTable";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { withAuth } from "@/lib/AuthCheckerForPages";
 import AuthCkeckerForComponent from "@/lib/AuthCkeckerForComponent";
 import React, { useState } from "react";
@@ -21,7 +22,9 @@ const Permissions = () => {
   return (
     <div className="my-5 px-5">
       <div className="my-4">
-        <AuthCkeckerForComponent requiredPermission={9}>
+        <AuthCkeckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PERMISSIONS]}
+        >
           <Button
             appearance="primary"
             onClick={() => setPostModalOpen(!postModalOpen)}
@@ -39,7 +42,12 @@ const Permissions = () => {
         />
       </div>
       <div>
-        <AuthCkeckerForComponent requiredPermission={11}>
+        <AuthCkeckerForComponent
+          requiredPermission={[
+            ENUM_USER_PEMISSION.GET_PERMISSIONS,
+            ENUM_USER_PEMISSION.MANAGE_PERMISSIONS,
+          ]}
+        >
           <PermissionTable />
         </AuthCkeckerForComponent>
       </div>
@@ -47,4 +55,8 @@ const Permissions = () => {
   );
 };
 
-export default withAuth(Permissions, 11);
+export default withAuth(
+  Permissions,
+  ENUM_USER_PEMISSION.MANAGE_PERMISSIONS,
+  ENUM_USER_PEMISSION.GET_PERMISSIONS
+);

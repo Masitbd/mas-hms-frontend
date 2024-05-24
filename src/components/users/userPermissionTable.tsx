@@ -1,4 +1,6 @@
 import { IPermission } from "@/app/(withlayout)/permission/page";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { useGetpermissionQuery } from "@/redux/api/permission/permissonSlice";
 import { usePatchUserPermissionMutation } from "@/redux/api/userPermission/userPermissonSlice";
 import { useGetSingleUserQuery } from "@/redux/api/users/usersSlice";
@@ -70,31 +72,38 @@ const UserPermissionsTable = ({ param }: { param: IAUth }) => {
           <Cell>
             {(rowData: IPermission) => {
               return (
-                <>
-                  <Button
-                    appearance="primary"
-                    color="red"
-                    disabled={
-                      !availabelUserPermissions
-                        .map((permission) => permission)
-                        .includes(rowData.code as unknown as Number)
-                    }
-                    onClick={() => handlePermissionChange(rowData)}
-                  >
-                    Revoke
-                  </Button>
-                  <Button
-                    appearance="primary"
-                    className="mx-5"
-                    color="green"
-                    disabled={availabelUserPermissions.includes(rowData.code)}
-                    onClick={() => handlePermissionChange(rowData)}
-                  >
-                    {availabelUserPermissions.includes(rowData.code)
-                      ? "Granted"
-                      : "Grant"}
-                  </Button>
-                </>
+                <AuthCheckerForComponent
+                  requiredPermission={[
+                    ENUM_USER_PEMISSION.MANAGE_USER,
+                    ENUM_USER_PEMISSION.MANAGE_USER_PERMISSIONS,
+                  ]}
+                >
+                  <>
+                    <Button
+                      appearance="primary"
+                      color="red"
+                      disabled={
+                        !availabelUserPermissions
+                          .map((permission) => permission)
+                          .includes(rowData.code as unknown as Number)
+                      }
+                      onClick={() => handlePermissionChange(rowData)}
+                    >
+                      Revoke
+                    </Button>
+                    <Button
+                      appearance="primary"
+                      className="mx-5"
+                      color="green"
+                      disabled={availabelUserPermissions.includes(rowData.code)}
+                      onClick={() => handlePermissionChange(rowData)}
+                    >
+                      {availabelUserPermissions.includes(rowData.code)
+                        ? "Granted"
+                        : "Grant"}
+                    </Button>
+                  </>
+                </AuthCheckerForComponent>
               );
             }}
           </Cell>

@@ -13,6 +13,7 @@ import {
   usePatchpermissionMutation,
 } from "@/redux/api/permission/permissonSlice";
 import AuthCkeckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const { Column, HeaderCell, Cell } = Table;
 const PermissionTable = () => {
@@ -149,7 +150,9 @@ const PermissionTable = () => {
           <HeaderCell>Action</HeaderCell>
           <Cell align="center">
             {(rowdate) => (
-              <AuthCkeckerForComponent requiredPermission={9}>
+              <AuthCkeckerForComponent
+                requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PERMISSIONS]}
+              >
                 <>
                   <Button
                     appearance="ghost"
