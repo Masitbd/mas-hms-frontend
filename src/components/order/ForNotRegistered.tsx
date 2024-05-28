@@ -1,3 +1,4 @@
+
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import React, { forwardRef } from "react";
 import { DatePicker, Form, InputPicker, Schema } from "rsuite";
@@ -131,3 +132,4 @@ const ForNotRegistered = (param: param) => {
 };
 
 export default ForNotRegistered;
+

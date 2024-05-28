@@ -1,3 +1,4 @@
+
 import React from "react";
 import { IPriceSectionProps } from "./initialDataAndTypes";
 
@@ -73,3 +74,4 @@ const PriceSection = (props: IPriceSectionProps) => {
 };
 
 export default PriceSection;
+

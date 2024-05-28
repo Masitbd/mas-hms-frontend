@@ -1,3 +1,4 @@
+
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import React from "react";
 import { DatePicker, Form, InputPicker, Schema } from "rsuite";

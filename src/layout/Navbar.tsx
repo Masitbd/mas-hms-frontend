@@ -1,7 +1,12 @@
-import { Navbar as ResuiteNavber, Nav } from "rsuite";
+import { Navbar as ResuiteNavber, Nav, Avatar, Button } from "rsuite";
 import HomeIcon from "@rsuite/icons/legacy/Home";
 import CogIcon from "@rsuite/icons/legacy/Cog";
 import { SyntheticEvent, useState } from "react";
+import { NavLink } from "@/utils/Navlink";
+import { useAppDispatch } from "@/redux/hook";
+import { setAuthStatus } from "@/redux/features/authentication/authSlice";
+import { redirect } from "next/navigation";
+import { baseApi } from "@/redux/api/baseApi";
 
 const CustomNavbar = ({
   onSelect,
@@ -11,6 +16,13 @@ const CustomNavbar = ({
   onSelect: SyntheticEvent<Element, Event>;
   activeKey: boolean;
 }) => {
+  const dispatch = useAppDispatch();
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    dispatch(setAuthStatus({ loggedIn: false, user: {} }));
+    dispatch(baseApi.util.resetApiState());
+    redirect("/signin");
+  };
   return (
     <ResuiteNavber {...props}>
       <ResuiteNavber.Brand href="#">HMS</ResuiteNavber.Brand>
@@ -18,16 +30,19 @@ const CustomNavbar = ({
         <Nav.Item eventKey="1" icon={<HomeIcon />}>
           Home
         </Nav.Item>
-        <Nav.Item eventKey="2">News</Nav.Item>
-        <Nav.Item eventKey="3">Products</Nav.Item>
-        <Nav.Menu title="About">
-          <Nav.Item eventKey="4">Company</Nav.Item>
-          <Nav.Item eventKey="5">Team</Nav.Item>
-          <Nav.Item eventKey="6">Contact</Nav.Item>
-        </Nav.Menu>
+        <Nav.Item eventKey="2" as={NavLink} href="/profile">
+          Profile
+        </Nav.Item>
+        <Nav.Item eventKey="3" as={NavLink} href="/order">
+          Dashboard
+        </Nav.Item>
       </Nav>
-      <Nav pullRight>
-        <Nav.Item icon={<CogIcon />}>Settings</Nav.Item>
+      <Nav pullRight className="mr-5">
+        <Button appearance="primary" color="red" onClick={handleLogout}>
+          Logout
+        </Button>
+
+        <Nav.Menu icon={<Avatar src="/avater.jpg" circle />}></Nav.Menu>
       </Nav>
     </ResuiteNavber>
   );

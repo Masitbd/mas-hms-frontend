@@ -29,14 +29,14 @@ const NewBacteria = ({
         }
       );
       setModalStatus(!open);
-      setLoading();
+      setLoading(false);
     }
     if (conditionLoading) {
-      setLoading();
+      setLoading(true);
     }
 
     if (isError) {
-      setLoading();
+      setLoading(false);
       toaster.push(
         <Message type="error">
           Something went wrong please try again letter

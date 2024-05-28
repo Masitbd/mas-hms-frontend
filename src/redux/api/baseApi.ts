@@ -1,20 +1,15 @@
+import { Middleware } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootState } from "../store";
+import { axiosBaseQuery } from "@/shared/axios/axiosBaseQuery";
 //import { tagTypes } from "../tagTypes";
 //import { getFromLocalStorage } from "@/utils/local-storage";
 
 export const baseApi = createApi({
   reducerPath: "baseApi",
-  baseQuery: fetchBaseQuery({
-    //baseUrl: "https://city-clean-aps.vercel.app/api/v1",
-    baseUrl: "http://localhost:5000/api/v1",
-    // prepareHeaders: (headers, { getState }) => {
-    //   /*  const accessToken = getFromLocalStorage("accessToken");
-    //   if (accessToken) {
-    //     headers.set("Authorization", accessToken);
-    //   }
-    //   return headers; */
-    // },
-  }),
+
+  baseQuery: axiosBaseQuery({ baseUrl: "http://localhost:3001/api/v1" }),
+
   endpoints: () => ({}),
   tagTypes: [
     "condition",
@@ -28,6 +23,10 @@ export const baseApi = createApi({
     "test",
     "patient",
     "order",
+    "permission",
+    "users",
+    "user",
+    "profile",
   ],
 
   // tagTypes: tagTypes,
