@@ -1,17 +1,8 @@
 import React from "react";
+import { IPriceSectionProps } from "./initialDataAndTypes";
 
-const PriceSection = ({
-  totalPrice,
-  data,
-  discountAmount,
-  vatAmount,
-}: {
-  totalPrice: number;
-  data: any;
-  discountAmount: number;
-  vatAmount: number;
-}) => {
-  console.log();
+const PriceSection = (props: IPriceSectionProps) => {
+  const { data, discountAmount, totalPrice, vatAmount } = props;
   return (
     <div>
       <div className="mt-10">

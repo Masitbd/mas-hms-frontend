@@ -1,110 +1,31 @@
 "use client";
 import OrderTable from "@/components/order/OrderTable";
 import RModal from "@/components/ui/Modal";
-import React, { SetStateAction, useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  InputGroup,
-  InputPicker,
-  Message,
-  Table,
-  toaster,
-} from "rsuite";
-import SearchIcon from "@rsuite/icons/Search";
-import FormControl from "rsuite/esm/FormControl";
-import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
-import { IDoctor, IPatient } from "@/types/allDepartmentInterfaces";
-import {
-  useGetSinglePatientQuery,
-  useLazyGetSinglePatientQuery,
-} from "@/redux/api/patient/patientSlice";
-import { useGetTestQuery, useGetTestsQuery } from "@/redux/api/test/testSlice";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Message, toaster } from "rsuite";
 import TestInformation from "@/components/order/TestInformation";
-import CheckIcon from "@rsuite/icons/Check";
 import {
   useLazyGetInvoiceQuery,
   usePostOrderMutation,
 } from "@/redux/api/order/orderSlice";
-import ForRegistered from "@/components/order/ForRegistered";
-import ForNotRegistered from "@/components/order/ForNotRegistered";
-import { ITest } from "@/types/allDepartmentInterfaces";
 import FInancialSection from "@/components/order/FInancialSection";
 import PriceSection from "@/components/order/PriceSection";
 import ForDewCollection from "@/components/order/ForDewCollection";
+import {
+  IOrderData,
+  ItestInformaiton,
+  initialData,
+} from "@/components/order/initialDataAndTypes";
+import PatientInformation from "@/components/order/PatientInformation";
 
-type InitialData = {
-  totalPrice: number;
-  parcentDiscount: number;
-  cashDiscount: number;
-  vat: number;
-  paid: number;
-  tests: ItestInformaiton[]; // Define the appropriate type for tests
-  patientType: string;
-  patient: IPatient;
-  refBy?: string; // Make refBy optional
-  deliveryTime: Date;
-};
-
-const initialData: InitialData = {
-  totalPrice: 0,
-  parcentDiscount: 0,
-  cashDiscount: 0,
-  vat: 0,
-  paid: 0,
-  tests: [],
-  patientType: "",
-  patient: {
-    _id: "",
-    name: "",
-    uuid: "",
-    age: "",
-    gender: "",
-    address: "",
-    phone: "",
-    image: "",
-  },
-  refBy: "",
-  deliveryTime: new Date(),
-};
-
-type ItestInformaiton = {
-  discount: string;
-  ramark: string;
-  test: ITest;
-  deliveryTime: Date;
-  remark: string;
-  SL: number;
-};
-export type IOrderData = {
-  _id: string;
-  uuid?: string;
-  patient?: Partial<IPatient>;
-  refBy: string;
-  status: string;
-  deliveryTime: Date;
-  tests: {
-    SL: number;
-    status: string;
-    discount: number;
-    test: string | undefined;
-  }[];
-  totalPrice: number;
-  cashDiscount: number;
-  parcentDiscount: number;
-  dueAmount: number;
-  patientType: string;
-  paid: number;
-  vat: number;
-};
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
   const patientTypeRef: React.MutableRefObject<any> = useRef();
-  const [data, setData] = useState(initialData);
-  const [search, { data: SearchData }] = useLazyGetSinglePatientQuery();
+  const [data, setFormData] = useState(initialData);
+  const setData = (props: React.SetStateAction<any>) => {
+    setFormData(props);
+  };
   const [postOrder, { isSuccess, isError }] = usePostOrderMutation();
-  const { data: doctorData } = useGetDoctorQuery(undefined);
   const [mode, setMode] = useState("new");
   const [dewModalOpen, setDewMOdalOpen] = useState(false);
 
@@ -117,21 +38,6 @@ const Order = () => {
     handlePostORder();
     setData(initialData);
   };
-
-  //   for search
-
-  const patientType = [
-    { label: "Registered", value: "registered" },
-    { label: "Not Registered", value: "notRegistered" },
-  ];
-
-  const handleSearchFunction = async (value: string) => {
-    const sdata = await search(value);
-    setData({ ...data, patient: sdata.data.data });
-    if (sdata.data.data.ref_by) {
-      setData({ ...data, refBy: sdata.data.data.ref_by });
-    }
-  };
   // Handling discount and vat functionality
   let vatAmount = 0;
   let discountAmount = 0;
@@ -141,7 +47,7 @@ const Order = () => {
     data.tests.map((param: ItestInformaiton) => {
       totalPrice = totalPrice + param.test.price;
       if (param.deliveryTime > data.deliveryTime) {
-        setData((preValue) => ({
+        setData((preValue: any) => ({
           ...preValue,
           deliveryTime: param.deliveryTime,
         }));
@@ -212,8 +118,9 @@ const Order = () => {
       patientType: data.patientType,
       vat: data.vat,
       refBy: "",
+      _id: "",
     };
-    if (data.refBy.length > 5) {
+    if (data?.refBy && data.refBy.length > 5) {
       orderData.refBy = data.refBy as string;
     }
 
@@ -284,7 +191,7 @@ const Order = () => {
       <div>
         <RModal
           open={modalOpen}
-          title=""
+          title="Generate New Bill"
           size="full"
           cancelHandler={cancelHandler}
           okHandler={okHandler}
@@ -293,75 +200,21 @@ const Order = () => {
             <h2 className="text-4xl font-bold text-center">
               Generate New Bill
             </h2>
-            <Form
-              onChange={(value, event) =>
-                setData((prevData) => ({
-                  ...prevData,
-                  patientType: value.patientType,
-                }))
-              }
-              fluid
-              className="grid grid-cols-2"
-              formValue={data}
-              ref={patientTypeRef}
-            >
-              <Form.Group controlId="patientType">
-                <Form.ControlLabel>Patient Type</Form.ControlLabel>
-                <Form.Control
-                  name="patientType"
-                  accepter={InputPicker}
-                  data={patientType}
-                />
-              </Form.Group>
-            </Form>
-            <div>
-              {data?.patientType == "registered" && (
-                <>
-                  <div className="mt-5">
-                    <h1 className="font-bold">Patient UUID</h1>
-                    <InputGroup>
-                      <Input
-                        name="value"
-                        onChange={handleSearchFunction}
-                        width={50}
-                      />
-                    </InputGroup>
-                  </div>
-                </>
-              )}
-            </div>
 
-            <div className="mt-5">
-              {data.patientType === "registered" &&
-                (data?.patient?._id ? (
-                  <ForRegistered
-                    doctors={doctorData.data}
-                    formData={data}
-                    patient={SearchData?.data ? SearchData.data : data}
-                    setFormData={
-                      setData as unknown as SetStateAction<IOrderData>
-                    }
-                  />
-                ) : (
-                  <>
-                    <div className="h-24 flex justify-center items-center">
-                      No data founds
-                    </div>
-                  </>
-                ))}
-              {data.patientType === "notRegistered" && (
-                <ForNotRegistered
-                  doctorData={doctorData.data}
-                  setFromData={setData}
-                  data={data}
-                  forwardedRef={refForUnregistered}
-                />
-              )}
+            <div>
+              <PatientInformation
+                data={data}
+                forwardedRefForUnregisterd={refForUnregistered}
+                setFormData={setData as React.SetStateAction<any>}
+                forwardedRefForPatientType={patientTypeRef}
+                key={2589}
+              />
             </div>
 
             <div className="my-10">
               <TestInformation formData={data} setFormData={setData} />
             </div>
+
             <div>
               <FInancialSection
                 setData={setData}
@@ -374,6 +227,7 @@ const Order = () => {
                 data={data}
               />
             </div>
+
             <div>
               <ForDewCollection
                 data={data as unknown as IOrderData}
@@ -381,6 +235,7 @@ const Order = () => {
                 setDewModalOpen={setDewMOdalOpen}
               />
             </div>
+
             <div>
               <PriceSection
                 data={data}
@@ -388,6 +243,7 @@ const Order = () => {
                 totalPrice={totalPrice}
                 vatAmount={vatAmount}
               />
+
               <div className="flex justify-end">
                 <Button
                   appearance="primary"
@@ -395,13 +251,15 @@ const Order = () => {
                   size="lg"
                   disabled={mode == "new"}
                   onClick={() => setDewMOdalOpen(!dewModalOpen)}
+                  className={`${mode == "new" && "invisible"}`}
                 >
                   Collect Due Ammount
                 </Button>
                 <Button
                   appearance="primary"
                   color="blue"
-                  onClick={() => handlePdf(data.oid)}
+                  onClick={() => handlePdf(data.oid as string)}
+                  className={`${mode == "new" && "invisible"}`}
                 >
                   Invoice
                 </Button>

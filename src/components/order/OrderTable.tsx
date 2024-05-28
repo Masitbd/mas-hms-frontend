@@ -17,7 +17,7 @@ import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
-import { IOrderData } from "@/app/(withlayout)/order/page";
+import { IOrderData } from "./initialDataAndTypes";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({

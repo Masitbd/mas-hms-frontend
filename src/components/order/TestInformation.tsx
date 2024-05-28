@@ -1,70 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
-import SearchIcon from "@rsuite/icons/Search";
-import {
-  Button,
-  Checkbox,
-  DatePicker,
-  Form,
-  Input,
-  InputGroup,
-  InputPicker,
-  Message,
-  Modal,
-  Schema,
-  Table,
-  toaster,
-} from "rsuite";
-import RModal from "../ui/Modal";
-import {
-  useGetTestsQuery,
-  useLazyGetTestQuery,
-  useLazyGetTestsQuery,
-} from "@/redux/api/test/testSlice";
-import { ITest } from "@/types/allDepartmentInterfaces";
+import React from "react";
+import { Button, DatePicker, Input, Message, Table, toaster } from "rsuite";
 import { RowDataType } from "rsuite/esm/Table";
+import { IParamsForTestInformation } from "./initialDataAndTypes";
+import AvailableTestSection from "./AvailableTestSection";
 
-const { Cell, Column, HeaderCell } = Table;
-
-type IParams = {
-  formData: any;
-  setFormData: (params: any) => void;
-};
-
-const TestInformation = (params: IParams) => {
-  const { data: testSetData } = useGetTestsQuery(undefined);
-
-  // Handling add test
-  const handleAddTest = (rowData: ITest) => {
-    const estimatedDeliveryDate = new Date();
-    estimatedDeliveryDate.setHours(
-      estimatedDeliveryDate.getHours() + Number(rowData.processTime)
-    );
-    const newObject = {
-      ...params.formData,
-    };
-    const tests = newObject.tests ? newObject.tests : [];
-    var sl = Number(tests.length) + 1;
-    const testDataForOrder = {
-      test: rowData,
-      deliveryTime: estimatedDeliveryDate,
-      status: "pending",
-      remark: "",
-      discount: 0,
-      SL: sl,
-    };
-    const newTestArray = [...tests, testDataForOrder];
-    newObject.tests = newTestArray;
-    params.setFormData(newObject);
-  };
-
+const TestInformation = (params: IParamsForTestInformation) => {
+  const { Cell, Column, HeaderCell } = Table;
   // Test removal handler
   const testRemoveFromListHandler = (data: RowDataType<any>) => {
     const newObject = {
       ...params.formData,
     };
+
     const newTestsData = newObject.tests.filter(
       (test: { SL: any }) => test.SL !== data.SL
     );
+
     if (newTestsData.length > 0) {
       newTestsData.map(
         (test: { SL: number }, index: number) => (test.SL = index + 1)
@@ -74,16 +25,6 @@ const TestInformation = (params: IParams) => {
     newObject.tests = newTestsData;
     params.setFormData(newObject);
   };
-
-  // For handeling searching the single tests
-  const [tests, setTests] = useState([]);
-  const [search, { isLoading: testSearchLoading, isError: testSearchError }] =
-    useLazyGetTestsQuery();
-  const handleTestSearch = async (value: string) => {
-    const data = await search({ searchTerm: value });
-    setTests(data.data.data.data);
-  };
-
   const handleCellEdit = (id: RowDataType<any>, key: string, value: any) => {
     const newObject = {
       ...params.formData,
@@ -230,67 +171,10 @@ const TestInformation = (params: IParams) => {
           </div>
 
           {/* Available test section */}
-          <div className=" p-2 bg-stone-100 rounded-lg">
-            <h3 className="text-center font-bold text-2xl">Available Tests</h3>
-            <div className="mt-5">
-              <InputPicker
-                onSearch={(value, event) => {
-                  handleTestSearch(value);
-                }}
-                data={tests?.map(
-                  (test: ITest): { label: string; value: string } => ({
-                    label: test.label,
-                    value: test as unknown as string,
-                  })
-                )}
-                onSelect={(value, event) => {
-                  handleAddTest(value);
-                }}
-                placeholder={"Search"}
-                className="w-full z-50"
-                caretAs={SearchIcon}
-                loading={testSearchLoading}
-              />
-            </div>
-            <Table
-              height={500}
-              rowHeight={60}
-              bordered
-              cellBordered
-              data={testSetData?.data?.data}
-              wordWrap={"break-all"}
-            >
-              <Column align="center" resizable flexGrow={2}>
-                <HeaderCell>Test ID</HeaderCell>
-                <Cell dataKey="testCode" />
-              </Column>
-              <Column align="center" resizable flexGrow={2}>
-                <HeaderCell>Title</HeaderCell>
-                <Cell dataKey="label" />
-              </Column>
-              <Column align="center" resizable flexGrow={2}>
-                <HeaderCell>Price</HeaderCell>
-                <Cell dataKey="price" />
-              </Column>
-
-              <Column align="center" resizable flexGrow={2}>
-                <HeaderCell>Actions</HeaderCell>
-                <Cell>
-                  {(rowdata) => (
-                    <>
-                      <Button
-                        onClick={() => handleAddTest(rowdata as ITest)}
-                        color="green"
-                        appearance="primary"
-                      >
-                        Add
-                      </Button>
-                    </>
-                  )}
-                </Cell>
-              </Column>
-            </Table>
-          </div>
+          <AvailableTestSection
+            formData={params.formData}
+            setFormData={params.setFormData}
+          />
         </div>
       </div>
     </div>
