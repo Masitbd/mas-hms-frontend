@@ -1,28 +1,11 @@
-import { IOrderData } from "@/app/(withlayout)/order/page";
 import React, { useRef, useState } from "react";
 import RModal from "../ui/Modal";
 import { usePatchOrderMutation } from "@/redux/api/order/orderSlice";
-import {
-  Button,
-  Form,
-  Input,
-  InputGroup,
-  InputPicker,
-  Message,
-  Schema,
-  Table,
-  toaster,
-} from "rsuite";
+import { Form, Message, Schema, toaster } from "rsuite";
+import { IDewCollectionProps } from "./initialDataAndTypes";
 
-const ForDewCollection = ({
-  dewModalOpen,
-  setDewModalOpen,
-  data,
-}: {
-  dewModalOpen: boolean;
-  setDewModalOpen(data: boolean): void;
-  data: IOrderData;
-}) => {
+const ForDewCollection = (props: IDewCollectionProps) => {
+  const { data, dewModalOpen, setDewModalOpen } = props;
   const { StringType, NumberType } = Schema.Types;
   const ref: React.MutableRefObject<any> = useRef();
   const [patchOrder, { isSuccess, isLoading, isError }] =
@@ -117,3 +100,4 @@ const ForDewCollection = ({
 };
 
 export default ForDewCollection;
+

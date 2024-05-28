@@ -1,34 +1,10 @@
-import { IDoctor, IPatient } from "@/types/allDepartmentInterfaces";
+
+import { IDoctor } from "@/types/allDepartmentInterfaces";
 import React from "react";
 import { DatePicker, Form, InputPicker, Schema } from "rsuite";
+import { IRegisteredPatient } from "./initialDataAndTypes";
 
-type paramType = {
-  patient: IPatient;
-  doctors: IDoctor[];
-  setFormData: (data: { refBy: string; consultant: string }) => void;
-  formData: any;
-};
-
-const ForRegistered = (param: paramType) => {
-  const { StringType, NumberType } = Schema.Types;
-
-  const model = Schema.Model({
-    name: StringType().isRequired("This field is required."),
-    fatherName: StringType().isRequired("This field is required."),
-    email: StringType()
-      .isEmail("This field is Required for email")
-      .isRequired("This field is required."),
-    designation: StringType().isRequired("This field is required."),
-    phone: NumberType()
-      .isRequired("This field is required.")
-      .addRule((value: string | number): boolean => {
-        const phoneNumber = value.toString();
-        if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
-          return false;
-        }
-        return true;
-      }, "Phone number must be 11 digits."),
-  });
+const ForRegistered = (param: IRegisteredPatient) => {
   return (
     <div>
       <div>
