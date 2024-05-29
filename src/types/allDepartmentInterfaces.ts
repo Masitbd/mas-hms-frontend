@@ -13,12 +13,6 @@ export type ISpecimen = {
   value: string;
   description: string;
 };
-export type IReportGroup = {
-  _id?: string;
-  label: string;
-  value: string;
-  description: string;
-};
 export type IVacuumTube = {
   _id?: string;
   label: string;
@@ -30,7 +24,6 @@ export type IDepartment = {
   _id?: string;
   label: string;
   value: string;
-  reportGroupName: string;
   commissionParcentage: number;
   fixedCommission: number;
   isCommissionFiexed: boolean;
@@ -38,23 +31,12 @@ export type IDepartment = {
 };
 export type IDoctor = {
   _id?: string;
-  title: string;
   name: string;
   fatherName: string;
   email: string;
   designation: string;
   phone: string;
   image?: string;
-  account_number?: string; // as account.uuid
-  account_id?: IAccount; // as account_.id
-};
-export type ITransaction = {
-  _id?: string;
-  ref?: string;
-  amount: number;
-  description: string;
-  transactionType: string;
-  uuid: string;
 };
 export type IHospitalGroup = {
   _id?: string;
@@ -104,24 +86,4 @@ export type ITest = {
   vatRate: number;
   processTime: number;
   resultFields: IResultField[];
-};
-
-export type IAccount = {
-  _id: string;
-  uuid: string;
-  balanceType: string;
-  balance: number;
-};
-export type IPatient = {
-  _id: any;
-  name: string;
-  age: string;
-  gender: string;
-  address: string;
-  uuid: string;
-  ref_by?: string;
-  consultant?: string;
-  phone: string;
-  email?: string;
-  image: string;
 };

@@ -1,8 +1,10 @@
 "use client";
 import BacteriaTable from "@/components/bacteria/BacteriaTable";
 import NewBacteriaModal from "@/components/bacteria/NewBacteria";
-import { useState } from "react";
-import { Button } from "rsuite";
+import { usePostBacteriaMutation } from "@/redux/api/bacteria/bacteriaSlice";
+import { setLoading } from "@/redux/features/loading/loading";
+import React, { use, useEffect, useState } from "react";
+import { Button, toaster, Message } from "rsuite";
 export type IBacteria = {
   _id?: string;
   label: string;
@@ -22,7 +24,7 @@ const Bacteria = () => {
           appearance="primary"
           onClick={() => setPostModalOpen(!postModalOpen)}
         >
-          Add New Bacteria
+          Add New Conditon
         </Button>
       </div>
 

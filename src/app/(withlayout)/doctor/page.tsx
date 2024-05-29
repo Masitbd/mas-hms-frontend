@@ -12,7 +12,6 @@ import { Button } from 'rsuite';
 const Doctor = () => {
     const [postModelOpen, setPostModelOpen] = useState(false);
     const [patchData, setPatchData] = useState<IDoctor>({
-        title: "",
         name: "",
         fatherName: "",
         email: "",
@@ -25,7 +24,6 @@ const Doctor = () => {
     useEffect(() => {
         if (mode === 'new') {
             setPatchData({
-                title: "",
                 name: "",
                 fatherName: "",
                 email: "",
