@@ -52,16 +52,6 @@ const testMenuItem = [
   { key: "7", title: "Vacumme Tube", href: "/vacuumTube" },
   { key: "8", title: "Test", href: "/test" },
   { key: "9", title: "Doctor", href: "/doctor" },
-  {
-    key: "10",
-    title: "Patient",
-    href: "/patient",
-  },
-  {
-    key: "11",
-    title: "Generate Bill",
-    href: "/order",
-  },
 ];
 
 const Sidebar = () => {

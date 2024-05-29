@@ -87,17 +87,3 @@ export type ITest = {
   processTime: number;
   resultFields: IResultField[];
 };
-
-export type IPatient = {
-  _id: any;
-  name: string;
-  age: string;
-  gender: string;
-  address: string;
-  uuid: string;
-  ref_by?: string;
-  consultant?: string;
-  phone: string;
-  email?: string;
-  image: string;
-};
