@@ -14,8 +14,6 @@ import {
 } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
 import VisibleIcon from "@rsuite/icons/Visible";
-import { ITest } from "@/types/allDepartmentInterfaces";
-import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
 import { IOrderData } from "./initialDataAndTypes";
 
@@ -34,10 +32,6 @@ const OrderTable = ({
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleteTest, { isSuccess: deleteSuccess, isError: deleteError }] =
     useDeleteTestMutation();
-  const handleDeletOpen = (id: string) => {
-    setDeleteOpen(!deleteOpen);
-    setDeleteData(id);
-  };
   const okHandler = () => {
     deleteTest(deleteData);
     setDeleteOpen(!deleteOpen);
@@ -134,7 +128,7 @@ const OrderTable = ({
         height={500}
         data={testData?.data}
         loading={testLoading}
-        className="w-full"
+        className="w-full bg-white"
         bordered
         cellBordered
         rowHeight={60}
@@ -247,4 +241,3 @@ const OrderTable = ({
 };
 
 export default OrderTable;
-
