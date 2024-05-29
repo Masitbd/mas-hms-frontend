@@ -1,15 +1,34 @@
+import { IOrderData, InitialData } from "@/app/(withlayout)/order/page";
 import { IDoctor, IPatient } from "@/types/allDepartmentInterfaces";
-import React from "react";
-import { DatePicker, Form, InputPicker } from "rsuite";
+import { DatePicker, Form, InputPicker, Schema } from "rsuite";
 
 type paramType = {
   patient: IPatient;
   doctors: IDoctor[];
-  setFormData: (data: { refBy: string; consultant: string }) => void;
-  formData: any;
+  setFormData: (data: Partial<InitialData>) => void;
+  formData: IOrderData;
 };
 
-const ForRegistered = (param: paramType) => {
+const ForRegistered = ({ patient, doctors, setFormData, formData }: paramType) => {
+  const { StringType, NumberType } = Schema.Types;
+
+  const model = Schema.Model({
+    name: StringType().isRequired("This field is required."),
+    fatherName: StringType().isRequired("This field is required."),
+    email: StringType()
+      .isEmail("This field is Required for email")
+      .isRequired("This field is required."),
+    designation: StringType().isRequired("This field is required."),
+    phone: NumberType()
+      .isRequired("This field is required.")
+      .addRule((value: string | number): boolean => {
+        const phoneNumber = value.toString();
+        if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
+          return false;
+        }
+        return true;
+      }, "Phone number must be 11 digits."),
+  });
   return (
     <div>
       <div>
@@ -22,50 +41,49 @@ const ForRegistered = (param: paramType) => {
         <div className="grid grid-cols-3">
           <div className="flex flex-col">
             <h2 className="font-bold">Name</h2>
-            {param.formData.patient.name}
+            {formData.patient?.name}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Age</h2>
-            {param.formData.patient.age}
+            {formData.patient?.age}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Gender</h2>
-            {param.formData.patient.gender}
+            {formData.patient?.gender}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Address</h2>
-            {param.formData.patient.address}
+            {formData.patient?.address}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Ref By</h2>
-            {param.formData.patient?.ref_by}
+            {formData.refBy}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Consultent</h2>
-            {param.formData.patient.consultant}
+            {formData.consultant}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Phone</h2>
-            {param.formData.patient.phone}
+            {formData.patient?.phone}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Email</h2>
-            {param.formData.patient.email}
+            {formData.patient?.email}
           </div>
         </div>
 
         <div>
           <Form
-            onChange={(fromValue, event) => {
-              param.setFormData((prevData: any) => ({
-                ...prevData,
+            onChange={(fromValue) => {
+              setFormData({
                 refBy: fromValue.refBy,
                 consultant: fromValue.consultant,
                 deliveryTime: fromValue.deliveryTime,
-              }));
+              });
             }}
             className="grid grid-cols-3"
-            formValue={param.formData}
+            formValue={formData}
           >
             <Form.Group controlId="refBy">
               <Form.ControlLabel className="font-bold">
@@ -74,10 +92,10 @@ const ForRegistered = (param: paramType) => {
               <Form.Control
                 name="refBy"
                 accepter={InputPicker}
-                data={param.doctors.map((data: IDoctor) => {
+                data={doctors.map((data: IDoctor) => {
                   return { label: data.name, value: data._id };
                 })}
-                value={param.formData.refBy._id}
+                value={formData.refBy ? formData.refBy : ""}
               />
             </Form.Group>
             <Form.Group controlId="consultant">
@@ -87,20 +105,20 @@ const ForRegistered = (param: paramType) => {
               <Form.Control
                 name="consultant"
                 accepter={InputPicker}
-                data={param.doctors.map((data: IDoctor) => {
+                data={doctors.map((data: IDoctor) => {
                   return { label: data.name, value: data._id };
                 })}
-                value={param.formData?.patient?.consultant}
+                value={formData?.patient?.consultant}
               />
             </Form.Group>
-            <Form.Group controlId="deliveryDate">
+            <Form.Group controlId="deliveryTime">
               <Form.ControlLabel>Delivery Date </Form.ControlLabel>
               <Form.Control
                 name="deliveryTime"
                 accepter={DatePicker}
                 placement="top"
                 format="dd MMM yyyy hh:mm aa"
-                value={new Date(param.formData.deliveryTime)}
+                value={new Date(formData.deliveryTime)}
                 showMeridian
                 cleanable
               />

@@ -53,5 +53,6 @@ export const {
   useGetSingleTestQuery,
   useGetTestsQuery,
   useDeleteTestMutation,
-  useLazyGetSingleTestQuery
+  useLazyGetSingleTestQuery,
+  useLazyGetTestsQuery
 } = testSlice;

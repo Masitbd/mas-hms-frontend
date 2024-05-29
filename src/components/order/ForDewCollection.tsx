@@ -56,7 +56,7 @@ const ForDewCollection = ({
       .isRequired("This field is required.")
       .addRule((value: string | number): boolean => {
         const amount = Number(value);
-        console.log(amount <= Number(data.dueAmount));
+
         if (amount >= 0 && amount <= Number(data.dueAmount)) {
           return true;
         }

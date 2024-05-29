@@ -113,6 +113,7 @@ export type IAccount = {
   balance: number;
 };
 export type IPatient = {
+  _id: any;
   name: string;
   age: string;
   gender: string;

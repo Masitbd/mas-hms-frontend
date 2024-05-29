@@ -1,17 +1,21 @@
-import { useGetTestsQuery } from "@/redux/api/test/testSlice";
-import { IDepartment, IHospitalGroup, ITest } from "@/types/allDepartmentInterfaces";
-import React, { useRef, useState } from "react";
+import {
+  useGetTestsQuery,
+
+  useLazyGetTestsQuery,
+} from "@/redux/api/test/testSlice";
+import { ITest } from "@/types/allDepartmentInterfaces";
+import SearchIcon from "@rsuite/icons/Search";
+import { useState } from "react";
 import {
   Button,
-  Checkbox,
   DatePicker,
-  Form,
+  Input,
+  InputPicker,
   Message,
-  Schema,
   Table,
-  toaster,
+  toaster
 } from "rsuite";
-
+import { RowDataType } from "rsuite/esm/Table";
 import TestReportForm from "../testReport/TestReportForm";
 import TestView from "../testReport/TestView/TestView";
 import RModal from "../ui/Modal";
@@ -23,184 +27,73 @@ type IParams = {
   setFormData: (params: any) => void;
 };
 
-type IFormData = {
-  test: ITest;
-  hasDiscount: boolean;
-  discount: number;
-  deliveryDate: Date;
-  remark: string;
-  pirceAfterDiscount: number;
-  discountAmount: number;
-};
-
-const initialFromData = {
-  test: {} as ITest,
-  hasDiscount: false,
-  discount: 0,
-  deliveryDate: new Date(),
-  remark: "",
-  pirceAfterDiscount: 0,
-  discountAmount: 0,
-};
-
-const initialFormTestData = {
-  label: "",
-  department: {} as IDepartment,
-  testCode: "",
-  specimen: [],
-  testType: "",
-  hasTestTube: true,
-  testTube: [],
-  reportGroup: "",
-  hospitalGroup: {} as IHospitalGroup,
-  price: 0,
-  vatRate: 0,
-  processTime: 0,
-  resultFields: [],
-  groupTests: [],
-  isGroupTest: false,
-  testResulType: "",
-  type: "",
-  value: "",
-  _id: "",
-  description: "",
-}
-
 export type ITestGenerateType = {
   modeSingleType: string; modeType: string; id: string, status: string;
 }
 
-
-
 const TestInformation = (params: IParams) => {
-  console.log(params.formData);
-  const ref: React.MutableRefObject<any> = useRef();
-  const { StringType, NumberType, ObjectType } = Schema.Types;
-  const [isTestModalOpen, setTestModalOpen] = useState(false);
-  const [isTestOrderInfoOpen, setTestOrderInfoOpen] = useState(false);
-  const [mode, setMode] = useState("new");
-  const [data, setFormData] = useState<IFormData>(initialFromData);
-
   const { data: testSetData } = useGetTestsQuery(undefined);
 
-  const toggleTestModal = () => setTestModalOpen(!isTestModalOpen);
-  const toggleTestOrderInfo = () => setTestOrderInfoOpen(!isTestOrderInfoOpen);
-
+  // Handling add test
   const handleAddTest = (rowData: ITest) => {
-    setMode("new");
     const estimatedDeliveryDate = new Date();
     estimatedDeliveryDate.setHours(
       estimatedDeliveryDate.getHours() + Number(rowData.processTime)
     );
-    setFormData({
-      ...data,
-      pirceAfterDiscount: rowData.price,
+    const newObject = {
+      ...params.formData,
+    };
+    const tests = newObject.tests ? newObject.tests : [];
+    var sl = Number(tests.length) + 1;
+    const testDataForOrder = {
       test: rowData,
-      deliveryDate: estimatedDeliveryDate,
-    });
-
-    toggleTestOrderInfo();
+      deliveryTime: estimatedDeliveryDate,
+      status: "pending",
+      remark: "",
+      discount: 0,
+      SL: sl,
+    };
+    const newTestArray = [...tests, testDataForOrder];
+    newObject.tests = newTestArray;
+    params.setFormData(newObject);
   };
 
-  const handleDiscountChange = (value: string) => {
-    const discountValue = Number(value);
-    if (discountValue >= 0 && discountValue < 100) {
-      const oldPrice = Number(data.test.price);
-      const discountAmount = Math.ceil((discountValue / 100) * oldPrice);
-      const newPrice = Math.ceil(oldPrice - discountAmount);
-      setFormData({
-        ...data,
-        pirceAfterDiscount: newPrice,
-        discountAmount,
-      });
+  // Test removal handler
+  const testRemoveFromListHandler = (data: RowDataType<any>) => {
+    const newObject = {
+      ...params.formData,
+    };
+    const newTestsData = newObject.tests.filter(
+      (test: { SL: any }) => test.SL !== data.SL
+    );
+    if (newTestsData.length > 0) {
+      newTestsData.map(
+        (test: { SL: number }, index: number) => (test.SL = index + 1)
+      );
     }
+
+    newObject.tests = newTestsData;
+    params.setFormData(newObject);
   };
 
-  const handleFormChange = (formValue: any) => {
-    setFormData({
-      deliveryDate: formValue.deliveryDate,
-      discount: formValue.discount,
-      hasDiscount: formValue.hasDiscount,
-      remark: formValue.remark,
-      test: data.test,
-      pirceAfterDiscount: data.pirceAfterDiscount,
-      discountAmount: data.discountAmount,
-    });
+  // For handeling searching the single tests
+  const [tests, setTests] = useState([]);
+  const [search, { isLoading: testSearchLoading, isError: testSearchError }] =
+    useLazyGetTestsQuery();
+  const handleTestSearch = async (value: string) => {
+    const data = await search({ searchTerm: value });
+    setTests(data.data.data.data);
   };
 
-  const okHandlerForOrderInfo = () => {
-    if (ref.current.check()) {
-      if (mode === "new") {
-        const newObject = {
-          ...params.formData,
-        };
-
-        const tests = newObject.tests ? newObject.tests : [];
-        const newTestArray = [...tests, data];
-
-        //   : 0 + data.pirceAfterDiscount;
-        newObject.tests = newTestArray;
-
-        params.setFormData(newObject);
-      }
-      if (mode === "view") {
-        setFormData(initialFromData);
-      }
-      if (mode === "delete") {
-        const newObject = { ...params.formData };
-        const updatedTest = newObject.tests.filter(
-          (fdata: IFormData) => fdata.test._id !== data.test._id
-        );
-
-        newObject.tests = updatedTest;
-        params.setFormData(newObject);
-      }
-      if (mode === "edit") {
-        const newObject = { ...params.formData };
-        const updatedTest = newObject.tests.filter(
-          (fdata: IFormData) => fdata.test._id !== data.test._id
-        );
-        const newTestArray = [...updatedTest, data];
-        newObject.tests = newTestArray;
-        params.setFormData(newObject);
-      }
-      toggleTestOrderInfo();
-      setFormData(initialFromData);
-    } else {
-      toaster.push(<Message type="error">Fill out all the fields</Message>);
-    }
+  const handleCellEdit = (id: RowDataType<any>, key: string, value: any) => {
+    const newObject = {
+      ...params.formData,
+    };
+    newObject.tests.find((testInfo: { SL: any }) => testInfo.SL === id.SL)[
+      key
+    ] = value;
+    params.setFormData(newObject);
   };
-  const cancelHandlerForOrderInfo = () => {
-    setFormData(initialFromData);
-    toggleTestOrderInfo();
-  };
-
-  const viewButtonHandler = (data: IFormData) => {
-    setFormData(data);
-    setMode("view");
-    toggleTestOrderInfo();
-  };
-  const deleteButtonHandler = (data: IFormData) => {
-    setFormData(data);
-    setMode("delete");
-    toggleTestOrderInfo();
-  };
-  const editButtonHandler = (data: IFormData) => {
-    setFormData(data);
-    setMode("edit");
-    toggleTestOrderInfo();
-  };
-
-  const singleTestModel = Schema.Model({
-    deliveryDate: ObjectType().isRequired("This field is required."),
-    discount: NumberType().addRule((value: string | number): boolean => {
-      const discount = Number(value);
-      if (discount < 0 || discount > 99) {
-        return false;
-      }
-      return true;
-    }, "Discount Cannot be more then 99%"),
-  });
 
   const [reportGenerate, setReportGenerate] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '', status: "" });
 
@@ -221,209 +114,227 @@ const TestInformation = (params: IParams) => {
     setReportGenerateModal2(!reportGenerateModal2)
   }
 
-
-
-
-
-
-
   return (
     <div>
       <h2 className="font-bold text-xl">Test Information</h2>
       <div>
-        <div>
-          <Button
-            onClick={toggleTestModal}
-            appearance="primary"
-            color="green"
-            className="my-2"
-          >
-            Add Tests
-          </Button>
-          <RModal
-            open={isTestModalOpen}
-            size="lg"
-            title=""
-            okHandler={toggleTestModal}
-            cancelHandler={toggleTestModal}
-          >
-            <>
-              <div>
-                <h2 className="mb-5 text-center text-xl font-bold">
-                  All Availabel Tests
-                </h2>
-              </div>
-              <Table
-                height={500}
-                rowHeight={60}
-                bordered
-                cellBordered
-                data={testSetData?.data?.data}
-              >
-                <Column align="center" resizable flexGrow={2}>
-                  <HeaderCell>Test ID</HeaderCell>
-                  <Cell dataKey="testCode" />
-                </Column>
-                <Column align="center" resizable flexGrow={2}>
-                  <HeaderCell>Test ID</HeaderCell>
-                  <Cell dataKey="label" />
-                </Column>
-                <Column align="center" resizable flexGrow={2}>
-                  <HeaderCell>Test ID</HeaderCell>
-                  <Cell dataKey="price" />
-                </Column>
-                <Column align="center" resizable flexGrow={2}>
-                  <HeaderCell>Test ID</HeaderCell>
-                  <Cell dataKey="testCode" />
-                </Column>
-                <Column align="center" resizable flexGrow={2}>
-                  <HeaderCell>Actions</HeaderCell>
-                  <Cell>
-                    {(rowdata) => (
+        <div className="grid grid-cols-4 gap-2">
+          <div className="col-span-3">
+            <Table
+              data={params?.formData?.tests}
+              className="w-full"
+              bordered
+              cellBordered
+              rowHeight={100}
+              wordWrap={"break-word"}
+              height={500}
+            >
+              <Column align="center" resizable flexGrow={0.5}>
+                <HeaderCell>SL.</HeaderCell>
+                <Cell dataKey="SL" />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Test ID</HeaderCell>
+                <Cell dataKey="test.testCode" />
+              </Column>
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Title</HeaderCell>
+                <Cell dataKey="test.label" />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Original Price</HeaderCell>
+                <Cell dataKey="test.price" />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Discount %</HeaderCell>
+                <Cell>
+                  {(rowData) => {
+                    return (
                       <>
-                        <Button
-                          onClick={() => handleAddTest(rowdata as ITest)}
-                          color="green"
-                          appearance="primary"
-                        //   disabled={
-                        //     rowdata?.test?.testCode ===
-                        //     params.formData?.tests?.find(
-                        //       (tdata) =>
-                        //         tdata.test._id === rowdata.test.testCode
-                        //     )
-                        //   } for next
-                        >
-                          Add
-                        </Button>
+                        <Input
+                          type="number"
+                          value={rowData.discount}
+                          onChange={(value) => {
+                            if (
+                              Number(
+                                rowData.test.department.commissionParcentage
+                              ) < Number(value)
+                            ) {
+                              toaster.push(
+                                <Message type="error">
+                                  You cannot give discount more Then{" "}
+                                  {rowData.test.department.commissionParcentage}
+                                </Message>
+                              );
+                            } else {
+                              handleCellEdit(
+                                rowData,
+                                "discount",
+                                Number(value)
+                              );
+                            }
+                          }}
+                        />
                       </>
-                    )}
-                  </Cell>
-                </Column>
-              </Table>
-            </>
-          </RModal>
-        </div>
-        <div>
-          <RModal
-            open={isTestOrderInfoOpen}
-            okHandler={okHandlerForOrderInfo}
-            cancelHandler={cancelHandlerForOrderInfo}
-            size="lg"
-            title={
-              mode == "edit"
-                ? "Edit Test Info"
-                : mode == "view"
-                  ? "View Test Info"
-                  : "Add new test"
-            }
-          >
-            <>
-              <div className="my-5">
-                <div>
-                  <h3 className="text-2xl font-bold">Test Information</h3>
-                  <hr />
-                </div>
-                <div className="grid grid-cols-3">
-                  {[
-                    ["Title", data.test.label],
-                    ["Price", data.test.price],
-                    [
-                      "Specimen",
-                      data.test?.specimen
-                        ?.map((specimen) => specimen.value + ",")
-                        .join(""),
-                    ],
-                    data.pirceAfterDiscount > 0 && [
-                      "Discount Parcent",
-                      <span className="text-red-600" key={1}>
-                        {data.discount} %
-                      </span>,
-                    ],
-                    data.pirceAfterDiscount > 0 && [
-                      "Discount Amount",
-                      <span className="text-red-600" key={2}>
-                        {data.discountAmount}
-                      </span>,
-                    ],
-                    data.pirceAfterDiscount > 0 && [
-                      "Price After Discount",
-                      <span className="text-green-600" key={3}>
-                        {data.pirceAfterDiscount}
-                      </span>,
-                    ],
-                  ]
-                    .filter((item) => item)
-                    .map(([label, value], index) => (
-                      <div key={index} className={` mt-4`}>
-                        <h2 className="text-md font-bold mb-[-20px]">
-                          {label}
-                        </h2>
-                        <br />
-                        <span>{value}</span>
-                      </div>
-                    ))}
-                </div>
-                <div>
-                  <h2 className="text-md font-bold mb-[-20px] mt-4">
-                    Description
-                  </h2>
-                  <br />
-                  <span>{data.test?.description}</span>
-                </div>
-              </div>
-              <div className="mt-10 mb-2">
-                <h3 className="text-2xl font-bold">Other Information</h3>
-                <hr />
-              </div>
-              <Form
-                onChange={handleFormChange}
-                fluid
-                model={singleTestModel}
-                readOnly={mode === "view"}
-                formValue={data}
-                ref={ref}
-              >
-                <div className="grid grid-cols-2">
-                  <Form.Group controlId="hasDiscount">
-                    <Form.Control
-                      name="hasDiscount"
-                      value={data.hasDiscount}
-                      accepter={Checkbox}
-                      onChange={(value, event) =>
-                        setFormData({
-                          ...data,
-                          hasDiscount: event as unknown as boolean,
-                        })
+                    );
+                  }}
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Discounted Price</HeaderCell>
+                <Cell>
+                  {(rowData) => {
+                    const priceAfterDiscount = (
+                      rowData.discount > 0
+                        ? rowData.test.price -
+                        (rowData.test.price * rowData.discount) / 100
+                        : rowData.test.price
+                    ).toFixed(2);
+
+                    return `${priceAfterDiscount}`;
+                  }}
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={1.5}>
+                <HeaderCell>Delivery Date</HeaderCell>
+                <Cell>
+                  {(rowData) => {
+                    return (
+                      <>
+                        <DatePicker
+                          value={new Date(rowData.deliveryTime)}
+                          onChange={(event, value) =>
+                            handleCellEdit(rowData, "deliveryTime", event)
+                          }
+                        />
+                      </>
+                    );
+                  }}
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Remark</HeaderCell>
+                <Cell>
+                  {(rowData) => {
+                    return (
+                      <>
+                        <Input
+                          as="textarea"
+                          style={{ scrollbarWidth: "none" }}
+                          onChange={(value) =>
+                            handleCellEdit(rowData, "remark", value)
+                          }
+                        />
+                      </>
+                    );
+                  }}
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={3}>
+                <HeaderCell>Action</HeaderCell>
+                <Cell>
+                  {(rowData) => (
+                    <>
+                      <Button
+                        onClick={() => testRemoveFromListHandler(rowData)}
+                        appearance="primary"
+                        color="red"
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        className="ml-2"
+                        onClick={() => {
+                          reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                        }}
+                        appearance="primary"
+                        color="orange"
+                      >
+                        Report
+                      </Button>
+                      {
+                        rowData.status === 'completed' &&
+                        <Button
+                          className="ml-2"
+                          onClick={() => {
+                            reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                          }}
+                          appearance="primary"
+                          color="blue"
+                        >
+                          Report View
+                        </Button>
                       }
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="discount">
-                    <Form.Control
-                      name="discount"
-                      disabled={!data.hasDiscount}
-                      type="number"
-                      max={100}
-                      onChange={(value, event) => handleDiscountChange(value)}
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="deliveryDate">
-                    <Form.ControlLabel>Delivery Date </Form.ControlLabel>
-                    <Form.Control
-                      name="deliveryDate"
-                      accepter={DatePicker}
-                      format="dd MMM yyyy hh:mm aa"
-                      showMeridian
-                      cleanable
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="remark">
-                    <Form.ControlLabel>Remark</Form.ControlLabel>
-                    <Form.Control name="remark" />
-                  </Form.Group>
-                </div>
-              </Form>
-            </>
-          </RModal>
+                    </>
+
+                  )}
+                </Cell>
+              </Column>
+            </Table>
+          </div>
+
+          {/* Available test section */}
+          <div className=" p-2 bg-stone-100 rounded-lg">
+            <h3 className="text-center font-bold text-2xl">Available Tests</h3>
+            <div className="mt-5">
+              <InputPicker
+                onSearch={(value, event) => {
+                  handleTestSearch(value);
+                }}
+                data={tests?.map(
+                  (test: ITest): { label: string; value: string } => ({
+                    label: test.label,
+                    value: test as unknown as string,
+                  })
+                )}
+                onSelect={(value, event) => {
+                  handleAddTest(value);
+                }}
+                placeholder={"Search"}
+                className="w-full z-50"
+                caretAs={SearchIcon}
+                loading={testSearchLoading}
+              />
+            </div>
+            <Table
+              height={500}
+              rowHeight={60}
+              bordered
+              cellBordered
+              data={testSetData?.data?.data}
+              wordWrap={"break-all"}
+            >
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Test ID</HeaderCell>
+                <Cell dataKey="testCode" />
+              </Column>
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Title</HeaderCell>
+                <Cell dataKey="label" />
+              </Column>
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Price</HeaderCell>
+                <Cell dataKey="price" />
+              </Column>
+
+              <Column align="center" resizable flexGrow={2}>
+                <HeaderCell>Actions</HeaderCell>
+                <Cell>
+                  {(rowdata) => (
+                    <>
+                      <Button
+                        onClick={() => handleAddTest(rowdata as ITest)}
+                        color="green"
+                        appearance="primary"
+                      >
+                        Add
+                      </Button>
+                    </>
+                  )}
+                </Cell>
+              </Column>
+            </Table>
+          </div>
         </div>
         {
           reportGenerateModal && (
@@ -451,94 +362,7 @@ const TestInformation = (params: IParams) => {
             </RModal>
           )
         }
-
-        <Table
-          height={200}
-          data={params?.formData?.tests}
-          className="w-full"
-          bordered
-          cellBordered
-          rowHeight={60}
-        >
-          <Column align="center" resizable flexGrow={2}>
-            <HeaderCell>Test ID</HeaderCell>
-            <Cell dataKey="test.testCode" />
-          </Column>
-          <Column align="center" resizable flexGrow={3}>
-            <HeaderCell>Title</HeaderCell>
-            <Cell dataKey="test.label" />
-          </Column>
-          <Column align="center" resizable flexGrow={1.5}>
-            <HeaderCell>Original Price</HeaderCell>
-            <Cell dataKey="test.price" />
-          </Column>
-          <Column align="center" resizable flexGrow={1.5}>
-            <HeaderCell>Discount %</HeaderCell>
-            <Cell dataKey="discount" />
-          </Column>
-          <Column align="center" resizable flexGrow={1.5}>
-            <HeaderCell>Discounted Price</HeaderCell>
-            <Cell dataKey="pirceAfterDiscount" />
-          </Column>
-          <Column align="center" resizable flexGrow={3.5}>
-            <HeaderCell>Action</HeaderCell>
-            <Cell>
-              {(rowData) => (
-                <>
-                  <Button
-                    onClick={() => deleteButtonHandler(rowData as IFormData)}
-                    appearance="primary"
-                    color="red"
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    appearance="primary"
-                    color="blue"
-                    onClick={() => editButtonHandler(rowData as IFormData)}
-                    className="mx-4"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    onClick={() => viewButtonHandler(rowData as IFormData)}
-                    appearance="primary"
-                    color="green"
-                  >
-                    View
-                  </Button>
-
-                  <Button
-                    className="ml-2"
-                    onClick={() => {
-                      reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
-                    }}
-                    appearance="primary"
-                    color="orange"
-                  >
-                    Report
-                  </Button>
-                  {
-                    rowData.status === 'completed' &&
-                    <Button
-                      className="ml-2"
-                      onClick={() => {
-                        reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
-                      }}
-                      appearance="primary"
-                      color="blue"
-                    >
-                      Report View
-                    </Button>
-                  }
-
-                </>
-              )}
-            </Cell>
-          </Column>
-        </Table>
       </div>
-
     </div>
   );
 };
