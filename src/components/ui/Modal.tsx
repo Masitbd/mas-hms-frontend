@@ -25,16 +25,16 @@ const RModal = ({
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-5">{children}</Modal.Body>
-        {
-          (okHandler && cancelHandler) && (<Modal.Footer>
+        {okHandler && cancelHandler && (
+          <Modal.Footer>
             <Button onClick={cancelHandler} appearance="subtle">
               Cancel
             </Button>
             <Button onClick={okHandler} appearance="primary">
               {loading ? <Loader></Loader> : "OK"}
             </Button>
-          </Modal.Footer>)
-        }
+          </Modal.Footer>
+        )}
       </Modal>
     </div>
   );
