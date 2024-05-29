@@ -1,15 +1,27 @@
 "use client";
 import CondtionTable from "@/components/condition/CondtionTable";
 import NewConditionModal from "@/components/condition/NewConditionModal";
+import AlartDialog from "@/components/ui/AlertModal";
 import {
-  usePostConditionMutation
+  useDeleteConditionMutation,
+  useGetConditionQuery,
+  usePostConditionMutation,
 } from "@/redux/api/condition/conditionSlice";
+import { setCondition } from "@/redux/features/condition/conditionSlice";
+import { setdel } from "@/redux/features/delpopup/delpopuo";
 import { setLoading } from "@/redux/features/loading/loading";
-import { useEffect, useState } from "react";
+import { useAppDispatch } from "@/redux/hook";
+import React, { use, useEffect, useState } from "react";
 import {
+  Table,
+  Pagination,
   Button,
+  Modal,
+  Schema,
+  Form,
+  Loader,
+  toaster,
   Message,
-  toaster
 } from "rsuite";
 
 const Condition = () => {
@@ -57,7 +69,7 @@ const Condition = () => {
           appearance="primary"
           onClick={() => setPostModalOpen(!postModalOpen)}
         >
-          Add New Condition
+          Add New Conditon
         </Button>
       </div>
 

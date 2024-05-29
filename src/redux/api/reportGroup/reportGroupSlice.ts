@@ -1,55 +1,55 @@
-import { IReportGroup } from "@/types/allDepartmentInterfaces";
+import { ISpecimen } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
 const reportGroup = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    postReportGroup: build.mutation({
-      query: (data: IReportGroup) => ({
-        url: "/reportGroup",
+    postSpecimen: build.mutation({
+      query: (data: ISpecimen) => ({
+        url: "/specimen",
         method: "post",
         body: data,
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["reportGroup"]
+      invalidatesTags: ["specimen"],
     }),
-    patchReportGroup: build.mutation({
+    patchSpecimen: build.mutation({
       query: ({ data, id }) => ({
-        url: `/reportGroup/${id}`,
+        url: `/specimen/${id}`,
         method: "PATCH",
         body: data,
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["reportGroup"]
+      invalidatesTags: ["specimen"],
     }),
-    deleteReportGroup: build.mutation({
+    deleteSpecimen: build.mutation({
       query: (id: string) => ({
-        url: `/reportGroup/${id}`,
+        url: `/specimen/${id}`,
         method: "DELETE",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["reportGroup"]
+      invalidatesTags: ["specimen"],
     }),
-    getReportGroup: build.query({
+    getSpecimen: build.query({
       query: () => ({
-        url: "/reportGroup",
+        url: "/specimen",
         method: "GET",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      providesTags: ["reportGroup"]
+      providesTags: ["specimen"],
     }),
     getSingleSpecimen: build.mutation({
       query: (id: string) => ({
-        url: `/reportGroup/${id}`,
+        url: `/specimen/${id}`,
         method: "GET",
-        contentType: "application/json"
-      })
-    })
-  })
+        contentType: "application/json",
+      }),
+    }),
+  }),
 });
 
 export const {
-  usePostReportGroupMutation,
-  useGetReportGroupQuery,
-  useDeleteReportGroupMutation,
-  usePatchReportGroupMutation
-} = reportGroup;
+  usePostSpecimenMutation,
+  useGetSpecimenQuery,
+  useDeleteSpecimenMutation,
+  usePatchSpecimenMutation,
+} = specimen;

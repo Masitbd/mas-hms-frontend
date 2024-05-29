@@ -1,26 +1,30 @@
-import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
-import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
-
-import { useGetReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Form,
+  InputPicker,
+  Message,
+  Schema,
+  Table,
+  TagPicker,
+  Toggle,
+  toaster,
+} from "rsuite";
+import ToggleButton from "rsuite/esm/Picker/ToggleButton";
+import ForParameterBased from "./ForParameterBased";
+import ForDescriptiveBased from "./TestForDescriptive";
+import ForMicroBiology from "./ForMicroBiology";
+import ForGroupTest from "./ForGroupTest";
 import { useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
+import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
 import { useGetVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
+import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import {
   IDepartment,
   IHospitalGroup,
   ISpecimen,
   IVacuumTube,
 } from "@/types/allDepartmentInterfaces";
-import {
-  Form,
-  InputPicker,
-  Schema,
-  TagPicker,
-  Toggle
-} from "rsuite";
-import ForGroupTest from "./ForGroupTest";
-import ForMicroBiology from "./ForMicroBiology";
-import ForParameterBased from "./ForParameterBased";
-import ForDescriptiveBased from "./TestForDescriptive";
 
 const TestForm = ({
   defaultValue,
@@ -41,7 +45,6 @@ const TestForm = ({
   const { data: departmentData } = useGetDepartmentQuery(undefined);
   const { data: specimenData } = useGetSpecimenQuery(undefined);
   const { data: vaccumeTubeData } = useGetVacuumTubeQuery(undefined);
-  const { data: reportGroupData } = useGetReportGroupQuery(undefined);
   const { data: hospitalGroupData } = useGetHospitalGroupQuery(undefined);
   const testType = [
     {
@@ -193,10 +196,7 @@ const TestForm = ({
             className="w-full"
             name="reportGroup"
             accepter={InputPicker}
-            data={reportGroupData?.data.map((data: any) => ({
-              label: data.label,
-              value: data._id,
-            }))}
+            data={dDataForReportGroup}
           />
         </Form.Group>
         <Form.Group controlId="hospitalGroup">
@@ -223,8 +223,8 @@ const TestForm = ({
           <div>
             {(formData?.type == "single" &&
               formData.testResultType == "parameter") ||
-              (defaultValue?.type == "single" &&
-                defaultValue.testResultType == "parameter") ? (
+            (defaultValue?.type == "single" &&
+              defaultValue.testResultType == "parameter") ? (
               <ForParameterBased
                 defaultMode={mode}
                 testFromData={formData}
@@ -234,7 +234,7 @@ const TestForm = ({
               ""
             )}{" "}
             {formData?.type == "single" &&
-              formData.testResultType == "descriptive" ? (
+            formData.testResultType == "descriptive" ? (
               <ForDescriptiveBased
                 testFromData={formData}
                 setTestFromData={setfromData}
@@ -243,7 +243,7 @@ const TestForm = ({
               ""
             )}
             {formData?.type == "single" &&
-              formData.testResultType == "bacterial" ? (
+            formData.testResultType == "bacterial" ? (
               <ForMicroBiology
                 testFromData={formData}
                 setTestFromData={setfromData}
