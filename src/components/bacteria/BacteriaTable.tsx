@@ -78,7 +78,7 @@ const BacteriaTable = () => {
 
   useEffect(() => {
     if (deleteLoading || patchLoading) {
-      setLoading(true);
+      setLoading();
     }
     if (deleteSuccess || patchSuccess) {
       toaster.push(
@@ -107,7 +107,7 @@ const BacteriaTable = () => {
           duration: 3000,
         }
       );
-      setLoading(false);
+      setLoading();
     }
     if (patchError) {
       setPatchModalOpen(!patchModalOpen);
@@ -119,7 +119,7 @@ const BacteriaTable = () => {
           duration: 3000,
         }
       );
-      setLoading(false);
+      setLoading();
     }
   }, [
     deleteLoading,

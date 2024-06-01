@@ -20,7 +20,7 @@ const RModal = ({
   const loading = useAppSelector((state) => state.loading.loading);
   return (
     <div>
-      <Modal size={size} open={open}>
+      <Modal size={size} open={open} backdrop="static" onClose={cancelHandler}>
         <Modal.Header>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>

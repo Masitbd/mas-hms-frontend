@@ -11,6 +11,7 @@ import { Table, Pagination, Button, toaster, Message } from "rsuite";
 import PatchConditonModal from "./PatchConditionModal";
 import { ICondition } from "@/types/allDepartmentInterfaces";
 
+
 const { Column, HeaderCell, Cell } = Table;
 const CondtionTable = () => {
   const { data: defaultData, isLoading } = useGetConditionQuery(undefined);
@@ -70,7 +71,7 @@ const CondtionTable = () => {
 
   useEffect(() => {
     if (deleteLoading || patchLoading) {
-      setLoading(true);
+      setLoading();
     }
     if (deleteSuccess || patchSuccess) {
       toaster.push(
@@ -99,7 +100,7 @@ const CondtionTable = () => {
           duration: 3000,
         }
       );
-      setLoading(false);
+      setLoading();
     }
     if (patchError) {
       setPatchModalOpen(!patchModalOpen);
@@ -111,17 +112,9 @@ const CondtionTable = () => {
           duration: 3000,
         }
       );
-      setLoading(false);
+      setLoading();
     }
-  }, [
-    deleteLoading,
-    deleteError,
-    deleteSuccess,
-    patchLoading,
-    patchSuccess,
-    patchError,
-    patchModalOpen,
-  ]);
+  }, [deleteLoading, deleteError, deleteSuccess, patchLoading, patchSuccess, patchError, patchModalOpen]);
   return (
     <div>
       <Table

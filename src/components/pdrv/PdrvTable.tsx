@@ -75,7 +75,7 @@ const PdrvTable = () => {
 
   useEffect(() => {
     if (deleteLoading || patchLoading) {
-      setLoading(true);
+      setLoading();
     }
     if (deleteSuccess || patchSuccess) {
       toaster.push(
@@ -104,7 +104,7 @@ const PdrvTable = () => {
           duration: 3000,
         }
       );
-      setLoading(false);
+      setLoading();
     }
     if (patchError) {
       setPatchModalOpen(!patchModalOpen);
@@ -116,7 +116,7 @@ const PdrvTable = () => {
           duration: 3000,
         }
       );
-      setLoading(false);
+      setLoading();
     }
   }, [
     deleteLoading,

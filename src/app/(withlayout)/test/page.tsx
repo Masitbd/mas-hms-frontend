@@ -3,7 +3,6 @@ import TestForm from "@/components/Test/TestForm";
 import TestTable from "@/components/Test/TestTable";
 import RModal from "@/components/ui/Modal";
 import {
-  useGetTestQuery,
   useGetTestsQuery,
   usePatchTestMutation,
   usePostTestMutation,

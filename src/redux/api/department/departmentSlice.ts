@@ -37,9 +37,9 @@ const department = baseApi.injectEndpoints({
       }),
       providesTags: ["department"]
     }),
-    getSingleDepartment: build.mutation({
+    getSingleDepartment: build.query({
       query: (id: string) => ({
-        url: `/department/${id}`,
+        url: `/departments/${id}`,
         method: "GET",
         contentType: "application/json"
       })
@@ -50,6 +50,7 @@ const department = baseApi.injectEndpoints({
 export const {
   usePostDepartmentMutation,
   useGetDepartmentQuery,
+  useGetSingleDepartmentQuery,
   useDeleteDepartmentMutation,
   usePatchDepartmentMutation
 } = department;

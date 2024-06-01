@@ -25,14 +25,14 @@ const NewPdrv = ({
         duration: 3000,
       });
       modalStatusHandler(!open);
-      setLoading(false);
+      setLoading();
     }
     if (conditionLoading) {
-      setLoading(true);
+      setLoading();
     }
 
     if (isError) {
-      setLoading(false);
+      setLoading();
       toaster.push(
         <Message type="error">
           Something went wrong please try again letter

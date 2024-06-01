@@ -36,11 +36,6 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
     </Navbar>
   );
 };
-const userMenuItem = [
-  { key: "1", title: "Users", href: "/users" },
-  { key: "2", title: "Prifile", href: "/profile" },
-  { key: "3", title: "Permissions", href: "/permission" },
-];
 
 const testMenuItem = [
   { key: "1", title: "Pdrv", href: "/pdrv" },
@@ -52,6 +47,16 @@ const testMenuItem = [
   { key: "7", title: "Vacumme Tube", href: "/vacuumTube" },
   { key: "8", title: "Test", href: "/test" },
   { key: "9", title: "Doctor", href: "/doctor" },
+  {
+    key: "10",
+    title: "Patient",
+    href: "/patient",
+  },
+  {
+    key: "11",
+    title: "Generate Bill",
+    href: "/order",
+  },
 ];
 
 const Sidebar = () => {
@@ -103,34 +108,13 @@ const Sidebar = () => {
                 ))}
               </Nav.Menu>
               <Nav.Menu
-                eventKey="5"
+                eventKey="4"
                 trigger="hover"
-                title="Manage Users"
+                title="Settings"
                 icon={<GearCircleIcon />}
                 placement="rightStart"
               >
-                {userMenuItem.map((item) => (
-                  <Nav.Item
-                    eventKey={`5-${item.key}`}
-                    href={item.href}
-                    as={NavLink}
-                    key={Number(item.key) + 20}
-                    onClick={() => setSelectedItem(item.href)}
-                    style={
-                      selectedItem === item.href
-                        ? {
-                            backgroundColor: "#3498ff",
-                            color: "white",
-                            borderRadius: "5px",
-                          }
-                        : {
-                            color: "black",
-                          }
-                    }
-                  >
-                    {item.title}
-                  </Nav.Item>
-                ))}
+                <Nav.Item eventKey="4-5">Versions</Nav.Item>
               </Nav.Menu>
             </Nav>
           </Sidenav.Body>
