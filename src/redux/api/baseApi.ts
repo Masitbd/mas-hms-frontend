@@ -8,7 +8,7 @@ import { axiosBaseQuery } from "@/shared/axios/axiosBaseQuery";
 export const baseApi = createApi({
   reducerPath: "baseApi",
 
-  baseQuery: axiosBaseQuery({ baseUrl: "http://localhost:3001/api/v1" }),
+  baseQuery: axiosBaseQuery({ baseUrl: "http://localhost:7000/api/v1" }),
 
   endpoints: () => ({}),
   tagTypes: [
