@@ -9,45 +9,47 @@ const doctor = baseApi.injectEndpoints({
         url: "/doctor",
         method: "POST",
         body: data,
-        contentType: "application/json"
+        data: data,
+        contentType: "application/json",
       }),
-      invalidatesTags: ["doctor"]
+      invalidatesTags: ["doctor"],
     }),
     patchDoctor: build.mutation({
       query: ({ data, id }) => ({
         url: `/doctor/${id}`,
         method: "PATCH",
         body: data,
-        contentType: "application/json"
+        data: data,
+        contentType: "application/json",
       }),
-      invalidatesTags: ["doctor"]
+      invalidatesTags: ["doctor"],
     }),
     deleteDoctor: build.mutation({
       query: (id: string) => ({
         url: `/doctor/${id}`,
         method: "DELETE",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["doctor"]
+      invalidatesTags: ["doctor"],
     }),
     getDoctor: build.query({
       query: (data?: ISearchTermType) => ({
         url: `/doctor`,
         method: "GET",
         params: data,
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      providesTags: ["doctor"]
+      providesTags: ["doctor"],
     }),
     getSingleDoctor: build.query({
       query: (id: string) => ({
         url: `/doctor/${id}`,
         method: "GET",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      providesTags: ["doctor"]
-    })
-  })
+      providesTags: ["doctor"],
+    }),
+  }),
 });
 
 export const {
@@ -55,5 +57,5 @@ export const {
   useGetDoctorQuery,
   useDeleteDoctorMutation,
   usePatchDoctorMutation,
-  useGetSingleDoctorQuery
+  useGetSingleDoctorQuery,
 } = doctor;

@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Pagination, Button, toaster, Message } from "rsuite";
 import PatchConditonModal from "./PatchConditionModal";
 import { ICondition } from "@/types/allDepartmentInterfaces";
-
+import swal from "sweetalert";
 
 const { Column, HeaderCell, Cell } = Table;
 const CondtionTable = () => {
@@ -70,51 +70,25 @@ const CondtionTable = () => {
   ] = usePatchConditionMutation();
 
   useEffect(() => {
-    if (deleteLoading || patchLoading) {
-      setLoading();
-    }
     if (deleteSuccess || patchSuccess) {
-      toaster.push(
-        <Message type="success">Operation Successfully Performed</Message>,
-        {
-          duration: 3000,
-        }
-      );
+      swal("Success", "Operation completed successfully", "success");
+      setPatchModalOpen(false);
     }
-    if (patchSuccess) {
-      toaster.push(
-        <Message type="success">Operation Successfully Performed</Message>,
-        {
-          duration: 3000,
-        }
-      );
-      setPatchModalOpen(!patchModalOpen);
-    }
+
     if (deleteError || patchError) {
       setPatchModalOpen(!patchModalOpen);
-      toaster.push(
-        <Message type="error">
-          Something went wrong. Please try again letter
-        </Message>,
-        {
-          duration: 3000,
-        }
-      );
-      setLoading();
-    }
-    if (patchError) {
       setPatchModalOpen(!patchModalOpen);
-      toaster.push(
-        <Message type="error">
-          Something went wrong. Please try again letter
-        </Message>,
-        {
-          duration: 3000,
-        }
-      );
-      setLoading();
+      swal("Error", "Something went wrong", "error");
     }
-  }, [deleteLoading, deleteError, deleteSuccess, patchLoading, patchSuccess, patchError, patchModalOpen]);
+  }, [
+    deleteLoading,
+    deleteError,
+    deleteSuccess,
+    patchLoading,
+    patchSuccess,
+    patchError,
+    patchModalOpen,
+  ]);
   return (
     <div>
       <Table

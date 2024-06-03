@@ -7,6 +7,7 @@ const hospitalGroup = baseApi.injectEndpoints({
       query: (data: IHospitalGroup) => ({
         url: "/hospitalGroup/create-hospitalGroup",
         method: "POST",
+        data: data,
         body: data,
         contentType: "application/json",
       }),
@@ -17,6 +18,7 @@ const hospitalGroup = baseApi.injectEndpoints({
         url: `/hospitalGroup/${id}`,
         method: "PATCH",
         body: data,
+        data: data,
         contentType: "application/json",
       }),
       invalidatesTags: ["hospitalGroup"],
