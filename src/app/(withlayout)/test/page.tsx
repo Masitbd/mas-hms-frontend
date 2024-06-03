@@ -2,6 +2,7 @@
 import TestForm from "@/components/Test/TestForm";
 import TestTable from "@/components/Test/TestTable";
 import RModal from "@/components/ui/Modal";
+import { ENUM_MODE } from "@/enum/Mode";
 import {
   useGetTestsQuery,
   usePatchTestMutation,
@@ -55,6 +56,25 @@ const Test = () => {
   const ref: React.MutableRefObject<any> = useRef();
   // For new test
   const okHandler = () => {
+    if (mode == ENUM_MODE.VIEW) {
+      setfromData({
+        label: "",
+        department: "",
+        testCode: "",
+        specimen: [],
+        testType: "",
+        hasTestTube: false,
+        testTube: "",
+        reportGroup: "",
+        hospitalGroup: "",
+        price: 0,
+        vatRate: 0,
+        processTime: 0,
+        resultFields: [],
+        description: "",
+      });
+      setDefaultValue(undefined);
+    }
     if (ref.current.check()) {
       setModalOpen(!modalOpen);
       formData.value = formData?.label.toLowerCase();
@@ -70,6 +90,13 @@ const Test = () => {
         formData.isGroupTest = true;
       }
       if (mode === "new") {
+        if (formData?.vatRate == undefined || Number.isNaN(formData.vatRate)) {
+          formData.vatRate = 0;
+        }
+        if (!formData.hasTestTube) {
+          formData.hasTestTube = false;
+        }
+
         postTest(formData);
       }
       if (mode === "patch") {
@@ -98,7 +125,7 @@ const Test = () => {
         });
         setDefaultValue(undefined);
       }
-      if (mode === "watch") {
+      if (mode === ENUM_MODE.VIEW) {
         setfromData({
           label: "",
           department: "",
@@ -115,6 +142,7 @@ const Test = () => {
           resultFields: [],
           description: "",
         });
+        setDefaultValue(undefined);
       }
     } else {
       toaster.push(
