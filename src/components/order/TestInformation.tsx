@@ -1,9 +1,9 @@
-
 import React from "react";
 import { Button, DatePicker, Input, Message, Table, toaster } from "rsuite";
 import { RowDataType } from "rsuite/esm/Table";
 import { IParamsForTestInformation } from "./initialDataAndTypes";
 import AvailableTestSection from "./AvailableTestSection";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const TestInformation = (params: IParamsForTestInformation) => {
   const { Cell, Column, HeaderCell } = Table;
@@ -36,6 +36,72 @@ const TestInformation = (params: IParamsForTestInformation) => {
     params.setFormData(newObject);
   };
 
+  if (params.mode == ENUM_MODE.VIEW) {
+    return (
+      <>
+        <h2 className="font-bold text-xl mt-5">Test Information</h2>
+        <hr />
+        <Table
+          data={params?.formData?.tests}
+          className="w-full"
+          bordered
+          cellBordered
+          wordWrap={"break-word"}
+          autoHeight
+        >
+          <Column align="center" resizable flexGrow={0.5}>
+            <HeaderCell>SL.</HeaderCell>
+            <Cell dataKey="SL" />
+          </Column>
+          <Column align="center" resizable flexGrow={1}>
+            <HeaderCell>Test ID</HeaderCell>
+            <Cell dataKey="test.testCode" />
+          </Column>
+          <Column align="center" resizable flexGrow={2}>
+            <HeaderCell>Title</HeaderCell>
+            <Cell dataKey="test.label" />
+          </Column>
+          <Column align="center" resizable flexGrow={1}>
+            <HeaderCell>Original Price</HeaderCell>
+            <Cell dataKey="test.price" />
+          </Column>
+          <Column align="center" resizable flexGrow={1}>
+            <HeaderCell>Discount %</HeaderCell>
+            <Cell dataKey="test.discount" />
+          </Column>
+          <Column align="center" resizable flexGrow={1}>
+            <HeaderCell>Discounted Price</HeaderCell>
+            <Cell>
+              {(rowData) => {
+                const priceAfterDiscount = (
+                  rowData.discount > 0
+                    ? rowData.test.price -
+                      (rowData.test.price * rowData.discount) / 100
+                    : rowData.test.price
+                ).toFixed(2);
+
+                return `${priceAfterDiscount}`;
+              }}
+            </Cell>
+          </Column>
+          <Column align="center" resizable flexGrow={1.5}>
+            <HeaderCell>Delivery Date</HeaderCell>
+            <Cell>
+              {(rowData) => {
+                return (
+                  <>
+                    <span>
+                      {new Date(rowData.deliveryTime).toLocaleDateString()}
+                    </span>
+                  </>
+                );
+              }}
+            </Cell>
+          </Column>
+        </Table>
+      </>
+    );
+  }
   return (
     <div>
       <h2 className="font-bold text-xl">Test Information</h2>
@@ -175,6 +241,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
           <AvailableTestSection
             formData={params.formData}
             setFormData={params.setFormData}
+            mode={params.mode}
           />
         </div>
       </div>
@@ -183,4 +250,3 @@ const TestInformation = (params: IParamsForTestInformation) => {
 };
 
 export default TestInformation;
-

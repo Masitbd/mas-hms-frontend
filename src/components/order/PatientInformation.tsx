@@ -1,16 +1,15 @@
 import React, { SetStateAction, useEffect, useState } from "react";
 import {
-  IInitialData,
-  IOrderData,
-  InitialData,
   IpatientInforMationProps,
   patientType,
+  unreagisteredPatientProfileDataPropertyNames,
 } from "./initialDataAndTypes";
 import ForRegistered from "./ForRegistered";
 import ForNotRegistered from "./ForNotRegistered";
 import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { useLazyGetSinglePatientQuery } from "@/redux/api/patient/patientSlice";
 import { Form, Input, InputGroup, InputPicker, Message, toaster } from "rsuite";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const PatientInformation = (porps: IpatientInforMationProps) => {
   const {
@@ -18,6 +17,7 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
     setFormData,
     forwardedRefForUnregisterd,
     forwardedRefForPatientType,
+    mode,
   } = porps;
   const { data: doctorData } = useGetDoctorQuery(undefined);
   const [
@@ -35,10 +35,30 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
 
   useEffect(() => {
     if (patientSearchError) {
-      toaster.push(<Message>Search Error ! Please try again letter</Message>);
+      toaster.push(<Message>Search Error ! Please try again later</Message>);
     }
   }, [patientSearchError]);
 
+  if (mode == ENUM_MODE.VIEW) {
+    return (
+      <>
+        <h2 className="text-2xl mt-5 font-bold"> Patient Information</h2>
+        <hr />
+        <div className="grid grid-cols-3 gap-5 my-5">
+          {unreagisteredPatientProfileDataPropertyNames.map((value, index) => {
+            return (
+              <>
+                <div className="flex flex-col" key={index}>
+                  <div className="text-lg font-bold capitalize">{value}</div>
+                  <div>{data.patient[value]}</div>
+                </div>
+              </>
+            );
+          })}
+        </div>
+      </>
+    );
+  }
   return (
     <div>
       {/* For selecting patient type */}

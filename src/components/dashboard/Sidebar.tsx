@@ -6,6 +6,8 @@ import GearCircleIcon from "@rsuite/icons/legacy/GearCircle";
 import MagicIcon from "@rsuite/icons/legacy/Magic";
 import { useState } from "react";
 import { NavLink } from "@/utils/Navlink";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 
 interface NavToggleProps {
   expand: boolean;
@@ -37,21 +39,141 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
   );
 };
 const userMenuItem = [
-  { key: "1", title: "Users", href: "/users" },
-  { key: "2", title: "Prifile", href: "/profile" },
-  { key: "3", title: "Permissions", href: "/permission" },
+  {
+    key: "1",
+    title: "Users",
+    href: "/users",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ALL_USER,
+      ENUM_USER_PEMISSION.MANAGE_USER,
+    ],
+  },
+  {
+    key: "2",
+    title: "Profile",
+    href: "/profile",
+    requiredPermission: [ENUM_USER_PEMISSION.USER],
+  },
+  {
+    key: "3",
+    title: "Permissions",
+    href: "/permission",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.MANAGE_PERMISSIONS,
+      ENUM_USER_PEMISSION.GET_PERMISSIONS,
+    ],
+  },
 ];
 
 const testMenuItem = [
-  { key: "1", title: "Pdrv", href: "/pdrv" },
-  { key: "2", title: "Bacteria", href: "/bacteria" },
-  { key: "3", title: "Condition", href: "/condition" },
-  { key: "4", title: "Department", href: "/department" },
-  { key: "5", title: "Hospital Group", href: "/hospitalGroup" },
-  { key: "6", title: "Specimen", href: "/specimen" },
-  { key: "7", title: "Vacumme Tube", href: "/vacuumTube" },
-  { key: "8", title: "Test", href: "/test" },
-  { key: "9", title: "Doctor", href: "/doctor" },
+  {
+    key: "1",
+    title: "Pdrv",
+    href: "/pdrv",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "2",
+    title: "Bacteria",
+    href: "/bacteria",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "3",
+    title: "Condition",
+    href: "/condition",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "4",
+    title: "Department",
+    href: "/department",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "5",
+    title: "Hospital Group",
+    href: "/hospitalGroup",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "6",
+    title: "Specimen",
+    href: "/specimen",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "7",
+    title: "Vacumme Tube",
+    href: "/vacuumTube",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "8",
+    title: "Test",
+    href: "/test",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "9",
+    title: "Doctor",
+    href: "/doctor",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_DOCTORS,
+      ENUM_USER_PEMISSION.MANAGE_DOCTORS,
+    ],
+  },
+  {
+    key: "10",
+    title: "Order",
+    href: "/order",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
+  {
+    key: "11",
+    title: "Patient",
+    href: "/patient",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_PATIENT,
+      ENUM_USER_PEMISSION.MANAGE_PATIENT,
+    ],
+  },
+  {
+    key: "12",
+    title: "Report Group",
+    href: "/reportGroup",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
 ];
 
 const Sidebar = () => {
@@ -79,27 +201,32 @@ const Sidebar = () => {
                 icon={<MagicIcon />}
                 placement="rightStart"
               >
-                {testMenuItem.map((item) => (
-                  <Nav.Item
-                    eventKey={`3-${item.key}`}
-                    href={item.href}
-                    as={NavLink}
-                    key={item.key}
-                    onClick={() => setSelectedItem(item.href)}
-                    style={
-                      selectedItem === item.href
-                        ? {
-                            backgroundColor: "#3498ff",
-                            color: "white",
-                            borderRadius: "5px",
-                          }
-                        : {
-                            color: "black",
-                          }
-                    }
+                {testMenuItem.map((item, index) => (
+                  <AuthCheckerForComponent
+                    requiredPermission={item.requiredPermission as number[]}
+                    key={index}
                   >
-                    {item.title}
-                  </Nav.Item>
+                    <Nav.Item
+                      eventKey={`3-${item.key}`}
+                      href={item.href}
+                      as={NavLink}
+                      key={item.key}
+                      onClick={() => setSelectedItem(item.href)}
+                      style={
+                        selectedItem === item.href
+                          ? {
+                              backgroundColor: "#3498ff",
+                              color: "white",
+                              borderRadius: "5px",
+                            }
+                          : {
+                              color: "black",
+                            }
+                      }
+                    >
+                      {item.title}
+                    </Nav.Item>
+                  </AuthCheckerForComponent>
                 ))}
               </Nav.Menu>
               <Nav.Menu
@@ -109,27 +236,32 @@ const Sidebar = () => {
                 icon={<GearCircleIcon />}
                 placement="rightStart"
               >
-                {userMenuItem.map((item) => (
-                  <Nav.Item
-                    eventKey={`5-${item.key}`}
-                    href={item.href}
-                    as={NavLink}
-                    key={Number(item.key) + 20}
-                    onClick={() => setSelectedItem(item.href)}
-                    style={
-                      selectedItem === item.href
-                        ? {
-                            backgroundColor: "#3498ff",
-                            color: "white",
-                            borderRadius: "5px",
-                          }
-                        : {
-                            color: "black",
-                          }
-                    }
+                {userMenuItem.map((item, index) => (
+                  <AuthCheckerForComponent
+                    requiredPermission={item.requiredPermission as number[]}
+                    key={index}
                   >
-                    {item.title}
-                  </Nav.Item>
+                    <Nav.Item
+                      eventKey={`5-${item.key}`}
+                      href={item.href}
+                      as={NavLink}
+                      key={Number(item.key) + 20}
+                      onClick={() => setSelectedItem(item.href)}
+                      style={
+                        selectedItem === item.href
+                          ? {
+                              backgroundColor: "#3498ff",
+                              color: "white",
+                              borderRadius: "5px",
+                            }
+                          : {
+                              color: "black",
+                            }
+                      }
+                    >
+                      {item.title}
+                    </Nav.Item>
+                  </AuthCheckerForComponent>
                 ))}
               </Nav.Menu>
             </Nav>

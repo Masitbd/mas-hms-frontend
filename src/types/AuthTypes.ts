@@ -30,3 +30,10 @@ interface IAUth {
   __v: number;
   profile: Profile;
 }
+
+interface IMode {
+  NEW: "new";
+  EDIT: "edit";
+  VIEW: "view";
+  CHANGE_PASSWROD: "change_password";
+}
