@@ -59,7 +59,7 @@ const UserPermissionsTable = ({ param }: { param: IAUth }) => {
         bordered
         cellBordered
         rowHeight={60}
-        height={600}
+        autoHeight
         loading={permissionLoading || userDataLoading}
       >
         <Column flexGrow={2}>

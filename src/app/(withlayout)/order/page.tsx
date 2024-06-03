@@ -1,4 +1,3 @@
-
 "use client";
 import OrderTable from "@/components/order/OrderTable";
 import RModal from "@/components/ui/Modal";
@@ -18,6 +17,7 @@ import {
   initialData,
 } from "@/components/order/initialDataAndTypes";
 import PatientInformation from "@/components/order/PatientInformation";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
@@ -118,8 +118,6 @@ const Order = () => {
       paid: data.paid ? data.paid : 0,
       patientType: data.patientType,
       vat: data.vat,
-      refBy: "",
-      _id: "",
     };
     if (data?.refBy && data.refBy.length > 5) {
       orderData.refBy = data.refBy as string;
@@ -199,7 +197,9 @@ const Order = () => {
         >
           <>
             <h2 className="text-4xl font-bold text-center">
-              Generate New Bill
+              {mode == ENUM_MODE.VIEW
+                ? "Bill Information"
+                : " Generate New Bill"}
             </h2>
 
             <div>
@@ -209,11 +209,16 @@ const Order = () => {
                 setFormData={setData as React.SetStateAction<any>}
                 forwardedRefForPatientType={patientTypeRef}
                 key={2589}
+                mode={mode}
               />
             </div>
 
             <div className="my-10">
-              <TestInformation formData={data} setFormData={setData} />
+              <TestInformation
+                formData={data}
+                setFormData={setData}
+                mode={mode}
+              />
             </div>
 
             <div>
@@ -226,6 +231,7 @@ const Order = () => {
                   (data.paid ? data.paid : 0)
                 ).toFixed(2)}
                 data={data}
+                mode={mode}
               />
             </div>
 
