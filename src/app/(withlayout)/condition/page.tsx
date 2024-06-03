@@ -1,16 +1,11 @@
 "use client";
 import CondtionTable from "@/components/condition/CondtionTable";
 import NewConditionModal from "@/components/condition/NewConditionModal";
-import {
-  usePostConditionMutation
-} from "@/redux/api/condition/conditionSlice";
+import { usePostConditionMutation } from "@/redux/api/condition/conditionSlice";
 import { setLoading } from "@/redux/features/loading/loading";
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Message,
-  toaster
-} from "rsuite";
+import { Button, Message, toaster } from "rsuite";
+import swal from "sweetalert";
 
 const Condition = () => {
   const [postModalOpen, setPostModalOpen] = useState(false);
@@ -24,29 +19,11 @@ const Condition = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toaster.push(
-        <Message type="success">Condition Added Successfully</Message>,
-        {
-          duration: 3000,
-        }
-      );
+      swal("Success", "Condition Added Successfully", "success");
       setPostModalOpen(!postModalOpen);
-      setLoading();
     }
-    if (conditionLoading) {
-      setLoading();
-    }
-
     if (isError) {
-      setLoading();
-      toaster.push(
-        <Message type="error">
-          Something went wrong please try again letter
-        </Message>,
-        {
-          duration: 3000,
-        }
-      );
+      swal("Error", " Something went wrong please try again letter", "error");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionLoading, isError, isSuccess]);

@@ -7,6 +7,7 @@ const bacteria = baseApi.injectEndpoints({
         url: "/bacteria",
         method: "post",
         body: data,
+        data: data,
         contentType: "application/json",
       }),
       invalidatesTags: ["bacteria"],
@@ -16,6 +17,7 @@ const bacteria = baseApi.injectEndpoints({
         url: `/bacteria/${id}`,
         method: "PATCH",
         body: data,
+        data: data,
         contentType: "application/json",
       }),
       invalidatesTags: ["bacteria"],
@@ -24,6 +26,7 @@ const bacteria = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/bacteria/${data}`,
         method: "delete",
+        data: data,
         contentType: "application/json",
       }),
       invalidatesTags: ["bacteria"],
@@ -32,6 +35,7 @@ const bacteria = baseApi.injectEndpoints({
       query: () => ({
         url: "/bacteria",
         method: "get",
+
         contentType: "application/json",
       }),
       providesTags: ["bacteria"],
@@ -40,6 +44,7 @@ const bacteria = baseApi.injectEndpoints({
       query: (data: any) => ({
         url: `/bacteria/${data}`,
         method: "get",
+        data: data,
         contentType: "application/json",
       }),
     }),

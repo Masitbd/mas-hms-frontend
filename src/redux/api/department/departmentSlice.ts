@@ -7,44 +7,45 @@ const department = baseApi.injectEndpoints({
       query: (data: IDepartment) => ({
         url: "/departments",
         method: "POST",
+        data: data,
         body: data,
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["department"]
+      invalidatesTags: ["department"],
     }),
     patchDepartment: build.mutation({
       query: ({ data, id }) => ({
         url: `/departments/${id}`,
         method: "PATCH",
         body: data,
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["department"]
+      invalidatesTags: ["department"],
     }),
     deleteDepartment: build.mutation({
       query: (id: string) => ({
         url: `/departments/${id}`,
         method: "DELETE",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["department"]
+      invalidatesTags: ["department"],
     }),
     getDepartment: build.query({
       query: () => ({
         url: "/departments",
         method: "GET",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      providesTags: ["department"]
+      providesTags: ["department"],
     }),
     getSingleDepartment: build.query({
       query: (id: string) => ({
         url: `/departments/${id}`,
         method: "GET",
-        contentType: "application/json"
-      })
-    })
-  })
+        contentType: "application/json",
+      }),
+    }),
+  }),
 });
 
 export const {
@@ -52,5 +53,5 @@ export const {
   useGetDepartmentQuery,
   useGetSingleDepartmentQuery,
   useDeleteDepartmentMutation,
-  usePatchDepartmentMutation
+  usePatchDepartmentMutation,
 } = department;
