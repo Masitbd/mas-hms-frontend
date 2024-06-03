@@ -2,54 +2,56 @@ import { ISpecimen } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
 const specimen = baseApi.injectEndpoints({
-    endpoints: (build) => ({
-      postSpecimen: build.mutation({
-        query: (data: ISpecimen) => ({
-          url: "/specimen",
-          method: "post",
-          body: data,
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["specimen"],
+  endpoints: (build) => ({
+    postSpecimen: build.mutation({
+      query: (data: ISpecimen) => ({
+        url: "/specimen",
+        method: "post",
+        body: data,
+        data: data,
+        contentType: "application/json",
       }),
-      patchSpecimen: build.mutation({
-        query: ({ data, id }) => ({
-          url: `/specimen/${id}`,
-          method: "PATCH",
-          body: data,
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["specimen"],
+      invalidatesTags: ["specimen"],
+    }),
+    patchSpecimen: build.mutation({
+      query: ({ data, id }) => ({
+        url: `/specimen/${id}`,
+        method: "PATCH",
+        body: data,
+        data: data,
+        contentType: "application/json",
       }),
-      deleteSpecimen: build.mutation({
-        query: (id: string) => ({
-          url: `/specimen/${id}`,
-          method: "DELETE",
-          contentType: "application/json",
-        }),
-        invalidatesTags: ["specimen"],
+      invalidatesTags: ["specimen"],
+    }),
+    deleteSpecimen: build.mutation({
+      query: (id: string) => ({
+        url: `/specimen/${id}`,
+        method: "DELETE",
+        contentType: "application/json",
       }),
-      getSpecimen: build.query({
-        query: () => ({
-          url: "/specimen",
-          method: "GET",
-          contentType: "application/json",
-        }),
-        providesTags: ["specimen"],
+      invalidatesTags: ["specimen"],
+    }),
+    getSpecimen: build.query({
+      query: () => ({
+        url: "/specimen",
+        method: "GET",
+        contentType: "application/json",
       }),
-      getSingleSpecimen: build.mutation({
-        query: (id: string) => ({
-          url: `/specimen/${id}`,
-          method: "GET",
-          contentType: "application/json",
-        }),
+      providesTags: ["specimen"],
+    }),
+    getSingleSpecimen: build.mutation({
+      query: (id: string) => ({
+        url: `/specimen/${id}`,
+        method: "GET",
+        contentType: "application/json",
       }),
     }),
-  });
+  }),
+});
 
-  export const {
-    usePostSpecimenMutation,
-    useGetSpecimenQuery,
-    useDeleteSpecimenMutation,
-    usePatchSpecimenMutation,
-  } = specimen;
+export const {
+  usePostSpecimenMutation,
+  useGetSpecimenQuery,
+  useDeleteSpecimenMutation,
+  usePatchSpecimenMutation,
+} = specimen;
