@@ -58,19 +58,19 @@ const TestForm = ({
   ];
   const dDataForReportGroup = [
     {
-      label: "SOme Group with _id",
+      label: "Some Group with _id",
       value: "65b54df9f84e13eee7ceb547",
     },
     {
-      label: "SOme Group",
+      label: "Some Group",
       value: "Some valeeeue",
     },
     {
-      label: "SOme Group",
+      label: "Some Group",
       value: "Some vaeeeelue",
     },
     {
-      label: "SOme Group",
+      label: "Some Group",
       value: "Some vwwwalue",
     },
   ];
@@ -159,7 +159,7 @@ const TestForm = ({
           <Form.ControlLabel>Process Time</Form.ControlLabel>
           <Form.Control name="processTime" type="number" />
         </Form.Group>
-        {/*  */}
+
         <Form.Group controlId="specimen">
           <Form.ControlLabel>Specimen</Form.ControlLabel>
           <Form.Control

@@ -61,69 +61,73 @@ const NavToggle = ({ expand, onChange }: NavToggleProps) => {
 const Sidebar = () => {
   const [expand, setExpand] = useState(true);
   return (
-    <div>
-      <ResuiteSidebar
-        style={{ display: "flex", flexDirection: "column" }}
-        width={expand ? 260 : 56}
-        collapsible
-      >
-        <Sidenav expanded={expand} defaultOpenKeys={["3"]} appearance="subtle">
-          <Sidenav.Body>
-            <Nav>
-              <Nav.Menu
-                eventKey="3"
-                trigger="hover"
-                title="Test Params"
-                icon={<MagicIcon />}
-                placement="rightStart"
-              >
-                <Nav.Item eventKey="3-1" href={"/pdrv"} as={NavLink}>
-                  Pdrv
-                </Nav.Item>
-                <Nav.Item eventKey="3-2" href={"/bacteria"} as={NavLink}>
-                  Bacteria
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/condition"} as={NavLink}>
-                  Condition
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/department"} as={NavLink}>
-                  Department
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/hospitalGroup"} as={NavLink}>
-                  Hospital Group
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/specimen"} as={NavLink}>
-                  Specimen
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/vacuumTube"} as={NavLink}>
-                  Vacumme Tube
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/test"} as={NavLink}>
-                  Test
-                </Nav.Item>
-                <Nav.Item eventKey="3-3" href={"/doctor"} as={NavLink}>
-                  Doctor
-                </Nav.Item>
-              </Nav.Menu>
-              <Nav.Menu
-                eventKey="4"
-                trigger="hover"
-                title="Settings"
-                icon={<GearCircleIcon />}
-                placement="rightStart"
-              >
-                <Nav.Item eventKey="4-1">Applications</Nav.Item>
-                <Nav.Item eventKey="4-2">Websites</Nav.Item>
-                <Nav.Item eventKey="4-3">Channels</Nav.Item>
-                <Nav.Item eventKey="4-4">Tags</Nav.Item>
-                <Nav.Item eventKey="4-5">Versions</Nav.Item>
-              </Nav.Menu>
-            </Nav>
-          </Sidenav.Body>
-        </Sidenav>
-        <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
-      </ResuiteSidebar>
-    </div>
+    <ResuiteSidebar
+      style={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+      width={expand ? 260 : 56}
+      collapsible
+      className="bg-slate-200"
+    >
+      <Sidenav expanded={expand} defaultOpenKeys={["3"]} appearance="subtle">
+        <Sidenav.Body>
+          <Nav>
+            <Nav.Menu
+              eventKey="3"
+              trigger="hover"
+              title="Test Params"
+              icon={<MagicIcon />}
+              placement="rightStart"
+            >
+              <Nav.Item eventKey="3-1" href={"/pdrv"} as={NavLink}>
+                Pdrv
+              </Nav.Item>
+              <Nav.Item eventKey="3-2" href={"/bacteria"} as={NavLink}>
+                Bacteria
+              </Nav.Item>
+              <Nav.Item eventKey="3-3" href={"/condition"} as={NavLink}>
+                Condition
+              </Nav.Item>
+              <Nav.Item eventKey="3-3" href={"/department"} as={NavLink}>
+                Department
+              </Nav.Item>
+              <Nav.Item eventKey="3-3" href={"/hospitalGroup"} as={NavLink}>
+                Hospital Group
+              </Nav.Item>
+              <Nav.Item eventKey="3-3" href={"/specimen"} as={NavLink}>
+                Specimen
+              </Nav.Item>
+              <Nav.Item eventKey="3-3" href={"/vacuumTube"} as={NavLink}>
+                Vacumme Tube
+              </Nav.Item>
+              <Nav.Item eventKey="3-3" href={"/test"} as={NavLink}>
+                Test
+              </Nav.Item>
+              <Nav.Item eventKey="3-3" href={"/doctor"} as={NavLink}>
+                Doctor
+              </Nav.Item>
+            </Nav.Menu>
+            <Nav.Menu
+              eventKey="4"
+              trigger="hover"
+              title="Settings"
+              icon={<GearCircleIcon />}
+              placement="rightStart"
+            >
+              <Nav.Item eventKey="4-1">Patient Registration</Nav.Item>
+              <Nav.Item eventKey="4-2">Doctor Setup</Nav.Item>
+              <Nav.Item eventKey="4-3" href="/employeeRegistration">
+                Employee Registration
+              </Nav.Item>
+              <Nav.Item eventKey="4-4">Tags</Nav.Item>
+              <Nav.Item eventKey="4-5">Versions</Nav.Item>
+            </Nav.Menu>
+          </Nav>
+        </Sidenav.Body>
+      </Sidenav>
+      <NavToggle expand={expand} onChange={() => setExpand(!expand)} />
+    </ResuiteSidebar>
   );
 };
 

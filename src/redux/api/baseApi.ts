@@ -25,5 +25,6 @@ export const baseApi = createApi({
     "vacuumTube",
     "department",
     "hospitalGroup",
+    "employeeRegistration",
   ],
 });

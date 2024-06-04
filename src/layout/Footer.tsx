@@ -7,7 +7,7 @@ export const Footer = () => {
         <Row>
           <Col xs={24} sm={12}>
             {/* Left side of the footer */}
-            <p>&copy; 2024 Your Company Name</p>
+            <p>&copy; MASITBD</p>
           </Col>
           <Col xs={24} sm={12}>
             {/* Right side of the footer */}

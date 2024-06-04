@@ -1,5 +1,3 @@
-import Form from "@/components/Form/Form";
-
 const NotFoundPage = () => {
   return (
     <div>

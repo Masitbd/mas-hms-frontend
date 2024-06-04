@@ -21,7 +21,7 @@ const RModal = ({
   return (
     <div>
       <Modal size={size} open={open}>
-        <Modal.Header>
+        <Modal.Header onClick={cancelHandler}>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-5">{children}</Modal.Body>

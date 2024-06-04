@@ -1,13 +1,15 @@
 "use client";
 
-import {  IHospitalGroup } from "@/types/allDepartmentInterfaces";
+import { IHospitalGroup } from "@/types/allDepartmentInterfaces";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
 
-import { useDeleteHospitalGroupMutation, useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
+import {
+  useDeleteHospitalGroupMutation,
+  useGetHospitalGroupQuery,
+} from "@/redux/api/hospitalGroup/hospitalGroupSlice";
 import NewHospitalGroup from "./NewHospitalGroup";
-
 
 const { Column, HeaderCell, Cell } = Table;
 const HospitalGroupTable = () => {
@@ -29,12 +31,9 @@ const HospitalGroupTable = () => {
   });
   console.log(data);
   //   For delete
-  const [
-    deleteItem
-  ] = useDeleteHospitalGroupMutation();
+  const [deleteItem] = useDeleteHospitalGroupMutation();
 
   const deleteHandler = async (id: string) => {
-
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this Hospital Group!",
@@ -43,32 +42,32 @@ const HospitalGroupTable = () => {
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-
-        const result = await deleteItem(id)
-        console.log(result, 'delete result')
-        if ('error' in result) {
-          const errorMessage = (result as { error: { data: { message: string } } })?.error.data.message;
+        const result = await deleteItem(id);
+        console.log(result, "delete result");
+        if ("error" in result) {
+          const errorMessage = (
+            result as { error: { data: { message: string } } }
+          )?.error.data.message;
           swal(errorMessage, {
             icon: "warning",
           });
         }
-        if ('data' in result) {
-          const message = (result as { data: { message: string } })?.data.message;
+        if ("data" in result) {
+          const message = (result as { data: { message: string } })?.data
+            .message;
           swal(`Done! ${message}!`, {
             icon: "success",
-          })
+          });
         }
       } else {
         swal("Your hospital group is safe!");
       }
-    })
+    });
   };
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
   const [patchData, setPatchData] = useState<IHospitalGroup>();
-
-
 
   return (
     <div>
@@ -107,7 +106,7 @@ const HospitalGroupTable = () => {
                   className="ml-2"
                   onClick={() => {
                     setPatchData(rowdate as IHospitalGroup);
-                    setPatchModalOpen(!patchModalOpen)
+                    setPatchModalOpen(!patchModalOpen);
                   }}
                 >
                   Edit
@@ -139,7 +138,8 @@ const HospitalGroupTable = () => {
       <div>
         <NewHospitalGroup
           defaultData={patchData}
-          open={patchModalOpen} setPostModelOpen={setPatchModalOpen}
+          open={patchModalOpen}
+          setPostModelOpen={setPatchModalOpen}
         />
       </div>
     </div>

@@ -1,16 +1,15 @@
 import { Navbar as ResuiteNavber, Nav } from "rsuite";
 import HomeIcon from "@rsuite/icons/legacy/Home";
 import CogIcon from "@rsuite/icons/legacy/Cog";
-import { SyntheticEvent, useState } from "react";
+import { useState } from "react";
 
-const CustomNavbar = ({
-  onSelect,
-  activeKey,
-  ...props
-}: {
-  onSelect: SyntheticEvent<Element, Event>;
-  activeKey: boolean;
-}) => {
+interface CustomNavbarProps
+  extends Omit<React.ComponentProps<typeof ResuiteNavber>, "onSelect"> {
+  onSelect: (eventKey: string | number) => void;
+  activeKey: string | number;
+}
+
+const CustomNavbar = ({ onSelect, activeKey, ...props }: CustomNavbarProps) => {
   return (
     <ResuiteNavber {...props}>
       <ResuiteNavber.Brand href="#">HMS</ResuiteNavber.Brand>
@@ -34,7 +33,7 @@ const CustomNavbar = ({
 };
 
 export const Navbar = () => {
-  const [activeKey, setActiveKey] = useState(null);
+  const [activeKey, setActiveKey] = useState<string | number>("");
 
   return (
     <>

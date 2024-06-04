@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import Providers from "@/lib/Providers";
 
 export const metadata: Metadata = {
-  title: "City Clean Aps",
-  description: "A good cleaning service",
+  title: "Hospital Management Software",
+  description: "This is total hospital management services",
 };
 
 export default function RootLayout({
