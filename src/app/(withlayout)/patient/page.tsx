@@ -111,8 +111,8 @@ const Patient = () => {
     presentAddress: StringType().isRequired("This field is required."),
     phone: StringType().isRequired("This field is required."),
     email: StringType().isRequired("This field is required."),
-    // ref_by: NumberType().isRequired("This field is required."),
-    // consultant: ArrayType().isRequired("This field is required."),
+    ref_by: StringType().isRequired("This field is required."),
+    consultant: StringType().isRequired("This field is required."),
   });
 
   // For patch

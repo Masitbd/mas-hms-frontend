@@ -145,7 +145,7 @@ const PatientForm = ({
         </Form.Group>
         <Form.Group controlId="dateOfBirth">
           <Form.ControlLabel>Date Of Birth</Form.ControlLabel>
-          <Form.Control name="dateOfBirth" format="dd.MM.yyyy" accepter={DatePicker} />
+          <Form.Control name="dateOfBirth"  format="dd.MM.yyyy"  accepter={DatePicker} />
         </Form.Group>
         <Form.Group controlId="email">
           <Form.ControlLabel>Email</Form.ControlLabel>
