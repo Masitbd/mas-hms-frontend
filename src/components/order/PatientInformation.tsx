@@ -27,9 +27,12 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
 
   const searchHandler = async (value: string) => {
     const sdata = await patientSearch(value);
-    setFormData({ ...data, patient: sdata?.data?.data });
+
     if (sdata?.data?.data?.ref_by) {
       setFormData({ ...data, refBy: sdata.data.data.ref_by });
+    }
+    if (sdata?.data?.data?._id) {
+      setFormData({ ...data, patient: sdata.data.data });
     }
   };
 

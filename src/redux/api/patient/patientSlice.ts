@@ -7,6 +7,8 @@ const patient = baseApi.injectEndpoints({
         url: "/patient",
         method: "post",
         body: data,
+
+        data: data,
         contentType: "application/json",
       }),
       invalidatesTags: ["patient"],
@@ -16,6 +18,7 @@ const patient = baseApi.injectEndpoints({
         url: `/patient`,
         method: "PATCH",
         body: data,
+        data: data,
         contentType: "application/json",
       }),
       invalidatesTags: ["patient"],
