@@ -18,6 +18,8 @@ import {
 } from "@/components/order/initialDataAndTypes";
 import PatientInformation from "@/components/order/PatientInformation";
 import { ENUM_MODE } from "@/enum/Mode";
+import { useAppDispatch } from "@/redux/hook";
+import { setId } from "@/redux/features/IdStore/idSlice";
 
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
@@ -165,12 +167,13 @@ const Order = () => {
       setModalOpen(!modalOpen);
     }
   }, [isSuccess]);
-
+  const dispatch = useAppDispatch();
   // Handleign vew Order
   const patchAndViewHandler = (data: { mode: string; data: IOrderData }) => {
     setModalOpen(!modalOpen);
     setMode(data.mode);
     setData(data.data as IOrderData);
+    dispatch(setId(data.data._id as string));
   };
 
   return (

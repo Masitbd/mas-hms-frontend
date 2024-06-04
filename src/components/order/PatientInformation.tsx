@@ -26,23 +26,21 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
   ] = useLazyGetSinglePatientQuery();
 
   const searchHandler = async (value: string) => {
-    console.log(value)
     const sdata = await patientSearch(value);
 
-      setFormData({ ...data, patient: sdata?.data?.data });
-          if (sdata?.data?.data?.ref_by) {
-        setFormData({ ...data, refBy: sdata.data.data.ref_by });
-      }
+    setFormData({ ...data, patient: sdata?.data?.data });
+    if (sdata?.data?.data?.ref_by) {
+      setFormData({ ...data, refBy: sdata.data.data.ref_by });
+    }
 
     if (sdata?.data?.data?.ref_by) {
       setFormData({ ...data, refBy: sdata.data.data.ref_by });
-
     }
     if (sdata?.data?.data?._id) {
       setFormData({ ...data, patient: sdata.data.data });
     }
   };
-  console.log(data)
+  console.log(data);
 
   useEffect(() => {
     if (patientSearchError) {

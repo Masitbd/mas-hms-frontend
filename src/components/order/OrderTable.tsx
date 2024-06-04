@@ -18,6 +18,8 @@ import { ITest } from "@/types/allDepartmentInterfaces";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
 import { IOrderData } from "./initialDataAndTypes";
+import { useAppDispatch } from "@/redux/hook";
+import { setId } from "@/redux/features/IdStore/idSlice";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
@@ -73,6 +75,8 @@ const OrderTable = ({
     isLoading: testLoading,
     isError: TesError,
   } = useGetOrderQuery(searchData);
+
+  const dispatch = useAppDispatch();
   return (
     <div>
       <div className="my-5">

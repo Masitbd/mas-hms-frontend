@@ -40,6 +40,7 @@ export type IInitialData = {
 };
 
 export type IOrderData = {
+  oid?: string;
   _id?: string;
   uuid?: string;
   patient?: Partial<IPatient>;
