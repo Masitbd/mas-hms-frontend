@@ -1,7 +1,5 @@
-import { Middleware } from "@reduxjs/toolkit";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
 import { axiosBaseQuery } from "@/shared/axios/axiosBaseQuery";
+import { createApi } from "@reduxjs/toolkit/query/react";
 //import { tagTypes } from "../tagTypes";
 //import { getFromLocalStorage } from "@/utils/local-storage";
 
@@ -21,13 +19,18 @@ export const baseApi = createApi({
     "doctor",
     "hospitalGroup",
     "test",
-    "patient",
-    "order",
     "permission",
     "users",
     "user",
     "profile",
-  ],
+    "testReport",
+    "account",
+    "transaction",
+    "patient",
+    "order",
+    "reportGroup",
+    "sensitivity"
+  ]
 
   // tagTypes: tagTypes,
 });

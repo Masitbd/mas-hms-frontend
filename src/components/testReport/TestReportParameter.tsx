@@ -111,7 +111,7 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
 
     const reportGroupNames = reportGroupQueryData?.data?.find((group: IReportGroup) => group.value === departmentQueryData?.data?.reportGroupName.toLowerCase())
 
-    console.log(reportGroupNames.value)
+    console.log(reportGroupNames)
 
 
 
@@ -145,7 +145,7 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
                     <Column flexGrow={3} width={200}>
                         <HeaderCell>Result</HeaderCell>
                         <Cell >{rowData =>
-                            departmentQueryData?.data?.reportGroupName.toLowerCase() !== reportGroupNames.value ? (<SelectPicker
+                            departmentQueryData?.data?.reportGroupName.toLowerCase() !== reportGroupNames?.value ? (<SelectPicker
                                 data={testType}
                                 searchable={false}
                                 style={{ width: 224 }}
@@ -154,7 +154,7 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
                             />) : (<Input ref={formRef} type="text" name="result" defaultValue={rowData.result} onBlur={(e) => handleSubmit(e, rowData as ITest)} />)}</Cell>
                     </Column>
                     {
-                        departmentQueryData?.data?.reportGroupName.toLowerCase() === reportGroupNames.value && (
+                        departmentQueryData?.data?.reportGroupName.toLowerCase() === reportGroupNames?.value && (
                             <Column flexGrow={3} width={200}>
                                 <HeaderCell>Comment</HeaderCell>
                                 <Cell >{rowData => <Input ref={formRef} type="text" name="comment" defaultValue={rowData.comment} onBlur={(e) => handleSubmit(e, rowData as ITest)} />}</Cell>

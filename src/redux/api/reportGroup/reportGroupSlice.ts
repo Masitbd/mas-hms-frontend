@@ -37,7 +37,7 @@ const reportGroup = baseApi.injectEndpoints({
       }),
       providesTags: ["reportGroup"]
     }),
-    getSingleSpecimen: build.mutation({
+    getSingleReportGroup: build.mutation({
       query: (id: string) => ({
         url: `/reportGroup/${id}`,
         method: "GET",

@@ -16,7 +16,7 @@ const { Column, HeaderCell, Cell } = Table;
 const TestViewP = ({ reportGenerate, setReportGenerate, setReportGenerateModal, setUpdateReportGenerate, updateReportGenerate }: ITestReportForm) => {
     const id = useAppSelector((state) => state.id.id);
     // console.log(id, "order id");
-    // console.log(reportGenerate.modeSingleType);
+    console.log(reportGenerate.id);
     const { data: reportData } = useGetSingleTestReportQuery(reportGenerate.id);
     const formRef: React.MutableRefObject<any> = useRef();
 

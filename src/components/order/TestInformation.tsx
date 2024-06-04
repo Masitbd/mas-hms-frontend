@@ -1,9 +1,15 @@
-import React from "react";
+import { ENUM_MODE } from "@/enum/Mode";
+import { useState } from "react";
 import { Button, DatePicker, Input, Message, Table, toaster } from "rsuite";
 import { RowDataType } from "rsuite/esm/Table";
-import { IParamsForTestInformation } from "./initialDataAndTypes";
+import TestReportForm from "../testReport/TestReportForm";
+import TestView from "../testReport/TestView/TestView";
+import RModal from "../ui/Modal";
 import AvailableTestSection from "./AvailableTestSection";
-import { ENUM_MODE } from "@/enum/Mode";
+import { IParamsForTestInformation } from "./initialDataAndTypes";
+export type ITestGenerateType = {
+  modeSingleType: string; modeType: string; id: string, status: string;
+}
 
 const TestInformation = (params: IParamsForTestInformation) => {
   const { Cell, Column, HeaderCell } = Table;
@@ -35,6 +41,27 @@ const TestInformation = (params: IParamsForTestInformation) => {
     ] = value;
     params.setFormData(newObject);
   };
+
+
+  const [reportGenerate, setReportGenerate] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '', status: "" });
+
+  const [reportGenerate2, setReportGenerate2] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '', status: "" });
+
+
+
+  const [reportGenerateModal, setReportGenerateModal] = useState<boolean>(false);
+
+  const reportGenerateHandler = (data: ITestGenerateType) => {
+    setReportGenerate({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id, status: data.status })
+    setReportGenerateModal(!reportGenerateModal)
+  }
+  const [reportGenerateModal2, setReportGenerateModal2] = useState<boolean>(false);
+
+  const reportGenerateHandler2 = (data: ITestGenerateType) => {
+    setReportGenerate2({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id, status: data.status })
+    setReportGenerateModal2(!reportGenerateModal2)
+  }
+
 
   if (params.mode == ENUM_MODE.VIEW) {
     return (
@@ -76,7 +103,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 const priceAfterDiscount = (
                   rowData.discount > 0
                     ? rowData.test.price -
-                      (rowData.test.price * rowData.discount) / 100
+                    (rowData.test.price * rowData.discount) / 100
                     : rowData.test.price
                 ).toFixed(2);
 
@@ -98,10 +125,81 @@ const TestInformation = (params: IParamsForTestInformation) => {
               }}
             </Cell>
           </Column>
+          <Column align="center" resizable flexGrow={1}>
+            <HeaderCell>Action</HeaderCell>
+            <Cell>
+              {(rowData) => (
+                <>
+                  <Button
+                    onClick={() => testRemoveFromListHandler(rowData)}
+                    appearance="primary"
+                    color="red"
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    className="ml-2"
+                    onClick={() => {
+                      reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                    }}
+                    appearance="primary"
+                    color="orange"
+                  >
+                    Report
+                  </Button>
+
+                  <Button
+                    className="ml-2"
+                    disabled={rowData.status === 'completed' ? true : false}
+                    onClick={() => {
+                      reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                    }}
+                    appearance="primary"
+                    color="blue"
+                  >
+                    Report View
+                  </Button>
+
+
+                </>
+              )}
+            </Cell>
+          </Column>
         </Table>
+        {
+          reportGenerateModal && (
+            <RModal
+              open={reportGenerateModal}
+              size="xxl"
+              title={
+                "Test Report Generate"
+              }
+            >
+              <TestReportForm reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
+            </RModal>
+          )
+        }
+        {
+          reportGenerateModal2 && (
+            <RModal
+              open={reportGenerateModal2}
+              size="xxl"
+              title={
+                "Test Report View"
+              }
+            >
+              <TestView reportGenerate={reportGenerate2} setReportGenerate={setReportGenerate2} setReportGenerateModal={setReportGenerateModal2} />
+            </RModal>
+          )
+        }
       </>
     );
   }
+
+
+
+
+
   return (
     <div>
       <h2 className="font-bold text-xl">Test Information</h2>
@@ -132,6 +230,46 @@ const TestInformation = (params: IParamsForTestInformation) => {
               <Column align="center" resizable flexGrow={1}>
                 <HeaderCell>Original Price</HeaderCell>
                 <Cell dataKey="test.price" />
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Action</HeaderCell>
+                <Cell>
+                  {(rowData) => (
+                    <>
+                      <Button
+                        onClick={() => testRemoveFromListHandler(rowData)}
+                        appearance="primary"
+                        color="red"
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        className="ml-2"
+                        onClick={() => {
+                          reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                        }}
+                        appearance="primary"
+                        color="orange"
+                      >
+                        Report
+                      </Button>
+
+                      <Button
+                        className="ml-2"
+                        disabled={rowData.status === 'completed' ? true : false}
+                        onClick={() => {
+                          reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                        }}
+                        appearance="primary"
+                        color="blue"
+                      >
+                        Report View
+                      </Button>
+
+
+                    </>
+                  )}
+                </Cell>
               </Column>
               <Column align="center" resizable flexGrow={1}>
                 <HeaderCell>Discount %</HeaderCell>
@@ -168,21 +306,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                   }}
                 </Cell>
               </Column>
-              <Column align="center" resizable flexGrow={1}>
-                <HeaderCell>Discounted Price</HeaderCell>
-                <Cell>
-                  {(rowData) => {
-                    const priceAfterDiscount = (
-                      rowData.discount > 0
-                        ? rowData.test.price -
-                          (rowData.test.price * rowData.discount) / 100
-                        : rowData.test.price
-                    ).toFixed(2);
 
-                    return `${priceAfterDiscount}`;
-                  }}
-                </Cell>
-              </Column>
               <Column align="center" resizable flexGrow={1.5}>
                 <HeaderCell>Delivery Date</HeaderCell>
                 <Cell>
@@ -200,6 +324,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                   }}
                 </Cell>
               </Column>
+
               <Column align="center" resizable flexGrow={1}>
                 <HeaderCell>Remark</HeaderCell>
                 <Cell>
@@ -219,19 +344,18 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 </Cell>
               </Column>
               <Column align="center" resizable flexGrow={1}>
-                <HeaderCell>Action</HeaderCell>
+                <HeaderCell>Discounted Price</HeaderCell>
                 <Cell>
-                  {(rowData) => (
-                    <>
-                      <Button
-                        onClick={() => testRemoveFromListHandler(rowData)}
-                        appearance="primary"
-                        color="red"
-                      >
-                        Delete
-                      </Button>
-                    </>
-                  )}
+                  {(rowData) => {
+                    const priceAfterDiscount = (
+                      rowData.discount > 0
+                        ? rowData.test.price -
+                        (rowData.test.price * rowData.discount) / 100
+                        : rowData.test.price
+                    ).toFixed(2);
+
+                    return `${priceAfterDiscount}`;
+                  }}
                 </Cell>
               </Column>
             </Table>
@@ -244,6 +368,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
             mode={params.mode}
           />
         </div>
+
       </div>
     </div>
   );
