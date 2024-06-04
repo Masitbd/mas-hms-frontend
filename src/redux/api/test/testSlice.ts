@@ -7,6 +7,7 @@ const testSlice = baseApi.injectEndpoints({
         url: "/test",
         method: "POST",
         contentType: "application/json",
+        data: data,
         body: data,
       }),
       invalidatesTags: ["test"],
@@ -16,6 +17,7 @@ const testSlice = baseApi.injectEndpoints({
         url: `/test/${id}`,
         method: "PATCH",
         contentType: "application/json",
+        data: data,
         body: data,
       }),
       invalidatesTags: ["test"],
@@ -28,7 +30,7 @@ const testSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["test"],
     }),
-    getTest: build.query({
+    getSingleTest: build.query({
       query: (id) => ({
         url: `/test/${id}`,
         method: "GET",
@@ -50,8 +52,9 @@ const testSlice = baseApi.injectEndpoints({
 export const {
   usePostTestMutation,
   usePatchTestMutation,
-  useGetTestQuery,
+  useGetSingleTestQuery,
   useGetTestsQuery,
   useDeleteTestMutation,
-  useLazyGetTestQuery,
+  useLazyGetSingleTestQuery,
+  useLazyGetTestsQuery,
 } = testSlice;

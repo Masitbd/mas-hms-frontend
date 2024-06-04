@@ -7,6 +7,7 @@ import { Button, Form, Message, Table, toaster } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest } from "@/types/allDepartmentInterfaces";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const { Column, HeaderCell, Cell } = Table;
 const TestTable = ({
@@ -128,7 +129,10 @@ const TestTable = ({
                   className="ml-2"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
-                    patchHandler({ data: rowdate as ITest, mode: "watch" });
+                    patchHandler({
+                      data: rowdate as ITest,
+                      mode: ENUM_MODE.VIEW,
+                    });
                   }}
                 />
               </>

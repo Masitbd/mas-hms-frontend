@@ -1,19 +1,18 @@
+import { IPatient1 } from "@/app/(withlayout)/patient/page";
+import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import {
-  useDeleteTestMutation,
-  useGetTestsQuery,
+  useDeleteTestMutation
 } from "@/redux/api/test/testSlice";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import VisibleIcon from "@rsuite/icons/Visible";
+import { useEffect, useState } from "react";
 import { Button, Form, Message, Table, toaster } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
-import VisibleIcon from "@rsuite/icons/Visible";
-import { ITest } from "@/types/allDepartmentInterfaces";
-import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 
 const { Column, HeaderCell, Cell } = Table;
 const PatientTable = ({
   patchHandler,
 }: {
-  patchHandler?: (data: { data: ITest; mode: string }) => void;
+  patchHandler: (data: { data: IPatient1; mode: string }) => void;
 }) => {
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
@@ -115,7 +114,7 @@ const PatientTable = ({
                   color="blue"
                   className="ml-2"
                   onClick={() =>
-                    patchHandler({ data: rowdate as ITest, mode: "patch" })
+                    patchHandler({ data: rowdate as IPatient1, mode: "patch" })
                   }
                 >
                   Edit
@@ -125,7 +124,7 @@ const PatientTable = ({
                   className="ml-2"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
-                    patchHandler({ data: rowdate as ITest, mode: "watch" });
+                    patchHandler({ data: rowdate as IPatient1, mode: "watch" });
                   }}
                 />
               </>

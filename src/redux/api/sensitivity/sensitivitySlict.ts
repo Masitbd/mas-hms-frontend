@@ -1,50 +1,50 @@
-import { ISpecimen } from "@/types/allDepartmentInterfaces";
+import { ISensitivity } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
 
 const sensitivity = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postSensitivity: build.mutation({
-      query: (data: ISpecimen) => ({
+      query: (data: ISensitivity) => ({
         url: "/sensitivity",
         method: "post",
         body: data,
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      invalidatesTags: ["specimen"],
+      invalidatesTags: ["sensitivity"]
     }),
     patchSensitivity: build.mutation({
       query: ({ data, id }) => ({
         url: `/sensitivity/${id}`,
         method: "PATCH",
         body: data,
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      invalidatesTags: ["specimen"],
+      invalidatesTags: ["sensitivity"]
     }),
     deleteSensitivity: build.mutation({
       query: (id: string) => ({
         url: `/sensitivity/${id}`,
         method: "DELETE",
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      invalidatesTags: ["specimen"],
+      invalidatesTags: ["sensitivity"]
     }),
     getSensitivity: build.query({
       query: () => ({
         url: "/sensitivity",
         method: "GET",
-        contentType: "application/json",
+        contentType: "application/json"
       }),
-      providesTags: ["specimen"],
+      providesTags: ["sensitivity"]
     }),
     getSingleSensitivity: build.mutation({
       query: (id: string) => ({
         url: `/sensitivity/${id}`,
         method: "GET",
-        contentType: "application/json",
-      }),
-    }),
-  }),
+        contentType: "application/json"
+      })
+    })
+  })
 });
 
 export const { useGetSensitivityQuery } = sensitivity;

@@ -1,19 +1,25 @@
-
 import React, { useState } from "react";
 import { Input, InputGroup, Message, toaster } from "rsuite";
 import CheckIcon from "@rsuite/icons/Check";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const FInancialSection = ({
   setData,
   dueAmount,
   data,
+  mode,
 }: {
   setData(arg0: any): void;
   dueAmount: string;
   data: any;
+  mode: string;
 }) => {
   return (
-    <div className="grid grid-cols-4 mt-5 gap-16">
+    <div
+      className={`grid grid-cols-4 mt-5 gap-16 ${
+        mode == ENUM_MODE.VIEW && "hidden"
+      } `}
+    >
       {/* For financial seciton */}
       <div>
         <h5 className="font-bold">Vat</h5>
@@ -81,4 +87,3 @@ const FInancialSection = ({
 };
 
 export default FInancialSection;
-

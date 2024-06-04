@@ -1,28 +1,11 @@
 "use client";
 import CondtionTable from "@/components/condition/CondtionTable";
 import NewConditionModal from "@/components/condition/NewConditionModal";
-import AlartDialog from "@/components/ui/AlertModal";
-import {
-  useDeleteConditionMutation,
-  useGetConditionQuery,
-  usePostConditionMutation,
-} from "@/redux/api/condition/conditionSlice";
-import { setCondition } from "@/redux/features/condition/conditionSlice";
-import { setdel } from "@/redux/features/delpopup/delpopuo";
+import { usePostConditionMutation } from "@/redux/api/condition/conditionSlice";
 import { setLoading } from "@/redux/features/loading/loading";
-import { useAppDispatch } from "@/redux/hook";
-import React, { use, useEffect, useState } from "react";
-import {
-  Table,
-  Pagination,
-  Button,
-  Modal,
-  Schema,
-  Form,
-  Loader,
-  toaster,
-  Message,
-} from "rsuite";
+import { useEffect, useState } from "react";
+import { Button, Message, toaster } from "rsuite";
+import swal from "sweetalert";
 
 const Condition = () => {
   const [postModalOpen, setPostModalOpen] = useState(false);
@@ -36,29 +19,11 @@ const Condition = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      toaster.push(
-        <Message type="success">Condition Added Successfully</Message>,
-        {
-          duration: 3000,
-        }
-      );
+      swal("Success", "Condition Added Successfully", "success");
       setPostModalOpen(!postModalOpen);
-      setLoading(false);
     }
-    if (conditionLoading) {
-      setLoading(true);
-    }
-
     if (isError) {
-      setLoading(false);
-      toaster.push(
-        <Message type="error">
-          Something went wrong please try again letter
-        </Message>,
-        {
-          duration: 3000,
-        }
-      );
+      swal("Error", " Something went wrong please try again letter", "error");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionLoading, isError, isSuccess]);
@@ -69,7 +34,7 @@ const Condition = () => {
           appearance="primary"
           onClick={() => setPostModalOpen(!postModalOpen)}
         >
-          Add New Conditon
+          Add New Condition
         </Button>
       </div>
 

@@ -40,7 +40,8 @@ export type IInitialData = {
 };
 
 export type IOrderData = {
-  _id: string;
+  oid?: string;
+  _id?: string;
   uuid?: string;
   patient?: Partial<IPatient>;
   refBy?: string;
@@ -84,6 +85,7 @@ export const initialData: InitialData = {
 
 export type IpatientInforMationProps = {
   data: InitialData;
+  mode: string;
   setFormData: (props: React.SetStateAction<Partial<IInitialData>>) => void;
   forwardedRefForUnregisterd: React.MutableRefObject<any>;
   forwardedRefForPatientType: React.MutableRefObject<any>;
@@ -121,6 +123,7 @@ export const modelForRegisteredPatient = Schema.Model({
 export type IParamsForTestInformation = {
   formData: any;
   setFormData: (params: any) => void;
+  mode: string;
 };
 
 export type IDewCollectionProps = {
@@ -135,3 +138,12 @@ export type IPriceSectionProps = {
   discountAmount: number;
   vatAmount: number;
 };
+
+export const unreagisteredPatientProfileDataPropertyNames = [
+  "name",
+  "age",
+  "gender",
+  "address",
+  "phone",
+  "email",
+];
