@@ -48,7 +48,7 @@ const TestReportForm = ({ reportGenerate, setReportGenerate, setReportGenerateMo
             <Form
                 className="grid grid-cols-3 gap-5 justify-center w-full"
                 fluid
-                formValue={testQueryData.data}
+                formValue={testQueryData?.data}
             >
                 <Form.Group controlId="label">
                     <Form.ControlLabel>Test Name</Form.ControlLabel>

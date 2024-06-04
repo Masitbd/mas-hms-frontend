@@ -35,7 +35,8 @@ const testReportSlice = baseApi.injectEndpoints({
         url: `/testReport/${id}`,
         method: "get",
         contentType: "application/json"
-      })
+      }),
+      providesTags: ["testReport"]
     }),
     getTestReports: build.query({
       query: (data?: any) => ({

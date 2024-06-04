@@ -1,5 +1,4 @@
 
-import { useRef } from 'react';
 import { Button, Form, Table } from 'rsuite';
 
 import { useGetSingleTestReportQuery } from '@/redux/api/testReport/testReportSlice';
@@ -18,10 +17,7 @@ const TestViewP = ({ reportGenerate, setReportGenerate, setReportGenerateModal, 
     // console.log(id, "order id");
     console.log(reportGenerate.id);
     const { data: reportData } = useGetSingleTestReportQuery(reportGenerate.id);
-    const formRef: React.MutableRefObject<any> = useRef();
 
-
-    // const [formData, setFromData] = useState<>();
     console.log(reportData)
 
 

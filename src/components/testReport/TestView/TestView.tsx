@@ -32,7 +32,7 @@ const TestView = ({ reportGenerate, setReportGenerate, setReportGenerateModal }:
     console.log(testQueryData, 'testData', reportGenerate.modeSingleType)
     const handlePrint = async (id: string) => {
         try {
-            const response = await axios.post(`http://localhost:5000/api/v1/testReport/print/${id}`);
+            const response = await axios.post(`http://localhost:3001/api/v1/testReport/print/${id}`);
             console.log(response.data)
 
             // const dataUrl = URL.createObjectURL(response.data.data)
