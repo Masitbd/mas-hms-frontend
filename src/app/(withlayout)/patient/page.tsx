@@ -34,7 +34,7 @@ export type IPatient1 = {
   phone: string;
   email?: string;
   image?: string;
-}
+};
 
 const initialPatientData = {
   name: "",
@@ -45,11 +45,11 @@ const initialPatientData = {
   presentAddress: "",
   permanentAddress: "",
   maritalStatus: "",
-  dateOfBirth: {},
+  dateOfBirth: new Date(),
   district: "",
   religion: "",
   nationality: "",
-  admissionDate: {},
+  admissionDate: new Date(),
   bloodGroup: "",
   passportNo: "",
   courseDuration: "",
@@ -61,8 +61,7 @@ const initialPatientData = {
   phone: "",
   email: "",
   image: "",
-}
-
+};
 
 const Patient = () => {
   const { StringType, NumberType, ArrayType } = Schema.Types;
@@ -81,16 +80,17 @@ const Patient = () => {
     setFormData(initialPatientData);
     setMode("new");
   };
-  console.log("data", formData)
-  console.log("file", fileRef.current?.files?.[0])
+  console.log("data", formData);
+  console.log("file", fileRef.current?.files?.[0]);
   const modalOKHandler = async () => {
     if (ref.current.check()) {
       if (mode == "new") {
-        await ImageUpload(fileRef.current?.files?.[0]
-          , value => {
-            return formData.image = value as string
-          })
-        formData.image = formData.image || 'https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg';
+        await ImageUpload(fileRef.current?.files?.[0], (value) => {
+          return (formData.image = value as string);
+        });
+        formData.image =
+          formData.image ||
+          "https://res.cloudinary.com/deildnpys/image/upload/v1707574218/myUploads/wrm6s87apasmhne3soyb.jpg";
         await postPatient(formData);
         console.log("data2", formData);
         console.log("1");
@@ -116,7 +116,10 @@ const Patient = () => {
   });
 
   // For patch
-  const patchHandler = (data: { data: React.SetStateAction<IPatient1>; mode: React.SetStateAction<string>; }) => {
+  const patchHandler = (data: {
+    data: React.SetStateAction<IPatient1>;
+    mode: React.SetStateAction<string>;
+  }) => {
     setFormData(data.data);
     setMode(data.mode);
     setModalOpen(!modalOpen);
