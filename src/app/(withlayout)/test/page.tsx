@@ -41,7 +41,6 @@ const Test = () => {
     type: "",
     value: "",
     _id: "",
-    description: "",
   });
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -71,7 +70,6 @@ const Test = () => {
         vatRate: 0,
         processTime: 0,
         resultFields: [],
-        description: "",
       });
       setDefaultValue(undefined);
     }
@@ -121,7 +119,6 @@ const Test = () => {
           type: "",
           value: "",
           _id: "",
-          description: "",
         });
         setDefaultValue(undefined);
       }
@@ -140,7 +137,6 @@ const Test = () => {
           vatRate: 0,
           processTime: 0,
           resultFields: [],
-          description: "",
         });
         setDefaultValue(undefined);
       }
@@ -189,7 +185,6 @@ const Test = () => {
     }
   }, [testSuccess, patchSuccess]);
   const model = Schema.Model({
-    description: StringType().isRequired("This field is required."),
     label: StringType().isRequired("This field is required."),
     type: StringType().isRequired("This field is required."),
     testResultType: StringType().isRequired("This field is required."),

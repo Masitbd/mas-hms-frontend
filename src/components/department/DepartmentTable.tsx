@@ -1,5 +1,8 @@
 "use client";
-import { useDeleteDepartmentMutation, useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
+import {
+  useDeleteDepartmentMutation,
+  useGetDepartmentQuery,
+} from "@/redux/api/department/departmentSlice";
 import { IDepartment } from "@/types/allDepartmentInterfaces";
 import { TableType } from "@/types/componentsType";
 import { useState } from "react";
@@ -8,8 +11,12 @@ import swal from "sweetalert";
 
 const { Column, HeaderCell, Cell } = Table;
 
-const DepartmentTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableType<IDepartment>) => {
-
+const DepartmentTable = ({
+  setPatchData,
+  setMode,
+  open,
+  setPostModelOpen,
+}: TableType<IDepartment>) => {
   const { data: defaultData, isLoading } = useGetDepartmentQuery(undefined);
   console.log(defaultData);
 
@@ -21,7 +28,6 @@ const DepartmentTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
     setLimit(dataKey);
   };
 
-
   const data = defaultData?.data.filter((v: any, i: number) => {
     const start = limit * (page - 1);
     const end = start + limit;
@@ -29,12 +35,9 @@ const DepartmentTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
   });
   console.log(data);
   //   For delete
-  const [
-    deleteItem
-  ] = useDeleteDepartmentMutation();
+  const [deleteItem] = useDeleteDepartmentMutation();
 
   const deleteHandler = async (id: string) => {
-
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this Department!",
@@ -43,29 +46,28 @@ const DepartmentTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-
-        const result = await deleteItem(id)
-        console.log(result, 'delete result')
-        if ('error' in result) {
-          const errorMessage = (result as { error: { data: { message: string } } })?.error.data.message;
+        const result = await deleteItem(id);
+        console.log(result, "delete result");
+        if ("error" in result) {
+          const errorMessage = (
+            result as { error: { data: { message: string } } }
+          )?.error.data.message;
           swal(errorMessage, {
             icon: "warning",
           });
         }
-        if ('data' in result) {
-          const message = (result as { data: { message: string } })?.data.message;
+        if ("data" in result) {
+          const message = (result as { data: { message: string } })?.data
+            .message;
           swal(`Done! ${message}!`, {
             icon: "success",
-          })
+          });
         }
       } else {
         swal("Your department is safe!");
       }
-    })
+    });
   };
-
-
-
 
   return (
     <div>
@@ -78,7 +80,7 @@ const DepartmentTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
         rowHeight={65}
         className="text-md"
       >
-        <Column flexGrow={1}>
+        <Column flexGrow={2}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
@@ -113,7 +115,7 @@ const DepartmentTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
                   onClick={() => {
                     setPatchData(rowdate as IDepartment);
                     setPostModelOpen(!open);
-                    setMode("patch")
+                    setMode("patch");
                   }}
                 >
                   Edit

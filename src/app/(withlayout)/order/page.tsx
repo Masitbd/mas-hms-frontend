@@ -20,6 +20,8 @@ import PatientInformation from "@/components/order/PatientInformation";
 import { ENUM_MODE } from "@/enum/Mode";
 import { useAppDispatch } from "@/redux/hook";
 import { setId } from "@/redux/features/IdStore/idSlice";
+import jsPDF from "jspdf";
+import { URL } from "url";
 
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
@@ -153,13 +155,22 @@ const Order = () => {
   const [getInvoice] = useLazyGetInvoiceQuery();
   const handlePdf = async (id: string) => {
     const invoice = await getInvoice(id);
-    const buffer = Buffer.from(invoice.data.data.data);
-    const blob = new Blob([buffer], { type: "application/pdf" });
+    const newWindow = window.open("", "_blank");
 
-    const fileName = URL.createObjectURL(blob);
+    if (newWindow) {
+      newWindow.document.write(decodeURIComponent(invoice.data.data));
+      newWindow.document.title = "Managed By HMS system";
+
+      newWindow?.print();
+    }
+
+    // const buffer = Buffer.from(invoice.data.data.data);
+    // const blob = new Blob([buffer], { type: "application/pdf" });
+
+    // const fileName = URL.createObjectURL(blob);
     // const pdfwindow = window.open();
     // pdfwindow.location.href = fileName;
-    window.open(fileName)?.print();
+    // window.open(fileName)?.print();
   };
   useEffect(() => {
     if (isSuccess) {

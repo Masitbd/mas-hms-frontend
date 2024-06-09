@@ -9,6 +9,7 @@ const RModal = ({
   children,
   okHandler,
   cancelHandler,
+  loading,
 }: {
   size: string;
   open: boolean;
@@ -16,8 +17,8 @@ const RModal = ({
   children: React.ReactElement;
   okHandler?: <T>(data: T) => void;
   cancelHandler?: <T>(data: T) => void;
+  loading?: boolean;
 }) => {
-  const loading = useAppSelector((state) => state.loading.loading);
   return (
     <div>
       <Modal size={size} open={open} backdrop="static" onClose={cancelHandler}>
@@ -27,7 +28,11 @@ const RModal = ({
         <Modal.Body className="p-5">{children}</Modal.Body>
         {okHandler && cancelHandler && (
           <Modal.Footer>
-            <Button onClick={cancelHandler} appearance="subtle">
+            <Button
+              onClick={cancelHandler}
+              appearance="subtle"
+              loading={loading ? loading : false}
+            >
               Cancel
             </Button>
             <Button onClick={okHandler} appearance="primary">

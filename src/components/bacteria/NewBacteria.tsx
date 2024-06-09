@@ -29,14 +29,11 @@ const NewBacteria = ({
         }
       );
       setModalStatus(!open);
-      setLoading();
     }
     if (conditionLoading) {
-      setLoading();
     }
 
     if (isError) {
-      setLoading();
       toaster.push(
         <Message type="error">
           Something went wrong please try again letter
@@ -75,6 +72,7 @@ const NewBacteria = ({
         open={open}
         size="sm"
         title="Add New Bacteria "
+        loading={conditionLoading}
       >
         <BacteriaForm
           forwardedRef={formRef}
