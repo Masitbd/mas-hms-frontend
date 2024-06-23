@@ -74,12 +74,12 @@ const ReportGroupTab = () => {
     unit: "",
     remark: "",
     status: ENUM_MODE.NEW,
-    SL: tableData.length + 1,
+    SL: tableData?.length ? tableData.length + 1 : 1,
     reportTypeGroup: "",
   };
 
   const isNewDataOnProgress =
-    tableData.length > 0 &&
+    tableData?.length > 0 &&
     tableData[tableData.length - 1].status == ENUM_MODE.NEW;
 
   const cancelHandler = () => {

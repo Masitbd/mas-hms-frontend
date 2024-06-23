@@ -39,7 +39,8 @@ const ExistingTest = ({
   const addTestHandler = (params: IResultField) => {
     const nextData = Object.assign({}, formData);
     const nextResultData = Object.assign({}, params);
-    nextResultData.gid = nextData.resultFields.length + 1;
+    nextData?.resultFields?.length ? "" : (nextData.resultFields = []);
+    nextResultData.gid = nextData.resultFields?.length + 1;
     nextData.resultFields.push(nextResultData);
     setFormData(nextData);
   };
@@ -48,7 +49,7 @@ const ExistingTest = ({
   const checker = (params: IResultField) => {
     const nextData = Object.assign({}, formData);
     let added = false;
-    nextData.resultFields.length > 0 &&
+    nextData?.resultFields?.length > 0 &&
       nextData.resultFields.map((data) => {
         data?._id && (data._id === params._id ? (added = true) : false);
       });

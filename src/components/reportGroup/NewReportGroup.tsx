@@ -1,5 +1,5 @@
 import ReportGroupForm from "@/components/reportGroup/ReportGroupForm";
-import React, { SetStateAction, useRef } from "react";
+import React, { SetStateAction, useEffect, useRef } from "react";
 import {
   INewReportGroupProps,
   IReportGroupFormData,
@@ -13,56 +13,57 @@ import ForDescriptiveBased from "../Test/TestForDescriptive";
 import ForMicroBiology from "../Test/ForMicroBiology";
 import { Button } from "rsuite";
 import { usePostGroupMutation } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
+import swal from "sweetalert";
 
 const NewReportGroup = (props: INewReportGroupProps) => {
   const { formData, mode, setFormData } = props;
-  const reportType = formData.resultType;
+  const reportType = formData?.resultType;
   const ref: React.MutableRefObject<any> = useRef();
   const [
     postGroup,
     { isLoading: postGroupLoading, isSuccess: postGroupSuccess },
   ] = usePostGroupMutation();
 
-  let element;
-  switch (reportType) {
-    case "parameter":
-      element = (
-        <ForParameterBased
-          defaultMode="new"
-          setTestFromData={setFormData}
-          testFromData={formData}
-        />
-      );
+  // let element;
+  // switch (reportType) {
+  //   case "parameter":
+  //     element = (
+  //       <ForParameterBased
+  //         defaultMode="new"
+  //         setTestFromData={setFormData}
+  //         testFromData={formData}
+  //       />
+  //     );
 
-      break;
+  //     break;
 
-    case "descriptive":
-      element = (
-        <ForDescriptiveBased
-          setTestFromData={setFormData}
-          testFromData={formData}
-        />
-      );
-      break;
+  //   case "descriptive":
+  //     element = (
+  //       <ForDescriptiveBased
+  //         setTestFromData={setFormData}
+  //         testFromData={formData}
+  //       />
+  //     );
+  //     break;
 
-    case "bacterial":
-      element = (
-        <ForMicroBiology
-          mode="new"
-          setTestFromData={setFormData}
-          testFromData={formData}
-        />
-      );
-      break;
+  //   case "bacterial":
+  //     element = (
+  //       <ForMicroBiology
+  //         mode="new"
+  //         setTestFromData={setFormData}
+  //         testFromData={formData}
+  //       />
+  //     );
+  //     break;
 
-    default:
-      element = (
-        <div className="w-full h-[50vh] flex items-center justify-center border rounded-md font-bold text-2xl ">
-          Select A report Group and report type
-        </div>
-      );
-      break;
-  }
+  //   default:
+  //     element = (
+  //       <div className="w-full h-[50vh] flex items-center justify-center border rounded-md font-bold text-2xl ">
+  //         Select A report Group and report type
+  //       </div>
+  //     );
+  //     break;
+  // }
 
   // Handler function
   const formSbmitHandlerFunction = async () => {
@@ -78,6 +79,12 @@ const NewReportGroup = (props: INewReportGroupProps) => {
       }
     }
   };
+  useEffect(() => {
+    if (postGroupSuccess) {
+      swal("Success", "Posted successfully");
+      setFormData(null);
+    }
+  }, [postGroupSuccess]);
   return (
     <div>
       <div className="">
