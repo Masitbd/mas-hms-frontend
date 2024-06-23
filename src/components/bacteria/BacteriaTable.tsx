@@ -78,7 +78,6 @@ const BacteriaTable = () => {
 
   useEffect(() => {
     if (deleteLoading || patchLoading) {
-      setLoading();
     }
     if (deleteSuccess || patchSuccess) {
       toaster.push(
@@ -107,7 +106,6 @@ const BacteriaTable = () => {
           duration: 3000,
         }
       );
-      setLoading();
     }
     if (patchError) {
       setPatchModalOpen(!patchModalOpen);
@@ -119,7 +117,6 @@ const BacteriaTable = () => {
           duration: 3000,
         }
       );
-      setLoading();
     }
   }, [
     deleteLoading,
@@ -202,7 +199,8 @@ const BacteriaTable = () => {
           open={deletModalOpen}
           onOk={okHandler}
           onCancel={cancelHandler}
-        ></AlartDialog>
+          loading={deleteLoading}
+        />
         <PatchBacteria
           cancelHandler={patchCancelHandler}
           defalutValue={patchData as IBacteria}

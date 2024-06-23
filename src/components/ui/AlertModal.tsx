@@ -9,14 +9,15 @@ const AlartDialog = ({
   open,
   onOk,
   onCancel,
+  loading,
 }: {
   title: string;
   description: string;
   open: boolean;
   onOk: () => void;
   onCancel: () => void;
+  loading?: boolean;
 }) => {
-  const loading = useAppSelector((state) => state.loading.loading);
   return (
     <>
       <Modal backdrop="static" role="alertdialog" open={open} size="xs">
@@ -28,8 +29,12 @@ const AlartDialog = ({
           {description}
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={onOk} appearance="primary" disabled={loading}>
-            {loading ? <Loader /> : "OK"}
+          <Button
+            onClick={onOk}
+            appearance="primary"
+            loading={loading ? loading : false}
+          >
+            OK
           </Button>
           <Button onClick={onCancel} appearance="subtle">
             Cancel

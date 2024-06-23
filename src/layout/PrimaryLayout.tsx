@@ -12,7 +12,7 @@ export default function PrimaryLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const noNav = ["/signup", "/signin"];
+  const noNav = ["/signup", "/signin", "/"];
 
   if (noNav.includes(pathname)) {
     return (
@@ -26,7 +26,7 @@ export default function PrimaryLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="">{children}</div>
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

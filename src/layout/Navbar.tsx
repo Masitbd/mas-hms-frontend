@@ -24,9 +24,17 @@ const CustomNavbar = ({
     redirect("/signin");
   };
   return (
-    <ResuiteNavber {...props}>
+    <ResuiteNavber {...props} appearance="inverse">
       <ResuiteNavber.Brand href="#">HMS</ResuiteNavber.Brand>
-      <Nav onSelect={onSelect} activeKey={activeKey}>
+      <Nav
+        onSelect={
+          onSelect as unknown as (
+            eventKey: any,
+            event: SyntheticEvent<Element, Event>
+          ) => void
+        }
+        activeKey={activeKey}
+      >
         <Nav.Item eventKey="1" icon={<HomeIcon />}>
           Home
         </Nav.Item>
@@ -54,9 +62,9 @@ export const Navbar = () => {
   return (
     <>
       <CustomNavbar
-        appearance="inverse"
-        activeKey={activeKey}
-        onSelect={setActiveKey}
+        //   appearance="inverse"
+        activeKey={activeKey as unknown as boolean}
+        onSelect={setActiveKey as unknown as SyntheticEvent<Element, Event>}
       />
     </>
   );

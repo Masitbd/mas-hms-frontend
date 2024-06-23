@@ -165,15 +165,6 @@ const testMenuItem = [
       ENUM_USER_PEMISSION.MANAGE_PATIENT,
     ],
   },
-  {
-    key: "12",
-    title: "Report Group",
-    href: "/reportGroup",
-    requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
-    ],
-  },
 ];
 
 const Sidebar = () => {

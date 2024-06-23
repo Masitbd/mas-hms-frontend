@@ -18,7 +18,7 @@ const ForDewCollection = (props: IDewCollectionProps) => {
   const okHanlder = () => {
     if (ref.current.check()) {
       patchOrder({
-        id: data._id,
+        id: data._id as string,
         data: {
           dueAmount: Number(data.dueAmount) - Number(formData.amount),
           paid: Number(data.paid) + Number(formData.amount),
@@ -100,4 +100,3 @@ const ForDewCollection = (props: IDewCollectionProps) => {
 };
 
 export default ForDewCollection;
-

@@ -10,13 +10,7 @@ import {
   ISpecimen,
   IVacuumTube,
 } from "@/types/allDepartmentInterfaces";
-import {
-  Form,
-  InputPicker,
-  Schema,
-  TagPicker,
-  Toggle
-} from "rsuite";
+import { Form, InputPicker, Schema, TagPicker, Toggle } from "rsuite";
 import ForGroupTest from "./ForGroupTest";
 import ForMicroBiology from "./ForMicroBiology";
 import ForParameterBased from "./ForParameterBased";
@@ -223,8 +217,8 @@ const TestForm = ({
           <div>
             {(formData?.type == "single" &&
               formData.testResultType == "parameter") ||
-              (defaultValue?.type == "single" &&
-                defaultValue.testResultType == "parameter") ? (
+            (defaultValue?.type == "single" &&
+              defaultValue.testResultType == "parameter") ? (
               <ForParameterBased
                 defaultMode={mode}
                 testFromData={formData}
@@ -234,7 +228,7 @@ const TestForm = ({
               ""
             )}{" "}
             {formData?.type == "single" &&
-              formData.testResultType == "descriptive" ? (
+            formData.testResultType == "descriptive" ? (
               <ForDescriptiveBased
                 testFromData={formData}
                 setTestFromData={setfromData}
@@ -243,7 +237,7 @@ const TestForm = ({
               ""
             )}
             {formData?.type == "single" &&
-              formData.testResultType == "bacterial" ? (
+            formData.testResultType == "bacterial" ? (
               <ForMicroBiology
                 testFromData={formData}
                 setTestFromData={setfromData}

@@ -1,4 +1,4 @@
-import { IOrderData } from "@/app/(withlayout)/order/page";
+import { IOrderData } from "@/components/order/initialDataAndTypes";
 import { baseApi } from "../baseApi";
 
 const order = baseApi.injectEndpoints({
