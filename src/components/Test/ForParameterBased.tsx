@@ -17,6 +17,7 @@ import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
 import AlartDialog from "../ui/AlertModal";
 import { IResultField, ITest } from "@/types/allDepartmentInterfaces";
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
+import ExistingTest from "./ExistingTest";
 type NewITestType = IResultField & { gid: number };
 const { Cell, Column, HeaderCell } = Table;
 const ForParameterBased = ({
@@ -28,7 +29,7 @@ const ForParameterBased = ({
   setTestFromData: (data: any) => void;
   defaultMode: string;
 }) => {
-  let resultFieldData = testFromData.resultFields;
+  let resultFieldData = testFromData?.resultFields;
   const formRef: React.MutableRefObject<any> = React.useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const initialValue = {
@@ -114,6 +115,9 @@ const ForParameterBased = ({
 
   const { data: pdrvData, isLoading: pdrvLoading } = useGetPdrvQuery(undefined);
 
+  // Existing test addition
+  const [existingModal, setExistingModal] = useState(false);
+
   return (
     <div>
       <div className="my-5">
@@ -121,9 +125,25 @@ const ForParameterBased = ({
           appearance="primary"
           color="blue"
           onClick={() => newOpenHandler()}
+          className="mr-2"
         >
-          Add Test Params
+          Add New
         </Button>
+        <Button
+          appearance="primary"
+          color="blue"
+          onClick={() => setExistingModal(true)}
+        >
+          Add existing
+        </Button>
+      </div>
+      <div>
+        <ExistingTest
+          existingModal={existingModal}
+          formData={testFromData}
+          setExistingModal={setExistingModal}
+          setFormData={setTestFromData}
+        />
       </div>
       <Table
         height={420}
@@ -148,7 +168,7 @@ const ForParameterBased = ({
         </Column>
         <Column flexGrow={1} width={200}>
           <HeaderCell>Normal Unit</HeaderCell>
-          <Cell dataKey="normalUnit" />
+          <Cell dataKey="normalValue" />
         </Column>
         <Column flexGrow={2}>
           <HeaderCell>Action</HeaderCell>

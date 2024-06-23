@@ -32,6 +32,9 @@ export const baseApi = createApi({
     "order",
     "reportGroup",
     "sensitivity",
+    "group",
+    "reportType",
+    "reportTypeGroup",
   ],
 
   // tagTypes: tagTypes,

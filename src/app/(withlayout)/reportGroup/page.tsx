@@ -5,33 +5,18 @@ import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { IDepartment } from "@/types/allDepartmentInterfaces";
 import React, { SetStateAction, useState } from "react";
 import { Button, Form, InputPicker } from "rsuite";
-import ReportGroupForm from "./ReportGroupForm";
+import ReportGroupForm from "../../../components/reportGroup/ReportGroupForm";
 import { ENUM_MODE } from "@/enum/Mode";
+import ReportGroupTab from "@/components/reportGroup/ReportGroupTab";
 
 const ReportGroup = () => {
-  // For handelling the from
-  const [formData, setFormData] =
-    useState<SetStateAction<Partial<IReportGroupFormData>>>();
-  const [mode, setMode] = useState(ENUM_MODE.NEW);
-
   return (
     <div>
-      <div className="my-5">
-        <Button appearance="primary" color="blue">
-          Add New Report Group
-        </Button>
-      </div>
-      {/* for form and will be moved */}
-      <div className="">
-        <ReportGroupForm
-          hanlderFunction={setFormData}
-          formData={formData as IReportGroupFormData}
-          mode={mode}
-        />
-      </div>
       <div>
-        <ReportGroupTable />
+        <ReportGroupTab />
       </div>
+
+      {/* for form and will be moved */}
     </div>
   );
 };
