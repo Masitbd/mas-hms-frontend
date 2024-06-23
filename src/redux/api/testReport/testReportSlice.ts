@@ -30,6 +30,16 @@ const testReportSlice = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["testReport"]
     }),
+    getSingleTestReportPrint: build.mutation({
+      query: (data) => ({
+        url: `/testReport/print`,
+        method: "post",
+        body: data,
+        data: data,
+        contentType: "application/json"
+      }),
+      invalidatesTags: ["testReport"]
+    }),
     getSingleTestReport: build.query({
       query: (id) => ({
         url: `/testReport/${id}`,
@@ -54,6 +64,7 @@ export const {
   usePostTestReportMutation,
   usePatchTestReportMutation,
   useGetSingleTestReportQuery,
+  useGetSingleTestReportPrintMutation,
   useGetTestReportsQuery,
   useDeleteTestReportMutation
 } = testReportSlice;

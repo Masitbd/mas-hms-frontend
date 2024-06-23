@@ -125,7 +125,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
               }}
             </Cell>
           </Column>
-          <Column align="center" resizable flexGrow={1}>
+          <Column resizable flexGrow={4}>
             <HeaderCell>Action</HeaderCell>
             <Cell>
               {(rowData) => (
@@ -138,7 +138,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                     Delete
                   </Button>
                   <Button
-                    className="ml-2"
+                    className="lg:ml-3 md:ml-1"
                     onClick={() => {
                       reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
                     }}
@@ -149,8 +149,8 @@ const TestInformation = (params: IParamsForTestInformation) => {
                   </Button>
 
                   <Button
-                    className="ml-2"
-                    disabled={rowData.status === 'completed' ? true : false}
+                    className="lg:ml-3 md:ml-1"
+                    disabled={rowData.status === 'completed' ? false : true}
                     onClick={() => {
                       reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
                     }}
@@ -231,7 +231,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 <HeaderCell>Original Price</HeaderCell>
                 <Cell dataKey="test.price" />
               </Column>
-              <Column align="center" resizable flexGrow={1}>
+              <Column align="center" resizable flexGrow={4}>
                 <HeaderCell>Action</HeaderCell>
                 <Cell>
                   {(rowData) => (
@@ -243,30 +243,6 @@ const TestInformation = (params: IParamsForTestInformation) => {
                       >
                         Delete
                       </Button>
-                      <Button
-                        className="ml-2"
-                        onClick={() => {
-                          reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
-                        }}
-                        appearance="primary"
-                        color="orange"
-                      >
-                        Report
-                      </Button>
-
-                      <Button
-                        className="ml-2"
-                        disabled={rowData.status === 'completed' ? true : false}
-                        onClick={() => {
-                          reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
-                        }}
-                        appearance="primary"
-                        color="blue"
-                      >
-                        Report View
-                      </Button>
-
-
                     </>
                   )}
                 </Cell>

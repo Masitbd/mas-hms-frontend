@@ -3,6 +3,7 @@ import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
 import { useGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 import { useGetSingleTestQuery } from "@/redux/api/test/testSlice";
+import { useGetSingleTestReportPrintMutation, useGetSingleTestReportQuery } from "@/redux/api/testReport/testReportSlice";
 import {
   IDepartment,
   IHospitalGroup,
@@ -28,44 +29,50 @@ const TestView = ({
   const { data: testQueryData, isLoading } = useGetSingleTestQuery(
     reportGenerate.id
   );
+  const { data: reportData } = useGetSingleTestReportQuery(reportGenerate.id);
   const { data: departmentData } = useGetDepartmentQuery(undefined);
   const { data: specimenData } = useGetSpecimenQuery(undefined);
   const { data: hospitalData } = useGetHospitalGroupQuery(undefined);
+  const [
+    getSingleTestReportPrint
+  ] = useGetSingleTestReportPrintMutation();
 
   if (isLoading) {
     return <div>Loading ....</div>;
   }
   // const [formData, setFromData] = useState<>();
 
+
   console.log(testQueryData, "testData", reportGenerate.modeSingleType);
   const handlePrint = async (id: string) => {
+    // const data = await getSingleTestReportPrint(id)
+    // console.log(data)
+    // console.log(data)
     try {
+      const newWindow = window.open("", "_blank");
       const response = await axios.post(
-        `http://localhost:3001/api/v1/testReport/print/${id}`
-      );
+        `http://localhost:3001/api/v1/testReport/print`
+        , JSON.stringify({ id: id }), {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       console.log(response.data);
+      if (newWindow) {
+        newWindow.document.write(decodeURIComponent(response.data.data));
+        newWindow.document.title = "Managed By HMS system";
+        newWindow?.print();
 
-      // const dataUrl = URL.createObjectURL(response.data.data)
-      // console.log(dataUrl)
-      // const base64String = response.data.data.data!.toString('base64');
+      }
 
-      const buffer = Buffer.from(response.data.data.data);
-      const pdfBlob = new Blob([buffer], { type: "application/pdf" });
 
-      // Create a URL for the Blob
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      window.open(pdfUrl);
 
-      // printJS({ printable: base64String, type: 'pdf', base64: true })
-      // printJS({
-      //   printable: pdfUrl,
-      //   type: 'pdf',
-      //   header: 'Print PDF',
-      //   documentTitle: 'Print Example',
-      //   base64: false
-      // });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   };
+  console.log(reportGenerate.modeSingleType)
+  console.log('87', reportData?.data?.descriptiveDataDocs?.docsContent)
 
   return (
     <div>
@@ -173,16 +180,29 @@ const TestView = ({
                 <h1></h1>
               </>
             )}
-            <Button
-              className="ml-5 mt-10"
-              onClick={() => {
-                handlePrint(testQueryData.data._id);
-              }}
-              appearance="ghost"
-              color="blue"
-            >
-              Print
-            </Button>
+            {
+              reportGenerate.modeSingleType == "descriptive" ? reportData?.data?.descriptiveDataDocs?.docsContent === undefined ? "" : <Button
+                className="ml-5 mt-10"
+                onClick={() => {
+                  handlePrint(testQueryData.data._id);
+                }}
+                appearance="ghost"
+                color="blue"
+              >
+                Print
+              </Button> : <Button
+                className="ml-5 mt-10"
+                onClick={() => {
+                  handlePrint(testQueryData.data._id);
+                }}
+                appearance="ghost"
+                color="blue"
+              >
+                Print
+              </Button>
+            }
+
+
           </div>
         </div>
       </div>

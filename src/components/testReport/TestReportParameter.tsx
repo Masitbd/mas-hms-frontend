@@ -107,7 +107,7 @@ const TestReportParameter = ({ reportGenerate, setReportGenerate, setReportGener
         },
     ];
 
-    console.log(departmentQueryData?.data?.reportGroupName.toLowerCase())
+    console.log(departmentQueryData?.data?.reportGroupName)
 
     const reportGroupNames = reportGroupQueryData?.data?.find((group: IReportGroup) => group.value === departmentQueryData?.data?.reportGroupName.toLowerCase())
 

@@ -35,7 +35,8 @@ const NewDepartmentTable = ({
 
   const handleSubmit = async () => {
     if (formRef.current.check()) {
-      departmentData.value = departmentData.label.toLowerCase();
+      departmentData.value = departmentData.value.toLowerCase();
+
       if (mode == 'new') {
         departmentData.fixedCommission = Number(departmentData.fixedCommission);
         departmentData.commissionParcentage = Number(
@@ -78,7 +79,7 @@ const NewDepartmentTable = ({
             label: formValue.label,
             reportGroupName: formValue.reportGroupName,
             description: formValue.description,
-            value: formValue.value,
+            value: formValue.label,
             commissionParcentage: formValue.commissionParcentage,
             fixedCommission: formValue.fixedCommission,
             isCommissionFiexed: fixedCommissionEnabled,

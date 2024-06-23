@@ -15,7 +15,7 @@ import StarterKit from "@tiptap/starter-kit";
 import axios from "axios";
 import mammoth from "mammoth";
 import { FormEvent, useRef, useState } from "react";
-import { Button, Input, Message, Table } from "rsuite";
+import { Button, Input, Loader, Message, Table } from "rsuite";
 import FileUpload from "./FileUpload";
 import { ITestReportForm } from "./TestReportForm";
 import MenuBar from "./TestView/MenuBar";
@@ -104,7 +104,6 @@ const TestDescriptive = ({
       testId,
       orderId,
       type,
-
       docsData,
     };
     console.log("113", finalDataForSendBakcend);
@@ -117,7 +116,7 @@ const TestDescriptive = ({
   };
   const handlePrint = async (id: string) => {
     try {
-      const response = await axios.post(
+      const response = await axios.get(
         `http://localhost:3001/api/v1/testReport/print/${id}`
       );
       console.log(response.data);
@@ -129,6 +128,9 @@ const TestDescriptive = ({
       const buffer = Buffer.from(response.data.data.data);
       const pdfBlob = new Blob([buffer], { type: "application/pdf" });
 
+      if (!pdfBlob) {
+        <Loader inverse center content="loading..." />
+      }
       // Create a URL for the Blob
       const pdfUrl = URL.createObjectURL(pdfBlob);
       window.open(pdfUrl);
@@ -141,7 +143,7 @@ const TestDescriptive = ({
       //   documentTitle: 'Print Example',
       //   base64: false
       // });
-    } catch (error) {}
+    } catch (error) { }
   };
 
   return (
@@ -179,6 +181,14 @@ const TestDescriptive = ({
         header="Do you want edit first?"
       >
         <p>So please Input field complete then edit docs </p>
+      </Message>
+      <Message
+        closable
+        showIcon
+        type="warning"
+        header="Attention!!"
+      >
+        <p>{`It's only work for normal docx not for highly docs likes charAt and table docx etc`} </p>
       </Message>
 
       <h1>File Upload</h1>
