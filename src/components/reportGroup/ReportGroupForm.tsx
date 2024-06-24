@@ -1,12 +1,10 @@
 import {
-  IReportGroupFormData,
   IReportGroupFormParam,
-  testResultType,
+  testResultType
 } from "@/components/reportGroup/initialDataAndTypes";
 import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { useGetReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { IDepartment } from "@/types/allDepartmentInterfaces";
-import React from "react";
 import { Form, InputPicker } from "rsuite";
 
 const ReportGroupForm = (props: IReportGroupFormParam) => {

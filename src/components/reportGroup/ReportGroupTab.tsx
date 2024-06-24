@@ -285,7 +285,7 @@ const ReportGroupTab = () => {
                         appearance="primary"
                         color="blue"
                         onClick={() => {
-                          emptyTableData.reportTypeGroup = data._id;
+                          emptyTableData.reportTypeGroup = data._id as string;
                           setTableData((p) => [...p, emptyTableData]);
                         }}
                         disabled={isNewDataOnProgress}
