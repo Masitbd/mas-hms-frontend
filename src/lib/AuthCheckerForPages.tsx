@@ -9,7 +9,7 @@ type IAuthState = {
   user: IAUth;
 };
 export function withAuth(
-  Components: JSX.ElementType,
+  Components: React.ElementType,
   ...requiredPermission: number[]
 ) {
   return function WithAuth(props: JSX.IntrinsicAttributes) {
