@@ -6,29 +6,14 @@ import {
   useLazyGetReportTypeQuery,
   usePostReportTypeMutation,
 } from "@/redux/api/reportType/reportType";
-import {
-  useGetGroupQuery
-} from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
+import { useGetGroupQuery } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";
-import {
-  SetStateAction,
-  SyntheticEvent,
-  useState
-} from "react";
-import {
-  Button,
-  Dropdown,
-  SelectPicker,
-  Table,
-  Tabs
-} from "rsuite";
+import { SetStateAction, SyntheticEvent, useState } from "react";
+import { Button, Dropdown, SelectPicker, Table, Tabs } from "rsuite";
 import swel from "sweetalert";
 import EditableCell from "./EditableCell";
 import NewReportGroup from "./NewReportGroup";
-import {
-  IReportGroupFormData,
-  initialFormData
-} from "./initialDataAndTypes";
+import { IReportGroupFormData, initialFormData } from "./initialDataAndTypes";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -52,7 +37,7 @@ const ReportGroupTab = () => {
   );
   const [reportData, setReportData] = useState([]);
   const [mode, setMode] = useState(ENUM_MODE.NEW);
-  console.log(searchOption)
+  console.log(searchOption);
 
   // Report group api
   const { data: reportGroupData, isLoading: reportGroupLoading } =
@@ -68,6 +53,7 @@ const ReportGroupTab = () => {
   // for rendering tab Table  data
   const { Cell, HeaderCell, Column } = Table;
   const [tableData, setTableData] = useState<EmptyTableData[]>([]);
+  const [dropdownTitle, setDropdownTitle] = useState("Select Report Group");
   const emptyTableData = {
     test: "",
     investigation: "",
@@ -117,7 +103,10 @@ const ReportGroupTab = () => {
     const nextData = Object.assign([], tableData);
     const activeItem = nextData.find((item: any) => item.SL === SL);
     if (activeItem) {
-      (activeItem as EmptyTableData).status = (activeItem as EmptyTableData).status ? "" : "EDIT";
+      (activeItem as EmptyTableData).status = (activeItem as EmptyTableData)
+        .status
+        ? ""
+        : "EDIT";
       setTableData(nextData);
     }
   };
@@ -141,15 +130,17 @@ const ReportGroupTab = () => {
     <div>
       <div className="my-5">
         <Dropdown
-          title={`${searchOption.reportGroup
-            ? searchOption.reportGroup
-            : "Select Report group "
-            }`}
+          title={`${
+            searchOption.reportGroup
+              ? searchOption.reportGroup
+              : "Select Report group "
+          }`}
           onSelect={(
             eventKey: string,
             event: SyntheticEvent<Element, Event>
           ) => {
             setSerachOption({ ...searchOption, reportGroup: eventKey });
+            setDropdownTitle(event.target?.innerText);
           }}
           activeKey={searchOption?.reportGroup}
           loading={reportGroupLoading}
@@ -170,134 +161,134 @@ const ReportGroupTab = () => {
       >
         {groupData?.data.length > 0
           ? groupData?.data.map(
-            (data: Partial<IReportGroupFormData>, index: number) => (
-              <Tabs.Tab eventKey={data?._id} title={data.group} key={index}>
-                <>
-                  <div className="border border-stone-200 py-5 px-3 mr-5 rounded-md">
-                    <div className="grid grid-cols-3 gap-5">
-                      <div className="flex flex-col">
-                        <div className="font-bold">Group</div>
-                        <div>{data?.group}</div>
-                      </div>
-                      <div className="flex flex-col">
-                        <div className="font-bold">Report Group</div>
-                        <div>{data?.reportGroup?.label}</div>
-                      </div>
-                      <div className="flex flex-col">
-                        <div className="font-bold">Department</div>
-                        <div>{data?.department?.label}</div>
-                      </div>
-                      <div className="flex flex-col">
-                        <div className="font-bold">Report Type</div>
-                        <div>{data?.resultType}</div>
+              (data: Partial<IReportGroupFormData>, index: number) => (
+                <Tabs.Tab eventKey={data?._id} title={data.group} key={index}>
+                  <>
+                    <div className="border border-stone-200 py-5 px-3 mr-5 rounded-md">
+                      <div className="grid grid-cols-3 gap-5">
+                        <div className="flex flex-col">
+                          <div className="font-bold">Group</div>
+                          <div>{data?.group}</div>
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="font-bold">Report Group</div>
+                          <div>{data?.reportGroup?.label}</div>
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="font-bold">Department</div>
+                          <div>{data?.department?.label}</div>
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="font-bold">Report Type</div>
+                          <div>{data?.resultType}</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className=" border border-stone-200  py-5 px-3 mr-5 rounded-md my-5">
-                    <Table
-                      className="w-full"
-                      data={tableData}
-                      rowHeight={65}
-                      autoHeight
-                    >
-                      <Column flexGrow={1}>
-                        <HeaderCell>Test</HeaderCell>
-                        <EditableCell
-                          dataKey={"test"}
-                          onChange={handleChange}
-                        />
-                      </Column>
-                      <Column flexGrow={2}>
-                        <HeaderCell>Investigation</HeaderCell>
-                        <EditableCell
-                          dataKey={"investigation"}
-                          onChange={handleChange}
-                        />
-                      </Column>
-                      <Column flexGrow={1}>
-                        <HeaderCell>Normal Value</HeaderCell>
-                        <EditableCell
-                          dataKey={"normalValue"}
-                          onChange={handleChange}
-                        />
-                      </Column>
-                      <Column flexGrow={1}>
-                        <HeaderCell>Unit</HeaderCell>
-                        <EditableCell
-                          dataKey={"unit"}
-                          onChange={handleChange}
-                        />
-                      </Column>
-                      <Column flexGrow={1}>
-                        <HeaderCell>Remark</HeaderCell>
-                        <EditableCell
-                          dataKey={"remark"}
-                          onChange={handleChange}
-                        />
-                      </Column>
-                      <Column flexGrow={1}>
-                        <HeaderCell>Default Values</HeaderCell>
-                        <EditableCell
-                          dataKey={"defaultValue"}
-                          onChange={handleChange}
-                          as={SelectPicker}
-                          value={pdrvData?.data.map((data: IPdrv) => {
-                            return { label: data.label, value: data.value };
-                          })}
-                        />
-                      </Column>
-                      <Column flexGrow={1}>
-                        <HeaderCell>Action</HeaderCell>
-                        <Cell>
-                          {(rowData) => (
-                            <>
-                              {rowData?.status == ENUM_MODE.NEW ? (
-                                <>
-                                  <Button
-                                    appearance="ghost"
-                                    color="green"
-                                    className="mr-2"
-                                    onClick={() => saveHandler(rowData.SL)}
-                                  >
-                                    Save
-                                  </Button>
-                                  <Button
-                                    appearance="ghost"
-                                    color="red"
-                                    onClick={cancelHandler}
-                                  >
-                                    Cancel
-                                  </Button>
-                                </>
-                              ) : (
-                                <Button appearance="primary" color="blue">
-                                  Edit
-                                </Button>
-                              )}
-                            </>
-                          )}
-                        </Cell>
-                      </Column>
-                    </Table>
-                    <div className="flex w-full justify-end">
-                      <Button
-                        appearance="primary"
-                        color="blue"
-                        onClick={() => {
-                          emptyTableData.reportTypeGroup = data._id as string;
-                          setTableData((p) => [...p, emptyTableData]);
-                        }}
-                        disabled={isNewDataOnProgress}
+                    <div className=" border border-stone-200  py-5 px-3 mr-5 rounded-md my-5">
+                      <Table
+                        className="w-full"
+                        data={tableData}
+                        rowHeight={65}
+                        autoHeight
                       >
-                        Add New
-                      </Button>
+                        <Column flexGrow={1}>
+                          <HeaderCell>Test</HeaderCell>
+                          <EditableCell
+                            dataKey={"test"}
+                            onChange={handleChange}
+                          />
+                        </Column>
+                        <Column flexGrow={2}>
+                          <HeaderCell>Investigation</HeaderCell>
+                          <EditableCell
+                            dataKey={"investigation"}
+                            onChange={handleChange}
+                          />
+                        </Column>
+                        <Column flexGrow={1}>
+                          <HeaderCell>Normal Value</HeaderCell>
+                          <EditableCell
+                            dataKey={"normalValue"}
+                            onChange={handleChange}
+                          />
+                        </Column>
+                        <Column flexGrow={1}>
+                          <HeaderCell>Unit</HeaderCell>
+                          <EditableCell
+                            dataKey={"unit"}
+                            onChange={handleChange}
+                          />
+                        </Column>
+                        <Column flexGrow={1}>
+                          <HeaderCell>Remark</HeaderCell>
+                          <EditableCell
+                            dataKey={"remark"}
+                            onChange={handleChange}
+                          />
+                        </Column>
+                        <Column flexGrow={1}>
+                          <HeaderCell>Default Values</HeaderCell>
+                          <EditableCell
+                            dataKey={"defaultValue"}
+                            onChange={handleChange}
+                            as={SelectPicker}
+                            value={pdrvData?.data.map((data: IPdrv) => {
+                              return { label: data.label, value: data.value };
+                            })}
+                          />
+                        </Column>
+                        <Column flexGrow={1}>
+                          <HeaderCell>Action</HeaderCell>
+                          <Cell>
+                            {(rowData) => (
+                              <>
+                                {rowData?.status == ENUM_MODE.NEW ? (
+                                  <>
+                                    <Button
+                                      appearance="ghost"
+                                      color="green"
+                                      className="mr-2"
+                                      onClick={() => saveHandler(rowData.SL)}
+                                    >
+                                      Save
+                                    </Button>
+                                    <Button
+                                      appearance="ghost"
+                                      color="red"
+                                      onClick={cancelHandler}
+                                    >
+                                      Cancel
+                                    </Button>
+                                  </>
+                                ) : (
+                                  <Button appearance="primary" color="blue">
+                                    Edit
+                                  </Button>
+                                )}
+                              </>
+                            )}
+                          </Cell>
+                        </Column>
+                      </Table>
+                      <div className="flex w-full justify-end">
+                        <Button
+                          appearance="primary"
+                          color="blue"
+                          onClick={() => {
+                            emptyTableData.reportTypeGroup = data._id as string;
+                            setTableData((p) => [...p, emptyTableData]);
+                          }}
+                          disabled={isNewDataOnProgress}
+                        >
+                          Add New
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </>
-              </Tabs.Tab>
+                  </>
+                </Tabs.Tab>
+              )
             )
-          )
           : ""}
         <Tabs.Tab
           eventKey="150"
