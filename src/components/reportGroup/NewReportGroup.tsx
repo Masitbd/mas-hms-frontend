@@ -1,19 +1,15 @@
 import ReportGroupForm from "@/components/reportGroup/ReportGroupForm";
-import React, { SetStateAction, useEffect, useRef } from "react";
+import { ENUM_MODE } from "@/enum/Mode";
+import { usePostGroupMutation } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
+import React, { useEffect, useRef } from "react";
+import { Button } from "rsuite";
+import swal from "sweetalert";
 import {
   INewReportGroupProps,
   IReportGroupFormData,
   initialFormData,
   newGroupModel,
 } from "./initialDataAndTypes";
-import ReportGroupTable from "./ReportGroupTable";
-import ForParameterBased from "../Test/ForParameterBased";
-import { ENUM_MODE } from "@/enum/Mode";
-import ForDescriptiveBased from "../Test/TestForDescriptive";
-import ForMicroBiology from "../Test/ForMicroBiology";
-import { Button } from "rsuite";
-import { usePostGroupMutation } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
-import swal from "sweetalert";
 
 const NewReportGroup = (props: INewReportGroupProps) => {
   const { formData, mode, setFormData } = props;
@@ -82,7 +78,7 @@ const NewReportGroup = (props: INewReportGroupProps) => {
   useEffect(() => {
     if (postGroupSuccess) {
       swal("Success", "Posted successfully");
-      setFormData(null);
+      setFormData(initialFormData);
     }
   }, [postGroupSuccess]);
   return (
