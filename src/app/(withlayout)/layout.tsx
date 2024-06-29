@@ -2,7 +2,7 @@
 "use client";
 import SideBarItems from "@/utils/SideBarItems";
 import "./layout";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactElement, ReactNode, useEffect } from "react";
 import { Container, Header, Sidenav, Content, Nav, Loader } from "rsuite";
 import CogIcon from "@rsuite/icons/legacy/Cog";
 import AngleLeftIcon from "@rsuite/icons/legacy/AngleLeft";
@@ -24,7 +24,7 @@ interface ILayoutProps {
   onChange: any;
 }
 
-export default function layout({ children, expand, onChange }: ILayoutProps) {
+export default function layout({ children }: { children: ReactElement }) {
   const userLoggedIn = useAppSelector((state) => state.auth.loggedIn);
   const loading = useAppSelector((state) => state.loading.loading);
 

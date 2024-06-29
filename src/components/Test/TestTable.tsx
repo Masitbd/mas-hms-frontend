@@ -8,6 +8,7 @@ import AlartDialog from "../ui/AlertModal";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import { ENUM_MODE } from "@/enum/Mode";
+import Loading from "@/app/loading";
 
 const { Column, HeaderCell, Cell } = Table;
 const TestTable = ({
@@ -79,6 +80,7 @@ const TestTable = ({
         bordered
         cellBordered
         rowHeight={60}
+        loadAnimation={true}
       >
         <Column align="center" resizable flexGrow={1}>
           <HeaderCell>Test Code</HeaderCell>

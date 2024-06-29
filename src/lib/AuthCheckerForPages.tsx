@@ -2,17 +2,16 @@ import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { useAppSelector } from "@/redux/hook";
 import { useRouter } from "next/navigation";
 
-import React, { JSX } from "react";
+import React, { ComponentType, JSX } from "react";
 type IAuthState = {
   loggedIn: boolean;
   token: string;
   user: IAUth;
 };
-export function withAuth(
-  Components: React.ElementType,
-  ...requiredPermission: number[]
-) {
-  return function WithAuth(props: JSX.IntrinsicAttributes) {
+
+export function withAuth<T>(Components: any, ...requiredPermission: number[]) {
+  return function WithAuth(props: any) {
+
     const router = useRouter();
 
     const authData: IAuthState = useAppSelector(

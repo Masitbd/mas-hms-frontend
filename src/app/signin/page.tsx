@@ -105,7 +105,7 @@ const LoginPage = () => {
     if (loginError) {
       toaster.push(
         <Message type="error">
-          Logged In Failed. Check you password and try again letter
+          Login In Failed. Check you password and try again letter
         </Message>
       );
       dispatch(setLoading(false));
@@ -216,6 +216,9 @@ const LoginPage = () => {
                   color="blue"
                   size="lg"
                   onClick={handleLogin}
+                  loading={LoginLoading}
+                  disabled={LoginLoading}
+                  className={`${LoginLoading && "cursor-progress"}`}
                 >
                   Login
                 </Button>

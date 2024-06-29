@@ -26,7 +26,7 @@ const bacteria = baseApi.injectEndpoints({
       query: (data) => ({
         url: `/bacteria/${data}`,
         method: "delete",
-        data: data,
+
         contentType: "application/json",
       }),
       invalidatesTags: ["bacteria"],

@@ -4,7 +4,6 @@ import { useGetSingleTestQuery } from "@/redux/api/test/testSlice";
 import { usePostTestReportMutation } from "@/redux/api/testReport/testReportSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { ITest } from "@/types/allDepartmentInterfaces";
-
 import { setDocxContent } from "@/redux/features/discriptiveTem/docxTemSlice";
 import { Color } from "@tiptap/extension-color";
 import ListItem from "@tiptap/extension-list-item";
@@ -72,7 +71,7 @@ const TestDescriptive = ({
   const content = `${docxContents}`;
   const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
-    TextStyle.configure({ types: [ListItem.name] }),
+    TextStyle.configure({ types: [ListItem.name] } as any),
     StarterKit.configure({
       bulletList: {
         keepMarks: true,
