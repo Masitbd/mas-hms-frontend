@@ -18,6 +18,7 @@ export type IReportGroup = {
   label: string;
   value: string;
   description: string;
+  department: string;
 };
 export type IVacuumTube = {
   _id?: string;
@@ -30,7 +31,6 @@ export type IDepartment = {
   _id?: string;
   label: string;
   value: string;
-  reportGroupName: string;
   commissionParcentage: number;
   fixedCommission: number;
   isCommissionFiexed: boolean;

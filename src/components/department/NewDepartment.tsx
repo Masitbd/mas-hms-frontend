@@ -10,33 +10,31 @@ import React, { useState } from "react";
 import { Button, Form, Schema, Toggle } from "rsuite";
 import swal from "sweetalert";
 
-
-
 const NewDepartmentTable = ({
   open,
   setPostModelOpen,
   defaultData,
   setMode,
-  mode
+  mode,
 }: NewFormType<IDepartment>) => {
   const { StringType } = Schema.Types;
   const formRef: React.MutableRefObject<any> = React.useRef();
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
-    reportGroupName: StringType().isRequired("This field is required."),
     // description: StringType().isRequired("This field is required."),
     // fixedCommission: NumberType().isRequired("This field is required."),
     // commissionParcentage: NumberType().isRequired("This field is required."),
   });
 
-  const [departmentData, setDepartmentData] = useState<IDepartment>(defaultData);
+  const [departmentData, setDepartmentData] =
+    useState<IDepartment>(defaultData);
   const [postDepartment] = usePostDepartmentMutation();
   const [patchDepartment] = usePatchDepartmentMutation();
 
   const handleSubmit = async () => {
     if (formRef.current.check()) {
       departmentData.value = departmentData.label.toLowerCase();
-      if (mode == 'new') {
+      if (mode == "new") {
         departmentData.fixedCommission = Number(departmentData.fixedCommission);
         departmentData.commissionParcentage = Number(
           departmentData.commissionParcentage
@@ -62,7 +60,7 @@ const NewDepartmentTable = ({
             icon: "success",
           });
           setPostModelOpen(false);
-          setMode("new")
+          setMode("new");
         }
       }
     }
@@ -76,7 +74,6 @@ const NewDepartmentTable = ({
         onChange={(formValue, event) => {
           setDepartmentData({
             label: formValue.label,
-            reportGroupName: formValue.reportGroupName,
             description: formValue.description,
             value: formValue.value,
             commissionParcentage: formValue.commissionParcentage,
@@ -93,17 +90,11 @@ const NewDepartmentTable = ({
           <Form.ControlLabel>Department Name</Form.ControlLabel>
           <Form.Control name="label" />
         </Form.Group>
-        <Form.Group controlId="reportGroupName">
-          <Form.ControlLabel>Report Group Name</Form.ControlLabel>
-          <Form.Control name="reportGroupName" />
-        </Form.Group>
         <Form.Group>
           <Form.ControlLabel>
             <Toggle
               checked={fixedCommissionEnabled}
-              onChange={(value: boolean) =>
-                setFixedCommissionEnabled(value)
-              }
+              onChange={(value: boolean) => setFixedCommissionEnabled(value)}
             />
             Enable Fixed Commission
           </Form.ControlLabel>
@@ -126,25 +117,27 @@ const NewDepartmentTable = ({
           <Form.ControlLabel>Description</Form.ControlLabel>
           <Form.Control name="description" />
         </Form.Group>
-        <Button onClick={() => {
-          setMode("new")
-          setPostModelOpen(!open);
-          setDepartmentData({
-            label: "",
-            reportGroupName: "",
-            description: "",
-            value: "",
-            commissionParcentage: 0,
-            fixedCommission: 0,
-            isCommissionFiexed: false,
-          })
-        }} appearance="subtle">
+        <Button
+          onClick={() => {
+            setMode("new");
+            setPostModelOpen(!open);
+            setDepartmentData({
+              label: "",
+              description: "",
+              value: "",
+              commissionParcentage: 0,
+              fixedCommission: 0,
+              isCommissionFiexed: false,
+            });
+          }}
+          appearance="subtle"
+        >
           Cancel
         </Button>
-        <Button onClick={handleSubmit} appearance="primary" className='ml-5'>
+        <Button onClick={handleSubmit} appearance="primary" className="ml-5">
           OK
         </Button>
-      </Form >
+      </Form>
     </>
   );
 };

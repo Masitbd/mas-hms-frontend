@@ -1,6 +1,6 @@
 import { ISensitivity } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
-import { IReportGroupFormData } from "@/components/reportGroup/initialDataAndTypes";
+import { IReportGroupFormData } from "@/components/reportType/initialDataAndTypes";
 
 const reportType = baseApi.injectEndpoints({
   endpoints: (build) => ({
@@ -15,8 +15,8 @@ const reportType = baseApi.injectEndpoints({
       invalidatesTags: ["reportType"],
     }),
     patchReportType: build.mutation({
-      query: ({ data, id }) => ({
-        url: `/reportType/${id}`,
+      query: (data) => ({
+        url: `/reportType/${data?._id}`,
         method: "PATCH",
         body: data,
         data: data,

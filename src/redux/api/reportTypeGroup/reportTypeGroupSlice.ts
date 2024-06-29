@@ -1,6 +1,6 @@
 import { ISensitivity } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
-import { IReportGroupFormData } from "@/components/reportGroup/initialDataAndTypes";
+import { IReportGroupFormData } from "@/components/reportType/initialDataAndTypes";
 
 const group = baseApi.injectEndpoints({
   endpoints: (build) => ({

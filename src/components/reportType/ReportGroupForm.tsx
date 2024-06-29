@@ -1,7 +1,7 @@
 import {
   IReportGroupFormParam,
-  testResultType
-} from "@/components/reportGroup/initialDataAndTypes";
+  testResultType,
+} from "@/components/reportType/initialDataAndTypes";
 import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
 import { useGetReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { IDepartment } from "@/types/allDepartmentInterfaces";

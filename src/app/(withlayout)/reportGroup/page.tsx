@@ -1,22 +1,50 @@
 "use client";
+import NewReportGroupModal from "@/components/reportGroup/NewReportGroupModel";
 import ReportGroupTable from "@/components/reportGroup/ReportGroupTable";
-import { IReportGroupFormData } from "@/components/reportGroup/initialDataAndTypes";
-import { useGetDepartmentQuery } from "@/redux/api/department/departmentSlice";
-import { IDepartment } from "@/types/allDepartmentInterfaces";
-import React, { SetStateAction, useState } from "react";
-import { Button, Form, InputPicker } from "rsuite";
-import ReportGroupForm from "../../../components/reportGroup/ReportGroupForm";
-import { ENUM_MODE } from "@/enum/Mode";
-import ReportGroupTab from "@/components/reportGroup/ReportGroupTab";
+import { usePostReportGroupMutation } from "@/redux/api/reportGroup/reportGroupSlice";
+import React, { useEffect, useState } from "react";
+import { Button } from "rsuite";
+import swal from "sweetalert";
 
 const ReportGroup = () => {
+  const [postModalOpen, setPostModalOpen] = useState(false);
+  const [
+    postReportGroup,
+    { isError, isLoading: conditionLoading, isSuccess, error },
+  ] = usePostReportGroupMutation();
+  const cancelHandlerforPost = () => {
+    setPostModalOpen(!postModalOpen);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      swal("Success", "Report Group Added Successfully", "success");
+      setPostModalOpen(!postModalOpen);
+    }
+    if (isError) {
+      swal("Error", " Something went wrong please try again letter", "error");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [conditionLoading, isError, isSuccess]);
   return (
-    <div>
-      <div>
-        <ReportGroupTab />
+    <div className="my-5 px-5">
+      <div className="my-4">
+        <Button
+          appearance="primary"
+          onClick={() => setPostModalOpen(!postModalOpen)}
+        >
+          Add New Report Group
+        </Button>
       </div>
 
-      {/* for form and will be moved */}
+      <div>
+        <NewReportGroupModal
+          postReportGroup={postReportGroup}
+          open={postModalOpen}
+          cancelHandler={cancelHandlerforPost}
+        ></NewReportGroupModal>
+        <ReportGroupTable />
+      </div>
     </div>
   );
 };
