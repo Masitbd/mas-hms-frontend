@@ -82,6 +82,10 @@ const TestForm = ({
       label: "Group",
       value: "group",
     },
+    {
+      label: "Other",
+      value: "other",
+    },
   ];
   return (
     <div className=" px-5 ">
