@@ -54,6 +54,7 @@ const Test = () => {
   const [patchTest, { isSuccess: patchSuccess }] = usePatchTestMutation();
   const ref: React.MutableRefObject<any> = useRef();
   // For new test
+  console.log(formData);
   const okHandler = () => {
     if (mode == ENUM_MODE.VIEW) {
       setfromData({
@@ -71,10 +72,10 @@ const Test = () => {
         processTime: 0,
         resultFields: [],
       });
+
       setDefaultValue(undefined);
     }
     if (ref.current.check()) {
-      setModalOpen(!modalOpen);
       formData.value = formData?.label.toLowerCase();
       formData.price = Number(formData.price);
       formData.isGroupTest = false;
@@ -94,7 +95,16 @@ const Test = () => {
         if (!formData.hasTestTube) {
           formData.hasTestTube = false;
         }
-
+        if (formData.testResultType !== "other") {
+          const doesHaveResultFields = formData?.resultField?.length;
+          (doesHaveResultFields == undefined || doesHaveResultFields == 0) &&
+            toaster.push(
+              <Message type="error">
+                Please add the test information field
+              </Message>
+            );
+          return;
+        }
         postTest(formData);
       }
       if (mode === "patch") {
@@ -139,6 +149,8 @@ const Test = () => {
           resultFields: [],
         });
         setDefaultValue(undefined);
+        setModalOpen(!modalOpen);
+        setMode("new");
       }
     } else {
       toaster.push(
@@ -157,6 +169,7 @@ const Test = () => {
     setModalOpen(!modalOpen);
     setMode("new");
   };
+
   // For patch
   const patchHandler = ({ data, mode }: { data: ITest; mode: string }) => {
     let newData: ITest = Object.assign({}, data);
@@ -179,11 +192,17 @@ const Test = () => {
   useEffect(() => {
     if (testSuccess) {
       toaster.push(<Message type="success">Test crated Successfully</Message>);
+      setModalOpen(!modalOpen);
+    }
+    if (testErrors) {
+      toaster.push(
+        <Message type="error">Something went wrong. Please Try again.</Message>
+      );
     }
     if (patchSuccess) {
       toaster.push(<Message type="success">Test Edited Successfully</Message>);
     }
-  }, [testSuccess, patchSuccess]);
+  }, [testSuccess, patchSuccess, testErrors]);
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
     type: StringType().isRequired("This field is required."),
@@ -204,6 +223,7 @@ const Test = () => {
           open={modalOpen}
           size="lg"
           title={mode === "new" ? "Add New Test" : "Edit Test Fields"}
+          loading={testLoading}
         >
           <TestForm
             model={model}

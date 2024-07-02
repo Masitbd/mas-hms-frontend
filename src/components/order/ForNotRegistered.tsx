@@ -1,4 +1,3 @@
-
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import React, { forwardRef } from "react";
 import { DatePicker, Form, InputPicker, Schema } from "rsuite";
@@ -20,10 +19,6 @@ const ForNotRegistered = (param: param) => {
     name: StringType().isRequired("This field is required."),
     age: StringType().isRequired("This field is required."),
     gender: StringType().isRequired("This field is required."),
-    address: StringType().isRequired("This field is required."),
-    email: StringType()
-      .isEmail("This field is Required for email")
-      .isRequired("This field is required."),
     phone: NumberType()
       .isRequired("This field is required.")
       .addRule((value: string | number): boolean => {
@@ -132,4 +127,3 @@ const ForNotRegistered = (param: param) => {
 };
 
 export default ForNotRegistered;
-

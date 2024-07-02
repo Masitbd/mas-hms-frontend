@@ -6,9 +6,15 @@ import { Button, Dropdown, Table } from "rsuite";
 import { useGetReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { useGetReportTypeQuery } from "@/redux/api/reportType/reportType";
 import {
+  INewReportGroupProps,
+  IReportGroupFormData,
   IResultFieldForParameterBasedTest,
   reportType,
-} from "../reportGroup/initialDataAndTypes";
+} from "../reportType/initialDataAndTypes";
+
+export type IFilterableField = {
+  reportGroup: string;
+};
 
 const ExistingTest = ({
   formData,
@@ -26,7 +32,9 @@ const ExistingTest = ({
     useGetReportGroupQuery(undefined);
 
   // Set search data for group
-  const [groupFilterOption, setGroupFilterOption] = useState({});
+  const [groupFilterOption, setGroupFilterOption] = useState<IFilterableField>(
+    {} as IFilterableField
+  );
   const { data: groupData, isLoading: groupLoading } =
     useGetGroupQuery(groupFilterOption);
 
@@ -73,13 +81,15 @@ const ExistingTest = ({
                 title={"Select reportGroup"}
                 activeKey={groupFilterOption?.reportGroup}
               >
-                {reportGroup?.data.map((data) => {
+                {reportGroup?.data.map((data: IReportGroupFormData) => {
                   return (
                     <Dropdown.Item
                       key={data._id}
                       value={data._id}
                       onSelect={() =>
-                        setGroupFilterOption({ reportGroup: data._id })
+                        setGroupFilterOption({
+                          reportGroup: data._id as string,
+                        })
                       }
                     >
                       {data.label}
@@ -91,7 +101,7 @@ const ExistingTest = ({
 
             <div>
               <Dropdown loading={groupLoading} title={"Select Group"}>
-                {groupData?.data.map((data) => {
+                {groupData?.data.map((data: IReportGroupFormData) => {
                   return (
                     <Dropdown.Item
                       key={data._id}
@@ -143,11 +153,11 @@ const ExistingTest = ({
                     <Button
                       className="btn btn-primary"
                       onClick={() => {
-                        addTestHandler(rowdate);
+                        addTestHandler(rowdate as any);
                       }}
                       appearance="primary"
                       color="blue"
-                      disabled={checker(rowdate)}
+                      disabled={checker(rowdate as any)}
                     >
                       Add
                     </Button>
