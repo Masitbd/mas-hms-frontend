@@ -76,8 +76,8 @@ const NewDepartmentTable = ({
             label: formValue.label,
             description: formValue.description,
             value: formValue.value,
-            commissionParcentage: formValue.commissionParcentage,
-            fixedCommission: formValue.fixedCommission,
+            commissionParcentage: Number(formValue.commissionParcentage),
+            fixedCommission: Number(formValue.fixedCommission),
             isCommissionFiexed: fixedCommissionEnabled,
           });
 
@@ -104,6 +104,7 @@ const NewDepartmentTable = ({
           <Form.Control
             name="commissionParcentage"
             disabled={fixedCommissionEnabled}
+            type="number"
           />
         </Form.Group>
         <Form.Group controlId="fixedCommission">

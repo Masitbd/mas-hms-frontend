@@ -1,4 +1,8 @@
 "use client";
+import {
+  initialDataForTestForm,
+  modelForTestForm,
+} from "@/components/Test/initialDataAndTypes";
 import TestForm from "@/components/Test/TestForm";
 import TestTable from "@/components/Test/TestTable";
 import RModal from "@/components/ui/Modal";
@@ -21,27 +25,7 @@ import { Button, Message, Schema, toaster } from "rsuite";
 const Test = () => {
   const { StringType, NumberType, ArrayType } = Schema.Types;
   const [defaultValue, setDefaultValue] = useState<ITest | null>();
-  const [formData, setfromData] = useState<any | null>({
-    label: "",
-    department: "",
-    testCode: "",
-    specimen: [],
-    testType: "",
-    hasTestTube: false,
-    testTube: "",
-    reportGroup: "",
-    hospitalGroup: "",
-    price: 0,
-    vatRate: 0,
-    processTime: 0,
-    resultFields: [],
-    groupTests: [],
-    isGroupTest: false,
-    testResulType: "",
-    type: "",
-    value: "",
-    _id: "",
-  });
+  const [formData, setfromData] = useState<any | null>(initialDataForTestForm);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [mode, setMode] = useState("new");
@@ -49,29 +33,13 @@ const Test = () => {
     postTest,
     { isLoading: testLoading, isSuccess: testSuccess, isError: testErrors },
   ] = usePostTestMutation();
-  const { data: testData, isLoading: testDataLoading } =
-    useGetTestsQuery(undefined);
   const [patchTest, { isSuccess: patchSuccess }] = usePatchTestMutation();
   const ref: React.MutableRefObject<any> = useRef();
   // For new test
-  console.log(formData);
+
   const okHandler = () => {
     if (mode == ENUM_MODE.VIEW) {
-      setfromData({
-        label: "",
-        department: "",
-        testCode: "",
-        specimen: [],
-        testType: "",
-        hasTestTube: false,
-        testTube: "",
-        reportGroup: "",
-        hospitalGroup: "",
-        price: 0,
-        vatRate: 0,
-        processTime: 0,
-        resultFields: [],
-      });
+      setfromData(initialDataForTestForm);
 
       setDefaultValue(undefined);
     }
@@ -95,59 +63,29 @@ const Test = () => {
         if (!formData.hasTestTube) {
           formData.hasTestTube = false;
         }
-        if (formData.testResultType !== "other") {
-          const doesHaveResultFields = formData?.resultField?.length;
-          (doesHaveResultFields == undefined || doesHaveResultFields == 0) &&
+        if (
+          formData?.testType == "single" &&
+          formData.testResultType !== "other"
+        ) {
+          const doesHaveResultFields = formData?.resultFields?.length;
+          if (doesHaveResultFields == undefined || doesHaveResultFields == 0) {
             toaster.push(
               <Message type="error">
                 Please add the test information field
               </Message>
             );
-          return;
+            return;
+          }
         }
         postTest(formData);
       }
       if (mode === "patch") {
         patchTest({ data: formData, id: formData._id });
-        setfromData({
-          label: "",
-          department: "",
-          testCode: "",
-          specimen: [],
-          testType: "",
-          hasTestTube: false,
-          testTube: "",
-          reportGroup: "",
-          hospitalGroup: "",
-          price: 0,
-          vatRate: 0,
-          processTime: 0,
-          resultFields: [],
-          groupTests: [],
-          isGroupTest: false,
-          testResulType: "",
-          type: "",
-          value: "",
-          _id: "",
-        });
+        setfromData(initialDataForTestForm);
         setDefaultValue(undefined);
       }
       if (mode === ENUM_MODE.VIEW) {
-        setfromData({
-          label: "",
-          department: "",
-          testCode: "",
-          specimen: [],
-          testType: "",
-          hasTestTube: false,
-          testTube: "",
-          reportGroup: "",
-          hospitalGroup: "",
-          price: 0,
-          vatRate: 0,
-          processTime: 0,
-          resultFields: [],
-        });
+        setfromData(initialDataForTestForm);
         setDefaultValue(undefined);
         setModalOpen(!modalOpen);
         setMode("new");
@@ -201,19 +139,10 @@ const Test = () => {
     }
     if (patchSuccess) {
       toaster.push(<Message type="success">Test Edited Successfully</Message>);
+      setModalOpen(!modalOpen);
     }
   }, [testSuccess, patchSuccess, testErrors]);
-  const model = Schema.Model({
-    label: StringType().isRequired("This field is required."),
-    type: StringType().isRequired("This field is required."),
-    testResultType: StringType().isRequired("This field is required."),
-    department: StringType().isRequired("This field is required."),
-    price: NumberType().isRequired("This field is required."),
-    processTime: NumberType().isRequired("This field is required."),
-    specimen: ArrayType().isRequired("This field is required."),
-    hospitalGroup: StringType().isRequired("This field is required."),
-    reportGroup: StringType().isRequired("This field is required."),
-  });
+
   return (
     <div>
       <div>
@@ -226,13 +155,13 @@ const Test = () => {
           loading={testLoading}
         >
           <TestForm
-            model={model}
-            defaultValue={defaultValue}
+            model={modelForTestForm}
+            defaultValue={defaultValue as ITest}
             formData={formData}
             setfromData={setfromData}
             forwardedRef={ref}
             mode={mode}
-          ></TestForm>
+          />
         </RModal>
       </div>
       <div className="my-5">
