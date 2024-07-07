@@ -166,8 +166,17 @@ const testMenuItem = [
     ],
   },
   {
-    key: "11",
+    key: "12",
     title: "Report Type",
+    href: "/reportType",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "13",
+    title: "Report Group",
     href: "/reportGroup",
     requiredPermission: [
       ENUM_USER_PEMISSION.GET_TESTS,

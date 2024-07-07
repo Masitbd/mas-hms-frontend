@@ -8,8 +8,10 @@ type IAuthState = {
   token: string;
   user: IAUth;
 };
+
 export function withAuth<T>(Components: any, ...requiredPermission: number[]) {
   return function WithAuth(props: any) {
+
     const router = useRouter();
 
     const authData: IAuthState = useAppSelector(

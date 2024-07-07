@@ -1,22 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import { IResultField } from "@/types/allDepartmentInterfaces";
+import React, { useState } from "react";
 import {
   Button,
   Form,
-  Loader,
-  Message,
-  Modal,
   Schema,
-  SelectPicker,
   Table,
-  TagPicker,
-  Toggle,
-  toaster,
+  TagInput
 } from "rsuite";
+import swal from "sweetalert";
 import RModal from "../ui/Modal";
-import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
-import AlartDialog from "../ui/AlertModal";
-import { IResultField, ITest } from "@/types/allDepartmentInterfaces";
-import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import ExistingTest from "./ExistingTest";
 type NewITestType = IResultField & { gid: number };
 const { Cell, Column, HeaderCell } = Table;
@@ -85,35 +77,29 @@ const ForParameterBased = ({
     setfromData(initialValue);
   };
   // Fro delete
-  const [deleteData, setDeleteData] = useState<NewITestType>();
-  const [alertModalOpen, setAlertModal] = useState(false);
-  const deleteButtonFunction = (data: NewITestType) => {
-    setDeleteData(data);
-    setAlertModal(true);
-  };
-  const deleteHanldler = () => {
-    const newData = testFromData.resultFields.filter(
-      (data: NewITestType) => data.gid !== deleteData?.gid
-    );
-    testFromData.resultFields = newData;
-
-    setTestFromData(testFromData);
-    setDeleteData(undefined);
-    setAlertModal(false);
-  };
-  const deleteCancelHandler = () => {
-    setDeleteData(undefined);
-    setAlertModal(false);
+  const deleteHanldler = (index: number) => {
+    swal({
+      title: "Are you sure?",
+      text: "Are you sure that you want to delete this ?",
+      icon: "warning",
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        const newData = testFromData.resultFields.filter(
+          (data: NewITestType, dindex: number) => index !== dindex
+        );
+        testFromData.resultFields = newData;
+        setTestFromData(testFromData);
+        setMode("new");
+        swal("Deleted!", " deleted!", "success");
+      }
+    });
   };
   const { StringType, NumberType } = Schema.Types;
   const model = Schema.Model({
     title: StringType().isRequired("This field is required."),
     test: StringType().isRequired("This field is required."),
-    unit: StringType().isRequired("This field is required."),
-    normalValue: StringType().isRequired("This field is required."),
   });
-
-  const { data: pdrvData, isLoading: pdrvLoading } = useGetPdrvQuery(undefined);
 
   // Existing test addition
   const [existingModal, setExistingModal] = useState(false);
@@ -145,57 +131,59 @@ const ForParameterBased = ({
           setFormData={setTestFromData}
         />
       </div>
-      <Table
-        height={420}
-        data={testFromData?.resultFields as NewITestType[]}
-        rowHeight={60}
-        bordered
-        cellBordered
-      >
-        <Column flexGrow={3} align="center" fixed>
-          <HeaderCell>Investigation</HeaderCell>
-          <Cell dataKey="title" />
-        </Column>
+      <div className="w-full">
+        <Table
+          height={420}
+          data={testFromData?.resultFields as NewITestType[]}
+          rowHeight={60}
+          bordered
+          cellBordered
+          width={830}
+        >
+          <Column flexGrow={3} align="center" fixed>
+            <HeaderCell>Investigation</HeaderCell>
+            <Cell dataKey="title" />
+          </Column>
 
-        <Column flexGrow={4} width={100} fixed>
-          <HeaderCell>Test</HeaderCell>
-          <Cell dataKey="test" />
-        </Column>
+          <Column flexGrow={4} fixed>
+            <HeaderCell>Test</HeaderCell>
+            <Cell dataKey="test" />
+          </Column>
 
-        <Column flexGrow={1} width={200}>
-          <HeaderCell>Unit</HeaderCell>
-          <Cell dataKey="unit" />
-        </Column>
-        <Column flexGrow={1} width={200}>
-          <HeaderCell>Normal Unit</HeaderCell>
-          <Cell dataKey="normalValue" />
-        </Column>
-        <Column flexGrow={2}>
-          <HeaderCell>Action</HeaderCell>
-          <Cell align="center">
-            {(rowdate) => (
-              <>
-                <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => deleteButtonFunction(rowdate as NewITestType)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() => patchOpenHandler(rowdate as NewITestType)}
-                >
-                  Edit
-                </Button>
-              </>
-            )}
-          </Cell>
-        </Column>
-      </Table>
-
+          <Column flexGrow={1}>
+            <HeaderCell>Unit</HeaderCell>
+            <Cell dataKey="unit" />
+          </Column>
+          <Column flexGrow={1}>
+            <HeaderCell>Normal Unit</HeaderCell>
+            <Cell dataKey="normalValue" />
+          </Column>
+          <Column flexGrow={3}>
+            <HeaderCell>Action</HeaderCell>
+            <Cell align="center">
+              {(rowdate, index) => (
+                <>
+                  <Button
+                    appearance="ghost"
+                    color="red"
+                    onClick={() => deleteHanldler(index as number)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    appearance="ghost"
+                    color="blue"
+                    className="ml-2"
+                    onClick={() => patchOpenHandler(rowdate as NewITestType)}
+                  >
+                    Edit
+                  </Button>
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
+      </div>
       <div>
         {/* New Modal */}
         <RModal
@@ -214,7 +202,7 @@ const ForParameterBased = ({
               setfromData(formValue)
             }
             formDefaultValue={fromData}
-            className="grid grid-cols-2 gap-5 "
+            className="grid grid-cols-2 gap-2 w-full"
             fluid
             model={model}
             ref={formRef}
@@ -235,37 +223,14 @@ const ForParameterBased = ({
               <Form.ControlLabel>Normal Unit</Form.ControlLabel>
               <Form.Control name="normalValue" />
             </Form.Group>
-            <Form.Group controlId="hasPdrv">
-              <Form.ControlLabel>Result Values</Form.ControlLabel>
-              <Form.Control name="hasPdrv" accepter={Toggle} />
-            </Form.Group>
+
             <Form.Group controlId="pdrvValues">
-              <Form.ControlLabel>Values</Form.ControlLabel>
-              {pdrvLoading ? (
-                <Loader />
-              ) : (
-                <Form.Control
-                  name="defaultValues"
-                  accepter={TagPicker}
-                  data={pdrvData?.data.map((data: IPdrv) => {
-                    return { label: data.label, value: data._id };
-                  })}
-                  disabled={!fromData?.hasPdrv}
-                />
-              )}
+              <Form.ControlLabel>Default Values</Form.ControlLabel>
+
+              <Form.Control name="defaultValues" accepter={TagInput} block />
             </Form.Group>
           </Form>
         </RModal>
-      </div>
-
-      <div>
-        <AlartDialog
-          description="Are you sure you want to delete this item ?"
-          onCancel={deleteCancelHandler}
-          onOk={deleteHanldler}
-          open={alertModalOpen}
-          title="Delete Test Result Value"
-        ></AlartDialog>
       </div>
     </div>
   );

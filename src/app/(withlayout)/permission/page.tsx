@@ -1,8 +1,6 @@
 "use client";
-import PdrvTable from "@/components/pdrv/PdrvTable";
 import NewPermission from "@/components/permissions/NewPermission";
 import PermissionTable from "@/components/permissions/PermissionTable";
-import UserTable from "@/components/users/UserTable";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { withAuth } from "@/lib/AuthCheckerForPages";
 import AuthCkeckerForComponent from "@/lib/AuthCkeckerForComponent";
@@ -13,7 +11,7 @@ export type IPermission = {
   label: string;
   code: number;
 };
-const Permissions = () => {
+const Permissions: React.FC = () => {
   const [postModalOpen, setPostModalOpen] = useState(false);
   const cancelHandlerforPost = () => {
     setPostModalOpen(!postModalOpen);

@@ -1,4 +1,4 @@
-import ReportGroupForm from "@/components/reportGroup/ReportGroupForm";
+import ReportGroupForm from "@/components/reportType/ReportGroupForm";
 import { ENUM_MODE } from "@/enum/Mode";
 import { usePostGroupMutation } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
 import React, { useEffect, useRef } from "react";
@@ -68,16 +68,12 @@ const NewReportGroup = (props: INewReportGroupProps) => {
         const { group, resultType, department, reportGroup } = formData;
 
         await postGroup({ group, resultType, department, reportGroup });
-        if (postGroupSuccess) {
-          setFormData(initialFormData);
-          alert("success");
-        }
       }
     }
   };
   useEffect(() => {
     if (postGroupSuccess) {
-      swal("Success", "Posted successfully");
+      swal("Success", "Posted successfully", "success");
       setFormData(initialFormData);
     }
   }, [postGroupSuccess]);
@@ -101,6 +97,7 @@ const NewReportGroup = (props: INewReportGroupProps) => {
           className="mx-2"
           disabled={!reportType}
           onClick={() => setFormData(initialFormData)}
+          loading={postGroupLoading}
         >
           Cancel
         </Button>
@@ -110,6 +107,7 @@ const NewReportGroup = (props: INewReportGroupProps) => {
           size="lg"
           disabled={!reportType}
           onClick={formSbmitHandlerFunction}
+          loading={postGroupLoading}
         >
           Save
         </Button>

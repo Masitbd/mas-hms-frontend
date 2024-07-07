@@ -170,3 +170,14 @@ export const newGroupModel = Schema.Model({
   reportGroup: StringType().isRequired("This field is required."),
   department: StringType().isRequired("This field is required.")
 });
+
+export type EmptyTableData = {
+  test: string;
+  investigation: string;
+  normalValue: string;
+  unit: string;
+  remark: string;
+  status: string;
+  SL: number;
+  reportTypeGroup: string;
+};

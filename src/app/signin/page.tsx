@@ -21,6 +21,7 @@ import { useLazyGetProfileQuery } from "@/redux/api/profile/profileSlice";
 import { setAuthStatus } from "@/redux/features/authentication/authSlice";
 import Loading from "../loading";
 import { FormSetValueFunction } from "@/types/componentsType";
+import config from "@/config";
 
 const LoginPage = () => {
   const [getProfile, { data: profileData, isSuccess: profileRequestSuccess }] =
@@ -133,7 +134,6 @@ const LoginPage = () => {
       </>
     );
   }
-
   // All the form handle funciton
   const handleLoginFormData: FormSetValueFunction = (formValue, event) => {
     setLoginData(formValue as ILoginData);
