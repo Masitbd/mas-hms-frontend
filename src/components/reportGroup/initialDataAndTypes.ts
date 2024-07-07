@@ -45,12 +45,10 @@ export const initialFormData: IReportGroupFormData = {
   _id: "",
   title: "",
   label: "",
-
   testResultType: "",
   resultType: "",
   deleted: false,
   resultFields: [],
-
   group: ""
 };
 

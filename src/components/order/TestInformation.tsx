@@ -62,6 +62,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
     setReportGenerateModal2(!reportGenerateModal2)
   }
 
+  console.log(params?.formData?.tests)
 
   if (params.mode == ENUM_MODE.VIEW) {
     return (
@@ -84,7 +85,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
             <HeaderCell>Test ID</HeaderCell>
             <Cell dataKey="test.testCode" />
           </Column>
-          <Column align="center" resizable flexGrow={2}>
+          <Column align="center" resizable flexGrow={1}>
             <HeaderCell>Title</HeaderCell>
             <Cell dataKey="test.label" />
           </Column>
@@ -92,11 +93,11 @@ const TestInformation = (params: IParamsForTestInformation) => {
             <HeaderCell>Original Price</HeaderCell>
             <Cell dataKey="test.price" />
           </Column>
-          <Column align="center" resizable flexGrow={1}>
+          <Column align="center" resizable flexGrow={0.5}>
             <HeaderCell>Discount %</HeaderCell>
             <Cell dataKey="test.discount" />
           </Column>
-          <Column align="center" resizable flexGrow={1}>
+          <Column align="center" resizable flexGrow={0.5}>
             <HeaderCell>Discounted Price</HeaderCell>
             <Cell>
               {(rowData) => {
@@ -125,7 +126,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
               }}
             </Cell>
           </Column>
-          <Column align="center" resizable flexGrow={1}>
+          <Column align="center" resizable flexGrow={2}>
             <HeaderCell>Action</HeaderCell>
             <Cell>
               {(rowData) => (
@@ -150,7 +151,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
 
                   <Button
                     className="ml-2"
-                    disabled={rowData.status === 'completed' ? true : false}
+                    disabled={rowData.status === 'completed' ? false : true}
                     onClick={() => {
                       reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
                     }}
