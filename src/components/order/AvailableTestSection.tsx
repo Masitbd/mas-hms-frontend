@@ -4,7 +4,7 @@ import {
 } from "@/redux/api/test/testSlice";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import React, { useEffect, useState } from "react";
-import { Button, InputPicker, Table } from "rsuite";
+import { Button, InputPicker, SelectPicker, Table } from "rsuite";
 import { IParamsForTestInformation } from "./initialDataAndTypes";
 import SearchIcon from "@rsuite/icons/Search";
 
@@ -74,9 +74,10 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
               handleAddTest(value);
             }}
             placeholder={"Search"}
-            className="w-full z-50"
             caretAs={SearchIcon}
             loading={testSearchLoading}
+            block
+            virtualized={true}
           />
         </div>
         <Table

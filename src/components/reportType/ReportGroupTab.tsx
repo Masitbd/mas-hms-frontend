@@ -77,7 +77,8 @@ const ReportGroupTab = () => {
       const data = tableData.filter((data) => data.status !== ENUM_MODE.NEW);
       setTableData(data);
     }
-    const isEditMode = tableData.find((data) => data.status !== ENUM_MODE.EDIT);
+    const isEditMode = tableData.find((data) => data.status == ENUM_MODE.EDIT);
+    console.log(isEditMode);
     if (isEditMode) {
       setTableData(reportTypeData?.data);
     }

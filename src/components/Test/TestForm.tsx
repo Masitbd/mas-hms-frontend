@@ -16,6 +16,7 @@ import ForParameterBased from "./ForParameterBased";
 import ForDescriptiveBased from "./TestForDescriptive";
 import { ITestFormProps, testType } from "./initialDataAndTypes";
 import { testResultType } from "../reportType/initialDataAndTypes";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const TestForm = (props: ITestFormProps) => {
   const { defaultValue, forwardedRef, formData, setfromData, mode, model } =
@@ -39,8 +40,8 @@ const TestForm = (props: ITestFormProps) => {
         model={model}
         className="grid grid-cols-3 gap-5 justify-center w-full"
         fluid
-        formValue={defaultValue}
-        readOnly={mode === "watch"}
+        formValue={formData}
+        readOnly={mode === ENUM_MODE.VIEW}
       >
         <Form.Group controlId="label">
           <Form.ControlLabel>Title</Form.ControlLabel>

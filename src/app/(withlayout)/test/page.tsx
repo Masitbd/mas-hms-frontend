@@ -131,6 +131,7 @@ const Test = () => {
     if (testSuccess) {
       toaster.push(<Message type="success">Test crated Successfully</Message>);
       setModalOpen(!modalOpen);
+      setfromData(initialDataForTestForm);
     }
     if (testErrors) {
       toaster.push(

@@ -1,12 +1,6 @@
 import { IResultField } from "@/types/allDepartmentInterfaces";
 import React, { useState } from "react";
-import {
-  Button,
-  Form,
-  Schema,
-  Table,
-  TagInput
-} from "rsuite";
+import { Button, Form, Schema, Table, TagInput } from "rsuite";
 import swal from "sweetalert";
 import RModal from "../ui/Modal";
 import ExistingTest from "./ExistingTest";

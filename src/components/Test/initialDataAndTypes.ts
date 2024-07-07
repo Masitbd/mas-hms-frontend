@@ -67,7 +67,7 @@ export const initialDataForTestForm = {
   specimen: [],
   testType: "",
   hasTestTube: false,
-  testTube: "",
+  testTube: [],
   reportGroup: "",
   hospitalGroup: "",
   price: 0,
@@ -79,5 +79,4 @@ export const initialDataForTestForm = {
   testResulType: "",
   type: "",
   value: "",
-  _id: "",
 };

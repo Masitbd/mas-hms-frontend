@@ -1,36 +1,64 @@
 import React, { useRef, useState } from "react";
 import RModal from "../ui/Modal";
-import { usePatchOrderMutation } from "@/redux/api/order/orderSlice";
+import {
+  useDewColletcionMutation,
+  useGetOrderQuery,
+  useLazyGetOrderQuery,
+  usePatchOrderMutation,
+} from "@/redux/api/order/orderSlice";
 import { Form, Message, Schema, toaster } from "rsuite";
 import { IDewCollectionProps } from "./initialDataAndTypes";
+import swal from "sweetalert";
 
 const ForDewCollection = (props: IDewCollectionProps) => {
   const { data, dewModalOpen, setDewModalOpen } = props;
   const { StringType, NumberType } = Schema.Types;
   const ref: React.MutableRefObject<any> = useRef();
-  const [patchOrder, { isSuccess, isLoading, isError }] =
-    usePatchOrderMutation();
+  const [
+    patchOrder,
+    {
+      isSuccess: patchOrderSucced,
+      isLoading: patchOrderLoading,
+      isError: patchOrderError,
+      data: patchOrderData,
+    },
+  ] = usePatchOrderMutation();
 
+  const [
+    postDewCollection,
+    {
+      isLoading: dewCollectionLoading,
+      isSuccess: dewCollectionSuccess,
+      isError: dewCollectionError,
+    },
+  ] = useDewColletcionMutation();
   const [formData, setFormData] = useState({
     amount: 0,
   });
 
-  const okHanlder = () => {
+  const okHanlder = async () => {
     if (ref.current.check()) {
-      patchOrder({
-        id: data._id as string,
-        data: {
-          dueAmount: Number(data.dueAmount) - Number(formData.amount),
-          paid: Number(data.paid) + Number(formData.amount),
-        },
+      const result = await postDewCollection({
+        oid: data.oid as string,
+        amount: Number(formData.amount),
       });
+
+      if ("data" in result) {
+        const clonedData = Object.assign({}, props.data);
+        clonedData.dueAmount = result.data.data.dueAmount;
+        clonedData.paid = result.data.data.paid;
+        props.setFormData(clonedData);
+        swal("success", "Due Amount Collected Successfully", "success");
+        setFormData({ amount: 0 });
+      }
       setDewModalOpen(!dewModalOpen);
     } else {
       toaster.push(
-        <Message type="error">Please fill out all the form</Message>
+        <Message type="error">Please fill out all the Fields</Message>
       );
     }
   };
+
   const cancelHandler = () => {
     setDewModalOpen(!dewModalOpen);
   };
@@ -55,6 +83,7 @@ const ForDewCollection = (props: IDewCollectionProps) => {
         cancelHandler={cancelHandler}
         title="Collect due Amount"
         size="md"
+        loading={dewCollectionLoading}
       >
         <div>
           <h1 className=" text-xl font-bold">Bill Info</h1>

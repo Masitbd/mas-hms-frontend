@@ -1,7 +1,7 @@
 "use client";
 import OrderTable from "@/components/order/OrderTable";
 import RModal from "@/components/ui/Modal";
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { Button, Message, toaster } from "rsuite";
 import TestInformation from "@/components/order/TestInformation";
 import {
@@ -254,6 +254,7 @@ const Order = () => {
                 data={data as unknown as IOrderData}
                 dewModalOpen={dewModalOpen}
                 setDewModalOpen={setDewMOdalOpen}
+                setFormData={setFormData as any}
               />
             </div>
 
@@ -266,16 +267,18 @@ const Order = () => {
               />
 
               <div className="flex justify-end">
-                <Button
-                  appearance="primary"
-                  color="green"
-                  size="lg"
-                  disabled={mode == "new"}
-                  onClick={() => setDewMOdalOpen(!dewModalOpen)}
-                  className={`${mode == "new" && "invisible"}`}
-                >
-                  Collect Due Ammount
-                </Button>
+                <div className={`${mode == ENUM_MODE.NEW && "hidden"} mr-2`}>
+                  <Button
+                    appearance="primary"
+                    color="green"
+                    size="lg"
+                    disabled={data?.dueAmount == 0}
+                    onClick={() => setDewMOdalOpen(!dewModalOpen)}
+                    className={`${mode == "new" && "invisible"}`}
+                  >
+                    {data.dueAmount == 0 ? "Fully Paid" : "Collect Due Ammount"}
+                  </Button>
+                </div>
                 <Button
                   appearance="primary"
                   color="blue"

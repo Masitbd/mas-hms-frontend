@@ -8,8 +8,11 @@ import RModal from "../ui/Modal";
 import AvailableTestSection from "./AvailableTestSection";
 import { IParamsForTestInformation } from "./initialDataAndTypes";
 export type ITestGenerateType = {
-  modeSingleType: string; modeType: string; id: string, status: string;
-}
+  modeSingleType: string;
+  modeType: string;
+  id: string;
+  status: string;
+};
 
 const TestInformation = (params: IParamsForTestInformation) => {
   const { Cell, Column, HeaderCell } = Table;
@@ -42,27 +45,46 @@ const TestInformation = (params: IParamsForTestInformation) => {
     params.setFormData(newObject);
   };
 
+  const [reportGenerate, setReportGenerate] = useState<ITestGenerateType>({
+    modeSingleType: "",
+    modeType: "",
+    id: "",
+    status: "",
+  });
 
-  const [reportGenerate, setReportGenerate] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '', status: "" });
+  const [reportGenerate2, setReportGenerate2] = useState<ITestGenerateType>({
+    modeSingleType: "",
+    modeType: "",
+    id: "",
+    status: "",
+  });
 
-  const [reportGenerate2, setReportGenerate2] = useState<ITestGenerateType>({ modeSingleType: "", modeType: "", id: '', status: "" });
-
-
-
-  const [reportGenerateModal, setReportGenerateModal] = useState<boolean>(false);
+  const [reportGenerateModal, setReportGenerateModal] =
+    useState<boolean>(false);
 
   const reportGenerateHandler = (data: ITestGenerateType) => {
-    setReportGenerate({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id, status: data.status })
-    setReportGenerateModal(!reportGenerateModal)
-  }
-  const [reportGenerateModal2, setReportGenerateModal2] = useState<boolean>(false);
+    setReportGenerate({
+      modeSingleType: data.modeSingleType,
+      modeType: data.modeType,
+      id: data.id,
+      status: data.status,
+    });
+    setReportGenerateModal(!reportGenerateModal);
+  };
+  const [reportGenerateModal2, setReportGenerateModal2] =
+    useState<boolean>(false);
 
   const reportGenerateHandler2 = (data: ITestGenerateType) => {
-    setReportGenerate2({ modeSingleType: data.modeSingleType, modeType: data.modeType, id: data.id, status: data.status })
-    setReportGenerateModal2(!reportGenerateModal2)
-  }
+    setReportGenerate2({
+      modeSingleType: data.modeSingleType,
+      modeType: data.modeType,
+      id: data.id,
+      status: data.status,
+    });
+    setReportGenerateModal2(!reportGenerateModal2);
+  };
 
-  console.log(params?.formData?.tests)
+  console.log(params?.formData?.tests);
 
   if (params.mode == ENUM_MODE.VIEW) {
     return (
@@ -104,7 +126,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 const priceAfterDiscount = (
                   rowData.discount > 0
                     ? rowData.test.price -
-                    (rowData.test.price * rowData.discount) / 100
+                      (rowData.test.price * rowData.discount) / 100
                     : rowData.test.price
                 ).toFixed(2);
 
@@ -131,17 +153,26 @@ const TestInformation = (params: IParamsForTestInformation) => {
             <Cell>
               {(rowData) => (
                 <>
-                  <Button
-                    onClick={() => testRemoveFromListHandler(rowData)}
-                    appearance="primary"
-                    color="red"
+                  <div
+                    className={`${params.mode == ENUM_MODE.VIEW && "hidden"}`}
                   >
-                    Delete
-                  </Button>
+                    <Button
+                      onClick={() => testRemoveFromListHandler(rowData)}
+                      appearance="primary"
+                      color="red"
+                    >
+                      Delete
+                    </Button>
+                  </div>
                   <Button
                     className="ml-2"
                     onClick={() => {
-                      reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                      reportGenerateHandler({
+                        id: rowData.test._id,
+                        modeSingleType: rowData.test.testResultType,
+                        modeType: rowData.test.type,
+                        status: rowData.status,
+                      });
                     }}
                     appearance="primary"
                     color="orange"
@@ -151,55 +182,54 @@ const TestInformation = (params: IParamsForTestInformation) => {
 
                   <Button
                     className="ml-2"
-                    disabled={rowData.status === 'completed' ? false : true}
+                    disabled={rowData.status === "completed" ? false : true}
                     onClick={() => {
-                      reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
+                      reportGenerateHandler2({
+                        id: rowData.test._id,
+                        modeSingleType: rowData.test.testResultType,
+                        modeType: rowData.test.type,
+                        status: rowData.status,
+                      });
                     }}
                     appearance="primary"
                     color="blue"
                   >
                     Report View
                   </Button>
-
-
                 </>
               )}
             </Cell>
           </Column>
         </Table>
-        {
-          reportGenerateModal && (
-            <RModal
-              open={reportGenerateModal}
-              size="xxl"
-              title={
-                "Test Report Generate"
-              }
-            >
-              <TestReportForm reportGenerate={reportGenerate} setReportGenerate={setReportGenerate} setReportGenerateModal={setReportGenerateModal} />
-            </RModal>
-          )
-        }
-        {
-          reportGenerateModal2 && (
-            <RModal
-              open={reportGenerateModal2}
-              size="xxl"
-              title={
-                "Test Report View"
-              }
-            >
-              <TestView reportGenerate={reportGenerate2} setReportGenerate={setReportGenerate2} setReportGenerateModal={setReportGenerateModal2} />
-            </RModal>
-          )
-        }
+        {reportGenerateModal && (
+          <RModal
+            open={reportGenerateModal}
+            size="xxl"
+            title={"Test Report Generate"}
+          >
+            <TestReportForm
+              reportGenerate={reportGenerate}
+              setReportGenerate={setReportGenerate}
+              setReportGenerateModal={setReportGenerateModal}
+            />
+          </RModal>
+        )}
+        {reportGenerateModal2 && (
+          <RModal
+            open={reportGenerateModal2}
+            size="xxl"
+            title={"Test Report View"}
+          >
+            <TestView
+              reportGenerate={reportGenerate2}
+              setReportGenerate={setReportGenerate2}
+              setReportGenerateModal={setReportGenerateModal2}
+            />
+          </RModal>
+        )}
       </>
     );
   }
-
-
-
-
 
   return (
     <div>
@@ -312,7 +342,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                     const priceAfterDiscount = (
                       rowData.discount > 0
                         ? rowData.test.price -
-                        (rowData.test.price * rowData.discount) / 100
+                          (rowData.test.price * rowData.discount) / 100
                         : rowData.test.price
                     ).toFixed(2);
 
@@ -332,7 +362,6 @@ const TestInformation = (params: IParamsForTestInformation) => {
                       >
                         Delete
                       </Button>
-
                     </>
                   )}
                 </Cell>
@@ -347,7 +376,6 @@ const TestInformation = (params: IParamsForTestInformation) => {
             mode={params.mode}
           />
         </div>
-
       </div>
     </div>
   );
