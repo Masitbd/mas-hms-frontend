@@ -157,6 +157,7 @@ export const reportType = [
 ];
 
 export type INewReportGroupProps = {
+  setMode?: (mode: string) => void;
   formData: IReportGroupFormData;
   setFormData: (
     props: React.SetStateAction<Partial<IReportGroupFormData>>

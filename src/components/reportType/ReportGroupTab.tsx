@@ -2,6 +2,7 @@ import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import { ENUM_MODE } from "@/enum/Mode";
 import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
 import { useGetReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
+import EditIcon from "@rsuite/icons/Edit";
 import {
   useGetReportTypeQuery,
   useLazyGetReportTypeQuery,
@@ -31,6 +32,7 @@ import {
 } from "./initialDataAndTypes";
 import { useDispatch } from "react-redux";
 import { EmptyTableDataObject } from "./Functions";
+import NewReportGroupModal from "../reportGroup/NewReportGroupModel";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -78,7 +80,7 @@ const ReportGroupTab = () => {
       setTableData(data);
     }
     const isEditMode = tableData.find((data) => data.status == ENUM_MODE.EDIT);
-    console.log(isEditMode);
+
     if (isEditMode) {
       setTableData(reportTypeData?.data);
     }
@@ -136,6 +138,27 @@ const ReportGroupTab = () => {
     }
   };
 
+  // For report type group
+
+  const [reportTypeGroupMode, setReportTypeGroupMode] = useState(
+    ENUM_MODE.VIEW
+  );
+  const [reportTypeGroupData, setReportTypeGroupData] = useState();
+  const [reportTypeGroupOpen, setReportTypeGroupOpen] = useState(false);
+  const reportTypeGroupCancelHandler = () => {
+    setReportTypeGroupOpen(false);
+    setReportTypeGroupMode(ENUM_MODE.VIEW);
+    setReportTypeGroupData(undefined);
+  };
+  const editIconClickHandler = (data: any) => {
+    setReportTypeGroupOpen(true);
+    setReportTypeGroupMode(ENUM_MODE.EDIT);
+    const modifiedData = Object.assign({}, data);
+    modifiedData.department = modifiedData.department._id;
+    modifiedData.reportGroup = modifiedData.reportGroup._id;
+    setReportTypeGroupData(modifiedData);
+  };
+
   useEffect(() => {
     if (reportTypeData?.data) {
       setTableData(reportTypeData.data);
@@ -187,25 +210,46 @@ const ReportGroupTab = () => {
               (data: Partial<IReportGroupFormData>, index: number) => (
                 <Tabs.Tab eventKey={data?._id} title={data.group} key={index}>
                   <>
-                    <div className="border border-stone-200 py-5 px-3 mr-5 rounded-md">
-                      <div className="grid grid-cols-3 gap-5">
-                        <div className="flex flex-col">
-                          <div className="font-bold">Group</div>
-                          <div>{data?.group}</div>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="font-bold">Report Group</div>
-                          <div>{data?.reportGroup?.label}</div>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="font-bold">Department</div>
-                          <div>{data?.department?.label}</div>
-                        </div>
-                        <div className="flex flex-col">
-                          <div className="font-bold">Report Type</div>
-                          <div>{data?.resultType}</div>
-                        </div>
-                      </div>
+                    <div className="border border-stone-200 py-5 px-3 mr-5 rounded-md relative">
+                      {reportTypeGroupMode == ENUM_MODE.EDIT ? (
+                        <NewReportGroup
+                          formData={
+                            reportTypeGroupData as unknown as IReportGroupFormData
+                          }
+                          mode={reportTypeGroupMode}
+                          setFormData={setReportTypeGroupData as any}
+                          setMode={setReportTypeGroupMode as any}
+                        />
+                      ) : (
+                        <>
+                          {" "}
+                          <div className="absolute top-1 right-2 ">
+                            <EditIcon
+                              fill="blue"
+                              className="hover:text-2xl cursor-pointer text-lg"
+                              onClick={() => editIconClickHandler(data)}
+                            />
+                          </div>
+                          <div className="grid grid-cols-3 gap-5">
+                            <div className="flex flex-col">
+                              <div className="font-bold">Group</div>
+                              <div>{data?.group}</div>
+                            </div>
+                            <div className="flex flex-col">
+                              <div className="font-bold">Report Group</div>
+                              <div>{data?.reportGroup?.label}</div>
+                            </div>
+                            <div className="flex flex-col">
+                              <div className="font-bold">Department</div>
+                              <div>{data?.department?.label}</div>
+                            </div>
+                            <div className="flex flex-col">
+                              <div className="font-bold">Report Type</div>
+                              <div>{data?.resultType}</div>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     <div className=" border border-stone-200  py-5 px-3 mr-5 rounded-md my-5">
