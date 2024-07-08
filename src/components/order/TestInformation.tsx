@@ -232,46 +232,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 <HeaderCell>Original Price</HeaderCell>
                 <Cell dataKey="test.price" />
               </Column>
-              <Column align="center" resizable flexGrow={1}>
-                <HeaderCell>Action</HeaderCell>
-                <Cell>
-                  {(rowData) => (
-                    <>
-                      <Button
-                        onClick={() => testRemoveFromListHandler(rowData)}
-                        appearance="primary"
-                        color="red"
-                      >
-                        Delete
-                      </Button>
-                      <Button
-                        className="ml-2"
-                        onClick={() => {
-                          reportGenerateHandler({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
-                        }}
-                        appearance="primary"
-                        color="orange"
-                      >
-                        Report
-                      </Button>
 
-                      <Button
-                        className="ml-2"
-                        disabled={rowData.status === 'completed' ? true : false}
-                        onClick={() => {
-                          reportGenerateHandler2({ id: rowData.test._id, modeSingleType: rowData.test.testResultType, modeType: rowData.test.type, status: rowData.status })
-                        }}
-                        appearance="primary"
-                        color="blue"
-                      >
-                        Report View
-                      </Button>
-
-
-                    </>
-                  )}
-                </Cell>
-              </Column>
               <Column align="center" resizable flexGrow={1}>
                 <HeaderCell>Discount %</HeaderCell>
                 <Cell>
@@ -357,6 +318,23 @@ const TestInformation = (params: IParamsForTestInformation) => {
 
                     return `${priceAfterDiscount}`;
                   }}
+                </Cell>
+              </Column>
+              <Column align="center" resizable flexGrow={1}>
+                <HeaderCell>Action</HeaderCell>
+                <Cell>
+                  {(rowData) => (
+                    <>
+                      <Button
+                        onClick={() => testRemoveFromListHandler(rowData)}
+                        appearance="primary"
+                        color="red"
+                      >
+                        Delete
+                      </Button>
+
+                    </>
+                  )}
                 </Cell>
               </Column>
             </Table>
