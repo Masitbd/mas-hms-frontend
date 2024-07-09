@@ -41,7 +41,6 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
       setFormData({ ...data, patient: sdata.data.data });
     }
   };
-  console.log(data);
 
   useEffect(() => {
     if (patientSearchError) {

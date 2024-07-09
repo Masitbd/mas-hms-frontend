@@ -39,6 +39,7 @@ export type IDepartment = {
 export type IDoctor = {
   _id?: string;
   title: string;
+  code?: string;
   name: string;
   fatherName: string;
   email: string;
@@ -88,7 +89,7 @@ export type ITest = {
   label: string;
   value: string;
   description?: string;
-  testResulType: string;
+  testResultType: string;
   department: IDepartment;
   testCode: string;
   specimen: ISpecimen[];

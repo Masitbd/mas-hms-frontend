@@ -19,8 +19,14 @@ const TestTable = ({
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const [deleteTest, { isSuccess: deleteSuccess, isError: deleteError }] =
-    useDeleteTestMutation();
+  const [
+    deleteTest,
+    {
+      isSuccess: deleteSuccess,
+      isError: deleteError,
+      isLoading: deleteLoading,
+    },
+  ] = useDeleteTestMutation();
   const handleDeletOpen = (id: string) => {
     setDeleteOpen(!deleteOpen);
     setDeleteData(id);
@@ -113,6 +119,7 @@ const TestTable = ({
                   appearance="ghost"
                   color="red"
                   onClick={() => handleDeletOpen(rowdate._id)}
+                  loading={deleteLoading}
                 >
                   Delete
                 </Button>

@@ -35,7 +35,7 @@ const NewReportGroupModal = ({
   const formRef: React.MutableRefObject<any> = React.useRef();
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
-    description: StringType().isRequired("This field is required."),
+
     department: StringType().isRequired("This field is required."),
   });
 

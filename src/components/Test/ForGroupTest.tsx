@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { Button, Table } from "rsuite";
+import { Button, Table, toaster } from "rsuite";
 import RModal from "../ui/Modal";
 import { useGetTestsQuery } from "@/redux/api/test/testSlice";
 import AlartDialog from "../ui/AlertModal";
 import { IResultField, ITest } from "@/types/allDepartmentInterfaces";
+import swal from "sweetalert";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const ForGroupTest = ({
   fromData,
   setFormData,
+  mode,
 }: {
   fromData: ITest;
   setFormData: (data: ITest) => void;
+  mode: string;
 }) => {
   const [modal, setModal] = useState(false);
   const { data: sData, isLoading } = useGetTestsQuery(undefined);
@@ -23,6 +27,7 @@ const ForGroupTest = ({
     }
 
     setFormData(fromData);
+    swal("Added", "Test Added", "success");
   };
 
   const okHandler = () => {
@@ -34,22 +39,29 @@ const ForGroupTest = ({
   };
   // For remove
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [deleteData, setDeleteData] = useState<ITest | null>(null);
-  const removeTestHandler = () => {
-    fromData.groupTests = fromData.groupTests.filter(
-      (data) => deleteData?._id !== data._id
-    );
-    setFormData(fromData);
-    setDeleteOpen(!deleteOpen);
+  const removeTestHandler = (porps: ITest) => {
+    swal({
+      title: "Are you sure?",
+      text: "Are you sure you want to remove This",
+      icon: "warning",
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        fromData.groupTests = fromData.groupTests.filter(
+          (data) => porps?._id !== data._id
+        );
+        setFormData(fromData);
+        setDeleteOpen(!deleteOpen);
+        swal(
+          "Deleted!",
+
+          `Deleted Successfully `,
+          "success"
+        );
+      }
+    });
   };
-  const onCancels = () => {
-    setDeleteOpen(!deleteOpen);
-    setDeleteData(null);
-  };
-  const setHandler = (data: ITest) => {
-    setDeleteData(data);
-    setDeleteOpen(!deleteOpen);
-  };
+
   // For fixing infinite loop
   const fix = () => {
     setModal(!modal);
@@ -57,13 +69,6 @@ const ForGroupTest = ({
   return (
     <div>
       <div>
-        <AlartDialog
-          description="Are you sure you want to delete this "
-          title="Delete"
-          onOk={removeTestHandler}
-          onCancel={onCancels}
-          open={deleteOpen}
-        />
         <div>
           <Button appearance="primary" color="blue" onClick={() => fix()}>
             Add Tests
@@ -100,7 +105,8 @@ const ForGroupTest = ({
                     appearance="ghost"
                     color="red"
                     className="ml-2"
-                    onClick={() => setHandler(rowdate as ITest)}
+                    onClick={() => removeTestHandler(rowdate as ITest)}
+                    disabled={mode == ENUM_MODE.VIEW}
                   >
                     Remove
                   </Button>

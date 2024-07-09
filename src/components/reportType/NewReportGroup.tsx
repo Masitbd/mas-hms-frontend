@@ -1,6 +1,9 @@
 import ReportGroupForm from "@/components/reportType/ReportGroupForm";
 import { ENUM_MODE } from "@/enum/Mode";
-import { usePostGroupMutation } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
+import {
+  usePatchGroupMutation,
+  usePostGroupMutation,
+} from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
 import React, { useEffect, useRef } from "react";
 import { Button } from "rsuite";
 import swal from "sweetalert";
@@ -12,7 +15,7 @@ import {
 } from "./initialDataAndTypes";
 
 const NewReportGroup = (props: INewReportGroupProps) => {
-  const { formData, mode, setFormData } = props;
+  const { formData, mode, setFormData, setMode } = props;
   const reportType = formData?.resultType;
   const ref: React.MutableRefObject<any> = useRef();
   const [
@@ -20,6 +23,10 @@ const NewReportGroup = (props: INewReportGroupProps) => {
     { isLoading: postGroupLoading, isSuccess: postGroupSuccess },
   ] = usePostGroupMutation();
 
+  const [
+    patch,
+    { isSuccess: PatchSuccess, isLoading: patchLoading, isError: patchError },
+  ] = usePatchGroupMutation();
   // let element;
   // switch (reportType) {
   //   case "parameter":
@@ -69,6 +76,25 @@ const NewReportGroup = (props: INewReportGroupProps) => {
 
         await postGroup({ group, resultType, department, reportGroup });
       }
+      if (mode == ENUM_MODE.EDIT) {
+        const { group, resultType, department, reportGroup } = formData;
+
+        const result = await patch({
+          data: {
+            group,
+            resultType,
+            department,
+            reportGroup,
+          },
+          id: formData._id,
+        });
+        if ("data" in result) {
+          swal("Success", "Updated Successfully", "success");
+          setMode && setMode(ENUM_MODE.NEW);
+        } else {
+          swal("Error", "something went wrong", "error");
+        }
+      }
     }
   };
   useEffect(() => {
@@ -96,8 +122,11 @@ const NewReportGroup = (props: INewReportGroupProps) => {
           size="lg"
           className="mx-2"
           disabled={!reportType}
-          onClick={() => setFormData(initialFormData)}
-          loading={postGroupLoading}
+          onClick={() => {
+            setMode && setMode(ENUM_MODE.NEW);
+            setFormData(initialFormData);
+          }}
+          loading={postGroupLoading || patchLoading}
         >
           Cancel
         </Button>
@@ -107,7 +136,7 @@ const NewReportGroup = (props: INewReportGroupProps) => {
           size="lg"
           disabled={!reportType}
           onClick={formSbmitHandlerFunction}
-          loading={postGroupLoading}
+          loading={postGroupLoading || patchLoading}
         >
           Save
         </Button>

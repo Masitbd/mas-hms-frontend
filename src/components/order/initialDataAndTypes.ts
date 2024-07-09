@@ -23,6 +23,7 @@ export type InitialData = {
   patient: IPatient;
   refBy?: string; // Make refBy optional
   deliveryTime: Date;
+  dueAmount?: number;
 };
 
 export type IInitialData = {
@@ -130,6 +131,7 @@ export type IDewCollectionProps = {
   dewModalOpen: boolean;
   setDewModalOpen(data: boolean): void;
   data: IOrderData;
+  setFormData: (props: IOrderData) => void;
 };
 
 export type IPriceSectionProps = {
