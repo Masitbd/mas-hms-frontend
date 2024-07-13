@@ -16,6 +16,10 @@ export type IFilterableField = {
   reportGroup: string;
 };
 
+export type IFilterFieldForReportType = {
+  reportTypeGroup: string;
+};
+
 const ExistingTest = ({
   formData,
   setFormData,
@@ -30,6 +34,8 @@ const ExistingTest = ({
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
   const { data: reportGroup, isLoading: reportGroupLoading } =
     useGetReportGroupQuery(undefined);
+  const [reportGroupDropdownTitle, setReportGroupDropdownTitle] =
+    useState("Select reportGroup");
 
   // Set search data for group
   const [groupFilterOption, setGroupFilterOption] = useState<IFilterableField>(
@@ -39,7 +45,10 @@ const ExistingTest = ({
     useGetGroupQuery(groupFilterOption);
 
   // set search data for group query
-  const [reportTypeFilterOption, setReportTypeFilterOption] = useState({});
+  const [reportTypeGrouopDropdownTiltle, setReportTypeGroupDropdownTiltle] =
+    useState("Select Group");
+  const [reportTypeFilterOption, setReportTypeFilterOption] =
+    useState<IFilterFieldForReportType>({} as IFilterFieldForReportType);
   const { data: reportTypeData, isLoading: reportTypeDataLoading } =
     useGetReportTypeQuery(reportTypeFilterOption);
 
@@ -63,6 +72,7 @@ const ExistingTest = ({
       });
     return added;
   };
+  console.log(reportTypeData);
 
   return (
     <>
@@ -78,19 +88,21 @@ const ExistingTest = ({
             <div>
               <Dropdown
                 loading={reportGroupLoading}
-                title={"Select reportGroup"}
+                title={reportGroupDropdownTitle}
                 activeKey={groupFilterOption?.reportGroup}
               >
                 {reportGroup?.data.map((data: IReportGroupFormData) => {
                   return (
                     <Dropdown.Item
+                      eventKey={data._id}
                       key={data._id}
                       value={data._id}
-                      onSelect={() =>
+                      onSelect={() => {
                         setGroupFilterOption({
                           reportGroup: data._id as string,
-                        })
-                      }
+                        });
+                        setReportGroupDropdownTitle(data.label as string);
+                      }}
                     >
                       {data.label}
                     </Dropdown.Item>
@@ -100,15 +112,23 @@ const ExistingTest = ({
             </div>
 
             <div>
-              <Dropdown loading={groupLoading} title={"Select Group"}>
+              <Dropdown
+                loading={groupLoading}
+                title={reportTypeGrouopDropdownTiltle}
+                activeKey={reportTypeFilterOption?.reportTypeGroup}
+              >
                 {groupData?.data.map((data: IReportGroupFormData) => {
                   return (
                     <Dropdown.Item
                       key={data._id}
                       value={data._id}
-                      onSelect={() =>
-                        setReportTypeFilterOption({ reportTypeGroup: data._id })
-                      }
+                      eventKey={data._id}
+                      onSelect={() => {
+                        setReportTypeFilterOption({
+                          reportTypeGroup: data._id as string,
+                        });
+                        setReportTypeGroupDropdownTiltle(data.group as string);
+                      }}
                     >
                       {data.group}
                     </Dropdown.Item>
@@ -126,13 +146,14 @@ const ExistingTest = ({
               autoHeight
               rowHeight={60}
             >
+              {" "}
+              <Column flexGrow={2}>
+                <HeaderCell>Investigation</HeaderCell>
+                <Cell dataKey="investigation" />
+              </Column>
               <Column flexGrow={1}>
                 <HeaderCell>Test</HeaderCell>
                 <Cell dataKey="test" />
-              </Column>
-              <Column flexGrow={2}>
-                <HeaderCell>Investigation</HeaderCell>
-                <Cell dataKey="Investigation" />
               </Column>
               <Column>
                 <HeaderCell>Unit</HeaderCell>
@@ -144,7 +165,7 @@ const ExistingTest = ({
               </Column>
               <Column>
                 <HeaderCell>Default Value</HeaderCell>
-                <Cell dataKey="fj" />
+                <Cell dataKey="defaultValue" />
               </Column>
               <Column>
                 <HeaderCell>Action</HeaderCell>
@@ -153,6 +174,7 @@ const ExistingTest = ({
                     <Button
                       className="btn btn-primary"
                       onClick={() => {
+                        console.log(formData);
                         addTestHandler(rowdate as any);
                       }}
                       appearance="primary"

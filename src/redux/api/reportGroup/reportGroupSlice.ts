@@ -54,4 +54,5 @@ export const {
   useGetReportGroupQuery,
   useDeleteReportGroupMutation,
   usePatchReportGroupMutation,
+  useLazyGetReportGroupQuery,
 } = reportGroup;

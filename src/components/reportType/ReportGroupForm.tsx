@@ -28,7 +28,7 @@ const ReportGroupForm = (props: IReportGroupFormParam) => {
           <Form.ControlLabel>Title</Form.ControlLabel>
           <Form.Control name="group" />
         </Form.Group>
-        <Form.Group controlId="department">
+        {/* <Form.Group controlId="department">
           <Form.ControlLabel>Department</Form.ControlLabel>
           <Form.Control
             name="department"
@@ -41,7 +41,7 @@ const ReportGroupForm = (props: IReportGroupFormParam) => {
             })}
             loading={departmentDataLoading}
           />
-        </Form.Group>
+        </Form.Group> */}
         <Form.Group controlId="resultType">
           <Form.ControlLabel>Result Type</Form.ControlLabel>
           <Form.Control

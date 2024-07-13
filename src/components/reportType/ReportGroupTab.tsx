@@ -1,7 +1,10 @@
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import { ENUM_MODE } from "@/enum/Mode";
 import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
-import { useGetReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
+import {
+  useGetReportGroupQuery,
+  useLazyGetReportGroupQuery,
+} from "@/redux/api/reportGroup/reportGroupSlice";
 import EditIcon from "@rsuite/icons/Edit";
 import {
   useGetReportTypeQuery,
@@ -9,7 +12,10 @@ import {
   usePatchReportTypeMutation,
   usePostReportTypeMutation,
 } from "@/redux/api/reportType/reportType";
-import { useGetGroupQuery } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
+import {
+  useGetGroupQuery,
+  useLazyGetGroupQuery,
+} from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
 import AddOutlineIcon from "@rsuite/icons/AddOutline";
 import { SetStateAction, SyntheticEvent, useEffect, useState } from "react";
 import {
@@ -33,6 +39,7 @@ import {
 import { useDispatch } from "react-redux";
 import { EmptyTableDataObject } from "./Functions";
 import NewReportGroupModal from "../reportGroup/NewReportGroupModel";
+import Loading from "@/app/loading";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -40,13 +47,16 @@ type searchOption = {
 type EmptyTableDataKey = keyof EmptyTableData;
 
 const ReportGroupTab = () => {
+  const [getGroupData] = useLazyGetGroupQuery();
+  const [getReportGroup] = useLazyGetReportGroupQuery();
+  const [getRrportType] = useLazyGetReportTypeQuery();
   const [defaultTabActiveKey, setDefaultTabActiveKey] = useState("");
 
   // For handelling the from
   const [formData, setFormData] =
     useState<SetStateAction<Partial<IReportGroupFormData>>>(initialFormData);
 
-  // Report group api
+  // Report group api for Dropdown
   const { data: reportGroupData, isLoading: reportGroupLoading } =
     useGetReportGroupQuery(undefined);
   const [dropDownTitle, setDropDownTitle] = useState("Select Report Group");
@@ -103,14 +113,18 @@ const ReportGroupTab = () => {
     const data = tableData[SL];
     if (isNewDataOnProgress) {
       const postData = tableData.find((data) => data.status == ENUM_MODE.NEW);
-      await postReportType(postData as unknown as IReportGroupFormData);
-      if (reportTypePostSuccess) {
+      const result = await postReportType(
+        postData as unknown as IReportGroupFormData
+      );
+      if ("data" in result) {
         handleEditState(SL);
+        swel("Success", "Report Type Posted Successfully", "success");
       }
     }
+
     if (data?.status == ENUM_MODE.EDIT) {
-      await patchReportType(data);
-      if (patchReportTypePostSuccess) {
+      const result = await patchReportType(data);
+      if ("data" in result) {
         handleEditState(SL);
         swel("Success", "Updated Successfully", "success");
       }
@@ -152,9 +166,10 @@ const ReportGroupTab = () => {
   };
   const editIconClickHandler = (data: any) => {
     setReportTypeGroupOpen(true);
+
     setReportTypeGroupMode(ENUM_MODE.EDIT);
     const modifiedData = Object.assign({}, data);
-    modifiedData.department = modifiedData.department._id;
+    // modifiedData.department = modifiedData.department._id;
     modifiedData.reportGroup = modifiedData.reportGroup._id;
     setReportTypeGroupData(modifiedData);
   };
@@ -166,11 +181,41 @@ const ReportGroupTab = () => {
     if (groupData?.data.length) {
       setDefaultTabActiveKey(groupData?.data[0]._id);
     }
-    if (reportTypePostSuccess) {
-      swel("Success", "Report Type Posted Successfully", "success");
-    }
   }, [reportTypeData, reportGroupData, groupData, reportTypePostSuccess]);
 
+  // -----------------------setting default data at page rendering --------------------
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    (async function () {
+      const reportGroupDataforInitialSelect = await getReportGroup(undefined);
+
+      if ("data" in reportGroupDataforInitialSelect) {
+        if (reportGroupDataforInitialSelect.data.data?.length > 0) {
+          const firstReportGroup = reportGroupDataforInitialSelect.data.data[0];
+          setGroupSerachOption({
+            ...groupSearchOption,
+            reportGroup: firstReportGroup._id as string,
+          });
+          setDropDownTitle(firstReportGroup?.label as string);
+        }
+
+        const initialGroupData = await getGroupData(groupSearchOption);
+        if ("data" in initialGroupData) {
+          if (initialGroupData.data.data.length > 0) {
+            setDefaultTabActiveKey(initialGroupData.data.data[0]._id);
+            setReportTypeFilterOption({
+              reportTypeGroup: initialGroupData.data.data[0]._id,
+            });
+          }
+        }
+      }
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div>
       <div className="my-5">
@@ -204,6 +249,7 @@ const ReportGroupTab = () => {
         onSelect={(eventKey) =>
           setReportTypeFilterOption({ reportTypeGroup: eventKey })
         }
+        className="overflow-x-"
       >
         {groupData?.data.length > 0
           ? groupData?.data.map(
@@ -239,10 +285,10 @@ const ReportGroupTab = () => {
                               <div className="font-bold">Report Group</div>
                               <div>{data?.reportGroup?.label}</div>
                             </div>
-                            <div className="flex flex-col">
+                            {/* <div className="flex flex-col">
                               <div className="font-bold">Department</div>
                               <div>{data?.department?.label}</div>
-                            </div>
+                            </div> */}
                             <div className="flex flex-col">
                               <div className="font-bold">Report Type</div>
                               <div>{data?.resultType}</div>
@@ -256,21 +302,22 @@ const ReportGroupTab = () => {
                       <Table
                         className="w-full"
                         data={tableData}
-                        rowHeight={65}
-                        autoHeight
                         loading={reportTypeLoading}
+                        wordWrap="break-word"
+                        rowHeight={70}
+                        height={500}
                       >
                         <Column flexGrow={1}>
-                          <HeaderCell>Test</HeaderCell>
+                          <HeaderCell>Investigation</HeaderCell>
                           <EditableCell
-                            dataKey={"test"}
+                            dataKey={"investigation"}
                             onChange={handleChange}
                           />
                         </Column>
                         <Column flexGrow={2}>
-                          <HeaderCell>Investigation</HeaderCell>
+                          <HeaderCell>Test</HeaderCell>
                           <EditableCell
-                            dataKey={"investigation"}
+                            dataKey={"test"}
                             onChange={handleChange}
                           />
                         </Column>
