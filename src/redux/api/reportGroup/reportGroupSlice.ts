@@ -39,7 +39,7 @@ const reportGroup = baseApi.injectEndpoints({
       }),
       providesTags: ["reportGroup"],
     }),
-    getSingleReportGroup: build.mutation({
+    getSingleReportGroup: build.query({
       query: (id: string) => ({
         url: `/reportGroup/${id}`,
         method: "GET",
@@ -55,4 +55,6 @@ export const {
   useDeleteReportGroupMutation,
   usePatchReportGroupMutation,
   useLazyGetReportGroupQuery,
+  useGetSingleReportGroupQuery,
+  useLazyGetSingleReportGroupQuery,
 } = reportGroup;

@@ -41,6 +41,7 @@ export type IInitialData = {
 };
 
 export type IOrderData = {
+  createdAt?: string | number | Date;
   oid?: string;
   _id?: string;
   uuid?: string;
@@ -52,7 +53,7 @@ export type IOrderData = {
     SL: number;
     status: string;
     discount: number;
-    test: string | undefined;
+    test: string | undefined | ITest;
   }[];
   totalPrice: number;
   cashDiscount: number;

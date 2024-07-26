@@ -54,4 +54,5 @@ export const {
   useGetSpecimenQuery,
   useDeleteSpecimenMutation,
   usePatchSpecimenMutation,
+  useLazyGetSpecimenQuery,
 } = specimen;

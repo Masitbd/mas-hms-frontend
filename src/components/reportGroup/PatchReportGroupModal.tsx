@@ -17,6 +17,7 @@ import {
   Input,
   SelectPicker,
 } from "rsuite";
+import { testResultType } from "../Test/initialDataAndTypes";
 const ReportGroupPatchModal = ({
   open,
   patchReportGroup,
@@ -38,6 +39,7 @@ const ReportGroupPatchModal = ({
   const formRef: React.MutableRefObject<any> = React.useRef();
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
+    testResultType: StringType().isRequired("This field is required."),
 
     department: StringType().isRequired("This field is required."),
   });
@@ -47,6 +49,7 @@ const ReportGroupPatchModal = ({
     description: string;
     value: string;
     department: string;
+    testResultType: string;
   }>(defalutValue);
   const handleSubmit = () => {
     if (formRef.current.check()) {
@@ -76,6 +79,7 @@ const ReportGroupPatchModal = ({
                 description: formValue.description || "",
                 value: formValue.value || "",
                 department: formValue.department || "",
+                testResultType: formValue.testResultType || "",
               });
 
               // Additional logic if needed
@@ -89,6 +93,15 @@ const ReportGroupPatchModal = ({
               <Form.ControlLabel>Title</Form.ControlLabel>
               <Form.Control name="label" />
             </Form.Group>
+            <Form.Group controlId="testResultType">
+              <Form.ControlLabel>Test Result Type</Form.ControlLabel>
+              <Form.Control
+                name="testResultType"
+                accepter={SelectPicker}
+                data={testResultType}
+                block
+              />
+            </Form.Group>{" "}
             <Form.Group controlId="description">
               <Form.ControlLabel>Description</Form.ControlLabel>
               <Form.Control name="description" />
