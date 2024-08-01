@@ -2,16 +2,24 @@ import React, { useRef } from "react";
 import { Button, Table } from "rsuite";
 import { IComment, IPropsForCommentTable } from "./typesAdInitialData";
 import { ENUM_MODE } from "@/enum/Mode";
-import { useDeleteMutation } from "@/redux/api/comment/commentSlice";
+import {
+  useDeleteMutation,
+  useGetQuery,
+} from "@/redux/api/comment/commentSlice";
+import swal from "sweetalert";
 
 const CommentTable = (props: IPropsForCommentTable) => {
-  const { setData, setMode } = props;
+  const { data: commentData, isLoading: commentDataLoading } =
+    useGetQuery(undefined);
+
+  const { setData, setMode, setModalOpen } = props;
   const [remove] = useDeleteMutation();
   const { Column, HeaderCell, Cell } = Table;
   const viewAndEditButtonHandler = (data: IComment, mode: string) => {
     const modifiedData = JSON.parse(JSON.stringify(data));
     setData(modifiedData);
     setMode(mode);
+    setModalOpen(true);
   };
 
   const DeleteButtonHandler = async (props: IComment) => {
@@ -49,12 +57,13 @@ const CommentTable = (props: IPropsForCommentTable) => {
 
   return (
     <div>
-      <Button onClick={() => print()}>Print</Button>{" "}
       <Table
         height={600}
         bordered
         cellBordered
         rowHeight={65}
+        loading={commentDataLoading}
+        data={commentData?.data}
         className="text-md"
       >
         <Column flexGrow={2}>

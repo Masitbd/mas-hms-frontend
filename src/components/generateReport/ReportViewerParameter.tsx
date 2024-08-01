@@ -51,10 +51,25 @@ const ReportViewerParameter = React.forwardRef(
               {params.reportGroup.label}
             </div>
           </div>
-          <div className="border border-1 border-stone-400 p-2 grid grid-cols-2 gap-1 my-5 rounded-md">
+          {params?.testResult?.analyzerMachine ? (
+            <>
+              <div
+                className="border rounded-md px-2 p-3 text-center my-5 border-black"
+                style={{
+                  fontFamily: "monospace",
+                  padding: "1rem 2.5rem",
+                }}
+              >
+                {params.testResult.analyzerMachine}
+              </div>
+            </>
+          ) : (
+            ""
+          )}
+          <div className="border border-1 border-stone-400 p-2 grid grid-cols-2 gap-1 my-5 rounded-md font-serif">
             <div>
               <span className="font-bold">ID: </span>
-              {order.oid}
+              <span className="font-serif">{order.oid}</span>
             </div>
             <div>
               <span className="font-bold">Name: </span>
@@ -91,7 +106,7 @@ const ReportViewerParameter = React.forwardRef(
                   return;
                 }
                 return (
-                  <div key={field}>
+                  <div key={field} className="pb-2">
                     <span className="font-bold px-4">
                       {camelToFlat(field)}{" "}
                     </span>
@@ -107,7 +122,7 @@ const ReportViewerParameter = React.forwardRef(
                 return (
                   <>
                     <div
-                      className={`uppercase font-serif font-bold col-span-4 text-lg underline`}
+                      className={`uppercase font-serif font-bold col-span-4 text-lg py-1`}
                     >
                       {heading}:
                     </div>
@@ -119,19 +134,25 @@ const ReportViewerParameter = React.forwardRef(
                               <>
                                 <div>
                                   <hr />
-                                  <div key={fieldName}>
+                                  <div key={fieldName} className=" py-3 px-2">
                                     <span
                                       className={`${
-                                        fieldName == "result" ? "font-bold" : ""
-                                      } font-serif px-4 py-2`}
+                                        fieldName == "result"
+                                          ? "font-extrabold"
+                                          : ""
+                                      } font-serif `}
                                     >
-                                      {resultField[fieldName]}
+                                      {resultField[fieldName]
+                                        ? resultField[fieldName] + "   "
+                                        : ""}
                                     </span>
-                                    {fieldName == "result"
-                                      ? resultField?.unit
-                                        ? resultField.unit
-                                        : ""
-                                      : ""}
+                                    <span className="text-sm font-mono">
+                                      {fieldName == "result"
+                                        ? resultField?.unit
+                                          ? resultField.unit
+                                          : " "
+                                        : "  "}
+                                    </span>
                                   </div>
                                 </div>
                               </>

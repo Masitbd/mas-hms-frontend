@@ -20,7 +20,6 @@ const Comment = (props: {
     newData.comment = comment;
     props.setResult && props.setResult(newData);
   }, [comment]);
-
   const [activeKey, setActiveKey] = useState(0);
   return (
     <>
@@ -58,11 +57,11 @@ const Comment = (props: {
                 <SelectPicker
                   block
                   loading={commentDataLoading}
-                  data={commentData?.map((cd: IComment) => ({
+                  data={commentData?.data.map((cd: IComment) => ({
                     label: cd?.title,
                     value: cd?.comment,
                   }))}
-                  onSelect={(params) => setComment(params?.value)}
+                  onSelect={(p) => setComment(p)}
                 />
               </div>
               <div>

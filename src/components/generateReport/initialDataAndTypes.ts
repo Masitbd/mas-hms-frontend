@@ -5,6 +5,7 @@ import {
 } from "@/types/allDepartmentInterfaces";
 import { IOrderData } from "../order/initialDataAndTypes";
 import { ENUM_MODE } from "@/enum/Mode";
+import { Dispatch, SetStateAction } from "react";
 
 export type IPropsForGenerateReport = {
   params: { oid: string };
@@ -25,6 +26,7 @@ export type IPropsForParameter = {
   reportGroup: IReportGroup;
   order: IOrderData;
   mode: string;
+  refeatch: any;
 };
 
 export type ITestResultForParameter = {
@@ -34,4 +36,11 @@ export type ITestResultForParameter = {
   comment: string;
   createdAt?: string;
   conductedBy: string;
+  analyzerMachine?: string;
+};
+
+export type IPropsForMargin = {
+  setMargins: Dispatch<SetStateAction<number[]>>;
+  margin: number[];
+  marginTitle: string;
 };

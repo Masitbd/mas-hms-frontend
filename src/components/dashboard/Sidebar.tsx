@@ -192,6 +192,15 @@ const testMenuItem = [
       ENUM_USER_PEMISSION.MANAGE_TESTS,
     ],
   },
+  {
+    key: "15",
+    title: "Comment",
+    href: "/comment",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
 ];
 
 const Sidebar = () => {

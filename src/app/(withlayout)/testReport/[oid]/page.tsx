@@ -13,7 +13,10 @@ const Page = ({ params }: { params: { oid: string } }) => {
     data: orderData,
     isLoading: orderDataLoading,
     isError: orderDataError,
-  } = useGetOrderQuery({ oid: params.oid });
+  } = useGetOrderQuery(
+    { oid: params.oid },
+    { refetchOnMountOrArgChange: true }
+  );
 
   if (orderDataLoading) return <Loading />;
 

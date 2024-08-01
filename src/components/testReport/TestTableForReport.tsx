@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 import React, { useEffect, useState } from "react";
 import { IOrderData } from "../order/initialDataAndTypes";
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
@@ -115,16 +116,17 @@ const TestTableForReport = (props: { data: IOrderData }) => {
                             : "visible"
                         }`}
                       >
-                        <Button
-                          appearance="primary"
-                          color="blue"
-                          size="sm"
+                        <NavLink
                           className="mr-2"
-                          as={NavLink}
                           href={`/generateReport/${props.data.oid}?reportGroup=${rowData._id}&mode=new`}
                         >
-                          <EditIcon className="text-lg" />
-                        </Button>
+                          <Button
+                            children={<EditIcon className="text-lg" />}
+                            appearance="primary"
+                            color="blue"
+                            size="sm"
+                          />
+                        </NavLink>
                       </div>
                       <div
                         className={`${
@@ -133,26 +135,30 @@ const TestTableForReport = (props: { data: IOrderData }) => {
                             : "invisible"
                         }`}
                       >
-                        <Button
-                          appearance="primary"
-                          color="green"
-                          size="sm"
-                          as={NavLink}
+                        <NavLink
                           href={`/generateReport/${props.data.oid}?reportGroup=${rowData._id}&mode=edit`}
-                          title="Update"
                         >
-                          <EditIcon className="text-lg" />
-                        </Button>{" "}
-                        <Button
-                          title="View and Download"
-                          appearance="ghost"
-                          size="sm"
-                          className="ml-2"
-                          color="green"
+                          <Button
+                            children={<EditIcon />}
+                            appearance="primary"
+                            color="green"
+                            size="sm"
+                            title="Update"
+                          />
+                        </NavLink>{" "}
+                        <NavLink
                           href={`/generateReport/${props.data.oid}?reportGroup=${rowData._id}&mode=view`}
                         >
-                          <VisibleIcon className="text-lg" />
-                        </Button>
+                          <Button
+                            // eslint-disable-next-line react/no-children-prop
+                            children={<VisibleIcon />}
+                            title="View and Download"
+                            appearance="ghost"
+                            size="sm"
+                            className="ml-2"
+                            color="green"
+                          />
+                        </NavLink>
                       </div>
                     </>
                   );

@@ -12,8 +12,10 @@ import {
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import MenuBar from "../testReport/TestView/MenuBar";
+import { useEffect, useState } from "react";
 
 const Tiptap = (props: { data: any; setData: any }) => {
+  const [data, setData] = useState(props.data);
   const extensions = [
     Color.configure({ types: [TextStyle.name, ListItem.name] }),
     TextStyle.configure({ types: [ListItem.name] } as any),
@@ -41,12 +43,16 @@ const Tiptap = (props: { data: any; setData: any }) => {
   //   },
   // });
 
+  useEffect(() => {
+    setData(props.data);
+  }, [props.data]);
+
   return (
     <div className="border-stone-200 border-4 p-2">
       <EditorProvider
         slotBefore={<MenuBar />}
         extensions={extensions}
-        content={props.data}
+        content={data}
         onUpdate={(eidtor) => {
           props.setData && props.setData(eidtor.editor.getHTML());
         }}

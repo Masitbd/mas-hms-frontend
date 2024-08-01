@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { IComment, InitalCommentData, IPropsForNewAndUpdate } from "./typesAdInitialData";
+import {
+  IComment,
+  InitalCommentData,
+  IPropsForNewAndUpdate,
+} from "./typesAdInitialData";
 import RModal from "../ui/Modal";
 import { ENUM_MODE } from "@/enum/Mode";
 import { Form, Input } from "rsuite";
@@ -28,7 +32,7 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate) => {
       }
     }
     if (mode == ENUM_MODE.EDIT) {
-      const result = await patch(data);
+      const result = await patch({ data: data, id: data._id });
       if ("data" in result) {
         swal("Success", "Comment Updated Successfully", "success");
         modalCancelHandler();
@@ -48,30 +52,28 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate) => {
   return (
     <div>
       <div>
-        {mode == ENUM_MODE.NEW && (
-          <RModal
-            open={open}
-            size="lg"
-            title="Add Comment to Database"
-            cancelHandler={modalCancelHandler}
-            okHandler={modalOkHandler}
-          >
+        <RModal
+          open={open}
+          size="lg"
+          title="Add Comment to Database"
+          cancelHandler={modalCancelHandler}
+          okHandler={modalOkHandler}
+        >
+          <div>
             <div>
-              <div>
-                <Form onChange={setData}>
-                  <Form.Group controlId="title">
-                    <Form.ControlLabel>Title</Form.ControlLabel>
-                    <Form.Control name="title" />
-                  </Form.Group>
-                </Form>
-                <div className="my-5">
-                  <h3>Comment</h3>
-                  <Tiptap data={data.comment} setData={setComment} />
-                </div>
+              <Form onChange={setData} formDefaultValue={data}>
+                <Form.Group controlId="title">
+                  <Form.ControlLabel>Title</Form.ControlLabel>
+                  <Form.Control name="title" />
+                </Form.Group>
+              </Form>
+              <div className="my-5">
+                <h3>Comment</h3>
+                <Tiptap data={data.comment} setData={setComment} />
               </div>
             </div>
-          </RModal>
-        )}
+          </div>
+        </RModal>
       </div>
     </div>
   );

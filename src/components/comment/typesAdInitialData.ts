@@ -8,7 +8,7 @@ export type IComment = {
 export type IPropsForNewAndUpdate = {
   data: IComment;
   setData: (
-    formValue: Record<Partial<keyof IComment>, string | undefined>,
+    formValue: any,
     event?: SyntheticEvent<Element, Event> | undefined
   ) => void;
   open: boolean;
@@ -23,6 +23,7 @@ export const InitalCommentData: IComment = {
 };
 
 export type IPropsForCommentTable = {
+  setModalOpen: (modalOpen: boolean) => void;
   setData: (data: IComment) => void;
   setMode: (mode: string) => void;
 };

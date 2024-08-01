@@ -30,14 +30,17 @@ import { ENUM_MODE } from "@/enum/Mode";
 import ReportViewerParameter from "./ReportViewerParameter";
 import { useReactToPrint } from "react-to-print";
 import { useRouter } from "next/navigation";
+import jsPDF from "jspdf";
+import Margin from "./Margin";
 
 const ForParameterBased = (props: IPropsForParameter) => {
+  const [margin, setMargins] = useState([0, 0, 0, 0]);
   const router = useRouter();
   const [getReport, { isLoading: getLoading }] = useLazyGetSingleReportQuery();
   const [patchReport, { isLoading: patchLoading }] = usePatchReporMutation();
   const [post, { isLoading: postLoading }] = usePostReportMutation();
   const { HeaderCell, Cell, Column } = Table;
-  const { oid, tests, mode, order, reportGroup } = props;
+  const { oid, tests, mode, order, reportGroup, refeatch } = props;
   const [resultForHook, setResultForHook] = useState();
   const { fieldNames, headings, resultFields, returnResult } = useCleanedTests({
     mode,
@@ -56,12 +59,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
     setResult: any
   ) => {
     const [defaultValue, setDefaultValue] = useState(
-      rowData?.defaultValue as string[]
+      (rowData?.defaultValue as string[]) || []
     );
     const keys = Object.keys(rowData);
-    const dValue = rowData?.defaultValue || [];
-
-    if (keys.includes("defaultValue") && dValue?.length > 0) {
+    console.log(defaultValue);
+    if (keys.includes("defaultValue") && defaultValue?.length > 0) {
       return (
         <>
           <InputPicker
@@ -100,6 +102,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
     }
   };
 
+  // Result handler
   const [result, setResult] = useState<ITestResultForParameter>(
     returnResult as ITestResultForParameter
   );
@@ -129,6 +132,8 @@ const ForParameterBased = (props: IPropsForParameter) => {
       const data = await post(result);
       if ("data" in data) {
         swalButtonHandler(" Report posted Successfully");
+        router.push(`/testReport/${order.oid}`);
+        refeatch && refeatch();
       }
     }
 
@@ -137,6 +142,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
       if ("data" in data) {
         swal("success", "", "success");
         swalButtonHandler("Report updated Successfully");
+        refeatch && refeatch();
       }
     }
   };
@@ -145,6 +151,42 @@ const ForParameterBased = (props: IPropsForParameter) => {
   const componentRef = useRef<ReactInstance | null>();
   const handlePrint = useReactToPrint({
     content: () => componentRef.current as ReactInstance,
+    print: async (element) => {
+      const pdf = new jsPDF("p", "pt", "a4");
+      const dataa = await element.contentDocument;
+
+      pdf.html(dataa?.body as HTMLElement, {
+        callback: function (doc) {
+          // Convert the PDF document to a Blob
+
+          const pdfBlob = doc.output("blob");
+
+          // Create a Blob URL
+          const pdfUrl = URL.createObjectURL(pdfBlob);
+
+          // Open the Blob URL in a new window
+          const newWindow = window.open(pdfUrl);
+
+          // Print the PDF in the new window
+          if (newWindow) {
+            newWindow.addEventListener("load", () => {
+              newWindow.document.title = `${
+                reportGroup.label + "_" + order.oid
+              }`;
+              newWindow.print();
+            });
+          } else {
+            doc.save();
+          }
+        },
+
+        autoPaging: "text",
+        margin: margin,
+        windowWidth: 800,
+        width: 555,
+        filename: `${reportGroup.label + "_" + order.oid}.pdf`,
+      });
+    },
   });
 
   useEffect(() => {
@@ -169,20 +211,35 @@ const ForParameterBased = (props: IPropsForParameter) => {
     return <Loading />;
   }
 
+  if (getLoading) {
+    return <Loading />;
+  }
+
   if (props.mode == ENUM_MODE.VIEW) {
     return (
       <>
-        <div className="my-5  flex items-end justify-end px-10">
-          <Button
-            onClick={handlePrint}
-            className="mb-5"
-            appearance="primary"
-            color="blue"
-            size="lg"
-          >
-            Print
-          </Button>
+        <div className="shadow-lg rounded-md py-5 my-5 mx-2">
+          <div>
+            <Margin
+              margin={margin}
+              marginTitle="p"
+              setMargins={setMargins}
+              key={"p"}
+            />
+          </div>
+          <div className="flex justify-end mr-9">
+            <Button
+              onClick={handlePrint}
+              className="mb-5 col-span-4"
+              appearance="primary"
+              color="blue"
+              size="lg"
+            >
+              Print
+            </Button>
+          </div>
         </div>
+
         <ReportViewerParameter
           order={props.order}
           reportGroup={props.reportGroup}
@@ -198,6 +255,16 @@ const ForParameterBased = (props: IPropsForParameter) => {
     return (
       <div>
         <div>
+          <div className="mt-5">
+            Analyzer Machine Name
+            <Input
+              onChange={(value) => {
+                const data = { ...result };
+                (data.analyzerMachine = value), setResult(data);
+              }}
+              defaultValue={result?.analyzerMachine}
+            />
+          </div>
           <div>
             {headings.map((heading, index) => {
               return (
@@ -262,7 +329,12 @@ const ForParameterBased = (props: IPropsForParameter) => {
         </div>
 
         <div className="flex flex-row justify-end  my-5 w-3/4">
-          <Button appearance="primary" color="red" size="lg">
+          <Button
+            appearance="primary"
+            color="red"
+            size="lg"
+            onClick={() => router.push(`/testReport/${order.oid}`)}
+          >
             Cancel
           </Button>
           <Button
@@ -271,6 +343,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
             className="ml-5"
             size="lg"
             onClick={handleSubmit}
+            loading={patchLoading || postLoading}
           >
             Post
           </Button>

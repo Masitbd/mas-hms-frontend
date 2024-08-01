@@ -8,7 +8,11 @@ import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
 import React, { useEffect, useState } from "react";
 
 const GenerateReport = (props: IPropsForGenerateReport) => {
-  const { data: orderData, isLoading: OrderDataLoading } = useGetOrderQuery({
+  const {
+    data: orderData,
+    isLoading: OrderDataLoading,
+    refetch,
+  } = useGetOrderQuery({
     oid: props.params.oid,
   });
   const { data: reportGroupData, isLoading: reportGroupDataLoading } =
@@ -27,6 +31,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           reportGroup={reportGroupData?.data as IReportGroup}
           order={orderData?.data[0]}
           mode={props.searchParams.mode}
+          refeatch={refetch}
         />
       );
       break;

@@ -23,9 +23,10 @@ const Comment = () => {
   const modeHandler = (param: string) => {
     setMode(param as ENUM_MODE);
   };
+
   return (
     <div>
-      <div>
+      <div className="my-3">
         <Button
           appearance="primary"
           color="blue"
@@ -45,7 +46,11 @@ const Comment = () => {
         />
       </div>
       <div>
-        <CommentTable setData={commentDataHandler} setMode={modeHandler} />
+        <CommentTable
+          setData={commentDataHandler}
+          setMode={modeHandler}
+          setModalOpen={commentModalHandler}
+        />
       </div>
     </div>
   );
