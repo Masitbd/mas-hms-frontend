@@ -1,61 +1,64 @@
+import { InitialDoctorData } from "@/app/(withlayout)/doctorSeal/page";
 import { ENUM_MODE } from "@/enum/Mode";
 import {
-  usePatchMutation,
-  usePostMutation,
+    usePatchMutation,
+    usePostMutation,
 } from "@/redux/api/comment/commentSlice";
 import { useEffect, useState } from "react";
 import { Form } from "rsuite";
 import swal from "sweetalert";
+import { IDoctorSeal, IPropsForNewAndUpdate } from "../comment/typesAdInitialData";
 import Tiptap from "../tiptap/TipTap";
 import RModal from "../ui/Modal";
-import {
-  IComment,
-  InitalCommentData,
-  IPropsForNewAndUpdate,
-} from "./typesAdInitialData";
 
-const NewAndUpdate = (props: IPropsForNewAndUpdate<IComment>) => {
+const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
   const { data, open, setData, setOpen, mode, setMode } = props;
   const [post] = usePostMutation();
   const [patch] = usePatchMutation();
   const modalCancelHandler = () => {
     setOpen(false);
-    setData(InitalCommentData as IComment);
+    setData(InitialDoctorData as IDoctorSeal);
     setMode(ENUM_MODE.NEW);
   };
   const modalOkHandler = async () => {
     if (mode == ENUM_MODE.NEW) {
       const result = await post(data);
-      if ("data" in result) {
-        swal("Success", "Comment Created Successfully", "success");
-        modalCancelHandler();
+      if ('data' in result) {
+        const message = (result as { data: { message: string } })?.data.message;
+        swal(`Success! ${message}!`, {
+          icon: "success",
+        })
+        modalCancelHandler()
       }
     }
     if (mode == ENUM_MODE.EDIT) {
       const result = await patch({ data: data, id: data._id });
-      if ("data" in result) {
-        swal("Success", "Comment Updated Successfully", "success");
-        modalCancelHandler();
+      if ('data' in result) {
+        const message = (result as { data: { message: string } })?.data.message;
+        swal(`Success! ${message}!`, {
+          icon: "success",
+        })
+        modalCancelHandler()
       }
     } else {
       modalCancelHandler();
     }
   };
-  const [comment, setComment] = useState("");
+  const [seal, setSeal] = useState("");
   useEffect(() => {
     setData({
       ...data,
-      comment: comment,
+      seal: seal,
     });
-  }, [comment]);
+  }, [seal]);
 
   return (
     <div>
       <div>
         <RModal
           open={open}
-          size="lg"
-          title="Add Comment to Database"
+          size="xl"
+          title="Add Doctor Seal to Database"
           cancelHandler={modalCancelHandler}
           okHandler={modalOkHandler}
         >
@@ -69,7 +72,7 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate<IComment>) => {
               </Form>
               <div className="my-5">
                 <h3>Comment</h3>
-                <Tiptap data={data.comment} setData={setComment} />
+                <Tiptap data={data.seal} setData={setSeal} />
               </div>
             </div>
           </div>
@@ -79,4 +82,4 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate<IComment>) => {
   );
 };
 
-export default NewAndUpdate;
+export default NewAndUpdateSeal;

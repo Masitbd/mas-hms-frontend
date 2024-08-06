@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Tiptap from "../tiptap/TipTap";
-import { Accordion, Button, SelectPicker } from "rsuite";
-import { ITestResultForParameter } from "./initialDataAndTypes";
 import { useGetQuery } from "@/redux/api/comment/commentSlice";
-import { IComment } from "../comment/typesAdInitialData";
+import { useGetSealQuery } from "@/redux/api/doctorSeal/doctorSealSlice";
+import { useEffect, useState } from "react";
+import { Accordion, Button, SelectPicker } from "rsuite";
+import { IComment, IDoctorSeal } from "../comment/typesAdInitialData";
+import Tiptap from "../tiptap/TipTap";
+import { ITestResultForParameter } from "./initialDataAndTypes";
 
 const Comment = (props: {
   result: ITestResultForParameter;
@@ -11,15 +12,20 @@ const Comment = (props: {
 }) => {
   const { data: commentData, isLoading: commentDataLoading } =
     useGetQuery(undefined);
+  const { data: sealData, isLoading: sealDataLoading } =
+    useGetSealQuery(undefined);
   const [comment, setComment] = useState(props?.result?.comment);
+  const [seal, setSeal] = useState(props?.result?.seal);
 
+  console.log(comment)
   useEffect(() => {
     const newData = {
       ...props.result,
     };
     newData.comment = comment;
+    newData.seal = seal;
     props.setResult && props.setResult(newData);
-  }, [comment]);
+  }, [comment, props, seal]);
   const [activeKey, setActiveKey] = useState(0);
   return (
     <>
@@ -61,12 +67,42 @@ const Comment = (props: {
                     label: cd?.title,
                     value: cd?.comment,
                   }))}
-                  onSelect={(p) => setComment(p)}
+                  onSelect={(p) => {
+                    console.log(p);
+                    setComment(p)
+                  }}
                 />
               </div>
               <div>
                 Not in the Saved Comment ? Click{" "}
                 <span className="text-blue-500">Here</span> to Add New Comment
+                to the database
+              </div>
+            </div>
+          </div>
+        </Accordion.Panel>
+        <Accordion.Panel eventKey={2}>
+          <div className="w-full border border-stone-200 rounded-md p-10">
+            <Tiptap data={seal} setData={setSeal} />
+            <div>
+              <div className="w-1/5 my-4">
+                <h3>Select Saved Doctor Seal</h3>
+                <SelectPicker
+                  block
+                  loading={sealDataLoading}
+                  data={sealData?.data.map((cd: IDoctorSeal) => ({
+                    label: cd?.title,
+                    value: cd?.seal,
+                  }))}
+                  onSelect={(p) => {
+                    console.log(p);
+                    setComment(p)
+                  }}
+                />
+              </div>
+              <div>
+                Not in the Saved Doctor Seal ? Click{" "}
+                <span className="text-blue-500">Here</span> to Add New Doctor Seal
                 to the database
               </div>
             </div>

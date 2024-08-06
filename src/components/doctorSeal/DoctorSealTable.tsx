@@ -1,29 +1,27 @@
-import { ENUM_MODE } from "@/enum/Mode";
-import {
-  useDeleteMutation,
-  useGetQuery,
-} from "@/redux/api/comment/commentSlice";
 import { Button, Table } from "rsuite";
-import swal from "sweetalert";
-import { IComment, IPropsForTable } from "./typesAdInitialData";
 
-const CommentTable = (props: IPropsForTable<IComment>) => {
-  const { data: commentData, isLoading: commentDataLoading } =
-    useGetQuery(undefined);
+import { ENUM_MODE } from "@/enum/Mode";
+import { useDeleteSealMutation, useGetSealQuery } from "@/redux/api/doctorSeal/doctorSealSlice";
+import swal from "sweetalert";
+import { IDoctorSeal, IPropsForTable } from "../comment/typesAdInitialData";
+
+const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
+  const { data: sealData, isLoading: sealDataLoading } =
+    useGetSealQuery(undefined);
 
   const { setData, setMode, setModalOpen } = props;
-  const [remove] = useDeleteMutation();
+  const [deleteSeal] = useDeleteSealMutation();
   const { Column, HeaderCell, Cell } = Table;
-  const viewAndEditButtonHandler = (data: IComment, mode: string) => {
+  const viewAndEditButtonHandler = (data: IDoctorSeal, mode: string) => {
     const modifiedData = JSON.parse(JSON.stringify(data));
     setData(modifiedData);
     setMode(mode);
     setModalOpen(true);
   };
 
-  const DeleteButtonHandler = async (props: IComment) => {
+  const DeleteButtonHandler = async (props: IDoctorSeal) => {
     const confirm = await swal({
-      text: "Are you sure you want to delete this comment",
+      text: "Are you sure you want to delete this doctor seal",
       title: "Warning",
       icon: "error",
       buttons: {
@@ -45,10 +43,11 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
     });
 
     if (confirm) {
-      const result = await remove(props._id);
-      if ("data" in result) {
-        swal("success", "Comment Deleted successfully", "success");
-      }
+      const result = await deleteSeal(props._id);
+      const message = (result as { data: { message: string } })?.data.message;
+        swal(`Success! ${message}!`, {
+          icon: "success",
+        })
     }
   };
 
@@ -61,8 +60,8 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
         bordered
         cellBordered
         rowHeight={65}
-        loading={commentDataLoading}
-        data={commentData?.data}
+        loading={sealDataLoading}
+        data={sealData?.data}
         className="text-md"
       >
         <Column flexGrow={2}>
@@ -72,11 +71,11 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
         <Column flexGrow={2}>
           <HeaderCell>Comment</HeaderCell>
           <Cell>
-            {(rowdata: IComment) => (
+            {(rowdata: IDoctorSeal) => (
               <>
-                {rowdata?.comment ? (
+                {rowdata?.seal ? (
                   <div
-                    dangerouslySetInnerHTML={{ __html: rowdata.comment }}
+                    dangerouslySetInnerHTML={{ __html: rowdata.seal }}
                   ></div>
                 ) : (
                   ""
@@ -88,7 +87,7 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
         <Column flexGrow={2}>
           <HeaderCell>Action</HeaderCell>
           <Cell>
-            {(rowdata: IComment) => (
+            {(rowdata: IDoctorSeal) => (
               <>
                 <Button
                   appearance="primary"
@@ -124,4 +123,4 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
   );
 };
 
-export default CommentTable;
+export default DoctorSealTable;

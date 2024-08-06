@@ -1,18 +1,21 @@
-import { setDocxContent } from "@/redux/features/discriptiveTem/docxTemSlice";
-import { useAppDispatch } from "@/redux/hook";
-import { useCurrentEditor } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
 import "./TestViewD.css";
-const MenuBar = () => {
-  const { editor } = useCurrentEditor();
-  const dispatch = useAppDispatch();
+
+interface MenuBarProps{
+  editor: Editor | null
+}
+const MenuBar = ({editor}: MenuBarProps) => {
+  // const { editor } = useCurrentEditor();
+  // const dispatch = useAppDispatch();
 
   if (!editor) {
     return null;
   }
 
-  editor.on("update", ({ editor }) => {
-    dispatch(setDocxContent(editor.getHTML()));
-  });
+  // editor.on("update", ({ editor }) => {
+  //   console.log(editor)
+  //   dispatch(setDocxContent(editor.getHTML()));
+  // });
 
   return (
     <div className="flex gap-2 mb-4 ml-6">
@@ -20,7 +23,7 @@ const MenuBar = () => {
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
         className={`flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1${
-          editor.isActive("bold") ? "is-active" : ""
+          editor.isActive("bold") ? "is-active red" : ""
         }`}
       >
         <svg
@@ -136,7 +139,9 @@ const MenuBar = () => {
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive("heading", { level: 2 }) ? "is-active" : ""}
+        className={`flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1${
+          editor.isActive("heading", { level: 2 }) ? "red" : ""
+        }`}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

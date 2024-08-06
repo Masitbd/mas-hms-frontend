@@ -1,36 +1,33 @@
-import React, { ReactInstance, Ref, useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Input,
-  InputGroup,
-  InputPicker,
-  Modal,
-  SelectPicker,
-  Table,
-} from "rsuite";
-import {
-  IPropsForParameter,
-  ITestResultForParameter,
-} from "./initialDataAndTypes";
-import {
-  filterResultFieldsByInvestigation,
-  resultSetter,
-  useCleanedTests,
-} from "./functions";
-import { IResultField } from "@/types/allDepartmentInterfaces";
-import Comment from "./Comment";
+import Loading from "@/app/loading";
+import { ENUM_MODE } from "@/enum/Mode";
 import {
   useLazyGetSingleReportQuery,
   usePatchReporMutation,
   usePostReportMutation,
 } from "@/redux/api/reportTest/reportTestSlice";
+import { IResultField } from "@/types/allDepartmentInterfaces";
+import { ReactInstance, Ref, useEffect, useRef, useState } from "react";
+import {
+  Button,
+  Input,
+  InputGroup,
+  InputPicker,
+  Table
+} from "rsuite";
 import swal from "sweetalert";
-import Loading from "@/app/loading";
-import { ENUM_MODE } from "@/enum/Mode";
+import Comment from "./Comment";
+import {
+  filterResultFieldsByInvestigation,
+  resultSetter,
+  useCleanedTests,
+} from "./functions";
+import {
+  IPropsForParameter,
+  ITestResultForParameter,
+} from "./initialDataAndTypes";
 import ReportViewerParameter from "./ReportViewerParameter";
-import { useReactToPrint } from "react-to-print";
+// import { useReactToPrint } from "react-to-print";
 import { useRouter } from "next/navigation";
-import jsPDF from "jspdf";
 import Margin from "./Margin";
 
 const ForParameterBased = (props: IPropsForParameter) => {
@@ -72,6 +69,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
             }
             creatable
             onSelect={(value) => {
+              console.log(result)
               resultSetter(rowData._id, result, value, setResult);
             }}
             defaultValue={rowData?.result}
@@ -149,45 +147,45 @@ const ForParameterBased = (props: IPropsForParameter) => {
 
   // ------------------------------------For print ----------------
   const componentRef = useRef<ReactInstance | null>();
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current as ReactInstance,
-    print: async (element) => {
-      const pdf = new jsPDF("p", "pt", "a4");
-      const dataa = await element.contentDocument;
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current as ReactInstance,
+  //   print: async (element) => {
+  //     const pdf = new jsPDF("p", "pt", "a4");
+  //     const dataa = await element.contentDocument;
 
-      pdf.html(dataa?.body as HTMLElement, {
-        callback: function (doc) {
-          // Convert the PDF document to a Blob
+  //     pdf.html(dataa?.body as HTMLElement, {
+  //       callback: function (doc) {
+  //         // Convert the PDF document to a Blob
 
-          const pdfBlob = doc.output("blob");
+  //         const pdfBlob = doc.output("blob");
 
-          // Create a Blob URL
-          const pdfUrl = URL.createObjectURL(pdfBlob);
+  //         // Create a Blob URL
+  //         const pdfUrl = URL.createObjectURL(pdfBlob);
 
-          // Open the Blob URL in a new window
-          const newWindow = window.open(pdfUrl);
+  //         // Open the Blob URL in a new window
+  //         const newWindow = window.open(pdfUrl);
 
-          // Print the PDF in the new window
-          if (newWindow) {
-            newWindow.addEventListener("load", () => {
-              newWindow.document.title = `${
-                reportGroup.label + "_" + order.oid
-              }`;
-              newWindow.print();
-            });
-          } else {
-            doc.save();
-          }
-        },
+  //         // Print the PDF in the new window
+  //         if (newWindow) {
+  //           newWindow.addEventListener("load", () => {
+  //             newWindow.document.title = `${
+  //               reportGroup.label + "_" + order.oid
+  //             }`;
+  //             newWindow.print();
+  //           });
+  //         } else {
+  //           doc.save();
+  //         }
+  //       },
 
-        autoPaging: "text",
-        margin: margin,
-        windowWidth: 800,
-        width: 555,
-        filename: `${reportGroup.label + "_" + order.oid}.pdf`,
-      });
-    },
-  });
+  //       autoPaging: "text",
+  //       margin: margin,
+  //       windowWidth: 800,
+  //       width: 555,
+  //       filename: `${reportGroup.label + "_" + order.oid}.pdf`,
+  //     });
+  //   },
+  // });
 
   useEffect(() => {
     (async function () {
@@ -229,7 +227,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
           </div>
           <div className="flex justify-end mr-9">
             <Button
-              onClick={handlePrint}
+              // onClick={handlePrint}
               className="mb-5 col-span-4"
               appearance="primary"
               color="blue"

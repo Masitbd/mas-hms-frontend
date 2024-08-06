@@ -5,8 +5,13 @@ export type IComment = {
   title: string;
   comment: string;
 };
-export type IPropsForNewAndUpdate = {
-  data: IComment;
+export type IDoctorSeal = {
+  _id?: string;
+  title: string;
+  seal: string;
+};
+export type IPropsForNewAndUpdate<T> = {
+  data: T;
   setData: (
     formValue: any,
     event?: SyntheticEvent<Element, Event> | undefined
@@ -19,11 +24,15 @@ export type IPropsForNewAndUpdate = {
 
 export const InitalCommentData: IComment = {
   title: "",
-  comment: "",
+  comment: ""
+};
+export const InitialDoctorSealData: IDoctorSeal = {
+  title: "",
+  seal: ""
 };
 
-export type IPropsForCommentTable = {
+export type IPropsForTable<T> = {
   setModalOpen: (modalOpen: boolean) => void;
-  setData: (data: IComment) => void;
+  setData: (data: T) => void;
   setMode: (mode: string) => void;
 };

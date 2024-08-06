@@ -3,9 +3,8 @@ import {
   IResultField,
   ITest,
 } from "@/types/allDepartmentInterfaces";
-import { IOrderData } from "../order/initialDataAndTypes";
-import { ENUM_MODE } from "@/enum/Mode";
 import { Dispatch, SetStateAction } from "react";
+import { IOrderData } from "../order/initialDataAndTypes";
 
 export type IPropsForGenerateReport = {
   params: { oid: string };
@@ -34,6 +33,7 @@ export type ITestResultForParameter = {
   reportGroup: IReportGroup;
   testResult: IResultField[];
   comment: string;
+  seal: string;
   createdAt?: string;
   conductedBy: string;
   analyzerMachine?: string;
