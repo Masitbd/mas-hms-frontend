@@ -4,43 +4,43 @@ const DoctorSeal = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postSeal: build.mutation({
       query: (data: any) => ({
-        url: "/doctorSeal",
+        url: "/seal",
         method: "post",
         body: data,
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["doctorSeal"],
+      invalidatesTags: ["seal"],
     }),
     patchSeal: build.mutation({
       query: ({ data, id }) => ({
-        url: `/doctorSeal/${id}`,
+        url: `/seal/${id}`,
         method: "PATCH",
         body: data,
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["doctorSeal"],
+      invalidatesTags: ["seal"],
     }),
     deleteSeal: build.mutation({
       query: (data) => ({
-        url: `/doctorSeal/${data}`,
+        url: `/seal/${data}`,
         method: "delete",
         contentType: "application/json",
       }),
-      invalidatesTags: ["doctorSeal"],
+      invalidatesTags: ["seal"],
     }),
     getSeal: build.query({
       query: () => ({
-        url: "/doctorSeal",
+        url: "/seal",
         method: "get",
         contentType: "application/json",
       }),
-      providesTags: ["doctorSeal"],
+      providesTags: ["seal"],
     }),
     getSingleSeal: build.mutation({
       query: (data: any) => ({
-        url: `/doctorSeal/${data}`,
+        url: `/seal/${data}`,
         method: "get",
         contentType: "application/json",
       }),

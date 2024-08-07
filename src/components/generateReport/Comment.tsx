@@ -18,6 +18,7 @@ const Comment = (props: {
   const [seal, setSeal] = useState(props?.result?.seal);
 
   console.log(comment)
+  console.log(props?.result?.seal)
   useEffect(() => {
     const newData = {
       ...props.result,
@@ -25,7 +26,7 @@ const Comment = (props: {
     newData.comment = comment;
     newData.seal = seal;
     props.setResult && props.setResult(newData);
-  }, [comment, props, seal]);
+  }, [comment, seal]);
   const [activeKey, setActiveKey] = useState(0);
   return (
     <>
@@ -96,7 +97,7 @@ const Comment = (props: {
                   }))}
                   onSelect={(p) => {
                     console.log(p);
-                    setComment(p)
+                    setSeal(p)
                   }}
                 />
               </div>

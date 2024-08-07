@@ -69,7 +69,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
           <Cell dataKey="title" />
         </Column>
         <Column flexGrow={2}>
-          <HeaderCell>Comment</HeaderCell>
+          <HeaderCell>Seal</HeaderCell>
           <Cell>
             {(rowdata: IDoctorSeal) => (
               <>

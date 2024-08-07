@@ -83,8 +83,7 @@ import MenuBar from "../testReport/TestView/MenuBar";
 
 const Tiptap = (props: { data: any; setData: any }) => {
   const [data, setData] = useState(props.data);
-  const data2 = `${data}`
-  console.log(data2)
+console.log(data)
   // const modifiedData = JSON.parse(JSON.stringify(data));
 
 

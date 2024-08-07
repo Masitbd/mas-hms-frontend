@@ -58,6 +58,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
     const [defaultValue, setDefaultValue] = useState(
       (rowData?.defaultValue as string[]) || []
     );
+    console.log('61',result)
     const keys = Object.keys(rowData);
     console.log(defaultValue);
     if (keys.includes("defaultValue") && defaultValue?.length > 0) {
@@ -321,7 +322,6 @@ const ForParameterBased = (props: IPropsForParameter) => {
             })}
           </div>
         </div>
-
         <div>
           <Comment result={result} setResult={setResult} />
         </div>

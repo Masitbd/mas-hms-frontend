@@ -1,28 +1,25 @@
-import { InitialDoctorData } from "@/app/(withlayout)/doctorSeal/page";
+
 import { ENUM_MODE } from "@/enum/Mode";
-import {
-    usePatchMutation,
-    usePostMutation,
-} from "@/redux/api/comment/commentSlice";
+import { usePatchSealMutation, usePostSealMutation } from "@/redux/api/doctorSeal/doctorSealSlice";
 import { useEffect, useState } from "react";
 import { Form } from "rsuite";
 import swal from "sweetalert";
-import { IDoctorSeal, IPropsForNewAndUpdate } from "../comment/typesAdInitialData";
+import { IDoctorSeal, InitialDoctorSealData, IPropsForNewAndUpdate } from "../comment/typesAdInitialData";
 import Tiptap from "../tiptap/TipTap";
 import RModal from "../ui/Modal";
 
 const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
   const { data, open, setData, setOpen, mode, setMode } = props;
-  const [post] = usePostMutation();
-  const [patch] = usePatchMutation();
+  const [postSeal] = usePostSealMutation();
+  const [patchSeal] = usePatchSealMutation();
   const modalCancelHandler = () => {
     setOpen(false);
-    setData(InitialDoctorData as IDoctorSeal);
+    setData(InitialDoctorSealData as IDoctorSeal);
     setMode(ENUM_MODE.NEW);
   };
   const modalOkHandler = async () => {
     if (mode == ENUM_MODE.NEW) {
-      const result = await post(data);
+      const result = await postSeal(data);
       if ('data' in result) {
         const message = (result as { data: { message: string } })?.data.message;
         swal(`Success! ${message}!`, {
@@ -32,7 +29,7 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
       }
     }
     if (mode == ENUM_MODE.EDIT) {
-      const result = await patch({ data: data, id: data._id });
+      const result = await patchSeal({ data: data, id: data._id });
       if ('data' in result) {
         const message = (result as { data: { message: string } })?.data.message;
         swal(`Success! ${message}!`, {

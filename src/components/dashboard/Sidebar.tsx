@@ -1,13 +1,13 @@
-import { Sidebar as ResuiteSidebar, Sidenav, Navbar, Nav } from "rsuite";
-import CogIcon from "@rsuite/icons/legacy/Cog";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { NavLink } from "@/utils/Navlink";
 import AngleLeftIcon from "@rsuite/icons/legacy/AngleLeft";
 import AngleRightIcon from "@rsuite/icons/legacy/AngleRight";
+import CogIcon from "@rsuite/icons/legacy/Cog";
 import GearCircleIcon from "@rsuite/icons/legacy/GearCircle";
 import MagicIcon from "@rsuite/icons/legacy/Magic";
 import { useState } from "react";
-import { NavLink } from "@/utils/Navlink";
-import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
-import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { Nav, Navbar, Sidebar as ResuiteSidebar, Sidenav } from "rsuite";
 
 interface NavToggleProps {
   expand: boolean;
@@ -196,6 +196,15 @@ const testMenuItem = [
     key: "15",
     title: "Comment",
     href: "/comment",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "16",
+    title: "Doctor Seal",
+    href: "/doctorSeal",
     requiredPermission: [
       ENUM_USER_PEMISSION.GET_TESTS,
       ENUM_USER_PEMISSION.MANAGE_TESTS,
