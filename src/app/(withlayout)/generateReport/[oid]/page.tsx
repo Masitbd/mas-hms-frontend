@@ -1,7 +1,9 @@
 "use client";
 import Loading from "@/app/loading";
+import ForDescriptionBased from "@/components/generateReport/ForDescriptionBased";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
+import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
 import { useGetSingleReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
@@ -34,6 +36,10 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           refeatch={refetch}
         />
       );
+      break;
+
+    case "descriptive":
+      resultGeneratorComponent = <ForDescriptionBased />;
       break;
 
     default:
