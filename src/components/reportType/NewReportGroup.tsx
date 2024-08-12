@@ -72,9 +72,13 @@ const NewReportGroup = (props: INewReportGroupProps) => {
   const formSbmitHandlerFunction = async () => {
     if (ref.current.check()) {
       if (mode == ENUM_MODE.NEW) {
-        const { group, resultType, department, reportGroup } = formData;
+        const { group, resultType, reportGroup } = formData;
 
-        await postGroup({ group, resultType, department, reportGroup });
+        const result = await postGroup({ group, resultType, reportGroup });
+        if ("data" in result) {
+          swal("Success", "Posted Successfully", "success");
+          setFormData(initialFormData);
+        }
       }
       if (mode == ENUM_MODE.EDIT) {
         const { group, resultType, department, reportGroup } = formData;
@@ -83,12 +87,12 @@ const NewReportGroup = (props: INewReportGroupProps) => {
           data: {
             group,
             resultType,
-            department,
             reportGroup,
           },
           id: formData._id,
         });
         if ("data" in result) {
+          setFormData(initialFormData);
           swal("Success", "Updated Successfully", "success");
           setMode && setMode(ENUM_MODE.NEW);
         } else {
@@ -97,12 +101,6 @@ const NewReportGroup = (props: INewReportGroupProps) => {
       }
     }
   };
-  useEffect(() => {
-    if (postGroupSuccess) {
-      swal("Success", "Posted successfully", "success");
-      setFormData(initialFormData);
-    }
-  }, [postGroupSuccess]);
   return (
     <div>
       <div className="">

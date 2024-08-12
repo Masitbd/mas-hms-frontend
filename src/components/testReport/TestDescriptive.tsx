@@ -186,7 +186,7 @@ const TestDescriptive = ({
       {docxContents && (
         <div className="bg-gray-100 rounded p-4 editor">
           <EditorProvider
-            slotBefore={<MenuBar />}
+            slotBefore={<MenuBar editor={null} />}
             extensions={extensions}
             content={content}
           >

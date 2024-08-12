@@ -4,6 +4,7 @@ import { Button, Form, Schema, Table, TagInput } from "rsuite";
 import swal from "sweetalert";
 import RModal from "../ui/Modal";
 import ExistingTest from "./ExistingTest";
+import { ENUM_MODE } from "@/enum/Mode";
 type NewITestType = IResultField & { gid: number };
 const { Cell, Column, HeaderCell } = Table;
 const ForParameterBased = ({
@@ -19,7 +20,7 @@ const ForParameterBased = ({
   const formRef: React.MutableRefObject<any> = React.useRef();
   const [modalOpen, setModalOpen] = useState(false);
   const initialValue = {
-    title: "",
+    investigation: "",
     test: "",
     unit: "",
     normalValue: "",
@@ -31,10 +32,13 @@ const ForParameterBased = ({
     initialValue
   );
   const [mode, setMode] = useState("");
-  const patchOpenHandler = (data: NewITestType) => {
+  const patchOpenHandler = (data: NewITestType, index: number) => {
     setMode("patch");
     setModalOpen(!modalOpen);
-    setfromData(data);
+    const modifiedData = Object.assign({}, data);
+    modifiedData.gid = index;
+
+    setfromData(modifiedData);
   };
 
   //   For new
@@ -56,10 +60,9 @@ const ForParameterBased = ({
         setTestFromData(testFromData);
         setfromData(initialValue);
       } else {
-        const newDate = resultFieldData.filter(
-          (data: NewITestType) => data.gid !== fromData.gid
-        );
-        testFromData.resultFields = [...newDate, fromData];
+        const modifiedData = [...testFromData.resultFields];
+        modifiedData[fromData.gid] = fromData;
+        testFromData.resultFields = [...modifiedData];
         setTestFromData(testFromData);
         setModalOpen(!modalOpen);
         setfromData(initialValue);
@@ -72,6 +75,7 @@ const ForParameterBased = ({
   };
   // Fro delete
   const deleteHanldler = (index: number) => {
+    setMode(ENUM_MODE.VIEW);
     swal({
       title: "Are you sure?",
       text: "Are you sure that you want to delete this ?",
@@ -91,7 +95,7 @@ const ForParameterBased = ({
   };
   const { StringType, NumberType } = Schema.Types;
   const model = Schema.Model({
-    title: StringType().isRequired("This field is required."),
+    investigation: StringType().isRequired("This field is required."),
     test: StringType().isRequired("This field is required."),
   });
 
@@ -136,7 +140,7 @@ const ForParameterBased = ({
         >
           <Column flexGrow={3} align="center" fixed>
             <HeaderCell>Investigation</HeaderCell>
-            <Cell dataKey="title" />
+            <Cell dataKey="investigation" />
           </Column>
 
           <Column flexGrow={4} fixed>
@@ -168,7 +172,9 @@ const ForParameterBased = ({
                     appearance="ghost"
                     color="blue"
                     className="ml-2"
-                    onClick={() => patchOpenHandler(rowdate as NewITestType)}
+                    onClick={() =>
+                      patchOpenHandler(rowdate as NewITestType, index as number)
+                    }
                   >
                     Edit
                   </Button>
@@ -201,9 +207,9 @@ const ForParameterBased = ({
             model={model}
             ref={formRef}
           >
-            <Form.Group controlId="title">
+            <Form.Group controlId="investigation">
               <Form.ControlLabel>Investigation</Form.ControlLabel>
-              <Form.Control name="title" />
+              <Form.Control name="investigation" />
             </Form.Group>
             <Form.Group controlId="test">
               <Form.ControlLabel>Test</Form.ControlLabel>
@@ -221,7 +227,7 @@ const ForParameterBased = ({
             <Form.Group controlId="pdrvValues">
               <Form.ControlLabel>Default Values</Form.ControlLabel>
 
-              <Form.Control name="defaultValues" accepter={TagInput} block />
+              <Form.Control name="defaultValue" accepter={TagInput} block />
             </Form.Group>
           </Form>
         </RModal>

@@ -26,7 +26,6 @@ const TestForm = (props: ITestFormProps) => {
   const { data: vaccumeTubeData } = useGetVacuumTubeQuery(undefined);
   const { data: reportGroupData } = useGetReportGroupQuery(undefined);
   const { data: hospitalGroupData } = useGetHospitalGroupQuery(undefined);
-
   return (
     <div className=" px-5 ">
       <div className="my-5">
