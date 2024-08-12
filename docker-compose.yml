@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 services:
   nextjs:
     build: .
@@ -8,5 +8,13 @@ services:
       - .:/app
       - /app/node_modules
     environment:
-      NODE_ENV: development
-    #command: npm run dev
+      - NODE_ENV=development
+      
+    networks:
+      - mas-hms-network
+
+networks:
+  mas-hms-network:
+    external: true   
+
+
