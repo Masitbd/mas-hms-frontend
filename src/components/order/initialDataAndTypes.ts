@@ -24,6 +24,7 @@ export type InitialData = {
   refBy?: string; // Make refBy optional
   deliveryTime: Date;
   dueAmount?: number;
+  consultant?: string;
 };
 
 export type IInitialData = {
@@ -41,6 +42,7 @@ export type IInitialData = {
 };
 
 export type IOrderData = {
+  createdAt?: string | number | Date;
   oid?: string;
   _id?: string;
   uuid?: string;
@@ -52,7 +54,7 @@ export type IOrderData = {
     SL: number;
     status: string;
     discount: number;
-    test: string | undefined;
+    test: string | undefined | ITest;
   }[];
   totalPrice: number;
   cashDiscount: number;
@@ -61,6 +63,7 @@ export type IOrderData = {
   patientType: string;
   paid: number;
   vat: number;
+  consultant?: string;
 };
 
 export const initialData: InitialData = {

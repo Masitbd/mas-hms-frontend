@@ -19,6 +19,7 @@ export type IReportGroup = {
   value: string;
   description: string;
   department: string;
+  testResultType: string;
 };
 export type IVacuumTube = {
   _id?: string;
@@ -71,11 +72,12 @@ export type ISensitivity = {
 };
 
 export type IResultField = {
+  investigation: string;
   title?: string;
   test?: string;
   unit?: string;
   normalValue?: string;
-  defaultValue?: IPdrv[];
+  defaultValue?: string[];
   resultDescription?: string;
   sensitivityOptions?: ISensitivity[];
   conditons?: ICondition[];

@@ -52,6 +52,7 @@ const order = baseApi.injectEndpoints({
         data: { amount: data.amount },
         contentType: "application/json",
       }),
+      invalidatesTags: ["order"],
     }),
   }),
 });

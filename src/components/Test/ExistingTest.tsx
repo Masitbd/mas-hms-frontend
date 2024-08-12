@@ -1,4 +1,8 @@
-import { IResultField, ITest } from "@/types/allDepartmentInterfaces";
+import {
+  IReportGroup,
+  IResultField,
+  ITest,
+} from "@/types/allDepartmentInterfaces";
 import React, { useEffect, useState } from "react";
 import RModal from "../ui/Modal";
 import { useGetGroupQuery } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
@@ -16,20 +20,28 @@ export type IFilterableField = {
   reportGroup: string;
 };
 
+export type IFilterFieldForReportType = {
+  reportTypeGroup: string;
+};
+
 const ExistingTest = ({
   formData,
   setFormData,
   existingModal,
   setExistingModal,
+  reportGroupId,
 }: {
   formData: ITest;
   setFormData: (props: ITest) => void;
   existingModal: boolean;
   setExistingModal: (prpos: boolean) => void;
+  reportGroupId?: string;
 }) => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
   const { data: reportGroup, isLoading: reportGroupLoading } =
     useGetReportGroupQuery(undefined);
+  const [reportGroupDropdownTitle, setReportGroupDropdownTitle] =
+    useState("Select reportGroup");
 
   // Set search data for group
   const [groupFilterOption, setGroupFilterOption] = useState<IFilterableField>(
@@ -39,7 +51,10 @@ const ExistingTest = ({
     useGetGroupQuery(groupFilterOption);
 
   // set search data for group query
-  const [reportTypeFilterOption, setReportTypeFilterOption] = useState({});
+  const [reportTypeGrouopDropdownTiltle, setReportTypeGroupDropdownTiltle] =
+    useState("Select Group");
+  const [reportTypeFilterOption, setReportTypeFilterOption] =
+    useState<IFilterFieldForReportType>({} as IFilterFieldForReportType);
   const { data: reportTypeData, isLoading: reportTypeDataLoading } =
     useGetReportTypeQuery(reportTypeFilterOption);
 
@@ -64,6 +79,9 @@ const ExistingTest = ({
     return added;
   };
 
+  const [selectedReportGroup, setSelectedReportGroup] =
+    useState<IReportGroup>();
+
   return (
     <>
       <RModal
@@ -78,19 +96,23 @@ const ExistingTest = ({
             <div>
               <Dropdown
                 loading={reportGroupLoading}
-                title={"Select reportGroup"}
+                title={reportGroupDropdownTitle}
                 activeKey={groupFilterOption?.reportGroup}
               >
                 {reportGroup?.data.map((data: IReportGroupFormData) => {
                   return (
                     <Dropdown.Item
+                      eventKey={data._id}
                       key={data._id}
                       value={data._id}
-                      onSelect={() =>
+                      onSelect={() => {
+                        setSelectedReportGroup(data as unknown as IReportGroup);
                         setGroupFilterOption({
                           reportGroup: data._id as string,
-                        })
-                      }
+                        });
+                        setReportGroupDropdownTitle(data.label as string);
+                        setReportTypeFilterOption({ reportTypeGroup: "" });
+                      }}
                     >
                       {data.label}
                     </Dropdown.Item>
@@ -100,15 +122,23 @@ const ExistingTest = ({
             </div>
 
             <div>
-              <Dropdown loading={groupLoading} title={"Select Group"}>
+              <Dropdown
+                loading={groupLoading}
+                title={reportTypeGrouopDropdownTiltle}
+                activeKey={reportTypeFilterOption?.reportTypeGroup}
+              >
                 {groupData?.data.map((data: IReportGroupFormData) => {
                   return (
                     <Dropdown.Item
                       key={data._id}
                       value={data._id}
-                      onSelect={() =>
-                        setReportTypeFilterOption({ reportTypeGroup: data._id })
-                      }
+                      eventKey={data._id}
+                      onSelect={() => {
+                        setReportTypeFilterOption({
+                          reportTypeGroup: data._id as string,
+                        });
+                        setReportTypeGroupDropdownTiltle(data.group as string);
+                      }}
                     >
                       {data.group}
                     </Dropdown.Item>
@@ -119,52 +149,76 @@ const ExistingTest = ({
           </div>
 
           <div>
-            <Table
-              loading={reportTypeDataLoading}
-              data={reportTypeData?.data}
-              className="w-full"
-              autoHeight
-              rowHeight={60}
-            >
-              <Column flexGrow={1}>
-                <HeaderCell>Test</HeaderCell>
-                <Cell dataKey="test" />
-              </Column>
-              <Column flexGrow={2}>
-                <HeaderCell>Investigation</HeaderCell>
-                <Cell dataKey="Investigation" />
-              </Column>
-              <Column>
-                <HeaderCell>Unit</HeaderCell>
-                <Cell dataKey="unit" />
-              </Column>
-              <Column>
-                <HeaderCell>Normal Value</HeaderCell>
-                <Cell dataKey="normalValue" />
-              </Column>
-              <Column>
-                <HeaderCell>Default Value</HeaderCell>
-                <Cell dataKey="fj" />
-              </Column>
-              <Column>
-                <HeaderCell>Action</HeaderCell>
-                <Cell>
-                  {(rowdate) => (
-                    <Button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        addTestHandler(rowdate as any);
-                      }}
-                      appearance="primary"
-                      color="blue"
-                      disabled={checker(rowdate as any)}
-                    >
-                      Add
-                    </Button>
-                  )}
-                </Cell>
-              </Column>
-            </Table>
+            {selectedReportGroup?._id &&
+            reportTypeFilterOption?.reportTypeGroup?.length > 0 ? (
+              <Table
+                loading={reportTypeDataLoading}
+                data={reportTypeData?.data}
+                className="w-full"
+                autoHeight
+                rowHeight={60}
+              >
+                {" "}
+                {selectedReportGroup?.testResultType == "parameter" && (
+                  <>
+                    <Column flexGrow={2}>
+                      <HeaderCell>Investigation</HeaderCell>
+                      <Cell dataKey="investigation" />
+                    </Column>
+                    <Column flexGrow={1}>
+                      <HeaderCell>Test</HeaderCell>
+                      <Cell dataKey="test" />
+                    </Column>
+                    <Column>
+                      <HeaderCell>Unit</HeaderCell>
+                      <Cell dataKey="unit" />
+                    </Column>
+                    <Column>
+                      <HeaderCell>Normal Value</HeaderCell>
+                      <Cell dataKey="normalValue" />
+                    </Column>
+                    <Column>
+                      <HeaderCell>Default Value</HeaderCell>
+                      <Cell dataKey="defaultValue" />
+                    </Column>
+                  </>
+                )}
+                {selectedReportGroup?.testResultType == "descriptive" && (
+                  <>
+                    <Column flexGrow={2}>
+                      <HeaderCell>Title</HeaderCell>
+                      <Cell dataKey="label" />
+                    </Column>
+                    <Column flexGrow={4}>
+                      <HeaderCell>Description</HeaderCell>
+                      <Cell dataKey="description" />
+                    </Column>
+                  </>
+                )}
+                <Column>
+                  <HeaderCell>Action</HeaderCell>
+                  <Cell>
+                    {(rowdate) => (
+                      <Button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          addTestHandler(rowdate as any);
+                        }}
+                        appearance="primary"
+                        color="blue"
+                        disabled={checker(rowdate as any)}
+                      >
+                        Add
+                      </Button>
+                    )}
+                  </Cell>
+                </Column>
+              </Table>
+            ) : (
+              <div className="flex text-center font-bold py-10 items-center justify-center">
+                Please Select a Report group and Group
+              </div>
+            )}
           </div>
         </div>
       </RModal>

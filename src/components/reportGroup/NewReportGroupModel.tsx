@@ -12,6 +12,7 @@ import {
   Input,
   SelectPicker,
 } from "rsuite";
+import { testResultType } from "../Test/initialDataAndTypes";
 const NewReportGroupModal = ({
   open,
   postReportGroup,
@@ -28,6 +29,7 @@ const NewReportGroupModal = ({
     label: string;
     description: string;
     department: string;
+    testResultType: string;
   }) => void;
   cancelHandler: () => void;
 }) => {
@@ -35,6 +37,7 @@ const NewReportGroupModal = ({
   const formRef: React.MutableRefObject<any> = React.useRef();
   const model = Schema.Model({
     label: StringType().isRequired("This field is required."),
+    testResultType: StringType().isRequired("This field is required."),
 
     department: StringType().isRequired("This field is required."),
   });
@@ -44,11 +47,13 @@ const NewReportGroupModal = ({
     description: string;
     value: string;
     department: string;
+    testResultType: string;
   }>({
     label: "",
     description: "",
     value: "",
     department: "",
+    testResultType: "",
   });
   const handleSubmit = () => {
     if (formRef.current.check()) {
@@ -77,6 +82,7 @@ const NewReportGroupModal = ({
                 description: formValue.description || "",
                 value: formValue.value || "",
                 department: formValue.department || "",
+                testResultType: formValue.testResultType || "",
               });
 
               // Additional logic if needed
@@ -90,6 +96,15 @@ const NewReportGroupModal = ({
               <Form.ControlLabel>Title</Form.ControlLabel>
               <Form.Control name="label" />
             </Form.Group>
+            <Form.Group controlId="testResultType">
+              <Form.ControlLabel>Test Result Type</Form.ControlLabel>
+              <Form.Control
+                name="testResultType"
+                accepter={SelectPicker}
+                data={testResultType}
+                block
+              />
+            </Form.Group>{" "}
             <Form.Group controlId="description">
               <Form.ControlLabel>Description</Form.ControlLabel>
               <Form.Control name="description" />

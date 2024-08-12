@@ -1,4 +1,3 @@
-
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import React from "react";
 import { DatePicker, Form, InputPicker, Schema } from "rsuite";
@@ -85,7 +84,7 @@ const ForRegistered = (param: IRegisteredPatient) => {
                 data={param.doctors.map((data: IDoctor) => {
                   return { label: data.name, value: data._id };
                 })}
-                value={param.formData?.patient?.consultant}
+                value={param.formData?.consultant}
               />
             </Form.Group>
             <Form.Group controlId="deliveryTime">

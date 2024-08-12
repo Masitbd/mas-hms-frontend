@@ -55,7 +55,6 @@ export const modelForTestForm = ReactSuiteSchema.Model({
   department: StringType().isRequired("This field is required."),
   price: NumberType().isRequired("This field is required."),
   processTime: NumberType().isRequired("This field is required."),
-  specimen: ArrayType().isRequired("This field is required."),
   hospitalGroup: StringType().isRequired("This field is required."),
   reportGroup: StringType().isRequired("This field is required."),
 });

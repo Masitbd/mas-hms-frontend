@@ -3,7 +3,7 @@ import {
   ICondition,
   IDepartment,
   IReportGroup,
-  ISensitivity
+  ISensitivity,
 } from "@/types/allDepartmentInterfaces";
 import { Schema } from "rsuite";
 const { StringType } = Schema.Types;
@@ -49,7 +49,8 @@ export const initialFormData: IReportGroupFormData = {
   resultType: "",
   deleted: false,
   resultFields: [],
-  group: ""
+  group: "",
+  reportGroup: "" as unknown as IReportGroup,
 };
 
 export type IReportGroupFormParam = {
@@ -65,20 +66,20 @@ export type IReportGroupFormParam = {
 export const testResultType = [
   {
     label: "Parameter Based",
-    value: "parameter"
+    value: "parameter",
   },
   {
     label: "Descriptive",
-    value: "descriptive"
+    value: "descriptive",
   },
   {
     label: "Bacterial",
-    value: "bacterial"
+    value: "bacterial",
   },
   {
     label: "Group",
-    value: "group"
-  }
+    value: "group",
+  },
 ];
 
 export const dummyReprtGroupData = [
@@ -95,65 +96,65 @@ export const dummyReprtGroupData = [
   { label: "Report Group 7" },
   { label: "Report Group 8" },
   ,
-  { label: "Report Group 9" }
+  { label: "Report Group 9" },
 ];
 
 export const reportType = [
   {
     reportGroup: {
       title: "Some Title",
-      label: "Report Group 1"
+      label: "Report Group 1",
     },
     group: "some Group 1",
     test: "some test",
     investation: "some investation",
     unit: "dd/dl",
-    normalValue: "some"
+    normalValue: "some",
   },
   {
     reportGroup: {
       title: "Some Title",
-      label: "Report Group 1"
+      label: "Report Group 1",
     },
     group: "some Group 2",
     test: "some test",
     investation: "some investation",
     unit: "dd/dl",
-    normalValue: "some"
+    normalValue: "some",
   },
   {
     reportGroup: {
       title: "Some Title",
-      label: "Report Group 1"
+      label: "Report Group 1",
     },
     group: "some Group 3",
     test: "some test",
     investation: "some investation",
     unit: "dd/dl",
-    normalValue: "some"
+    normalValue: "some",
   },
   {
     reportGroup: {
       title: "Some Title",
-      label: "Report Group 2"
+      label: "Report Group 2",
     },
     group: "some Group",
     test: "some test",
     investation: "some investation",
     unit: "dd/dl",
-    normalValue: "some"
+    normalValue: "some",
   },
   {
     reportGroup: {
       title: "Some Title",
-      label: "Report Group 2"
+      label: "Report Group 2",
     },
     group: "some Group 4",
     test: "some test",
     investation: "some investation",
     unit: "dd/dl",
-    normalValue: "some"
-  }
+    normalValue: "some",
+  },
 ];
 
 export type INewReportGroupProps = {
@@ -169,7 +170,6 @@ export const newGroupModel = Schema.Model({
   group: StringType().isRequired("This field is required."),
   resultType: StringType().isRequired("This field is required."),
   reportGroup: StringType().isRequired("This field is required."),
-  department: StringType().isRequired("This field is required.")
 });
 
 export type EmptyTableData = {
