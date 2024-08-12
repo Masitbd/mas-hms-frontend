@@ -3,7 +3,6 @@ import { Button, Table } from "rsuite";
 import { ENUM_MODE } from "@/enum/Mode";
 import swal from "sweetalert";
 import { IPropsForTemplateTable, ITemplate } from "./typesandInitialData";
-import { IPropsForCommentTable } from "../comment/typesAdInitialData";
 import {
   useDeleteTemplateMutation,
   useGetTemplateQuery,

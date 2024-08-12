@@ -127,6 +127,10 @@ const Order = () => {
       orderData.refBy = data.refBy as string;
     }
 
+    if (data?.consultant && data.consultant.length > 5) {
+      orderData.consultant = data.consultant as string;
+    }
+
     if (data.patientType.length > 5) {
       if (data.patientType == "registered") {
         if (data.patient?._id) {

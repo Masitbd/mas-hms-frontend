@@ -58,4 +58,5 @@ export const {
   useDeleteDoctorMutation,
   usePatchDoctorMutation,
   useGetSingleDoctorQuery,
+  useLazyGetSingleDoctorQuery,
 } = doctor;

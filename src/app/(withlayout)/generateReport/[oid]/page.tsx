@@ -1,6 +1,5 @@
 "use client";
 import Loading from "@/app/loading";
-import ForDescriptionBased from "@/components/generateReport/ForDescriptionBased";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
 import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
@@ -39,7 +38,23 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
       break;
 
     case "descriptive":
-      resultGeneratorComponent = <ForDescriptionBased />;
+      // resultGeneratorComponent = (
+      //   <ForDescriptionBased
+      //     orderData={orderData?.data[0]}
+      //     reportGroupData={reportGroupData?.data}
+      //     mode={props.searchParams.mode}
+      //   />
+      // );
+      resultGeneratorComponent = (
+        <ForParameterBased
+          oid={orderData?.data[0]?.oid}
+          tests={testsAccordingResultType}
+          reportGroup={reportGroupData?.data as IReportGroup}
+          order={orderData?.data[0]}
+          mode={props.searchParams.mode}
+          refeatch={refetch}
+        />
+      );
       break;
 
     default:

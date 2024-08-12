@@ -26,7 +26,13 @@ export const useCleanedTests = (params: {
   const [getSpecimen] = useLazyGetSpecimenQuery();
   const { oid, mode, reportGroup, order, tests, result, setResult } = params;
   // This array contains the result fields name which will now be shoun in the result
-  const unnecesseryFields = ["investigation", "_id", "defaultValue", "unit"];
+  const unnecesseryFields = [
+    "investigation",
+    "_id",
+    "defaultValue",
+    "unit",
+    "description",
+  ];
   let modifiedTest;
   let specimen: string[] = [];
   let fieldNames: string[] = [];
@@ -51,6 +57,14 @@ export const useCleanedTests = (params: {
         const cleanedResultFields = test.test.resultFields.map((rfData) => {
           let resultField = { ...rfData };
 
+          // setting the default value to the result
+          if (
+            reportGroup?.testResultType == "descriptive" &&
+            resultField.description != null
+          ) {
+            resultField.result = resultField.description;
+          }
+          // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
           Object.keys(resultField).forEach((propName) => {
             //   cleaning the unwanted fields
             if (resultField[propName] === "") {
@@ -96,7 +110,10 @@ export const useCleanedTests = (params: {
         return newTest;
       }
     });
-    fieldNames.push("result");
+
+    if (!fieldNames.includes("result")) {
+      fieldNames.push("result");
+    }
   }
 
   // For edit

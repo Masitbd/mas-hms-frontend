@@ -12,11 +12,12 @@ import { IPropsForMargin } from "./initialDataAndTypes";
 const Margin = (props: IPropsForMargin) => {
   const { margin, marginTitle, setMargins } = props;
 
-  const handleMargin = async (index: number, data: number) => {
+  const handleMargin = (index: number, data: number) => {
+    const inch = (Number(data) * 72).toFixed(2);
     const margindata = [...margin];
-    margindata[index] = data;
+    margindata[index] = Number(inch);
     setMargins(margindata);
-    await localStorage.setItem(marginTitle, JSON.stringify(margindata));
+    localStorage.setItem(marginTitle, JSON.stringify(margindata));
   };
 
   useEffect(() => {
@@ -35,6 +36,7 @@ const Margin = (props: IPropsForMargin) => {
         <Input
           onChange={(value) => handleMargin(0, Number(value))}
           defaultValue={margin[0]}
+          type="number"
         />
       </div>
       <div>
@@ -42,6 +44,7 @@ const Margin = (props: IPropsForMargin) => {
         <Input
           onChange={(value) => handleMargin(1, Number(value))}
           defaultValue={margin[1]}
+          type="number"
         />
       </div>
       <div>
@@ -49,6 +52,7 @@ const Margin = (props: IPropsForMargin) => {
         <Input
           onChange={(value) => handleMargin(2, Number(value))}
           defaultValue={margin[2]}
+          type="number"
         />
       </div>
       <div>
@@ -56,6 +60,7 @@ const Margin = (props: IPropsForMargin) => {
         <Input
           onChange={(value) => handleMargin(3, Number(value))}
           defaultValue={margin[3]}
+          type="number"
         />
       </div>
     </div>

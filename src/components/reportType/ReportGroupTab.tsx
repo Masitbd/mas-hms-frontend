@@ -40,6 +40,8 @@ import { useDispatch } from "react-redux";
 import { EmptyTableDataObject } from "./Functions";
 import NewReportGroupModal from "../reportGroup/NewReportGroupModel";
 import Loading from "@/app/loading";
+import { IReportGroup } from "@/types/allDepartmentInterfaces";
+import ForDescriptive from "./ForDescriptive";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -51,6 +53,8 @@ const ReportGroupTab = () => {
   const [getReportGroup] = useLazyGetReportGroupQuery();
   const [getRrportType] = useLazyGetReportTypeQuery();
   const [defaultTabActiveKey, setDefaultTabActiveKey] = useState("");
+  const [selectedReportGroup, setSelectedReportGroup] =
+    useState<IReportGroup>();
 
   // For handelling the from
   const [formData, setFormData] =
@@ -183,6 +187,9 @@ const ReportGroupTab = () => {
     }
   }, [reportTypeData, reportGroupData, groupData, reportTypePostSuccess]);
 
+  // for mode
+  const [mode, setMode] = useState("");
+
   // -----------------------setting default data at page rendering --------------------
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -192,6 +199,7 @@ const ReportGroupTab = () => {
       if ("data" in reportGroupDataforInitialSelect) {
         if (reportGroupDataforInitialSelect.data.data?.length > 0) {
           const firstReportGroup = reportGroupDataforInitialSelect.data.data[0];
+          setSelectedReportGroup(firstReportGroup);
           setGroupSerachOption({
             ...groupSearchOption,
             reportGroup: firstReportGroup._id as string,
@@ -235,6 +243,7 @@ const ReportGroupTab = () => {
                     reportGroup: data._id as string,
                   });
                   setDropDownTitle(data?.label as string);
+                  setSelectedReportGroup(data as unknown as IReportGroup);
                 }}
               >
                 {data.label}
@@ -307,49 +316,89 @@ const ReportGroupTab = () => {
                         rowHeight={70}
                         height={500}
                       >
-                        <Column flexGrow={1}>
-                          <HeaderCell>Investigation</HeaderCell>
-                          <EditableCell
-                            dataKey={"investigation"}
-                            onChange={handleChange}
-                          />
-                        </Column>
-                        <Column flexGrow={2}>
-                          <HeaderCell>Test</HeaderCell>
-                          <EditableCell
-                            dataKey={"test"}
-                            onChange={handleChange}
-                          />
-                        </Column>
-                        <Column flexGrow={1}>
-                          <HeaderCell>Normal Value</HeaderCell>
-                          <EditableCell
-                            dataKey={"normalValue"}
-                            onChange={handleChange}
-                          />
-                        </Column>
-                        <Column flexGrow={1}>
-                          <HeaderCell>Unit</HeaderCell>
-                          <EditableCell
-                            dataKey={"unit"}
-                            onChange={handleChange}
-                          />
-                        </Column>
-                        <Column flexGrow={1}>
-                          <HeaderCell>Remark</HeaderCell>
-                          <EditableCell
-                            dataKey={"remark"}
-                            onChange={handleChange}
-                          />
-                        </Column>
-                        <Column flexGrow={1}>
-                          <HeaderCell>Default Values</HeaderCell>
-                          <EditableCell
-                            dataKey={"defaultValue"}
-                            onChange={handleChange}
-                            as={TagInput}
-                          />
-                        </Column>
+                        {selectedReportGroup?.testResultType == "parameter" && (
+                          <>
+                            <Column flexGrow={1}>
+                              <HeaderCell>Investigation</HeaderCell>
+                              <EditableCell
+                                dataKey={"investigation"}
+                                onChange={handleChange}
+                              />
+                            </Column>
+                            <Column flexGrow={2}>
+                              <HeaderCell>Test</HeaderCell>
+                              <EditableCell
+                                dataKey={"test"}
+                                onChange={handleChange}
+                              />
+                            </Column>
+                            <Column flexGrow={1}>
+                              <HeaderCell>Normal Value</HeaderCell>
+                              <EditableCell
+                                dataKey={"normalValue"}
+                                onChange={handleChange}
+                              />
+                            </Column>
+                            <Column flexGrow={1}>
+                              <HeaderCell>Unit</HeaderCell>
+                              <EditableCell
+                                dataKey={"unit"}
+                                onChange={handleChange}
+                              />
+                            </Column>
+                            <Column flexGrow={1}>
+                              <HeaderCell>Remark</HeaderCell>
+                              <EditableCell
+                                dataKey={"remark"}
+                                onChange={handleChange}
+                              />
+                            </Column>
+                            <Column flexGrow={1}>
+                              <HeaderCell>Default Values</HeaderCell>
+                              <EditableCell
+                                dataKey={"defaultValue"}
+                                onChange={handleChange}
+                                as={TagInput}
+                              />
+                            </Column>
+                          </>
+                        )}
+                        {selectedReportGroup?.testResultType ==
+                          "descriptive" && (
+                          <>
+                            <Column flexGrow={1}>
+                              <HeaderCell>Investigation</HeaderCell>
+                              <EditableCell
+                                dataKey={"investigation"}
+                                onChange={handleChange}
+                              />
+                            </Column>
+                            <Column flexGrow={1}>
+                              <HeaderCell>Title</HeaderCell>
+                              <EditableCell
+                                dataKey={"label"}
+                                onChange={handleChange}
+                              />
+                            </Column>
+                            <Column flexGrow={3}>
+                              <HeaderCell>Description</HeaderCell>
+                              <Cell>
+                                {(rowdata, index) => (
+                                  <ForDescriptive
+                                    data={
+                                      rowdata as {
+                                        status: string;
+                                        description: string;
+                                      }
+                                    }
+                                    index={index as number}
+                                    handleCHange={handleChange}
+                                  />
+                                )}
+                              </Cell>
+                            </Column>
+                          </>
+                        )}
                         <Column flexGrow={1}>
                           <HeaderCell>Action</HeaderCell>
                           <Cell>
