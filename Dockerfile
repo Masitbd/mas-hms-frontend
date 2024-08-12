@@ -6,9 +6,8 @@ RUN npm install
 
 COPY . .
 
-#RUN npm run build
-# copy .next folder into the docker next folder in the next directory 
-#COPY .next ./.next
+EXPOSE 3000
+
 CMD ["npm","run","dev"]
 
 
