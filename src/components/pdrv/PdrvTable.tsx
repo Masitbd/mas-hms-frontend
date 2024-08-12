@@ -8,13 +8,14 @@ import {
 import { setLoading } from "@/redux/features/loading/loading";
 import React, { useEffect, useState } from "react";
 import { Table, Pagination, Button, toaster, Message } from "rsuite";
-import { IConditon } from "@/app/(withlayout)/condition/page";
+
 import {
   useDeletePdrvMutation,
   useGetPdrvQuery,
   usePatchPdrvMutation,
 } from "@/redux/api/pdrv/pdrvSlice";
 import PatchPdrv from "./PatchPdrv";
+import { ICondition } from "@/types/allDepartmentInterfaces";
 
 const { Column, HeaderCell, Cell } = Table;
 const PdrvTable = () => {
@@ -59,8 +60,8 @@ const PdrvTable = () => {
 
   // For patch
   const [patchModalOpen, setPatchModalOpen] = useState(false);
-  const [patchData, setPatchData] = useState<IConditon>();
-  const patchHandler = (data: IConditon) => {
+  const [patchData, setPatchData] = useState<ICondition>();
+  const patchHandler = (data: ICondition) => {
     setPatchData(data);
     setPatchModalOpen(!patchModalOpen);
   };
@@ -74,9 +75,6 @@ const PdrvTable = () => {
   ] = usePatchPdrvMutation();
 
   useEffect(() => {
-    if (deleteLoading || patchLoading) {
-      setLoading();
-    }
     if (deleteSuccess || patchSuccess) {
       toaster.push(
         <Message type="success">Operation Successfully Performed</Message>,
@@ -104,7 +102,6 @@ const PdrvTable = () => {
           duration: 3000,
         }
       );
-      setLoading();
     }
     if (patchError) {
       setPatchModalOpen(!patchModalOpen);
@@ -116,7 +113,6 @@ const PdrvTable = () => {
           duration: 3000,
         }
       );
-      setLoading();
     }
   }, [
     deleteLoading,
@@ -162,7 +158,7 @@ const PdrvTable = () => {
                   appearance="ghost"
                   color="blue"
                   className="ml-2"
-                  onClick={() => patchHandler(rowdate as IConditon)}
+                  onClick={() => patchHandler(rowdate as ICondition)}
                 >
                   Edit
                 </Button>
@@ -202,7 +198,7 @@ const PdrvTable = () => {
         ></AlartDialog>
         <PatchPdrv
           open={patchModalOpen}
-          defalutValue={patchData as unknown as IConditon}
+          defalutValue={patchData as unknown as ICondition}
           cancelHandler={patchCancelHandler}
           patchPdrv={patchPdrv}
         ></PatchPdrv>

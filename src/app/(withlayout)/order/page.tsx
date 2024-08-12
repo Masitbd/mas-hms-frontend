@@ -1,7 +1,7 @@
 "use client";
 import OrderTable from "@/components/order/OrderTable";
 import RModal from "@/components/ui/Modal";
-import React, { useEffect, useRef, useState } from "react";
+import React, { SetStateAction, useEffect, useRef, useState } from "react";
 import { Button, Message, toaster } from "rsuite";
 import TestInformation from "@/components/order/TestInformation";
 import {
@@ -20,6 +20,8 @@ import PatientInformation from "@/components/order/PatientInformation";
 import { ENUM_MODE } from "@/enum/Mode";
 import { useAppDispatch } from "@/redux/hook";
 import { setId } from "@/redux/features/IdStore/idSlice";
+import jsPDF from "jspdf";
+import { URL } from "url";
 
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
@@ -153,13 +155,22 @@ const Order = () => {
   const [getInvoice] = useLazyGetInvoiceQuery();
   const handlePdf = async (id: string) => {
     const invoice = await getInvoice(id);
-    const buffer = Buffer.from(invoice.data.data.data);
-    const blob = new Blob([buffer], { type: "application/pdf" });
+    const newWindow = window.open("", "_blank");
 
-    const fileName = URL.createObjectURL(blob);
+    if (newWindow) {
+      newWindow.document.write(decodeURIComponent(invoice.data.data));
+      newWindow.document.title = "Managed By HMS system";
+
+      newWindow?.print();
+    }
+
+    // const buffer = Buffer.from(invoice.data.data.data);
+    // const blob = new Blob([buffer], { type: "application/pdf" });
+
+    // const fileName = URL.createObjectURL(blob);
     // const pdfwindow = window.open();
     // pdfwindow.location.href = fileName;
-    window.open(fileName)?.print();
+    // window.open(fileName)?.print();
   };
   useEffect(() => {
     if (isSuccess) {
@@ -243,6 +254,7 @@ const Order = () => {
                 data={data as unknown as IOrderData}
                 dewModalOpen={dewModalOpen}
                 setDewModalOpen={setDewMOdalOpen}
+                setFormData={setFormData as any}
               />
             </div>
 
@@ -255,16 +267,18 @@ const Order = () => {
               />
 
               <div className="flex justify-end">
-                <Button
-                  appearance="primary"
-                  color="green"
-                  size="lg"
-                  disabled={mode == "new"}
-                  onClick={() => setDewMOdalOpen(!dewModalOpen)}
-                  className={`${mode == "new" && "invisible"}`}
-                >
-                  Collect Due Ammount
-                </Button>
+                <div className={`${mode == ENUM_MODE.NEW && "hidden"} mr-2`}>
+                  <Button
+                    appearance="primary"
+                    color="green"
+                    size="lg"
+                    disabled={data?.dueAmount == 0}
+                    onClick={() => setDewMOdalOpen(!dewModalOpen)}
+                    className={`${mode == "new" && "invisible"}`}
+                  >
+                    {data.dueAmount == 0 ? "Fully Paid" : "Collect Due Ammount"}
+                  </Button>
+                </div>
                 <Button
                   appearance="primary"
                   color="blue"

@@ -18,6 +18,7 @@ const department = baseApi.injectEndpoints({
         url: `/departments/${id}`,
         method: "PATCH",
         body: data,
+        data: data,
         contentType: "application/json",
       }),
       invalidatesTags: ["department"],

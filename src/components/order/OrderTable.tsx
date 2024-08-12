@@ -239,7 +239,7 @@ const OrderTable = ({
       </div>
       <div>
         <AlartDialog
-          description="Are you sure you want to delete this code "
+          description="Are you sure you want to delete this Order "
           title="Delete TEst"
           onCancel={cancelHandler}
           onOk={okHandler}

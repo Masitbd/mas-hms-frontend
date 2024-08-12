@@ -1,3 +1,4 @@
+import config from "@/config";
 import { axiosBaseQuery } from "@/shared/axios/axiosBaseQuery";
 import { createApi } from "@reduxjs/toolkit/query/react";
 //import { tagTypes } from "../tagTypes";
@@ -6,10 +7,8 @@ import { createApi } from "@reduxjs/toolkit/query/react";
 export const baseApi = createApi({
   reducerPath: "baseApi",
 
-  //baseQuery: axiosBaseQuery({ baseUrl: "http://localhost:3001/api/v1" }),
   baseQuery: axiosBaseQuery({
-    // baseUrl: "http://mas-api-gateway-api-gateway-1:3001/api/v1",
-    baseUrl: "http://localhost:3001/api/v1",
+    baseUrl: config.api_url as string,
   }),
 
   endpoints: () => ({}),
@@ -34,6 +33,9 @@ export const baseApi = createApi({
     "order",
     "reportGroup",
     "sensitivity",
+    "group",
+    "reportType",
+    "reportTypeGroup"
   ],
 
   // tagTypes: tagTypes,

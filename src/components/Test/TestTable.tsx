@@ -8,6 +8,7 @@ import AlartDialog from "../ui/AlertModal";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import { ENUM_MODE } from "@/enum/Mode";
+import Loading from "@/app/loading";
 
 const { Column, HeaderCell, Cell } = Table;
 const TestTable = ({
@@ -18,8 +19,14 @@ const TestTable = ({
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
-  const [deleteTest, { isSuccess: deleteSuccess, isError: deleteError }] =
-    useDeleteTestMutation();
+  const [
+    deleteTest,
+    {
+      isSuccess: deleteSuccess,
+      isError: deleteError,
+      isLoading: deleteLoading,
+    },
+  ] = useDeleteTestMutation();
   const handleDeletOpen = (id: string) => {
     setDeleteOpen(!deleteOpen);
     setDeleteData(id);
@@ -79,6 +86,7 @@ const TestTable = ({
         bordered
         cellBordered
         rowHeight={60}
+        loadAnimation={true}
       >
         <Column align="center" resizable flexGrow={1}>
           <HeaderCell>Test Code</HeaderCell>
@@ -111,6 +119,7 @@ const TestTable = ({
                   appearance="ghost"
                   color="red"
                   onClick={() => handleDeletOpen(rowdate._id)}
+                  loading={deleteLoading}
                 >
                   Delete
                 </Button>

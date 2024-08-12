@@ -10,6 +10,7 @@ import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { useLazyGetSinglePatientQuery } from "@/redux/api/patient/patientSlice";
 import { Form, Input, InputGroup, InputPicker, Message, toaster } from "rsuite";
 import { ENUM_MODE } from "@/enum/Mode";
+import { IPatient } from "@/types/allDepartmentInterfaces";
 
 const PatientInformation = (porps: IpatientInforMationProps) => {
   const {
@@ -40,7 +41,6 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
       setFormData({ ...data, patient: sdata.data.data });
     }
   };
-  console.log(data);
 
   useEffect(() => {
     if (patientSearchError) {
@@ -59,7 +59,7 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
               <>
                 <div className="flex flex-col" key={index}>
                   <div className="text-lg font-bold capitalize">{value}</div>
-                  <div>{data.patient[value]}</div>
+                  <div>{(data.patient as any)[value]}</div>
                 </div>
               </>
             );

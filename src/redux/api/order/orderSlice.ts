@@ -1,4 +1,4 @@
-import { IOrderData } from "@/app/(withlayout)/order/page";
+import { IOrderData } from "@/components/order/initialDataAndTypes";
 import { baseApi } from "../baseApi";
 
 const order = baseApi.injectEndpoints({
@@ -43,6 +43,16 @@ const order = baseApi.injectEndpoints({
       }),
       providesTags: ["order"],
     }),
+
+    dewColletcion: build.mutation({
+      query: (data: { amount: number; oid: string }) => ({
+        url: `/order/dewCollection/${data.oid}`,
+        method: "PATCH",
+        body: data,
+        data: { amount: data.amount },
+        contentType: "application/json",
+      }),
+    }),
   }),
 });
 
@@ -51,4 +61,6 @@ export const {
   useGetOrderQuery,
   usePatchOrderMutation,
   useLazyGetInvoiceQuery,
+  useLazyGetOrderQuery,
+  useDewColletcionMutation,
 } = order;
