@@ -1,5 +1,6 @@
 "use client";
 import Loading from "@/app/loading";
+import ForMicrobiology from "@/components/generateReport/ForMicrobiology";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
 import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
@@ -38,13 +39,6 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
       break;
 
     case "descriptive":
-      // resultGeneratorComponent = (
-      //   <ForDescriptionBased
-      //     orderData={orderData?.data[0]}
-      //     reportGroupData={reportGroupData?.data}
-      //     mode={props.searchParams.mode}
-      //   />
-      // );
       resultGeneratorComponent = (
         <ForParameterBased
           oid={orderData?.data[0]?.oid}
@@ -53,6 +47,17 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           order={orderData?.data[0]}
           mode={props.searchParams.mode}
           refeatch={refetch}
+        />
+      );
+      break;
+
+    case "bacterial":
+      resultGeneratorComponent = (
+        <ForMicrobiology
+          mode={props.searchParams.mode}
+          oid={orderData?.data[0]?.oid}
+          reportGroup={reportGroupData?.data as IReportGroup}
+          order={orderData?.data[0]}
         />
       );
       break;

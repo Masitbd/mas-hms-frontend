@@ -37,7 +37,8 @@ export const baseApi = createApi({
     "reportType",
     "reportTypeGroup",
     "reportTest",
-    "seal"
+    "seal",
+    "miscellaneous",
   ],
 
   // tagTypes: tagTypes,

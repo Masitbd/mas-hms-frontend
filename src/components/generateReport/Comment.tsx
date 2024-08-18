@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { Accordion, Button, SelectPicker } from "rsuite";
 import { IComment, IDoctorSeal } from "../comment/typesAdInitialData";
 import Tiptap from "../tiptap/TipTap";
-import { ITestResultForParameter } from "./initialDataAndTypes";
+import {
+  ITestResultForParameter,
+  ITEstREsultForMicroBio,
+} from "./initialDataAndTypes";
 
 const Comment = (props: {
-  result: ITestResultForParameter;
+  result: ITestResultForParameter | ITEstREsultForMicroBio;
   setResult: any;
 }) => {
   const { data: commentData, isLoading: commentDataLoading } =
@@ -17,8 +20,6 @@ const Comment = (props: {
   const [comment, setComment] = useState(props?.result?.comment);
   const [seal, setSeal] = useState(props?.result?.seal);
 
-  console.log(comment)
-  console.log(props?.result?.seal)
   useEffect(() => {
     const newData = {
       ...props.result,
@@ -70,7 +71,7 @@ const Comment = (props: {
                   }))}
                   onSelect={(p) => {
                     console.log(p);
-                    setComment(p)
+                    setComment(p);
                   }}
                 />
               </div>
@@ -97,14 +98,14 @@ const Comment = (props: {
                   }))}
                   onSelect={(p) => {
                     console.log(p);
-                    setSeal(p)
+                    setSeal(p);
                   }}
                 />
               </div>
               <div>
                 Not in the Saved Doctor Seal ? Click{" "}
-                <span className="text-blue-500">Here</span> to Add New Doctor Seal
-                to the database
+                <span className="text-blue-500">Here</span> to Add New Doctor
+                Seal to the database
               </div>
             </div>
           </div>

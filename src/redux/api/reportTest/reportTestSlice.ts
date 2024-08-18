@@ -1,11 +1,14 @@
 import { IReportGroup } from "@/types/allDepartmentInterfaces";
 import { baseApi } from "../baseApi";
-import { ITestResultForParameter } from "@/components/generateReport/initialDataAndTypes";
+import {
+  ITEstREsultForMicroBio,
+  ITestResultForParameter,
+} from "@/components/generateReport/initialDataAndTypes";
 
 const reportTest = baseApi.injectEndpoints({
   endpoints: (build) => ({
     postReport: build.mutation({
-      query: (data: ITestResultForParameter) => ({
+      query: (data: ITestResultForParameter | ITEstREsultForMicroBio) => ({
         url: "/report/test",
         method: "post",
         body: data,

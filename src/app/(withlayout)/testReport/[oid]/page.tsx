@@ -3,6 +3,7 @@ import Loading from "@/app/loading";
 import OrderAndPatientInfo from "@/components/testReport/OrderAndPatientInfo";
 import TestTableForReport from "@/components/testReport/TestTableForReport";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
+import { useRouter } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 import { Divider } from "rsuite";
 
