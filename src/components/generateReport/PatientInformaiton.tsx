@@ -1,11 +1,9 @@
 import React from "react";
 import { IOrderData } from "../order/initialDataAndTypes";
-import { ITestReportForm } from "../testReport/TestReportForm";
-import { ITestResultForParameter } from "./initialDataAndTypes";
 import {
-  useGetSingleDoctorQuery,
-  useLazyGetSingleDoctorQuery,
-} from "@/redux/api/doctor/doctorSlice";
+  ITEstREsultForMicroBio,
+  ITestResultForParameter,
+} from "./initialDataAndTypes";
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 
 const PatientInformaiton = ({
@@ -14,7 +12,7 @@ const PatientInformaiton = ({
   consultant,
 }: {
   order: IOrderData;
-  testResult: ITestResultForParameter;
+  testResult?: ITestResultForParameter | ITEstREsultForMicroBio;
   consultant: { data: { data: IDoctor } };
 }) => {
   return (

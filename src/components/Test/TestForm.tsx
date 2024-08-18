@@ -179,7 +179,7 @@ const TestForm = (props: ITestFormProps) => {
             ) : (
               ""
             )}
-            {formData?.type == "single" &&
+            {/* {formData?.type == "single" &&
             formData.testResultType == "bacterial" ? (
               <ForMicroBiology
                 testFromData={formData}
@@ -188,7 +188,7 @@ const TestForm = (props: ITestFormProps) => {
               />
             ) : (
               ""
-            )}
+            )} */}
             {formData?.type === "group" ? (
               <ForGroupTest
                 fromData={formData}

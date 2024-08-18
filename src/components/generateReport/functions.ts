@@ -4,11 +4,12 @@ import {
   IResultField,
   ISpecimen,
 } from "@/types/allDepartmentInterfaces";
-import { ITestsFromOrder } from "./initialDataAndTypes";
+import { ITEstREsultForMicroBio, ITestsFromOrder } from "./initialDataAndTypes";
 import { IOrderData } from "../order/initialDataAndTypes";
 import { useLazyGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 import { useAppSelector } from "@/redux/hook";
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
+import { SetStateAction } from "react";
 
 export const useCleanedTests = (params: {
   oid: string;
@@ -185,4 +186,15 @@ export const resultSetter = (
 
 export const getPageMargins = () => {
   return `@page { margin: ${100} ${20} ${20} ${100} !important; }`;
+};
+
+export const resultSetterForMicroBio = (
+  key: string,
+  value: string | boolean,
+  result: ITEstREsultForMicroBio,
+  setResult: React.Dispatch<SetStateAction<ITEstREsultForMicroBio>>
+) => {
+  const data = JSON.parse(JSON.stringify(result));
+  data[key] = value;
+  setResult(data);
 };

@@ -16,7 +16,7 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
     try {
       const { isSuccess, data } = await getProfile(undefined);
       if (isSuccess) {
-        const token = getFromLocalStorage("accessToken");
+        const token = await getFromLocalStorage("accessToken");
         dispatch(setAuthStatus({ loggedIn: true, user: data?.data[0], token }));
       } else {
         dispatch(setAuthStatus({ loggedIn: false }));
