@@ -15,7 +15,7 @@ const reportTest = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order"],
+      invalidatesTags: ["singleOrder", "order"],
     }),
     patchRepor: build.mutation({
       query: (data) => ({
@@ -25,7 +25,7 @@ const reportTest = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order"],
+      invalidatesTags: ["order", "singleOrder"],
     }),
 
     getReport: build.query({
