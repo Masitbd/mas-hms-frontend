@@ -1,14 +1,13 @@
+import { ENUM_MODE } from "@/enum/Mode";
 import {
   useDeleteTestMutation,
   useGetTestsQuery,
 } from "@/redux/api/test/testSlice";
-import React, { SyntheticEvent, useEffect, useState } from "react";
-import { Button, Form, Message, Table, toaster } from "rsuite";
-import AlartDialog from "../ui/AlertModal";
-import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest } from "@/types/allDepartmentInterfaces";
-import { ENUM_MODE } from "@/enum/Mode";
-import Loading from "@/app/loading";
+import VisibleIcon from "@rsuite/icons/Visible";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Message, Pagination, Table, toaster } from "rsuite";
+import AlartDialog from "../ui/AlertModal";
 
 const { Column, HeaderCell, Cell } = Table;
 const TestTable = ({
@@ -16,6 +15,10 @@ const TestTable = ({
 }: {
   patchHandler: (data: { data: ITest; mode: string }) => void;
 }) => {
+
+
+
+
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -62,6 +65,21 @@ const TestTable = ({
     isError: TesError,
   } = useGetTestsQuery(searchData);
 
+  //pagination 
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+
+  const handleChangeLimit = (dataKey: React.SetStateAction<number>) => {
+    setPage(1);
+    setLimit(dataKey);
+  };
+
+  const data = testData?.data.data.filter((v: any, i: number) => {
+    const start = limit * (page - 1);
+    const end = start + limit;
+    return i >= start && i < end;
+  });
+
   return (
     <div>
       <div className="my-5">
@@ -80,7 +98,7 @@ const TestTable = ({
       </div>
       <Table
         height={650}
-        data={testData?.data.data as ITest[]}
+        data={data as ITest[]}
         loading={testLoading}
         className="w-full"
         bordered
@@ -149,6 +167,25 @@ const TestTable = ({
           </Cell>
         </Column>
       </Table>
+      <div style={{ padding: 20 }}>
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks 
+          maxButtons={5}
+          size="xs"
+          layout={["total", "-", "limit", "|", "pager", "skip"]}
+          total={testData?.data.data.length}
+          limitOptions={[10, 30, 50]}
+          limit={limit}
+          activePage={page}
+          onChangePage={setPage}
+          onChangeLimit={handleChangeLimit}
+        />
+      </div>
       <div>
         <AlartDialog
           description="Are you sure you want to delete this code "

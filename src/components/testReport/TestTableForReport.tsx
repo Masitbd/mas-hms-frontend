@@ -1,16 +1,14 @@
 /* eslint-disable react/no-children-prop */
-import React, { useEffect, useState } from "react";
-import { IOrderData } from "../order/initialDataAndTypes";
+import {
+  useLazyGetSingleReportGroupQuery
+} from "@/redux/api/reportGroup/reportGroupSlice";
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
+import { NavLink } from "@/utils/Navlink";
 import EditIcon from "@rsuite/icons/Edit";
 import VisibleIcon from "@rsuite/icons/Visible";
+import { useEffect, useState } from "react";
 import { Button, Table, Tag } from "rsuite";
-import {
-  useGetSingleReportGroupQuery,
-  useLazyGetSingleReportGroupQuery,
-} from "@/redux/api/reportGroup/reportGroupSlice";
-import FileDownloadIcon from "@rsuite/icons/FileDownload";
-import { NavLink } from "@/utils/Navlink";
+import { IOrderData } from "../order/initialDataAndTypes";
 
 const TestTableForReport = (props: { data: IOrderData }) => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
