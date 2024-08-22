@@ -91,6 +91,7 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
             {(rowdata: IComment) => (
               <>
                 <Button
+                  className='ml-5'
                   appearance="primary"
                   color="blue"
                   onClick={() =>
@@ -100,6 +101,7 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
                   View
                 </Button>
                 <Button
+                  className='ml-5'
                   appearance="primary"
                   color="green"
                   onClick={() =>
@@ -109,6 +111,7 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
                   Edit
                 </Button>
                 <Button
+                  className='ml-5'
                   appearance="primary"
                   color="red"
                   onClick={() => DeleteButtonHandler(rowdata)}
