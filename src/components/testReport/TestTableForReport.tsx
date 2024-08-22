@@ -5,12 +5,14 @@ import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
 import EditIcon from "@rsuite/icons/Edit";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { Button, Table, Tag } from "rsuite";
+import CheckIcon from "@rsuite/icons/Check";
 import {
   useGetSingleReportGroupQuery,
   useLazyGetSingleReportGroupQuery,
 } from "@/redux/api/reportGroup/reportGroupSlice";
 import FileDownloadIcon from "@rsuite/icons/FileDownload";
 import { NavLink } from "@/utils/Navlink";
+import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 
 const TestTableForReport = (props: { data: IOrderData }) => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -26,6 +28,10 @@ const TestTableForReport = (props: { data: IOrderData }) => {
         props.data.tests.map((data) => {
           const testData: ITest = data.test as ITest;
           if ("test" in data && "reportGroup" in testData) {
+            // useing for refunded tests
+            if (data?.status == ENUM_TEST_STATUS.REFUNDED) {
+              return;
+            }
             // for status complete
             const reportGroup = testData.reportGroup;
             setReportCompletionStatus((prevData: any) => ({
@@ -162,6 +168,15 @@ const TestTableForReport = (props: { data: IOrderData }) => {
                             color="green"
                           />
                         </NavLink>
+                        <Button
+                          // eslint-disable-next-line react/no-children-prop
+                          children={<CheckIcon />}
+                          title="Delivered"
+                          appearance="ghost"
+                          size="sm"
+                          className="ml-2"
+                          color="green"
+                        />
                       </div>
                     </>
                   );

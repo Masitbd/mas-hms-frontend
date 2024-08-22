@@ -10,6 +10,7 @@ import { useLazyGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 import { useAppSelector } from "@/redux/hook";
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import { SetStateAction } from "react";
+import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 
 export const useCleanedTests = (params: {
   oid: string;
@@ -25,7 +26,13 @@ export const useCleanedTests = (params: {
   setResult?: (params: any) => void;
 }) => {
   const [getSpecimen] = useLazyGetSpecimenQuery();
-  const { oid, mode, reportGroup, order, tests, result, setResult } = params;
+  let { oid, mode, reportGroup, order, tests, result, setResult } = params;
+  const unrefundedTest = order.tests.filter(
+    (test) => test.status !== ENUM_TEST_STATUS.REFUNDED
+  );
+  order.tests = unrefundedTest;
+  tests = unrefundedTest as unknown as ITestsFromOrder[];
+
   // This array contains the result fields name which will now be shoun in the result
   const unnecesseryFields = [
     "investigation",
@@ -119,7 +126,7 @@ export const useCleanedTests = (params: {
 
   // For edit
   else {
-    modifiedTest = order.tests;
+    modifiedTest = order?.tests;
     if (returnResult?.testResult) {
       returnResult.testResult.forEach((field: IResultField) => {
         Object.keys(field).forEach((propName) => {
