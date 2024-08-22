@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, InputGroup, Message, toaster } from "rsuite";
+import { Input, InputGroup, Message, SelectPicker, toaster } from "rsuite";
 import CheckIcon from "@rsuite/icons/Check";
 import { ENUM_MODE } from "@/enum/Mode";
 
@@ -14,13 +14,37 @@ const FInancialSection = ({
   data: any;
   mode: string;
 }) => {
+  const discountOption = [
+    { label: "System", value: "system" },
+    { label: "Doctor", value: "doctor" },
+    { label: "Both", value: "both" },
+    { label: "Free Patient", value: "free" },
+  ];
+
   return (
     <div
-      className={`grid grid-cols-4 mt-5 gap-16 ${
+      className={`grid grid-cols-5 mt-5 gap-16  mb-5 border  shadow-lg px-2 py-2 ${
         mode == ENUM_MODE.VIEW && "hidden"
       } `}
     >
       {/* For financial seciton */}
+      <div>
+        <h5 className="font-bold">Discount Given By</h5>
+        <SelectPicker
+          data={discountOption}
+          block
+          cleanable={false}
+          searchable={false}
+          onSelect={(value) => {
+            console.log(value);
+            setData((prevData: any) => ({
+              ...prevData,
+              discountedBy: value,
+            }));
+          }}
+          defaultValue={data?.discountedBy}
+        />
+      </div>
       <div>
         <h5 className="font-bold">Vat</h5>
         <InputGroup>

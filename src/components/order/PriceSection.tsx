@@ -1,12 +1,14 @@
-
 import React from "react";
 import { IPriceSectionProps } from "./initialDataAndTypes";
 
 const PriceSection = (props: IPriceSectionProps) => {
   const { data, discountAmount, totalPrice, vatAmount } = props;
   return (
-    <div>
-      <div className="mt-10">
+    <div className="mb-5 border  shadow-lg">
+      <div className="bg-[#3498ff] text-white px-2 py-2">
+        <h2 className="text-center text-xl font-semibold">Price Information</h2>
+      </div>
+      <div className="mt-10 px-2 py-2">
         <div className="mt-5">
           <h2 className="text-xl font-bold">Price Info</h2>
           <hr />
@@ -74,4 +76,3 @@ const PriceSection = (props: IPriceSectionProps) => {
 };
 
 export default PriceSection;
-

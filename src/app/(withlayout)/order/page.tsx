@@ -6,6 +6,7 @@ import { Button, Message, toaster } from "rsuite";
 import TestInformation from "@/components/order/TestInformation";
 import {
   useLazyGetInvoiceQuery,
+  useLazyGetSingleOrderQuery,
   usePostOrderMutation,
 } from "@/redux/api/order/orderSlice";
 import FInancialSection from "@/components/order/FInancialSection";
@@ -13,6 +14,7 @@ import PriceSection from "@/components/order/PriceSection";
 import ForDewCollection from "@/components/order/ForDewCollection";
 import {
   IOrderData,
+  InitialData,
   ItestInformaiton,
   initialData,
 } from "@/components/order/initialDataAndTypes";
@@ -22,11 +24,15 @@ import { useAppDispatch } from "@/redux/hook";
 import { setId } from "@/redux/features/IdStore/idSlice";
 import jsPDF from "jspdf";
 import { URL } from "url";
+import Refund from "@/components/order/Refund";
+import { ITest } from "@/types/allDepartmentInterfaces";
+import { ITestsFromOrder } from "@/components/generateReport/initialDataAndTypes";
+import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
   const patientTypeRef: React.MutableRefObject<any> = useRef();
-  const [data, setFormData] = useState(initialData);
+  const [data, setFormData] = useState<InitialData>(initialData);
   const setData = (props: React.SetStateAction<any>) => {
     setFormData(props);
   };
@@ -41,7 +47,6 @@ const Order = () => {
   };
   const okHandler = () => {
     handlePostORder();
-    setData(initialData);
   };
   // Handling discount and vat functionality
   let vatAmount = 0;
@@ -50,6 +55,9 @@ const Order = () => {
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
+      if (param.status == ENUM_TEST_STATUS.REFUNDED) {
+        return;
+      }
       totalPrice = totalPrice + param.test.price;
       if (param.deliveryTime > data.deliveryTime) {
         setData((preValue: any) => ({
@@ -72,6 +80,9 @@ const Order = () => {
 
   data.parcentDiscount > 0 &&
     data.tests.map((param: ItestInformaiton) => {
+      if (param.status == ENUM_TEST_STATUS.REFUNDED) {
+        return;
+      }
       if (Number(param.discount) > 0) {
         return;
       } else {
@@ -122,6 +133,7 @@ const Order = () => {
       paid: data.paid ? data.paid : 0,
       patientType: data.patientType,
       vat: data.vat,
+      discountedBy: data.discountedBy,
     };
     if (data?.refBy && data.refBy.length > 5) {
       orderData.refBy = data.refBy as string;
@@ -180,17 +192,36 @@ const Order = () => {
     if (isSuccess) {
       toaster.push(<Message type="success">Order posted Successfully</Message>);
       setModalOpen(!modalOpen);
+      setData(initialData);
+    }
+    if (isError) {
+      toaster.push(<Message type="error">! Error</Message>);
     }
   }, [isSuccess]);
   const dispatch = useAppDispatch();
   // Handleign vew Order
   const patchAndViewHandler = (data: { mode: string; data: IOrderData }) => {
-    setModalOpen(!modalOpen);
+    setModalOpen(true);
     setMode(data.mode);
     setData(data.data as IOrderData);
     dispatch(setId(data.data._id as string));
   };
 
+  //  For Refund =
+  const [rmodalOpen, setRmodalOpen] = useState(false);
+  const [rTest, setTest] = useState<ITestsFromOrder | undefined>();
+
+  // // for featching single data
+  // const [getSingle,{isLoading:getSingleLoading}] = useLazyGetSingleOrderQuery()
+  // useEffect(()=>{
+  //   if(ENUM_MODE.VIEW){
+  //     (async function() {
+
+  //       const data = a
+  //     }())
+
+  //   }
+  // },[mode])
   return (
     <div>
       <div className="my-5">
@@ -208,21 +239,26 @@ const Order = () => {
       <div>
         <RModal
           open={modalOpen}
-          title="Generate New Bill"
+          title={
+            mode == ENUM_MODE.VIEW ? "Bill Information" : " Generate New Bill"
+          }
           size="full"
           cancelHandler={cancelHandler}
           okHandler={okHandler}
         >
           <>
-            <h2 className="text-4xl font-bold text-center">
-              {mode == ENUM_MODE.VIEW
-                ? "Bill Information"
-                : " Generate New Bill"}
-            </h2>
-
+            <div>
+              <Refund
+                open={rmodalOpen}
+                order={data as unknown as IOrderData}
+                setOpen={setRmodalOpen}
+                test={rTest as unknown as ITestsFromOrder}
+                key={"rms"}
+              />
+            </div>
             <div>
               <PatientInformation
-                data={data}
+                data={data as unknown as InitialData}
                 forwardedRefForUnregisterd={refForUnregistered}
                 setFormData={setData as React.SetStateAction<any>}
                 forwardedRefForPatientType={patientTypeRef}
@@ -236,6 +272,8 @@ const Order = () => {
                 formData={data}
                 setFormData={setData}
                 mode={mode}
+                setRModalOpen={setRmodalOpen}
+                setRTest={setTest}
               />
             </div>
 
@@ -301,6 +339,9 @@ const Order = () => {
           patchHandler={patchAndViewHandler}
           mode={mode}
           setMode={setMode}
+          setFormData={
+            setFormData as unknown as React.Dispatch<SetStateAction<IOrderData>>
+          }
         />
       </div>
     </div>

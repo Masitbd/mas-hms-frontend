@@ -70,6 +70,9 @@ const TestTableForReport = (props: { data: IOrderData }) => {
 
       case "delivered":
         return <Tag color="blue">Delivered</Tag>;
+
+      case "refunded":
+        return <Tag color="orange">REFUNDED</Tag>;
     }
   };
 

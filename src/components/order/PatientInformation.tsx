@@ -51,85 +51,105 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
   if (mode == ENUM_MODE.VIEW) {
     return (
       <>
-        <h2 className="text-2xl mt-5 font-bold"> Patient Information</h2>
-        <hr />
-        <div className="grid grid-cols-3 gap-5 my-5">
-          {unreagisteredPatientProfileDataPropertyNames.map((value, index) => {
-            return (
-              <>
-                <div className="flex flex-col" key={index}>
-                  <div className="text-lg font-bold capitalize">{value}</div>
-                  <div>{(data.patient as any)[value]}</div>
-                </div>
-              </>
-            );
-          })}
+        <div className="mb-5 border  shadow-lg">
+          <div className="bg-[#3498ff] text-white px-2 py-2">
+            <h2 className="text-center text-xl font-semibold">
+              Patient Information
+            </h2>
+          </div>
+
+          <hr />
+          <div className="grid grid-cols-3 gap-5 py-2 px-2">
+            {unreagisteredPatientProfileDataPropertyNames.map(
+              (value, index) => {
+                return (
+                  <>
+                    <div className="flex flex-col" key={index}>
+                      <div className="text-lg font-bold capitalize">
+                        {value}
+                      </div>
+                      <div>{(data.patient as any)[value]}</div>
+                    </div>
+                  </>
+                );
+              }
+            )}
+          </div>
         </div>
       </>
     );
   }
   return (
-    <div>
-      {/* For selecting patient type */}
-      <Form
-        onChange={(value, event) =>
-          setFormData((prevData) => ({
-            ...prevData,
-            patientType: value.patientType,
-          }))
-        }
-        fluid
-        className="grid grid-cols-2"
-        formValue={data}
-        ref={forwardedRefForPatientType}
-      >
-        <Form.Group controlId="patientType">
-          <Form.ControlLabel>Patient Type</Form.ControlLabel>
-          <Form.Control
-            name="patientType"
-            accepter={InputPicker}
-            data={patientType}
-          />
-        </Form.Group>
-      </Form>
-
-      {/* For registered Patient to search patient with uuid */}
-
-      {data?.patientType == "registered" && (
-        <>
-          <div className="mt-5">
-            <h1 className="font-bold">Patient UUID</h1>
-            <InputGroup>
-              <Input name="value" onChange={searchHandler} width={50} />
-            </InputGroup>
-          </div>
-        </>
-      )}
-
-      <div className="mt-5">
-        {data.patientType === "registered" &&
-          (data?.patient?._id ? (
-            <ForRegistered
-              doctors={doctorData.data}
-              formData={data}
-              patient={patientSearchData?.data ? patientSearchData.data : data}
-              setFormData={setFormData}
+    <div className="mb-5 border  shadow-lg">
+      <div className="bg-[#3498ff] text-white px-2 py-2">
+        <h2 className="text-center text-xl font-semibold">
+          Patient Information
+        </h2>
+      </div>
+      <div className="px-2 py-2">
+        {/* For selecting  patient type */}
+        <Form
+          onChange={(value, event) =>
+            setFormData((prevData) => ({
+              ...prevData,
+              patientType: value.patientType,
+            }))
+          }
+          fluid
+          className="grid grid-cols-2"
+          formValue={data}
+          ref={forwardedRefForPatientType}
+        >
+          <Form.Group controlId="patientType">
+            <Form.ControlLabel>Patient Type</Form.ControlLabel>
+            <Form.Control
+              name="patientType"
+              accepter={InputPicker}
+              data={patientType}
             />
-          ) : (
-            <>
-              <div className="h-24 flex justify-center items-center">
-                No data founds
-              </div>
-            </>
-          ))}
-        {data.patientType === "notRegistered" && (
-          <ForNotRegistered
-            doctorData={doctorData?.data}
-            setFromData={setFormData}
-            data={data}
-            forwardedRef={forwardedRefForUnregisterd}
-          />
+          </Form.Group>
+        </Form>
+
+        {/* For registered Patient to search patient with uuid */}
+
+        {data?.patientType == "registered" && (
+          <>
+            <div className="mt-5">
+              <h1 className="font-bold">Patient UUID</h1>
+              <InputGroup>
+                <Input name="value" onChange={searchHandler} width={50} />
+              </InputGroup>
+            </div>
+          </>
         )}
+
+        <div className="mt-5">
+          {data.patientType === "registered" &&
+            (data?.patient?._id ? (
+              <ForRegistered
+                doctors={doctorData.data}
+                formData={data}
+                patient={
+                  patientSearchData?.data ? patientSearchData.data : data
+                }
+                setFormData={setFormData}
+              />
+            ) : (
+              <>
+                <div className="h-24 flex justify-center items-center">
+                  No data founds
+                </div>
+              </>
+            ))}
+          {data.patientType === "notRegistered" && (
+            <ForNotRegistered
+              doctorData={doctorData?.data}
+              setFromData={setFormData}
+              data={data}
+              forwardedRef={forwardedRefForUnregisterd}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
