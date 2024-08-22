@@ -1,9 +1,7 @@
 /* eslint-disable react/no-children-prop */
-import {
-  useLazyGetSingleReportGroupQuery
-} from "@/redux/api/reportGroup/reportGroupSlice";
+
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
-import { NavLink } from "@/utils/Navlink";
+
 import EditIcon from "@rsuite/icons/Edit";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { useEffect, useState } from "react";
