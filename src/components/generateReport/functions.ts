@@ -4,11 +4,12 @@ import {
   IResultField,
   ISpecimen,
 } from "@/types/allDepartmentInterfaces";
-import { ITestsFromOrder } from "./initialDataAndTypes";
+import { ITEstREsultForMicroBio, ITestsFromOrder } from "./initialDataAndTypes";
 import { IOrderData } from "../order/initialDataAndTypes";
 import { useLazyGetSpecimenQuery } from "@/redux/api/specimen/specimenSlice";
 import { useAppSelector } from "@/redux/hook";
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
+import { SetStateAction } from "react";
 
 export const useCleanedTests = (params: {
   oid: string;
@@ -26,7 +27,13 @@ export const useCleanedTests = (params: {
   const [getSpecimen] = useLazyGetSpecimenQuery();
   const { oid, mode, reportGroup, order, tests, result, setResult } = params;
   // This array contains the result fields name which will now be shoun in the result
-  const unnecesseryFields = ["investigation", "_id", "defaultValue", "unit"];
+  const unnecesseryFields = [
+    "investigation",
+    "_id",
+    "defaultValue",
+    "unit",
+    "description",
+  ];
   let modifiedTest;
   let specimen: string[] = [];
   let fieldNames: string[] = [];
@@ -51,6 +58,14 @@ export const useCleanedTests = (params: {
         const cleanedResultFields = test.test.resultFields.map((rfData) => {
           let resultField = { ...rfData };
 
+          // setting the default value to the result
+          if (
+            reportGroup?.testResultType == "descriptive" &&
+            resultField.description != null
+          ) {
+            resultField.result = resultField.description;
+          }
+          // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
           Object.keys(resultField).forEach((propName) => {
             //   cleaning the unwanted fields
             if (resultField[propName] === "") {
@@ -96,7 +111,10 @@ export const useCleanedTests = (params: {
         return newTest;
       }
     });
-    fieldNames.push("result");
+
+    if (!fieldNames.includes("result")) {
+      fieldNames.push("result");
+    }
   }
 
   // For edit
@@ -168,4 +186,15 @@ export const resultSetter = (
 
 export const getPageMargins = () => {
   return `@page { margin: ${100} ${20} ${20} ${100} !important; }`;
+};
+
+export const resultSetterForMicroBio = (
+  key: string,
+  value: string | boolean,
+  result: ITEstREsultForMicroBio,
+  setResult: React.Dispatch<SetStateAction<ITEstREsultForMicroBio>>
+) => {
+  const data = JSON.parse(JSON.stringify(result));
+  data[key] = value;
+  setResult(data);
 };

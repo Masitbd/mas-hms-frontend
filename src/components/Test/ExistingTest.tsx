@@ -1,4 +1,8 @@
-import { IResultField, ITest } from "@/types/allDepartmentInterfaces";
+import {
+  IReportGroup,
+  IResultField,
+  ITest,
+} from "@/types/allDepartmentInterfaces";
 import React, { useEffect, useState } from "react";
 import RModal from "../ui/Modal";
 import { useGetGroupQuery } from "@/redux/api/reportTypeGroup/reportTypeGroupSlice";
@@ -25,11 +29,13 @@ const ExistingTest = ({
   setFormData,
   existingModal,
   setExistingModal,
+  reportGroupId,
 }: {
   formData: ITest;
   setFormData: (props: ITest) => void;
   existingModal: boolean;
   setExistingModal: (prpos: boolean) => void;
+  reportGroupId?: string;
 }) => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
   const { data: reportGroup, isLoading: reportGroupLoading } =
@@ -72,7 +78,9 @@ const ExistingTest = ({
       });
     return added;
   };
-  console.log(reportTypeData);
+
+  const [selectedReportGroup, setSelectedReportGroup] =
+    useState<IReportGroup>();
 
   return (
     <>
@@ -98,10 +106,12 @@ const ExistingTest = ({
                       key={data._id}
                       value={data._id}
                       onSelect={() => {
+                        setSelectedReportGroup(data as unknown as IReportGroup);
                         setGroupFilterOption({
                           reportGroup: data._id as string,
                         });
                         setReportGroupDropdownTitle(data.label as string);
+                        setReportTypeFilterOption({ reportTypeGroup: "" });
                       }}
                     >
                       {data.label}
@@ -139,54 +149,76 @@ const ExistingTest = ({
           </div>
 
           <div>
-            <Table
-              loading={reportTypeDataLoading}
-              data={reportTypeData?.data}
-              className="w-full"
-              autoHeight
-              rowHeight={60}
-            >
-              {" "}
-              <Column flexGrow={2}>
-                <HeaderCell>Investigation</HeaderCell>
-                <Cell dataKey="investigation" />
-              </Column>
-              <Column flexGrow={1}>
-                <HeaderCell>Test</HeaderCell>
-                <Cell dataKey="test" />
-              </Column>
-              <Column>
-                <HeaderCell>Unit</HeaderCell>
-                <Cell dataKey="unit" />
-              </Column>
-              <Column>
-                <HeaderCell>Normal Value</HeaderCell>
-                <Cell dataKey="normalValue" />
-              </Column>
-              <Column>
-                <HeaderCell>Default Value</HeaderCell>
-                <Cell dataKey="defaultValue" />
-              </Column>
-              <Column>
-                <HeaderCell>Action</HeaderCell>
-                <Cell>
-                  {(rowdate) => (
-                    <Button
-                      className="btn btn-primary"
-                      onClick={() => {
-                        console.log(formData);
-                        addTestHandler(rowdate as any);
-                      }}
-                      appearance="primary"
-                      color="blue"
-                      disabled={checker(rowdate as any)}
-                    >
-                      Add
-                    </Button>
-                  )}
-                </Cell>
-              </Column>
-            </Table>
+            {selectedReportGroup?._id &&
+            reportTypeFilterOption?.reportTypeGroup?.length > 0 ? (
+              <Table
+                loading={reportTypeDataLoading}
+                data={reportTypeData?.data}
+                className="w-full"
+                autoHeight
+                rowHeight={60}
+              >
+                {" "}
+                {selectedReportGroup?.testResultType == "parameter" && (
+                  <>
+                    <Column flexGrow={2}>
+                      <HeaderCell>Investigation</HeaderCell>
+                      <Cell dataKey="investigation" />
+                    </Column>
+                    <Column flexGrow={1}>
+                      <HeaderCell>Test</HeaderCell>
+                      <Cell dataKey="test" />
+                    </Column>
+                    <Column>
+                      <HeaderCell>Unit</HeaderCell>
+                      <Cell dataKey="unit" />
+                    </Column>
+                    <Column>
+                      <HeaderCell>Normal Value</HeaderCell>
+                      <Cell dataKey="normalValue" />
+                    </Column>
+                    <Column>
+                      <HeaderCell>Default Value</HeaderCell>
+                      <Cell dataKey="defaultValue" />
+                    </Column>
+                  </>
+                )}
+                {selectedReportGroup?.testResultType == "descriptive" && (
+                  <>
+                    <Column flexGrow={2}>
+                      <HeaderCell>Title</HeaderCell>
+                      <Cell dataKey="label" />
+                    </Column>
+                    <Column flexGrow={4}>
+                      <HeaderCell>Description</HeaderCell>
+                      <Cell dataKey="description" />
+                    </Column>
+                  </>
+                )}
+                <Column>
+                  <HeaderCell>Action</HeaderCell>
+                  <Cell>
+                    {(rowdate) => (
+                      <Button
+                        className="btn btn-primary"
+                        onClick={() => {
+                          addTestHandler(rowdate as any);
+                        }}
+                        appearance="primary"
+                        color="blue"
+                        disabled={checker(rowdate as any)}
+                      >
+                        Add
+                      </Button>
+                    )}
+                  </Cell>
+                </Column>
+              </Table>
+            ) : (
+              <div className="flex text-center font-bold py-10 items-center justify-center">
+                Please Select a Report group and Group
+              </div>
+            )}
           </div>
         </div>
       </RModal>

@@ -3,9 +3,8 @@ import Loading from "@/app/loading";
 import OrderAndPatientInfo from "@/components/testReport/OrderAndPatientInfo";
 import TestTableForReport from "@/components/testReport/TestTableForReport";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
-import { useGetSingleReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Divider } from "rsuite";
 
 const Page = ({ params }: { params: { oid: string } }) => {
@@ -13,12 +12,14 @@ const Page = ({ params }: { params: { oid: string } }) => {
     data: orderData,
     isLoading: orderDataLoading,
     isError: orderDataError,
+    isFetching,
+    refetch,
   } = useGetOrderQuery(
     { oid: params.oid },
-    { refetchOnMountOrArgChange: true }
+    { refetchOnFocus: true, refetchOnMountOrArgChange: true }
   );
 
-  if (orderDataLoading) return <Loading />;
+  if (orderDataLoading || isFetching) return <Loading />;
 
   return (
     <div>

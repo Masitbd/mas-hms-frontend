@@ -1,4 +1,5 @@
 import { SyntheticEvent } from "react";
+import { ITemplate } from "../reportTemplate/typesandInitialData";
 
 export type IComment = {
   _id?: string;

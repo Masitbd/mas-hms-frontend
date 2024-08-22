@@ -22,7 +22,11 @@ const RModal = ({
     <div>
       <Modal size={size} open={open} backdrop="static" onClose={cancelHandler}>
         <Modal.Header>
-          <Modal.Title>{title}</Modal.Title>
+          <Modal.Title>
+            <div className="bg-[#3498ff] text-white px-2 py-2 text-center font-sans font-semibold rounded-md mt-5 text-xl">
+              {title}
+            </div>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="p-5">{children}</Modal.Body>
         {okHandler && cancelHandler && (

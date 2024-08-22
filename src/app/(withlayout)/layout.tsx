@@ -27,6 +27,7 @@ interface ILayoutProps {
 export default function layout({ children }: { children: ReactElement }) {
   const userLoggedIn = useAppSelector((state) => state.auth.loggedIn);
   const loading = useAppSelector((state) => state.loading.loading);
+  console.log(loading);
 
   if (loading) {
     return (

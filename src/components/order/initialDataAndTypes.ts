@@ -24,6 +24,7 @@ export type InitialData = {
   refBy?: string; // Make refBy optional
   deliveryTime: Date;
   dueAmount?: number;
+  consultant?: string;
 };
 
 export type IInitialData = {
@@ -62,6 +63,7 @@ export type IOrderData = {
   patientType: string;
   paid: number;
   vat: number;
+  consultant?: string;
 };
 
 export const initialData: InitialData = {

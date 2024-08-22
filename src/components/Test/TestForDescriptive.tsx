@@ -14,6 +14,7 @@ import RModal from "../ui/Modal";
 import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
 import AlartDialog from "../ui/AlertModal";
 import { IResultField } from "@/types/allDepartmentInterfaces";
+import ExistingTest from "./ExistingTest";
 
 const { Cell, Column, HeaderCell } = Table;
 const ForDescriptiveBased = ({
@@ -100,18 +101,29 @@ const ForDescriptiveBased = ({
     resultDescripton: StringType().isRequired("This field is required."),
   });
 
-  const { data: pdrvData, isLoading: pdrvLoading } = useGetPdrvQuery(undefined);
+  // Existing test addition
+  const [existingModal, setExistingModal] = useState(false);
 
   return (
     <div>
       <div>
-        <Button
-          appearance="primary"
-          color="blue"
-          onClick={() => newOpenHandler()}
-        >
-          Add Test Params
-        </Button>
+        <div>
+          <Button
+            appearance="primary"
+            color="blue"
+            onClick={() => setExistingModal(true)}
+          >
+            Add
+          </Button>
+        </div>
+        <div>
+          <ExistingTest
+            existingModal={existingModal}
+            formData={testFromData}
+            setExistingModal={setExistingModal}
+            setFormData={setTestFromData}
+          />
+        </div>
       </div>
       <Table
         height={420}
@@ -122,11 +134,11 @@ const ForDescriptiveBased = ({
       >
         <Column flexGrow={1} align="center">
           <HeaderCell>Title</HeaderCell>
-          <Cell dataKey="title" />
+          <Cell dataKey="label" />
         </Column>
         <Column flexGrow={3}>
           <HeaderCell>Description</HeaderCell>
-          <Cell dataKey="resultDescripton" />
+          <Cell dataKey="description" />
         </Column>
         <Column flexGrow={2}>
           <HeaderCell>Action</HeaderCell>
@@ -154,8 +166,8 @@ const ForDescriptiveBased = ({
         </Column>
       </Table>
 
-      <div>
-        {/* New Modal */}
+      {/* <div>
+      
         <RModal
           title={
             mode === "new"
@@ -185,7 +197,7 @@ const ForDescriptiveBased = ({
             </Form.Group>
           </Form>
         </RModal>
-      </div>
+      </div> */}
 
       <div>
         <AlartDialog

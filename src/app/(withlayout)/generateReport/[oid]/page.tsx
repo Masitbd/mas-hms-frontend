@@ -1,7 +1,9 @@
 "use client";
 import Loading from "@/app/loading";
+import ForMicrobiology from "@/components/generateReport/ForMicrobiology";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
+import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
 import { useGetSingleReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
@@ -32,6 +34,30 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           order={orderData?.data[0]}
           mode={props.searchParams.mode}
           refeatch={refetch}
+        />
+      );
+      break;
+
+    case "descriptive":
+      resultGeneratorComponent = (
+        <ForParameterBased
+          oid={orderData?.data[0]?.oid}
+          tests={testsAccordingResultType}
+          reportGroup={reportGroupData?.data as IReportGroup}
+          order={orderData?.data[0]}
+          mode={props.searchParams.mode}
+          refeatch={refetch}
+        />
+      );
+      break;
+
+    case "bacterial":
+      resultGeneratorComponent = (
+        <ForMicrobiology
+          mode={props.searchParams.mode}
+          oid={orderData?.data[0]?.oid}
+          reportGroup={reportGroupData?.data as IReportGroup}
+          order={orderData?.data[0]}
         />
       );
       break;

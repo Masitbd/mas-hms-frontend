@@ -47,6 +47,7 @@ const ForNotRegistered = (param: param) => {
                 email: value.email,
                 consultant: value.consultant,
               },
+              consultant: value.consultant,
               refBy: value.refBy ? value.refBy : param.data.refBy,
               deliveryTime: value.deliveryTime
                 ? value.deliveryTime

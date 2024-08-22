@@ -1,46 +1,46 @@
 import { baseApi } from "../baseApi";
 
-const DoctorSeal = baseApi.injectEndpoints({
+const template = baseApi.injectEndpoints({
   endpoints: (build) => ({
-    postSeal: build.mutation({
+    postTemplate: build.mutation({
       query: (data: any) => ({
-        url: "/seal",
+        url: "/template",
         method: "post",
         body: data,
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["seal"],
+      invalidatesTags: ["condition"],
     }),
-    patchSeal: build.mutation({
+    patchTemplate: build.mutation({
       query: ({ data, id }) => ({
-        url: `/seal/${id}`,
+        url: `/template/${id}`,
         method: "PATCH",
         body: data,
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["seal"],
+      invalidatesTags: ["condition"],
     }),
-    deleteSeal: build.mutation({
+    deleteTemplate: build.mutation({
       query: (data) => ({
-        url: `/seal/${data}`,
+        url: `/template/${data}`,
         method: "delete",
         contentType: "application/json",
       }),
-      invalidatesTags: ["seal"],
+      invalidatesTags: ["condition"],
     }),
-    getSeal: build.query({
+    getTemplate: build.query({
       query: () => ({
-        url: "/seal",
+        url: "/template",
         method: "get",
         contentType: "application/json",
       }),
-      providesTags: ["seal"],
+      providesTags: ["condition"],
     }),
-    getSingleSeal: build.mutation({
+    getSingleTemplate: build.mutation({
       query: (data: any) => ({
-        url: `/seal/${data}`,
+        url: `/template/${data}`,
         method: "get",
         contentType: "application/json",
       }),
@@ -49,9 +49,9 @@ const DoctorSeal = baseApi.injectEndpoints({
 });
 
 export const {
-  useGetSealQuery,
-  useDeleteSealMutation,
-  usePatchSealMutation,
-  usePostSealMutation,
-  useGetSingleSealMutation,
-} = DoctorSeal;
+  useGetTemplateQuery,
+  useDeleteTemplateMutation,
+  usePatchTemplateMutation,
+  usePostTemplateMutation,
+  useGetSingleTemplateMutation,
+} = template;

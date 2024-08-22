@@ -3,6 +3,13 @@ import {
   useDeleteTestMutation,
   useGetTestsQuery,
 } from "@/redux/api/test/testSlice";
+<<<<<<< HEAD
+=======
+import React, { SyntheticEvent, useEffect, useState } from "react";
+import { Button, Form, Message, Pagination, Table, toaster } from "rsuite";
+import AlartDialog from "../ui/AlertModal";
+import VisibleIcon from "@rsuite/icons/Visible";
+>>>>>>> 24299faa4366e830a75999328b5a3a5e43170e2f
 import { ITest } from "@/types/allDepartmentInterfaces";
 import VisibleIcon from "@rsuite/icons/Visible";
 import React, { useEffect, useState } from "react";
@@ -58,11 +65,16 @@ const TestTable = ({
     }
   }, [deleteSuccess, deleteError]);
   // For search
-  const [searchData, setSearchData] = useState({ searchTerm: "" });
+  const [searchData, setSearchData] = useState({
+    searchTerm: "",
+    page: 1,
+    limit: 10,
+  });
   const {
     data: testData,
     isLoading: testLoading,
     isError: TesError,
+    isFetching,
   } = useGetTestsQuery(searchData);
 
   //pagination 
@@ -85,7 +97,7 @@ const TestTable = ({
       <div className="my-5">
         <Form
           onChange={(formValue: Record<string, any>) =>
-            setSearchData({ searchTerm: formValue.searchTerm })
+            setSearchData({ ...searchData, searchTerm: formValue.searchTerm })
           }
           className="grid grid-cols-1 gap-5 justify-center w-full"
           fluid
@@ -97,9 +109,15 @@ const TestTable = ({
         </Form>
       </div>
       <Table
+<<<<<<< HEAD
         height={650}
         data={data as ITest[]}
         loading={testLoading}
+=======
+        height={550}
+        data={testData?.data.data as ITest[]}
+        loading={testLoading || isFetching}
+>>>>>>> 24299faa4366e830a75999328b5a3a5e43170e2f
         className="w-full"
         bordered
         cellBordered
@@ -184,6 +202,29 @@ const TestTable = ({
           activePage={page}
           onChangePage={setPage}
           onChangeLimit={handleChangeLimit}
+        />
+      </div>
+      <div>
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={10}
+          size="xs"
+          layout={["total", "-", "limit", "|", "pager", "skip"]}
+          total={testData?.data?.meta?.total}
+          limitOptions={[10, 30, 50]}
+          limit={testData?.data?.meta?.limit}
+          activePage={testData?.data?.meta?.page}
+          onChangePage={(page: number) =>
+            setSearchData((prevData) => ({ ...prevData, page: page }))
+          }
+          onChangeLimit={(limit: number) =>
+            setSearchData((prevData) => ({ ...prevData, limit: limit }))
+          }
         />
       </div>
       <div>

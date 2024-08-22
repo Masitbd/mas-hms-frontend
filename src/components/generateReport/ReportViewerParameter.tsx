@@ -9,6 +9,7 @@ import {
 import { ITestResultForParameter } from "./initialDataAndTypes";
 import { camelToFlat } from "@/utils/CamelToFlat";
 import { getPageMargins } from "./functions";
+import PatientInformaiton from "./PatientInformaiton";
 
 const ReportViewerParameter = React.forwardRef(
   (
@@ -19,29 +20,15 @@ const ReportViewerParameter = React.forwardRef(
       fieldNames: string[];
       headings: string[];
       resultFields: IResultField[];
+      consultant: IDoctor;
     },
     ref: LegacyRef<HTMLDivElement>
   ) => {
     const { order, testResult, headings, fieldNames, resultFields } = params;
-    const refByInfromation = () => {
-      if (order?.refBy) {
-        const refBy: IDoctor = order?.refBy as unknown as IDoctor;
-
-        if ("title" in refBy || "name" in refBy) {
-          return (
-            <>
-              <div>
-                <span className="font-bold">RefBy: </span>
-                {refBy.title} {refBy.name}
-              </div>
-            </>
-          );
-        } else {
-          return "";
-        }
-      }
-    };
-    const fieldsLength = fieldNames.length.toString();
+    let fieldsLength = fieldNames.length.toString();
+    if (params.reportGroup.testResultType == "descriptive") {
+      fieldsLength = "1";
+    }
 
     return (
       <>
@@ -66,56 +53,39 @@ const ReportViewerParameter = React.forwardRef(
           ) : (
             ""
           )}
-          <div className="border border-1 border-stone-400 p-2 grid grid-cols-2 gap-1 my-5 rounded-md font-serif">
-            <div>
-              <span className="font-bold">ID: </span>
-              <span className="font-serif">{order.oid}</span>
-            </div>
-            <div>
-              <span className="font-bold">Name: </span>
-              {order.patient?.name}
-            </div>
-            <div>
-              <span className="font-bold">Age: </span>
-              {order.patient?.age} Year(s)
-            </div>
-            <div>
-              <span className="font-bold">Sex: </span>
-              {order.patient?.gender}
-            </div>
-            {refByInfromation()}
-            <div>
-              <span className="font-bold">Receiving Date: </span>
-              {new Date(order.createdAt as Date).toDateString()}
-            </div>
-            <div>
-              <span className="font-bold">Report Creation Date: </span>
-              {new Date(
-                testResult?.createdAt as unknown as Date
-              ).toDateString()}
-            </div>
-            <div>
-              <span className="font-bold">Specimen: </span>
-            </div>
+          <div>
+            <PatientInformaiton
+              order={order}
+              testResult={testResult}
+              consultant={
+                { data: params.consultant } as unknown as {
+                  data: { data: IDoctor };
+                }
+              }
+            />
           </div>
 
           <div className="border rounded-md p-2">
-            <div className={`grid ${"grid-cols-" + fieldsLength} `}>
-              {fieldNames?.map((field) => {
-                if (field == "defaultValue") {
-                  return;
-                }
-                return (
-                  <div key={field} className="pb-2">
-                    <span className="font-bold px-4">
-                      {camelToFlat(field)}{" "}
-                    </span>
-                    {}
-                  </div>
-                );
-              })}
-            </div>
-            <hr />
+            {params.reportGroup.testResultType !== "descriptive" && (
+              <>
+                <div className={`grid ${"grid-cols-" + fieldsLength} `}>
+                  {fieldNames?.map((field) => {
+                    if (field == "defaultValue") {
+                      return;
+                    }
+                    return (
+                      <div key={field} className="pb-2">
+                        <span className="font-bold px-4">
+                          {camelToFlat(field)}{" "}
+                        </span>
+                        {}
+                      </div>
+                    );
+                  })}
+                </div>
+                <hr />
+              </>
+            )}
 
             <div className={` py-2`}>
               {headings.map((heading: string) => {
@@ -126,35 +96,53 @@ const ReportViewerParameter = React.forwardRef(
                     >
                       {heading}:
                     </div>
-                    <div className={`grid ${"grid-cols-" + fieldsLength}   `}>
+                    <div className={`grid ${"grid-cols-" + fieldsLength}`}>
                       {resultFields.map((resultField: IResultField) => {
                         if (resultField.investigation === heading) {
                           return fieldNames.map((fieldName: string) => {
                             return (
                               <>
-                                <div>
-                                  <hr />
-                                  <div key={fieldName} className=" py-3 px-2">
-                                    <span
-                                      className={`${
-                                        fieldName == "result"
-                                          ? "font-extrabold"
-                                          : ""
-                                      } font-serif `}
-                                    >
-                                      {resultField[fieldName]
-                                        ? resultField[fieldName] + "   "
-                                        : ""}
-                                    </span>
-                                    <span className="text-sm font-mono">
-                                      {fieldName == "result"
-                                        ? resultField?.unit
-                                          ? resultField.unit
-                                          : " "
-                                        : "  "}
-                                    </span>
+                                {params.reportGroup.testResultType ==
+                                "descriptive" ? (
+                                  <>
+                                    {fieldName == "result" ? (
+                                      <div>
+                                        <div
+                                          className="col-span-2  font-serif"
+                                          dangerouslySetInnerHTML={{
+                                            __html: resultField?.result,
+                                          }}
+                                        ></div>
+                                      </div>
+                                    ) : (
+                                      ""
+                                    )}
+                                  </>
+                                ) : (
+                                  <div>
+                                    <hr />
+                                    <div key={fieldName} className=" py-3 px-2">
+                                      <span
+                                        className={`${
+                                          fieldName == "result"
+                                            ? "font-extrabold"
+                                            : ""
+                                        } font-serif `}
+                                      >
+                                        {resultField[fieldName]
+                                          ? resultField[fieldName] + "   "
+                                          : ""}
+                                      </span>
+                                      <span className="text-sm font-mono">
+                                        {fieldName == "result"
+                                          ? resultField?.unit
+                                            ? resultField.unit
+                                            : " "
+                                          : "  "}
+                                      </span>
+                                    </div>
                                   </div>
-                                </div>
+                                )}
                               </>
                             );
                           });
@@ -168,7 +156,7 @@ const ReportViewerParameter = React.forwardRef(
             </div>
           </div>
           {params?.testResult?.comment ? (
-            <div className="border border-1  p-2 grid grid-cols-2 gap-1 my-5 rounded-md">
+            <div className="border border-1  p-2 grid grid-cols-2 gap-1 my-5 rounded-md font-serif">
               <div
                 dangerouslySetInnerHTML={{
                   __html: params?.testResult?.comment,
@@ -178,6 +166,19 @@ const ReportViewerParameter = React.forwardRef(
           ) : (
             ""
           )}
+          <div>
+            {params?.testResult?.seal ? (
+              <div className="flex justify-end items-end font-serif mt-5">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: params?.testResult?.seal,
+                  }}
+                />
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </>
     );

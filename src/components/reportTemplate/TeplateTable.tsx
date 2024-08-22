@@ -1,27 +1,30 @@
+import React, { useRef } from "react";
 import { Button, Table } from "rsuite";
-
 import { ENUM_MODE } from "@/enum/Mode";
-import { useDeleteSealMutation, useGetSealQuery } from "@/redux/api/doctorSeal/doctorSealSlice";
 import swal from "sweetalert";
-import { IDoctorSeal, IPropsForTable } from "../comment/typesAdInitialData";
+import { IPropsForTemplateTable, ITemplate } from "./typesandInitialData";
+import {
+  useDeleteTemplateMutation,
+  useGetTemplateQuery,
+} from "@/redux/api/template/templateSlice";
 
-const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
-  const { data: sealData, isLoading: sealDataLoading } =
-    useGetSealQuery(undefined);
+const TemplateTable = (props: IPropsForTemplateTable) => {
+  const { data: templateData, isLoading: templateDataLoading } =
+    useGetTemplateQuery(undefined);
 
   const { setData, setMode, setModalOpen } = props;
-  const [deleteSeal] = useDeleteSealMutation();
+  const [remove] = useDeleteTemplateMutation();
   const { Column, HeaderCell, Cell } = Table;
-  const viewAndEditButtonHandler = (data: IDoctorSeal, mode: string) => {
+  const viewAndEditButtonHandler = (data: ITemplate, mode: string) => {
     const modifiedData = JSON.parse(JSON.stringify(data));
     setData(modifiedData);
     setMode(mode);
     setModalOpen(true);
   };
 
-  const DeleteButtonHandler = async (props: IDoctorSeal) => {
+  const DeleteButtonHandler = async (props: ITemplate) => {
     const confirm = await swal({
-      text: "Are you sure you want to delete this doctor seal",
+      text: "Are you sure you want to delete this Template",
       title: "Warning",
       icon: "error",
       buttons: {
@@ -43,11 +46,10 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
     });
 
     if (confirm) {
-      const result = await deleteSeal(props._id);
-      const message = (result as { data: { message: string } })?.data.message;
-      swal(`Success! ${message}!`, {
-        icon: "success",
-      })
+      const result = await remove(props._id);
+      if ("data" in result) {
+        swal("success", "Template Deleted successfully", "success");
+      }
     }
   };
 
@@ -60,8 +62,8 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
         bordered
         cellBordered
         rowHeight={65}
-        loading={sealDataLoading}
-        data={sealData?.data}
+        loading={templateData}
+        data={templateData?.data}
         className="text-md"
       >
         <Column flexGrow={2}>
@@ -69,28 +71,11 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
           <Cell dataKey="title" />
         </Column>
         <Column flexGrow={2}>
-          <HeaderCell>Seal</HeaderCell>
-          <Cell>
-            {(rowdata: IDoctorSeal) => (
-              <>
-                {rowdata?.seal ? (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: rowdata.seal }}
-                  ></div>
-                ) : (
-                  ""
-                )}
-              </>
-            )}
-          </Cell>
-        </Column>
-        <Column flexGrow={2}>
           <HeaderCell>Action</HeaderCell>
           <Cell>
-            {(rowdata: IDoctorSeal) => (
+            {(rowdata: ITemplate) => (
               <>
                 <Button
-                  className='ml-5'
                   appearance="primary"
                   color="blue"
                   onClick={() =>
@@ -100,7 +85,6 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                   View
                 </Button>
                 <Button
-                  className='ml-5'
                   appearance="primary"
                   color="green"
                   onClick={() =>
@@ -110,7 +94,6 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                   Edit
                 </Button>
                 <Button
-                  className='ml-5'
                   appearance="primary"
                   color="red"
                   onClick={() => DeleteButtonHandler(rowdata)}
@@ -126,4 +109,4 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
   );
 };
 
-export default DoctorSealTable;
+export default TemplateTable;
