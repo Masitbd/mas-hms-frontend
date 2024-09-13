@@ -28,10 +28,10 @@ export const useCleanedTests = (params: {
   const [getSpecimen] = useLazyGetSpecimenQuery();
   let { oid, mode, reportGroup, order, tests, result, setResult } = params;
   const unrefundedTest = order.tests.filter(
-    (test) => test.status !== ENUM_TEST_STATUS.REFUNDED
+    (test) =>
+      test.status !== ENUM_TEST_STATUS.REFUNDED && test.status !== "tube"
   );
   order.tests = unrefundedTest;
-  tests = unrefundedTest as unknown as ITestsFromOrder[];
 
   // This array contains the result fields name which will now be shoun in the result
   const unnecesseryFields = [

@@ -4,6 +4,7 @@ import ForMicrobiology from "@/components/generateReport/ForMicrobiology";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
 import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
+import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import {
   useGetOrderQuery,
   useGetSingleOrderQuery,
@@ -46,7 +47,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           oid={orderData?.data[0]?.oid}
           tests={testsAccordingResultType}
           reportGroup={reportGroupData?.data as IReportGroup}
-          order={orderData?.data[0]}
+          order={JSON.parse(JSON.stringify(orderData?.data[0]))}
           mode={props.searchParams.mode}
           refeatch={refetch}
         />
@@ -72,8 +73,12 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
   useEffect(() => {
     if (orderData?.data?.length > 0 && reportGroupData?.data?._id) {
       const filteredTest = orderData?.data[0]?.tests.filter(
-        (test: { test: ITest }) => {
-          return test.test.reportGroup == reportGroupData?.data?._id;
+        (test: { test: ITest; status: string }) => {
+          return (
+            test.test.reportGroup == reportGroupData?.data?._id &&
+            test.status !== "tube" &&
+            test.status !== ENUM_TEST_STATUS.REFUNDED
+          );
         }
       );
       setTestAccordignResultType(filteredTest);

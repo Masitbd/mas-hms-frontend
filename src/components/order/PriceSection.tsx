@@ -2,7 +2,7 @@ import React from "react";
 import { IPriceSectionProps } from "./initialDataAndTypes";
 
 const PriceSection = (props: IPriceSectionProps) => {
-  const { data, discountAmount, totalPrice, vatAmount } = props;
+  const { data, discountAmount, totalPrice, vatAmount, tubePrice } = props;
   return (
     <div className="mb-5 border  shadow-lg">
       <div className="bg-[#3498ff] text-white px-2 py-2">
@@ -26,7 +26,9 @@ const PriceSection = (props: IPriceSectionProps) => {
           </div>
         </div>
         <div className=" flex justify-between">
-          <div className="font-bold">Discount parcent </div>
+          <div className="font-bold">
+            Discount parcent <b>({props.order?.parcentDiscount} % ) </b>{" "}
+          </div>
           <div className="text-red-600">
             {" "}
             {discountAmount ? discountAmount : 0}{" "}
@@ -34,7 +36,9 @@ const PriceSection = (props: IPriceSectionProps) => {
         </div>
 
         <div className=" flex justify-between">
-          <div className="font-bold">Vat</div>
+          <div className="font-bold">
+            Vat <b>({props.order?.vat} % ) </b>
+          </div>
           <div className="text-green-600">
             {data.vat ? vatAmount : vatAmount}{" "}
           </div>

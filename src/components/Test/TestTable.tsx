@@ -3,13 +3,6 @@ import {
   useDeleteTestMutation,
   useGetTestsQuery,
 } from "@/redux/api/test/testSlice";
-<<<<<<< HEAD
-=======
-import React, { SyntheticEvent, useEffect, useState } from "react";
-import { Button, Form, Message, Pagination, Table, toaster } from "rsuite";
-import AlartDialog from "../ui/AlertModal";
-import VisibleIcon from "@rsuite/icons/Visible";
->>>>>>> 24299faa4366e830a75999328b5a3a5e43170e2f
 import { ITest } from "@/types/allDepartmentInterfaces";
 import VisibleIcon from "@rsuite/icons/Visible";
 import React, { useEffect, useState } from "react";
@@ -22,10 +15,6 @@ const TestTable = ({
 }: {
   patchHandler: (data: { data: ITest; mode: string }) => void;
 }) => {
-
-
-
-
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
@@ -77,7 +66,7 @@ const TestTable = ({
     isFetching,
   } = useGetTestsQuery(searchData);
 
-  //pagination 
+  //pagination
   const [limit, setLimit] = React.useState(10);
   const [page, setPage] = React.useState(1);
 
@@ -109,15 +98,9 @@ const TestTable = ({
         </Form>
       </div>
       <Table
-<<<<<<< HEAD
-        height={650}
-        data={data as ITest[]}
-        loading={testLoading}
-=======
         height={550}
         data={testData?.data.data as ITest[]}
         loading={testLoading || isFetching}
->>>>>>> 24299faa4366e830a75999328b5a3a5e43170e2f
         className="w-full"
         bordered
         cellBordered
@@ -192,7 +175,7 @@ const TestTable = ({
           first
           last
           ellipsis
-          boundaryLinks 
+          boundaryLinks
           maxButtons={5}
           size="xs"
           layout={["total", "-", "limit", "|", "pager", "skip"]}

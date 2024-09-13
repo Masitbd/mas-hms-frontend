@@ -19,7 +19,7 @@ import {
 } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
 import VisibleIcon from "@rsuite/icons/Visible";
-import { ITest } from "@/types/allDepartmentInterfaces";
+import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import {
   useGetOrderQuery,
@@ -29,6 +29,8 @@ import { IOrderData } from "./initialDataAndTypes";
 import { useAppDispatch } from "@/redux/hook";
 import { setId } from "@/redux/features/IdStore/idSlice";
 import { ENUM_MODE } from "@/enum/Mode";
+import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
+import { useLazyGetSingleVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
@@ -66,11 +68,17 @@ const OrderTable = ({
     setDeleteData(undefined);
   };
 
+  // for vaccumeTubes
+  const [getTubes, { isLoading: tubeLoading }] =
+    useLazyGetSingleVacuumTubeQuery();
+  const [vaccumeTubes, setVaccumeTubes] = useState<string[]>([]);
+
   const patchHanlders = async (id: string) => {
     const result = await getSingle(id);
 
     if ("data" in result) {
-      const data = result.data.data[0];
+      const data = JSON.parse(JSON.stringify(result.data.data[0]));
+
       patchHandler &&
         patchHandler({
           data: JSON.parse(JSON.stringify(data)) as unknown as IOrderData,
@@ -183,7 +191,7 @@ const OrderTable = ({
       <Table
         height={500}
         data={testData?.data}
-        loading={testLoading}
+        loading={testLoading || singleFeatchLoaing || singleFeatching}
         className="w-full"
         bordered
         cellBordered
@@ -255,7 +263,6 @@ const OrderTable = ({
                       patchHanlders(rowdate?.oid);
                     }
                   }}
-                  loading={singleFeatchLoaing || singleFeatching}
                 />
               </>
             )}

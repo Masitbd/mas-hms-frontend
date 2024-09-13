@@ -8,6 +8,7 @@ import GearCircleIcon from "@rsuite/icons/legacy/GearCircle";
 import MagicIcon from "@rsuite/icons/legacy/Magic";
 import { useState } from "react";
 import { Nav, Navbar, Sidebar as ResuiteSidebar, Sidenav } from "rsuite";
+import "./SIdeNavStyle.css";
 
 interface NavToggleProps {
   expand: boolean;
@@ -221,6 +222,34 @@ const testMenuItem = [
   },
 ];
 
+const financialReportItem = [
+  {
+    key: "1",
+    title: "Overall Commission",
+    href: "/financialReport/commission",
+    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+  },
+  {
+    key: "2",
+    title: "Doctor's Performance",
+    href: "/financialReport/commission/single",
+    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+  },
+
+  {
+    key: "3",
+    title: "Income Statement- Test Wise",
+    href: "/financialReport/incomeStatement/testWise",
+    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+  },
+  {
+    key: "4",
+    title: "Income Statement- Department Wise",
+    href: "/financialReport/incomeStatement/departmentWise",
+    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+  },
+];
+
 const Sidebar = () => {
   const [expand, setExpand] = useState(true);
   const [selectedItem, setSelectedItem] = useState("");
@@ -230,14 +259,22 @@ const Sidebar = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "90vh",
+          minHeight: "88vh",
           justifyContent: "space-between",
+          overflowY: "hidden",
         }}
         width={expand ? 260 : 56}
         collapsible
       >
         <Sidenav expanded={expand} defaultOpenKeys={["3"]} appearance="subtle">
-          <Sidenav.Body>
+          <Sidenav.Body
+            style={{
+              maxHeight: "85vh",
+              overflowY: "scroll",
+              overflowX: "hidden",
+            }}
+            className="custom-scroll"
+          >
             <Nav>
               <Nav.Menu
                 eventKey="3"
@@ -288,6 +325,41 @@ const Sidebar = () => {
                   >
                     <Nav.Item
                       eventKey={`5-${item.key}`}
+                      href={item.href}
+                      as={NavLink}
+                      key={Number(item.key) + 20}
+                      onClick={() => setSelectedItem(item.href)}
+                      style={
+                        selectedItem === item.href
+                          ? {
+                              backgroundColor: "#3498ff",
+                              color: "white",
+                              borderRadius: "5px",
+                            }
+                          : {
+                              color: "black",
+                            }
+                      }
+                    >
+                      {item.title}
+                    </Nav.Item>
+                  </AuthCheckerForComponent>
+                ))}
+              </Nav.Menu>
+              <Nav.Menu
+                eventKey="7"
+                trigger="hover"
+                title="Financial Reports"
+                icon={<GearCircleIcon />}
+                placement="rightStart"
+              >
+                {financialReportItem.map((item, index) => (
+                  <AuthCheckerForComponent
+                    requiredPermission={item.requiredPermission as number[]}
+                    key={index}
+                  >
+                    <Nav.Item
+                      eventKey={`7-${item.key}`}
                       href={item.href}
                       as={NavLink}
                       key={Number(item.key) + 20}

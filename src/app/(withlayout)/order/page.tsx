@@ -25,7 +25,7 @@ import { setId } from "@/redux/features/IdStore/idSlice";
 import jsPDF from "jspdf";
 import { URL } from "url";
 import Refund from "@/components/order/Refund";
-import { ITest } from "@/types/allDepartmentInterfaces";
+import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { ITestsFromOrder } from "@/components/generateReport/initialDataAndTypes";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 
@@ -52,13 +52,18 @@ const Order = () => {
   let vatAmount = 0;
   let discountAmount = 0;
   let totalPrice = 0;
+  let tubePrice = 0;
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
       if (param.status == ENUM_TEST_STATUS.REFUNDED) {
         return;
       }
+      if (param.status == "tube") {
+        tubePrice += param.test.price;
+      }
       totalPrice = totalPrice + param.test.price;
+
       if (param.deliveryTime > data.deliveryTime) {
         setData((preValue: any) => ({
           ...preValue,
@@ -80,7 +85,10 @@ const Order = () => {
 
   data.parcentDiscount > 0 &&
     data.tests.map((param: ItestInformaiton) => {
-      if (param.status == ENUM_TEST_STATUS.REFUNDED) {
+      if (
+        param.status == ENUM_TEST_STATUS.REFUNDED ||
+        (param.status == "tube" && data.discountedBy !== "free")
+      ) {
         return;
       }
       if (Number(param.discount) > 0) {
@@ -108,17 +116,19 @@ const Order = () => {
     const orderData: IOrderData = {
       status: "pending",
       deliveryTime: data.deliveryTime,
-      tests: data.tests.map((testdata: ItestInformaiton) => {
-        return {
-          SL: testdata.SL,
-          status: "pending",
-          discount: Number(testdata?.discount),
-          test: testdata.test._id,
-          deliveryTime: testdata.deliveryTime,
-          remark: testdata.remark,
-        };
-      }),
-      totalPrice: totalPrice,
+      tests: data.tests
+        .filter((test) => test.status !== "tube")
+        .map((testdata: ItestInformaiton) => {
+          return {
+            SL: testdata.SL,
+            status: "pending",
+            discount: Number(testdata?.discount),
+            test: testdata.test._id,
+            deliveryTime: testdata.deliveryTime,
+            remark: testdata.remark,
+          };
+        }),
+      totalPrice: totalPrice + tubePrice,
       cashDiscount: data.cashDiscount ? data.cashDiscount : 0,
       parcentDiscount: data.parcentDiscount ? data.parcentDiscount : 0,
       dueAmount: Number(
@@ -176,17 +186,7 @@ const Order = () => {
     if (newWindow) {
       newWindow.document.write(decodeURIComponent(invoice.data.data));
       newWindow.document.title = "Managed By HMS system";
-
-      newWindow?.print();
     }
-
-    // const buffer = Buffer.from(invoice.data.data.data);
-    // const blob = new Blob([buffer], { type: "application/pdf" });
-
-    // const fileName = URL.createObjectURL(blob);
-    // const pdfwindow = window.open();
-    // pdfwindow.location.href = fileName;
-    // window.open(fileName)?.print();
   };
   useEffect(() => {
     if (isSuccess) {
@@ -198,13 +198,11 @@ const Order = () => {
       toaster.push(<Message type="error">! Error</Message>);
     }
   }, [isSuccess]);
-  const dispatch = useAppDispatch();
   // Handleign vew Order
   const patchAndViewHandler = (data: { mode: string; data: IOrderData }) => {
     setModalOpen(true);
     setMode(data.mode);
     setData(data.data as IOrderData);
-    dispatch(setId(data.data._id as string));
   };
 
   //  For Refund =
@@ -212,16 +210,55 @@ const Order = () => {
   const [rTest, setTest] = useState<ITestsFromOrder | undefined>();
 
   // // for featching single data
-  // const [getSingle,{isLoading:getSingleLoading}] = useLazyGetSingleOrderQuery()
-  // useEffect(()=>{
-  //   if(ENUM_MODE.VIEW){
-  //     (async function() {
+  const [vaccumeTubes, setVaccumetubes] = useState<IVacuumTube[]>([]);
+  useEffect(() => {
+    // 2. setting the tubes
 
-  //       const data = a
-  //     }())
+    if (data.tests.length && mode == ENUM_MODE.NEW) {
+      const tests = data.tests.filter((test) => test.status !== "tube");
+      const tubes: IVacuumTube[] = [];
+      tests.forEach((testInfo: ItestInformaiton) => {
+        const test = testInfo.test;
 
-  //   }
-  // },[mode])
+        if (test.hasTestTube) {
+          test.testTube.forEach((vTube: IVacuumTube, index) => {
+            const doesExistes = tubes.length
+              ? tubes.find((tubes: IVacuumTube) => tubes.label == vTube.label)
+              : false;
+
+            if (!doesExistes) {
+              tubes.push(vTube);
+            }
+          });
+        }
+      });
+      setVaccumetubes(tubes);
+    }
+  }, [data]);
+  useEffect(() => {
+    const orderData = JSON.parse(JSON.stringify(data));
+    const tests = orderData.tests;
+    if (vaccumeTubes.length && tests.length && ENUM_MODE.NEW) {
+      const filteredTest = tests.filter(
+        (test: ItestInformaiton) => test.status !== "tube"
+      );
+      vaccumeTubes.forEach((tube, index: number) => {
+        filteredTest.push({
+          test: tube,
+          deliveryTime: new Date().toLocaleDateString(),
+          status: "tube",
+          remark: "",
+          discount: 0,
+          SL: filteredTest.length + 1,
+        });
+      });
+      orderData.tests = filteredTest;
+      if (JSON.stringify(tests) !== JSON.stringify(filteredTest)) {
+        setData(orderData);
+      }
+    }
+  }, [vaccumeTubes]);
+
   return (
     <div>
       <div className="my-5">
@@ -306,6 +343,8 @@ const Order = () => {
                 discountAmount={discountAmount}
                 totalPrice={totalPrice}
                 vatAmount={vatAmount}
+                tubePrice={tubePrice}
+                order={data as unknown as IOrderData}
               />
 
               <div className="flex justify-end">

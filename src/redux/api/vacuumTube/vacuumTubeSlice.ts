@@ -39,7 +39,7 @@ const vacuumTube = baseApi.injectEndpoints({
       }),
       providesTags: ["vacuumTube"],
     }),
-    getSingleVacuumTube: build.mutation({
+    getSingleVacuumTube: build.query({
       query: (id: string) => ({
         url: `/test-tube/${id}`,
         method: "GET",
@@ -54,4 +54,5 @@ export const {
   useGetVacuumTubeQuery,
   useDeleteVacuumTubeMutation,
   usePatchVacuumTubeMutation,
+  useLazyGetSingleVacuumTubeQuery,
 } = vacuumTube;

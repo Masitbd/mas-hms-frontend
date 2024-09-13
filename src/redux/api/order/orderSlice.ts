@@ -63,6 +63,16 @@ const order = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["order", "singleOrder"],
     }),
+    singleStatusChanger: build.mutation({
+      query: (data: { oid: string; status: string; reportGroup: string }) => ({
+        url: `/order/statusChange/${data.oid}`,
+        method: "POST",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+      invalidatesTags: ["order", "singleOrder"],
+    }),
   }),
 });
 
@@ -75,4 +85,5 @@ export const {
   useLazyGetInvoiceQuery,
   useLazyGetOrderQuery,
   useDewColletcionMutation,
+  useSingleStatusChangerMutation,
 } = order;

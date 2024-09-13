@@ -6,7 +6,7 @@ import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 import { Input } from "rsuite";
 import { useAppSelector } from "@/redux/hook";
 import { usePostRefundMutation } from "@/redux/api/refund/refundSlice";
-
+import swal from "sweetalert";
 const Refund = (props: {
   open: boolean;
   order: IOrderData;
@@ -65,12 +65,12 @@ const Refund = (props: {
       netPriceOfTest = Number(refundTest?.price) - discountAmount;
     }
 
-    if (cashDiscount > 0) {
-      const cashDiscountGranted = Math.ceil(
-        (cashDiscount / totalAmountOfOrder) * refundTest.price
-      );
-      netPriceOfTest = netPriceOfTest - cashDiscountGranted;
-    }
+    // if (cashDiscount > 0) {
+    //   const cashDiscountGranted = Math.ceil(
+    //     (cashDiscount / totalAmountOfOrder) * refundTest.price
+    //   );
+    //   netPriceOfTest = netPriceOfTest - cashDiscountGranted;
+    // }
 
     if (vat) {
       const VatAmount = (netPriceOfTest * vat) / 100;

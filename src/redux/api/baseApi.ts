@@ -41,6 +41,7 @@ export const baseApi = createApi({
     "miscellaneous",
     "refund",
     "singleOrder",
+    "allCommission",
   ],
 
   // tagTypes: tagTypes,

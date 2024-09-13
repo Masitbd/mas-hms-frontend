@@ -1,4 +1,9 @@
-import { IDoctor, IPatient, ITest } from "@/types/allDepartmentInterfaces";
+import {
+  IDoctor,
+  IPatient,
+  ITest,
+  IVacuumTube,
+} from "@/types/allDepartmentInterfaces";
 import React, { SetStateAction } from "react";
 import { Schema } from "rsuite";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
@@ -149,6 +154,8 @@ export type IPriceSectionProps = {
   data: any;
   discountAmount: number;
   vatAmount: number;
+  tubePrice: number;
+  order: IOrderData;
 };
 
 export const unreagisteredPatientProfileDataPropertyNames = [

@@ -108,7 +108,7 @@ const ReportViewerParameter = React.forwardRef(
                                     {fieldName == "result" ? (
                                       <div>
                                         <div
-                                          className="col-span-2  font-serif"
+                                          className="col-span-2  font-serif whitespace-pre"
                                           dangerouslySetInnerHTML={{
                                             __html: resultField?.result,
                                           }}
@@ -161,6 +161,7 @@ const ReportViewerParameter = React.forwardRef(
                 dangerouslySetInnerHTML={{
                   __html: params?.testResult?.comment,
                 }}
+                className="whitespace-pre"
               />
             </div>
           ) : (
@@ -170,6 +171,7 @@ const ReportViewerParameter = React.forwardRef(
             {params?.testResult?.seal ? (
               <div className="flex justify-end items-end font-serif mt-5">
                 <div
+                  className="whitespace-pre"
                   dangerouslySetInnerHTML={{
                     __html: params?.testResult?.seal,
                   }}

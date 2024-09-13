@@ -25,7 +25,7 @@ export type ITestGenerateType = {
 
 const TestInformation = (params: IParamsForTestInformation) => {
   const { setRModalOpen, setRTest } = params;
-  console.log(params.formData);
+
   const { Cell, Column, HeaderCell } = Table;
   // Test removal handler
   const testRemoveFromListHandler = (data: RowDataType<any>) => {
@@ -355,12 +355,13 @@ const TestInformation = (params: IParamsForTestInformation) => {
               <HeaderCell>Discounted Price</HeaderCell>
               <Cell>
                 {(rowData) => {
-                  const priceAfterDiscount = (
-                    rowData.discount > 0
-                      ? rowData.test.price -
-                        (rowData.test.price * rowData.discount) / 100
-                      : rowData.test.price
-                  ).toFixed(2);
+                  const priceAfterDiscount =
+                    rowData.discount > 0 && rowData.test.price > 0
+                      ? (
+                          rowData.test.price -
+                          (rowData.test.price * rowData.discount) / 100
+                        ).toFixed(2)
+                      : rowData.test.price.toFixed(2);
 
                   return `${priceAfterDiscount}`;
                 }}
