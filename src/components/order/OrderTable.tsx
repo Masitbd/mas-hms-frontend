@@ -76,6 +76,8 @@ const OrderTable = ({
     isError: TesError,
   } = useGetOrderQuery(searchData);
 
+  console.log("test", testData);
+
   const dispatch = useAppDispatch();
   return (
     <div>

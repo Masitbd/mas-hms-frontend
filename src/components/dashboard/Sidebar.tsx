@@ -219,6 +219,33 @@ const testMenuItem = [
       ENUM_USER_PEMISSION.MANAGE_TESTS,
     ],
   },
+  {
+    key: "17",
+    title: "Income Statement",
+    href: "/income-statement",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "18",
+    title: " Employee Income Statement",
+    href: "/employee-income-statement",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "19",
+    title: "Employee Income Statement Summery",
+    href: "/emp-income-summery",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
 ];
 
 const Sidebar = () => {
