@@ -361,7 +361,9 @@ const TestInformation = (params: IParamsForTestInformation) => {
                           rowData.test.price -
                           (rowData.test.price * rowData.discount) / 100
                         ).toFixed(2)
-                      : rowData.test.price.toFixed(2);
+                      : rowData?.test?.price > 0
+                      ? rowData.test.price.toFixed(2)
+                      : 0;
 
                   return `${priceAfterDiscount}`;
                 }}

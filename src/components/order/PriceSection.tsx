@@ -1,8 +1,26 @@
 import React from "react";
 import { IPriceSectionProps } from "./initialDataAndTypes";
+import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 
 const PriceSection = (props: IPriceSectionProps) => {
   const { data, discountAmount, totalPrice, vatAmount, tubePrice } = props;
+  const dueAmount =
+    totalPrice -
+    discountAmount -
+    (data.cashDiscount ? data.cashDiscount : 0) -
+    (data.paid ? data.paid : 0) +
+    (data.vat ? vatAmount : 0);
+
+  const doesRefundedExists =
+    data.tests.length > 0 &&
+    data.tests.find((t: ITestsFromOrder) => t.status === "refunded");
+  let grossTotalPrice = totalPrice;
+  let refundTestPrice = 0;
+  if (doesRefundedExists) {
+    grossTotalPrice += doesRefundedExists?.test.price;
+    refundTestPrice += doesRefundedExists?.test.price;
+  }
+
   return (
     <div className="mb-5 border  shadow-lg">
       <div className="bg-[#3498ff] text-white px-2 py-2">
@@ -15,7 +33,11 @@ const PriceSection = (props: IPriceSectionProps) => {
         </div>
         <div className=" flex justify-between">
           <div className="font-bold">Total Price</div>
-          <div> {totalPrice} </div>
+          <div> {grossTotalPrice} </div>
+        </div>
+        <div className=" flex justify-between">
+          <div className="font-bold">Refunded</div>
+          <div className="text-red-600"> {refundTestPrice} </div>
         </div>
 
         <div className=" flex justify-between">
@@ -65,13 +87,7 @@ const PriceSection = (props: IPriceSectionProps) => {
         <div className=" flex justify-between">
           <div className="font-bold">Due Amount</div>
           <div className="font-bold  text-red-600">
-            {(
-              totalPrice -
-              discountAmount -
-              (data.cashDiscount ? data.cashDiscount : 0) -
-              (data.paid ? data.paid : 0) +
-              (data.vat ? vatAmount : 0)
-            ).toFixed(2)}
+            {(dueAmount >= 0 ? dueAmount : data?.dueAmount).toFixed(2)}
           </div>
         </div>
       </div>
