@@ -3,10 +3,11 @@ import RModal from "../ui/Modal";
 import { IOrderData } from "./initialDataAndTypes";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
-import { Input } from "rsuite";
+import { Button, Input } from "rsuite";
 import { useAppSelector } from "@/redux/hook";
 import { usePostRefundMutation } from "@/redux/api/refund/refundSlice";
 import swal from "sweetalert";
+
 const Refund = (props: {
   open: boolean;
   order: IOrderData;
@@ -59,7 +60,7 @@ const Refund = (props: {
       netPriceOfTest = Number(refundTest.price) - discountAmount;
     }
 
-    if (parcentDiscount > 0) {
+    if (parcentDiscount > 0 && gruntedDiscount == 0) {
       const discountAmount =
         Math.ceil(Number(refundTest?.price) * parcentDiscount) / 100;
       netPriceOfTest = Number(refundTest?.price) - discountAmount;
@@ -109,7 +110,7 @@ const Refund = (props: {
           {test?.discount ? test?.discount : "N/A"}
         </div>
         <div className="col-span-12 grid grid-cols-12">
-          <div className="col-span-12 font-bold">
+          {/* <div className="col-span-12 font-bold">
             Total {refundMethod}
             <hr />
           </div>
@@ -142,7 +143,7 @@ const Refund = (props: {
 
               <hr />
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="col-span-12">
           <h3 className="font-bold">Refund Reason</h3>

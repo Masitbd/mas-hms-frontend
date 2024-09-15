@@ -56,9 +56,9 @@ const Order = () => {
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
-      if (param.status == ENUM_TEST_STATUS.REFUNDED) {
-        return;
-      }
+      // if (param.status == ENUM_TEST_STATUS.REFUNDED) {
+      //   return;
+      // }
       if (param.status == "tube") {
         tubePrice += param.test.price;
       }
@@ -79,16 +79,9 @@ const Order = () => {
       }
     });
 
-  data.tests?.length > 0 &&
-    data.vat > 0 &&
-    (vatAmount = Number(((data.vat / 100) * totalPrice).toFixed(2)));
-
   data.parcentDiscount > 0 &&
     data.tests.map((param: ItestInformaiton) => {
-      if (
-        param.status == ENUM_TEST_STATUS.REFUNDED ||
-        (param.status == "tube" && data.discountedBy !== "free")
-      ) {
+      if (param.status == "tube" && data.discountedBy !== "free") {
         return;
       }
       if (Number(param.discount) > 0) {
@@ -100,6 +93,14 @@ const Order = () => {
         discountAmount = Number((discountAmount + discount).toFixed(2));
       }
     });
+  data.tests?.length > 0 &&
+    data.vat > 0 &&
+    (vatAmount = Number(
+      (
+        (data.vat / 100) *
+        (totalPrice - discountAmount - data.cashDiscount)
+      ).toFixed(2)
+    ));
 
   const handlePostORder = async () => {
     if (mode === "view") {

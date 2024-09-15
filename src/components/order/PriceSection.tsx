@@ -13,12 +13,11 @@ const PriceSection = (props: IPriceSectionProps) => {
 
   const doesRefundedExists =
     data.tests.length > 0 &&
-    data.tests.find((t: ITestsFromOrder) => t.status === "refunded");
+    data.tests.filter((t: ITestsFromOrder) => t.status === "refunded");
   let grossTotalPrice = totalPrice;
   let refundTestPrice = 0;
-  if (doesRefundedExists) {
-    grossTotalPrice += doesRefundedExists?.test.price;
-    refundTestPrice += doesRefundedExists?.test.price;
+  if (doesRefundedExists.length) {
+    refundTestPrice = data?.refundData?.refundApplied || 0;
   }
 
   return (
@@ -33,11 +32,7 @@ const PriceSection = (props: IPriceSectionProps) => {
         </div>
         <div className=" flex justify-between">
           <div className="font-bold">Total Price</div>
-          <div> {grossTotalPrice} </div>
-        </div>
-        <div className=" flex justify-between">
-          <div className="font-bold">Refunded</div>
-          <div className="text-red-600"> {refundTestPrice} </div>
+          <div> {totalPrice} </div>
         </div>
 
         <div className=" flex justify-between">
@@ -65,6 +60,7 @@ const PriceSection = (props: IPriceSectionProps) => {
             {data.vat ? vatAmount : vatAmount}{" "}
           </div>
         </div>
+
         <hr />
         <div className=" flex justify-between">
           <div className="font-bold">Net Price</div>
@@ -78,16 +74,30 @@ const PriceSection = (props: IPriceSectionProps) => {
           </div>
         </div>
         <div className=" flex justify-between">
+          <div className="font-bold">Refunded</div>
+          <div className="text-red-600"> {refundTestPrice} </div>
+        </div>
+        <div className=" flex justify-between">
           <div className="font-bold">Paid</div>
-          <div className="font-bold text-green-600">
+          <div className="font-bold text-red-600">
             {data.paid ? data.paid : 0}
           </div>
         </div>
+        {doesRefundedExists ? (
+          <div className=" flex justify-between">
+            <div className="font-bold">Cash Refunded </div>
+            <div className="text-red-600">
+              {data?.refundData?.remainingRefund || 0}
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
         <hr />
         <div className=" flex justify-between">
           <div className="font-bold">Due Amount</div>
           <div className="font-bold  text-red-600">
-            {(dueAmount >= 0 ? dueAmount : data?.dueAmount).toFixed(2)}
+            {(data?.dueAmount >= 0 ? data?.dueAmount : dueAmount).toFixed(2)}
           </div>
         </div>
       </div>

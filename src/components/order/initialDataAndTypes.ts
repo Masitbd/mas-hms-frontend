@@ -8,6 +8,17 @@ import React, { SetStateAction } from "react";
 import { Schema } from "rsuite";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 const { StringType, NumberType } = Schema.Types;
+export type IRefund = {
+  id: number;
+  oid: string;
+  grossAmount: number;
+  discount: number;
+  vat: number;
+  netAmount: number;
+  refundApplied: number;
+  remainingRefund?: number;
+  refundedBy: string;
+};
 
 export type ItestInformaiton = {
   discount: string;
@@ -73,6 +84,8 @@ export type IOrderData = {
   vat: number;
   consultant?: string;
   discountedBy: string;
+  postedBy?: string;
+  refundData?: Partial<IRefund>;
 };
 
 export const initialData: InitialData = {

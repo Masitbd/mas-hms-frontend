@@ -21,13 +21,25 @@ const TestWIseIncomeStatement = () => {
     isFetching: financialReportReacthing,
   } = useGetTestWiseIncomeStatementQuery(date);
 
+  console.log(financialReportData?.data);
   useEffect(() => {
     if (financialReportData?.data?.length) {
       const data = JSON.parse(JSON.stringify(financialReportData?.data[0]));
       const total = data.total[0];
       const testWiseDocs = data.testWiseDocs;
+      const finalData = [];
 
       const reportGroupWiseData = data.reportGroupWiseData;
+      if (reportGroupWiseData.length) {
+        reportGroupWiseData?.map((rgw: any) => {
+          const rgwiseData = testWiseDocs.filter(
+            (twi: any) => twi.rg == rgw._id
+          );
+
+          finalData.push(...rgwiseData);
+          finalData.push({ ...rgw, f: "rg" });
+        });
+      }
       const tubePrice = data.tubePrice;
       if (tubePrice) {
         tubePrice.map((t: any) => {
@@ -35,11 +47,12 @@ const TestWIseIncomeStatement = () => {
           total.vat += t.vat;
           total.quantity += t.quantity;
           total.pa += t.pa;
+          total.f = "t";
         });
-        testWiseDocs.push(...tubePrice);
+        finalData.push(...tubePrice);
       }
-      testWiseDocs.push(total);
-      setData(testWiseDocs);
+      finalData.push(total);
+      setData(finalData as never[]);
     }
   }, [financialReportData, financialReportLoading, financialReportReacthing]);
 
@@ -108,11 +121,45 @@ const TestWIseIncomeStatement = () => {
             >
               <Column flexGrow={4}>
                 <HeaderCell children={"Perticulars"} />
-                <Cell dataKey="_id" />
+                <Cell>
+                  {(rowData) => {
+                    const flag = rowData?.f;
+                    let colData;
+                    switch (flag) {
+                      case "rg":
+                        colData = (
+                          <div className=" font-bold text-center">
+                            {rowData?._id}
+                          </div>
+                        );
+                        break;
+                      case "t":
+                        colData = (
+                          <div className="font-bold  text-center">Total</div>
+                        );
+                        break;
+
+                      default:
+                        colData = <div>{rowData?._id}</div>;
+                        break;
+                    }
+                    return colData;
+                  }}
+                </Cell>
               </Column>
               <Column flexGrow={1}>
                 <HeaderCell children={"Price"} />
-                <Cell dataKey="price" />
+                <Cell>
+                  {(rowData) => {
+                    const flag = rowData?.f;
+                    let price = rowData.price;
+                    if (flag == "rg") {
+                      price = (rowData.sell / rowData.quantity).toFixed(2);
+                    }
+
+                    return price;
+                  }}
+                </Cell>
               </Column>
               <Column flexGrow={1}>
                 <HeaderCell children={"Quantity"} />
