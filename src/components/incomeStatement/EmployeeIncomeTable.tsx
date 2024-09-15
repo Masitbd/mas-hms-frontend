@@ -97,15 +97,15 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         },
 
         // Dynamic content for each group
-        ...data.map((group) => [
+        ...data?.map((group) => [
           {
-            text: ` ${group.groupDate}`,
+            text: ` ${group?.groupDate}`,
             style: "groupHeader",
             margin: [0, 10, 0, 10],
           },
-          ...group.users.map((user) => [
+          ...group?.users?.map((user) => [
             {
-              text: ` ${user.postedBy}`,
+              text: ` ${user?.postedBy}`,
               style: "nameHeader",
               margin: [0, 10, 0, 10],
             },
@@ -117,11 +117,11 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   alignment: "center",
                 },
                 body: [
-                  ...user.records.map((record) => [
-                    record.date,
-                    record.oid,
+                  ...user?.records?.map((record) => [
+                    record?.date,
+                    record?.oid,
 
-                    record.amount,
+                    record?.amount,
                   ]),
                 ],
               },
@@ -129,7 +129,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
             },
 
             {
-              text: `Total : ${user.totalPaid}`,
+              text: `Total : ${user?.totalPaid}`,
               style: "totalpaidHeader",
               margin: [10],
             },

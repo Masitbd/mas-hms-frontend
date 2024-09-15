@@ -3,7 +3,6 @@ import React, { useRef } from "react";
 import { formatDateString } from "@/utils/FormateDate";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import { display } from "html2canvas/dist/types/css/property-descriptors/display";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -86,9 +85,9 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
         },
 
         // Dynamic content for each group
-        ...data.map((group) => [
+        ...data?.map((group) => [
           {
-            text: ` ${group.groupDate}`,
+            text: ` ${group?.groupDate}`,
             style: "groupHeader",
             margin: [0, 10, 0, 10],
           },
@@ -101,10 +100,10 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
               },
               body: [
                 ...group.records.map((record) => [
-                  record.name,
-                  record.uuid,
+                  record?.name,
+                  record?.uuid,
 
-                  record.totalPaid,
+                  record?.totalPaid,
                 ]),
               ],
             },
@@ -112,7 +111,7 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
           },
 
           {
-            text: `Grand Total: ${group.grandTotal}`,
+            text: `Grand Total: ${group?.grandTotal}`,
             style: "grandTotal",
             margin: [0, 10, 0, 10],
           },

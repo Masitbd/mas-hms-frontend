@@ -33,6 +33,16 @@ const incomeApi = baseApi.injectEndpoints({
         params: args,
       }),
     }),
+
+    // get due details
+
+    getDueDetails: build.query({
+      query: (args) => ({
+        url: "/order/due-details",
+        method: "GET",
+        params: args,
+      }),
+    }),
   }),
 });
 
@@ -40,4 +50,5 @@ export const {
   useGetIncomeStatementMutation,
   useGetEmployeeIncomeStatementQuery,
   useGetEmployeeIncomeStatementSummeryQuery,
+  useGetDueDetailsQuery,
 } = incomeApi;
