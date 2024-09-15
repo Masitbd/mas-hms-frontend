@@ -24,6 +24,10 @@ const TestWIseIncomeStatement = () => {
   console.log(financialReportData?.data);
   useEffect(() => {
     if (financialReportData?.data?.length) {
+      if (!financialReportData?.data[0]?.testWiseDocs?.length) {
+        setData([]);
+        return;
+      }
       const data = JSON.parse(JSON.stringify(financialReportData?.data[0]));
       const total = data.total[0];
       const testWiseDocs = data.testWiseDocs;
