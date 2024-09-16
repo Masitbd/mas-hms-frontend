@@ -21,7 +21,6 @@ const TestWIseIncomeStatement = () => {
     isFetching: financialReportReacthing,
   } = useGetTestWiseIncomeStatementQuery(date);
 
-  console.log(financialReportData?.data);
   useEffect(() => {
     if (financialReportData?.data?.length) {
       if (!financialReportData?.data[0]?.testWiseDocs?.length) {

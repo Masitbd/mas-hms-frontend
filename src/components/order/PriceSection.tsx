@@ -57,7 +57,7 @@ const PriceSection = (props: IPriceSectionProps) => {
             Vat <b>({props.order?.vat} % ) </b>
           </div>
           <div className="text-green-600">
-            {data.vat ? vatAmount : vatAmount}{" "}
+            {data.vat ? Math.ceil(vatAmount) : Math.ceil(vatAmount)}{" "}
           </div>
         </div>
 
@@ -65,12 +65,12 @@ const PriceSection = (props: IPriceSectionProps) => {
         <div className=" flex justify-between">
           <div className="font-bold">Net Price</div>
           <div className="font-bold">
-            {(
+            {Math.ceil(
               totalPrice -
-              discountAmount +
-              (data.vat ? vatAmount : vatAmount) -
-              (data.cashDiscount ? data.cashDiscount : 0)
-            ).toFixed(2)}
+                discountAmount +
+                (data.vat ? vatAmount : vatAmount) -
+                (data.cashDiscount ? data.cashDiscount : 0)
+            )}
           </div>
         </div>
         <div className=" flex justify-between">
@@ -80,14 +80,14 @@ const PriceSection = (props: IPriceSectionProps) => {
         <div className=" flex justify-between">
           <div className="font-bold">Paid</div>
           <div className="font-bold text-red-600">
-            {data.paid ? data.paid : 0}
+            {data.paid ? Math.ceil(data.paid) : 0}
           </div>
         </div>
         {doesRefundedExists ? (
           <div className=" flex justify-between">
             <div className="font-bold">Cash Refunded </div>
             <div className="text-red-600">
-              {data?.refundData?.remainingRefund || 0}
+              {Math.ceil(data?.refundData?.remainingRefund) || 0}
             </div>
           </div>
         ) : (

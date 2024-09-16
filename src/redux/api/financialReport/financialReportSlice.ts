@@ -35,6 +35,30 @@ const financialReport = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    getDeptWiseCollectionSummery: build.query({
+      query: (data: { from: Date; to: Date }) => ({
+        url: `/financialReport/collectionStatement/deptWise`,
+        method: "get",
+        params: data,
+        contentType: "application/json",
+      }),
+    }),
+    getDeptWiseDoctorPerformance: build.query({
+      query: (data: { from: Date; to: Date; refBy: string }) => ({
+        url: `/financialReport/doctorsPerformance/deptWise/${data.refBy}`,
+        method: "get",
+        params: data,
+        contentType: "application/json",
+      }),
+    }),
+    getTestWiseDoctorPerformance: build.query({
+      query: (data: { from: Date; to: Date; refBy: string }) => ({
+        url: `/financialReport/doctorsPerformance/testWise/${data.refBy}`,
+        method: "get",
+        params: data,
+        contentType: "application/json",
+      }),
+    }),
   }),
 });
 
@@ -44,4 +68,9 @@ export const {
   useLazyGetSingleDoctorPerformanceQuery,
   useGetTestWiseIncomeStatementQuery,
   useGetDeptWiseIncomeStatementQuery,
+  useGetDeptWiseCollectionSummeryQuery,
+  useGetDeptWiseDoctorPerformanceQuery,
+  useGetTestWiseDoctorPerformanceQuery,
+  useLazyGetTestWiseDoctorPerformanceQuery,
+  useLazyGetDeptWiseDoctorPerformanceQuery,
 } = financialReport;

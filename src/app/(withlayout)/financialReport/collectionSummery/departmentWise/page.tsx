@@ -1,17 +1,17 @@
-/* eslint-disable react/no-children-prop */
 "use client";
+/* eslint-disable react/no-children-prop */
 import {
   defaultDate,
   IdefaultDate,
 } from "@/components/financialReport/comission/initialDataAndTypes";
 import {
+  useGetDeptWiseCollectionSummeryQuery,
   useGetDeptWiseIncomeStatementQuery,
-  useGetTestWiseIncomeStatementQuery,
 } from "@/redux/api/financialReport/financialReportSlice";
-import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { DatePicker, Table } from "rsuite";
 
-const DepartmentWiseIncomeStatement = () => {
+const DepartmentWIseCollectionSUmmery = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
   const [date, setDate] = useState<IdefaultDate>(defaultDate as IdefaultDate);
   const dateChangeHandler = (value: Partial<IdefaultDate>) => {
@@ -22,14 +22,14 @@ const DepartmentWiseIncomeStatement = () => {
     data: financialReportData,
     isLoading: financialReportLoading,
     isFetching: financialReportReacthing,
-  } = useGetDeptWiseIncomeStatementQuery(date);
+  } = useGetDeptWiseCollectionSummeryQuery(date);
 
   return (
     <div className="">
       <div className="my-5 border  shadow-lg mx-5">
         <div className="bg-[#3498ff] text-white px-2 py-2">
           <h2 className="text-center text-xl font-semibold">
-            Department wise Income statement
+            Department Wise Collection Statement
           </h2>
         </div>
         <div className="px-2 mb-5 py-2 grid grid-cols-12 gap-5">
@@ -73,7 +73,7 @@ const DepartmentWiseIncomeStatement = () => {
         <div className="my-5 px-2">
           <div>
             <h3 className="text-2xl font-serif text-center font-bold">
-              Department wise Income statement
+              Department wise Collection Statement
             </h3>
             <h4 className="text-center text-lg font-serif">
               From <b> {new Date(date.from).toLocaleDateString()} </b> To{" "}
@@ -88,85 +88,20 @@ const DepartmentWiseIncomeStatement = () => {
               autoHeight
             >
               <Column flexGrow={4}>
-                <HeaderCell children={"Perticulars"} />
+                <HeaderCell children={"Department"} />
                 <Cell dataKey="_id" />
               </Column>
               <Column flexGrow={1}>
-                <HeaderCell children={"Rate"} />
-                <Cell>
-                  {(rowData) => {
-                    return (
-                      <>
-                        {rowData.sell && rowData.quantity > 0
-                          ? (rowData.sell / rowData.quantity).toFixed(2)
-                          : 0}
-                      </>
-                    );
-                  }}
-                </Cell>
-              </Column>
-              <Column flexGrow={1}>
-                <HeaderCell children={"Quantity"} />
-                <Cell dataKey="quantity" />
-              </Column>
-              <Column flexGrow={1}>
-                <HeaderCell children={"Amount"} />
-                <Cell dataKey="sell" />
+                <HeaderCell children={"Amount Paid"} />
+                <Cell dataKey="paid" />
               </Column>
               <Column flexGrow={1}>
                 <HeaderCell children={"Vat"} />
                 <Cell dataKey="vat" />
               </Column>
               <Column flexGrow={1}>
-                <HeaderCell children={"Vat + Sell"} />
-                <Cell>
-                  {(rowData) => {
-                    return <>{rowData.sell + rowData.vat}</>;
-                  }}
-                </Cell>
-              </Column>
-              <Column flexGrow={1}>
-                <HeaderCell children={"Discount"} />
-                <Cell dataKey="discount" />
-              </Column>
-              <Column flexGrow={1.5}>
                 <HeaderCell children={"Total"} />
-                <Cell>
-                  {(rowData) => {
-                    return (
-                      <>
-                        {rowData.sell +
-                          rowData.vat -
-                          (rowData?.discount ? rowData.discount : 0)}
-                      </>
-                    );
-                  }}
-                </Cell>
-              </Column>
-              <Column flexGrow={1.5}>
-                <HeaderCell children={"Paid"} />
-                <Cell dataKey="pa" />
-              </Column>
-              <Column flexGrow={1.5}>
-                <HeaderCell children={"Dew"} />
-                <Cell>
-                  {(rowData) => {
-                    return (
-                      <>
-                        {rowData.sell +
-                          rowData.vat -
-                          (rowData?.discount ? rowData.discount : 0) -
-                          rowData.pa >
-                        0
-                          ? rowData.sell +
-                            rowData.vat -
-                            (rowData?.discount ? rowData.discount : 0) -
-                            rowData.pa
-                          : 0}
-                      </>
-                    );
-                  }}
-                </Cell>
+                <Cell dataKey="totalPaid" />
               </Column>
             </Table>
           </div>
@@ -185,4 +120,4 @@ const DepartmentWiseIncomeStatement = () => {
   );
 };
 
-export default DepartmentWiseIncomeStatement;
+export default DepartmentWIseCollectionSUmmery;

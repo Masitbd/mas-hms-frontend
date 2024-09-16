@@ -248,6 +248,26 @@ const financialReportItem = [
     href: "/financialReport/incomeStatement/departmentWise",
     requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
   },
+
+  {
+    key: "5",
+    title: "Collection Summery- Department Wise",
+    href: "/financialReport/collectionSummery/departmentWise",
+    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+  },
+
+  {
+    key: "6",
+    title: "Doctor Performance - Test Wise",
+    href: "/financialReport/doctorsPerformance/testWise",
+    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+  },
+  {
+    key: "6",
+    title: "Doctor Performance - Department Wise",
+    href: "/financialReport/doctorsPerformance/departmentWise",
+    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+  },
 ];
 
 const Sidebar = () => {
