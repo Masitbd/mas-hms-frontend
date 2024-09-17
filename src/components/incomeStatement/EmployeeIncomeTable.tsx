@@ -54,6 +54,20 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
           }
         : null;
 
+    // Prepare and validate data
+    const preparedData = data?.map((group) => ({
+      ...group,
+      users: group.users?.map((user) => ({
+        ...user,
+        records: user.records?.map((record) => ({
+          ...record,
+          amount: isNaN(Number(record.amount)) ? 0 : Number(record.amount), // Ensure amount is a number
+          date: record.date?.slice(0, 10) || "", // Safeguard for date
+        })),
+        totalPaid: isNaN(Number(user.totalPaid)) ? 0 : Number(user.totalPaid), // Ensure totalPaid is a number
+      })),
+    }));
+
     const documentDefinition: any = {
       pageOrientation: "portrait",
       defaultStyle: {
@@ -81,9 +95,6 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         {
           table: {
             widths: [150, 150, 150], // Fixed column widths
-            style: {
-              alignment: "center",
-            },
             headerRows: 1,
             body: [
               [
@@ -97,15 +108,15 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         },
 
         // Dynamic content for each group
-        ...data?.map((group) => [
+        ...preparedData?.map((group) => [
           {
-            text: ` ${group?.groupDate}`,
+            text: ` ${group?.groupDate || ""}`,
             style: "groupHeader",
             margin: [0, 10, 0, 10],
           },
           ...group?.users?.map((user) => [
             {
-              text: ` ${user?.postedBy}`,
+              text: ` ${user?.postedBy || ""}`,
               style: "nameHeader",
               margin: [0, 10, 0, 10],
             },
@@ -113,15 +124,11 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
             {
               table: {
                 widths: [150, 150, 150], // Fixed column widths
-                style: {
-                  alignment: "center",
-                },
                 body: [
                   ...user?.records?.map((record) => [
-                    record?.date.slice(0, 10),
-                    record?.oid,
-
-                    record?.amount,
+                    record?.date || "", // Safeguard for date
+                    record?.oid || "", // Safeguard for oid
+                    Number(record?.amount).toFixed(2), // Ensure amount is formatted correctly
                   ]),
                 ],
               },
@@ -129,7 +136,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
             },
 
             {
-              text: `Total : ${user?.totalPaid}`,
+              text: `Total : ${Number(user?.totalPaid).toFixed(2)}`,
               style: "totalpaidHeader",
               margin: [10],
             },
@@ -151,7 +158,6 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
           bold: true,
           color: "blue",
         },
-
         nameHeader: {
           fontSize: 12,
           bold: true,
@@ -160,7 +166,6 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         totalpaidHeader: {
           fontSize: 12,
           bold: true,
-
           border: true,
         },
         tableHeader: {
@@ -202,7 +207,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
           <div key={groupIndex} className="mb-8">
             {/* Group Date Row */}
             <div className="text-lg font-semibold p-2 mb-2 text-blue-700">
-              {group.groupDate}
+              {group?.groupDate}
             </div>
 
             {/* Users Data */}
@@ -210,7 +215,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
               <div key={userIndex} className="border-t">
                 {/* User Header */}
                 <div className=" font-semibold p-2 border">
-                  Name: {user.postedBy}
+                  Name: {user?.postedBy}
                 </div>
 
                 {/* Records Table */}
@@ -223,9 +228,9 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
                       key={recordIndex}
                       className="grid grid-cols-3 text-center p-2 border-b"
                     >
-                      <div>{record.date.slice(0, 10)}</div>
-                      <div>{record.oid}</div>
-                      <div>{record.amount || 0}</div>
+                      <div>{record?.date.slice(0, 10)}</div>
+                      <div>{record?.oid}</div>
+                      <div>{record?.amount || 0}</div>
                     </div>
                   ))}
                 </div>

@@ -304,6 +304,15 @@ const financialReportItem = [
       ENUM_USER_PEMISSION.MANAGE_TESTS,
     ],
   },
+  {
+    key: "21",
+    title: "Clientwise Inocme Statement",
+    href: "/client-statement",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
 ];
 
 const Sidebar = () => {

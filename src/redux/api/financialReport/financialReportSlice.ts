@@ -60,7 +60,7 @@ const financialReport = baseApi.injectEndpoints({
       }),
     }),
     getClientWiseIncomeStatement: build.query({
-      query: (data: { from: Date; to: Date }) => ({
+      query: (data) => ({
         url: `/financialReport/incomeStatement/clientWise`,
         method: "get",
         params: data,
