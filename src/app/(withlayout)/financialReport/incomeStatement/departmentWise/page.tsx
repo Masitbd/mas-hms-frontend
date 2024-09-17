@@ -61,6 +61,7 @@ const DepartmentWiseIncomeStatement = () => {
                   event: SyntheticEvent<Element, Event>
                 ) => {
                   if (value) {
+                    value.setHours(23, 59, 59, 999);
                     const data = { to: value };
                     dateChangeHandler(data);
                   }
