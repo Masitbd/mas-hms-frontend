@@ -63,7 +63,7 @@ const LoginPage = () => {
   });
   const handleLogin = () => {
     if (formRef.current.check()) {
-      login(loginData);
+      const res = login(loginData);
     }
   };
 
