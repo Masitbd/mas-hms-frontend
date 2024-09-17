@@ -100,6 +100,7 @@ const Patient = () => {
         patchPatient(formData);
       }
       if (mode == "watch") {
+        setFormData(initialPatientData);
         setModalOpen(!modalOpen);
       }
     }

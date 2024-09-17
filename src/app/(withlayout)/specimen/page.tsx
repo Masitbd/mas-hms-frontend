@@ -7,23 +7,28 @@ import { useEffect, useState } from 'react';
 
 import { Button } from 'rsuite';
 
+const initialDataOfSpecimen = {
+    label: "",
+    description: "",
+    value: "",
+} as ISpecimen;
+
+
 const Specimen = () => {
     const [postModelOpen, setPostModelOpen] = useState(false)
-    const [patchData, setPatchData] = useState<ISpecimen>({
-        label: "",
-        description: "",
-        value: "",
-    });
+    const [patchData, setPatchData] = useState<ISpecimen>(initialDataOfSpecimen);
     const [mode, setMode] = useState("new");
     useEffect(() => {
         if (mode === 'new') {
-            setPatchData({
-                label: "",
-                description: "",
-                value: "",
-            });
+            setPatchData(initialDataOfSpecimen);
         }
     }, [mode, setPatchData]);
+
+    const cancelHandler = () => {
+        setMode("new");
+        setPostModelOpen(!postModelOpen);
+        setPatchData(initialDataOfSpecimen);
+    };
     return (
         <div className='my-5 px-5'>
             <div className="my-4">
@@ -35,6 +40,7 @@ const Specimen = () => {
                 <RModal
                     open={postModelOpen}
                     size="xs"
+                    cancelHandler={cancelHandler}
                     title={mode === "new" ? "Add New Specimen" : mode === "patch" ? "Edit Specimen Fields" : "Specimen Details"}
                 >
                     <NewSpecimenModel defaultData={patchData} setMode={setMode} mode={mode} open={postModelOpen} setPostModelOpen={setPostModelOpen} />

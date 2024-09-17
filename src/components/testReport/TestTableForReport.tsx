@@ -1,16 +1,22 @@
 /* eslint-disable react/no-children-prop */
-import React, { useEffect, useState } from "react";
-import { IOrderData } from "../order/initialDataAndTypes";
+
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
+
 import EditIcon from "@rsuite/icons/Edit";
 import VisibleIcon from "@rsuite/icons/Visible";
+import { useEffect, useState } from "react";
 import { Button, Table, Tag } from "rsuite";
+import { IOrderData } from "../order/initialDataAndTypes";
+import CheckIcon from "@rsuite/icons/Check";
 import {
   useGetSingleReportGroupQuery,
   useLazyGetSingleReportGroupQuery,
 } from "@/redux/api/reportGroup/reportGroupSlice";
 import FileDownloadIcon from "@rsuite/icons/FileDownload";
 import { NavLink } from "@/utils/Navlink";
+import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
+import swal from "sweetalert";
+import { useSingleStatusChangerMutation } from "@/redux/api/order/orderSlice";
 
 const TestTableForReport = (props: { data: IOrderData }) => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -26,6 +32,10 @@ const TestTableForReport = (props: { data: IOrderData }) => {
         props.data.tests.map((data) => {
           const testData: ITest = data.test as ITest;
           if ("test" in data && "reportGroup" in testData) {
+            // useing for refunded tests
+            if (data?.status == ENUM_TEST_STATUS.REFUNDED) {
+              return;
+            }
             // for status complete
             const reportGroup = testData.reportGroup;
             setReportCompletionStatus((prevData: any) => ({
@@ -70,6 +80,35 @@ const TestTableForReport = (props: { data: IOrderData }) => {
 
       case "delivered":
         return <Tag color="blue">Delivered</Tag>;
+
+      case "refunded":
+        return <Tag color="orange">REFUNDED</Tag>;
+    }
+  };
+
+  // For status change
+  const [changeStatus, { isLoading: statusLoading }] =
+    useSingleStatusChangerMutation();
+
+  const statusChanger = async (params: IReportGroup) => {
+    const willDelete = await swal({
+      title: "Are you sure?",
+      text: "Are you sure You want to change the stats? This cannot be undone",
+      icon: "warning",
+      dangerMode: true,
+    });
+
+    if (willDelete) {
+      const result = await changeStatus({
+        oid: props.data.oid as string,
+        status: "delivered",
+        reportGroup: params.label,
+      });
+      if ("data" in result) {
+        swal("Success", "Status updated successfully", "success");
+      } else {
+        swal("Error", "Status update faild. Try again", "error");
+      }
     }
   };
 
@@ -86,10 +125,12 @@ const TestTableForReport = (props: { data: IOrderData }) => {
         <hr />
         <div className="my-2 p-2">
           <Table
-            loading={reportGroupDataLoading}
+            loading={reportGroupDataLoading || statusLoading}
             data={reportGroupData}
             bordered
             cellBordered
+            fillHeight
+            height={450}
           >
             <Column flexGrow={4}>
               <HeaderCell>Report Group</HeaderCell>
@@ -111,9 +152,9 @@ const TestTableForReport = (props: { data: IOrderData }) => {
                     <>
                       <div
                         className={`${
-                          reportCompletionStatus[rowData._id] == "completed"
-                            ? "invisible"
-                            : "visible"
+                          reportCompletionStatus[rowData._id] == "pending"
+                            ? "visible"
+                            : "invisible"
                         }`}
                       >
                         <NavLink
@@ -130,22 +171,11 @@ const TestTableForReport = (props: { data: IOrderData }) => {
                       </div>
                       <div
                         className={`${
-                          reportCompletionStatus[rowData._id] == "completed"
+                          reportCompletionStatus[rowData._id] !== "pending"
                             ? "visible"
                             : "invisible"
                         }`}
                       >
-                        <NavLink
-                          href={`/generateReport/${props.data.oid}?reportGroup=${rowData._id}&mode=edit`}
-                        >
-                          <Button
-                            children={<EditIcon />}
-                            appearance="primary"
-                            color="green"
-                            size="sm"
-                            title="Update"
-                          />
-                        </NavLink>{" "}
                         <NavLink
                           href={`/generateReport/${props.data.oid}?reportGroup=${rowData._id}&mode=view`}
                         >
@@ -155,10 +185,39 @@ const TestTableForReport = (props: { data: IOrderData }) => {
                             title="View and Download"
                             appearance="ghost"
                             size="sm"
-                            className="ml-2"
+                            className="mr-2"
                             color="green"
                           />
                         </NavLink>
+                        {reportCompletionStatus[rowData._id] !== "delivered" ? (
+                          <>
+                            <NavLink
+                              href={`/generateReport/${props.data.oid}?reportGroup=${rowData._id}&mode=edit`}
+                            >
+                              <Button
+                                children={<EditIcon />}
+                                appearance="primary"
+                                color="green"
+                                size="sm"
+                                title="Update"
+                              />
+                            </NavLink>{" "}
+                            <Button
+                              // eslint-disable-next-line react/no-children-prop
+                              onClick={() =>
+                                statusChanger(rowData as IReportGroup)
+                              }
+                              children={<CheckIcon />}
+                              title="Delivered"
+                              appearance="ghost"
+                              size="sm"
+                              className="ml-2"
+                              color="green"
+                            />
+                          </>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </>
                   );

@@ -8,29 +8,33 @@ import { useEffect, useState } from "react";
 
 import { Button } from "rsuite";
 
+
+const initialDataOfDepartment = {
+
+  label: "",
+  description: "",
+  value: "",
+  commissionParcentage: 0,
+  fixedCommission: 0,
+  isCommissionFiexed: false,
+} as IDepartment;
+
 const Department = () => {
   const [postModelOpen, setPostModelOpen] = useState(false);
   const [mode, setMode] = useState("new");
-  const [patchData, setPatchData] = useState<IDepartment>({
-    label: "",
-    description: "",
-    value: "",
-    commissionParcentage: 0,
-    fixedCommission: 0,
-    isCommissionFiexed: false,
-  });
+  const [patchData, setPatchData] = useState<IDepartment>(initialDataOfDepartment);
   useEffect(() => {
     if (mode === "new") {
-      setPatchData({
-        label: "",
-        description: "",
-        value: "",
-        commissionParcentage: 0,
-        fixedCommission: 0,
-        isCommissionFiexed: false,
-      });
+      setPatchData(initialDataOfDepartment);
     }
   }, [mode, setPatchData]);
+
+  const cancelHandler = () => {
+    setMode("new");
+    setPostModelOpen(!postModelOpen);
+    setPatchData(initialDataOfDepartment);
+  };
+
   return (
     <div className="my-5 px-5">
       <div className="my-4">
@@ -45,12 +49,13 @@ const Department = () => {
         <RModal
           open={postModelOpen}
           size="xs"
+          cancelHandler={cancelHandler}
           title={
             mode === "new"
               ? "Add New Department"
               : mode === "patch"
-              ? "Edit Department Fields"
-              : "Department Details"
+                ? "Edit Department Fields"
+                : "Department Details"
           }
         >
           <NewDepartment

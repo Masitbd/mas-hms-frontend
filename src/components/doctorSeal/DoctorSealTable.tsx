@@ -45,9 +45,9 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
     if (confirm) {
       const result = await deleteSeal(props._id);
       const message = (result as { data: { message: string } })?.data.message;
-        swal(`Success! ${message}!`, {
-          icon: "success",
-        })
+      swal(`Success! ${message}!`, {
+        icon: "success",
+      })
     }
   };
 
@@ -90,6 +90,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
             {(rowdata: IDoctorSeal) => (
               <>
                 <Button
+                  className='ml-5'
                   appearance="primary"
                   color="blue"
                   onClick={() =>
@@ -99,6 +100,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                   View
                 </Button>
                 <Button
+                  className='ml-5'
                   appearance="primary"
                   color="green"
                   onClick={() =>
@@ -108,6 +110,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                   Edit
                 </Button>
                 <Button
+                  className='ml-5'
                   appearance="primary"
                   color="red"
                   onClick={() => DeleteButtonHandler(rowdata)}

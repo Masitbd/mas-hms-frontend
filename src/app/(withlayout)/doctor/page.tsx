@@ -9,34 +9,35 @@ import { useEffect, useState } from "react";
 
 import { Button } from "rsuite";
 
+const initialDataOfDoctor = {
+  title: "",
+  name: "",
+  fatherName: "",
+  email: "",
+  designation: "",
+  phone: "",
+  image: "",
+  code: "",
+} as IDoctor;
+
+
 const Doctor = () => {
   const [postModelOpen, setPostModelOpen] = useState(false);
-  const [patchData, setPatchData] = useState<IDoctor>({
-    title: "",
-    name: "",
-    fatherName: "",
-    email: "",
-    designation: "",
-    phone: "",
-    image: "",
-    code: "",
-  });
+  const [patchData, setPatchData] = useState<IDoctor>(initialDataOfDoctor);
 
   const [mode, setMode] = useState("new");
   useEffect(() => {
     if (mode === "new") {
-      setPatchData({
-        title: "",
-        name: "",
-        fatherName: "",
-        email: "",
-        designation: "",
-        phone: "",
-        image: "",
-        code: "",
-      });
+      setPatchData(initialDataOfDoctor);
     }
   }, [mode, setPatchData]);
+
+  const cancelHandler = () => {
+    setMode("new");
+    setPostModelOpen(!postModelOpen);
+    setPatchData(initialDataOfDoctor);
+  };
+
   return (
     <div className="my-5 px-5">
       <div className="my-4">
@@ -51,12 +52,13 @@ const Doctor = () => {
         <RModal
           open={postModelOpen}
           size="md"
+          cancelHandler={cancelHandler}
           title={
             mode === "new"
               ? "Add New Doctor"
               : mode === "patch"
-              ? "Edit Doctor's Fields"
-              : "Doctor's Details"
+                ? "Edit Doctor's Fields"
+                : "Doctor's Details"
           }
         >
           <NewDoctor

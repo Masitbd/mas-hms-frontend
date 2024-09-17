@@ -1,6 +1,6 @@
-import { useAppSelector } from "@/redux/hook";
 import React from "react";
 import { Button, Loader, Modal } from "rsuite";
+import CloseIcon from "@rsuite/icons/Close";
 
 const RModal = ({
   size,
@@ -22,20 +22,32 @@ const RModal = ({
   return (
     <div>
       <Modal size={size} open={open} backdrop="static" onClose={cancelHandler}>
-        <Modal.Header>
-          <Modal.Title>
-            <div className="bg-[#3498ff] text-white px-2 py-2 text-center font-sans font-semibold rounded-md mt-5 text-xl">
-              {title}
+        <div className="bg-[#3498ff] text-white px-2 py-3 text-center font-sans font-semibold shadow-lg  text-xl -mt-5 -mb-5 -mx-5 z-20 grid grid-cols-12 ">
+          <h3 className="col-start-2 col-span-10">{title}</h3>
+          <div className="col-start-12 flex justify-end mx-2">
+            <div className=" flex items-center justify-center">
+              <Button
+                color="red"
+                appearance="primary"
+                className="font-bold"
+                onClick={() => {
+                  cancelHandler && cancelHandler(null);
+                }}
+              >
+                <CloseIcon />
+              </Button>
             </div>
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body className="p-5">{children}</Modal.Body>
+          </div>
+        </div>
+
+        <Modal.Body className="p-5 shadow-md my-5 ">{children}</Modal.Body>
         {okHandler && cancelHandler && (
           <Modal.Footer>
             <Button
               onClick={cancelHandler}
-              appearance="subtle"
+              appearance="primary"
               loading={loading ? loading : false}
+              color="red"
             >
               Cancel
             </Button>

@@ -27,7 +27,6 @@ interface ILayoutProps {
 export default function layout({ children }: { children: ReactElement }) {
   const userLoggedIn = useAppSelector((state) => state.auth.loggedIn);
   const loading = useAppSelector((state) => state.loading.loading);
-  console.log(loading);
 
   if (loading) {
     return (
@@ -44,7 +43,7 @@ export default function layout({ children }: { children: ReactElement }) {
           <Container className="rs-container-has-sidebar">
             <Sidebar />
             <Container>
-              <Content className="">{children}</Content>
+              <Content className="h-[90vh] overflow-x-auto">{children}</Content>
             </Container>
           </Container>
         </Container>

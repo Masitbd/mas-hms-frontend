@@ -1,7 +1,24 @@
-import { IDoctor, IPatient, ITest } from "@/types/allDepartmentInterfaces";
-import React from "react";
+import {
+  IDoctor,
+  IPatient,
+  ITest,
+  IVacuumTube,
+} from "@/types/allDepartmentInterfaces";
+import React, { SetStateAction } from "react";
 import { Schema } from "rsuite";
+import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 const { StringType, NumberType } = Schema.Types;
+export type IRefund = {
+  id: number;
+  oid: string;
+  grossAmount: number;
+  discount: number;
+  vat: number;
+  netAmount: number;
+  refundApplied: number;
+  remainingRefund?: number;
+  refundedBy: string;
+};
 
 export type ItestInformaiton = {
   discount: string;
@@ -10,6 +27,7 @@ export type ItestInformaiton = {
   deliveryTime: Date;
   remark: string;
   SL: number;
+  status?: string;
 };
 export type InitialData = {
   oid?: string;
@@ -25,6 +43,7 @@ export type InitialData = {
   deliveryTime: Date;
   dueAmount?: number;
   consultant?: string;
+  discountedBy: string;
 };
 
 export type IInitialData = {
@@ -64,6 +83,9 @@ export type IOrderData = {
   paid: number;
   vat: number;
   consultant?: string;
+  discountedBy: string;
+  postedBy?: string;
+  refundData?: Partial<IRefund>;
 };
 
 export const initialData: InitialData = {
@@ -73,6 +95,7 @@ export const initialData: InitialData = {
   vat: 0,
   paid: 0,
   tests: [],
+  discountedBy: "system",
   patientType: "notRegistered",
   patient: {
     _id: "",
@@ -128,6 +151,8 @@ export type IParamsForTestInformation = {
   formData: any;
   setFormData: (params: any) => void;
   mode: string;
+  setRModalOpen?: React.Dispatch<SetStateAction<boolean>>;
+  setRTest?: React.Dispatch<SetStateAction<ITestsFromOrder | undefined>>;
 };
 
 export type IDewCollectionProps = {
@@ -142,6 +167,8 @@ export type IPriceSectionProps = {
   data: any;
   discountAmount: number;
   vatAmount: number;
+  tubePrice: number;
+  order: IOrderData;
 };
 
 export const unreagisteredPatientProfileDataPropertyNames = [
