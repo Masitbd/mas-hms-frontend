@@ -129,6 +129,7 @@ const SIngleReport = () => {
                     dateChangeHandler(data);
                   }
                 }}
+                oneTap
               />
             </div>
           </div>
@@ -142,10 +143,12 @@ const SIngleReport = () => {
                   event: SyntheticEvent<Element, Event>
                 ) => {
                   if (value) {
+                    value.setHours(23, 59, 59, 999);
                     const data = { to: value };
                     dateChangeHandler(data);
                   }
                 }}
+                oneTap
               />
             </div>
           </div>
