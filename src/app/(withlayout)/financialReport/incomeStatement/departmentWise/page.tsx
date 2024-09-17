@@ -5,6 +5,7 @@ import {
   IdefaultDate,
 } from "@/components/financialReport/comission/initialDataAndTypes";
 import {
+  useGetClientWiseIncomeStatementQuery,
   useGetDeptWiseIncomeStatementQuery,
   useGetTestWiseIncomeStatementQuery,
 } from "@/redux/api/financialReport/financialReportSlice";
