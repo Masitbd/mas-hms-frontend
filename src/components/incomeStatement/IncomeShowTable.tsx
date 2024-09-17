@@ -91,7 +91,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
         // Dynamic content for each group
         ...data.map((group) => [
           {
-            text: ` ${group.groupDate}`,
+            text: ` ${group?.groupDate}`,
             style: "groupHeader",
             margin: [0, 10, 0, 10],
           },
@@ -99,7 +99,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
             table: {
               widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
               body: group.records.map((record) => [
-               record.oid,
+                record.oid,
                 record.totalPrice.toFixed(2),
                 `${record.parcentDiscount}%`,
                 record.cashDiscount.toFixed(2),

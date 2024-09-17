@@ -22,7 +22,7 @@ export const formatDate = (date: Date | null): string => {
 const IncomeStatementPage = () => {
   const [getIncome, { data, isLoading }] = useGetIncomeStatementMutation();
 
-  console.log("data", data);
+  // console.log("data", data);
 
   const [formValue, setFormValue] = useState<IFormValues>({
     startDate: null,

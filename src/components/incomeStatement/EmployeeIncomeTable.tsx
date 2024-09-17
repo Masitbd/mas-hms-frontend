@@ -118,7 +118,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
                 },
                 body: [
                   ...user?.records?.map((record) => [
-                    record?.date,
+                    record?.date.slice(0, 10),
                     record?.oid,
 
                     record?.amount,
@@ -223,7 +223,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
                       key={recordIndex}
                       className="grid grid-cols-3 text-center p-2 border-b"
                     >
-                      <div>{record.date}</div>
+                      <div>{record.date.slice(0, 10)}</div>
                       <div>{record.oid}</div>
                       <div>{record.amount || 0}</div>
                     </div>
