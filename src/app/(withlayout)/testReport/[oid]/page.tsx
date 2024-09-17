@@ -2,7 +2,10 @@
 import Loading from "@/app/loading";
 import OrderAndPatientInfo from "@/components/testReport/OrderAndPatientInfo";
 import TestTableForReport from "@/components/testReport/TestTableForReport";
-import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
+import {
+  useGetOrderQuery,
+  useGetSingleOrderQuery,
+} from "@/redux/api/order/orderSlice";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 import { Divider } from "rsuite";
@@ -14,10 +17,7 @@ const Page = ({ params }: { params: { oid: string } }) => {
     isError: orderDataError,
     isFetching,
     refetch,
-  } = useGetOrderQuery(
-    { oid: params.oid },
-    { refetchOnFocus: true, refetchOnMountOrArgChange: true }
-  );
+  } = useGetSingleOrderQuery(params.oid);
 
   if (orderDataLoading || isFetching) return <Loading />;
 

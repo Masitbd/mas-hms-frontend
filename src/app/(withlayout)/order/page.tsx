@@ -6,6 +6,7 @@ import { Button, Message, toaster } from "rsuite";
 import TestInformation from "@/components/order/TestInformation";
 import {
   useLazyGetInvoiceQuery,
+  useLazyGetSingleOrderQuery,
   usePostOrderMutation,
 } from "@/redux/api/order/orderSlice";
 import FInancialSection from "@/components/order/FInancialSection";
@@ -13,6 +14,7 @@ import PriceSection from "@/components/order/PriceSection";
 import ForDewCollection from "@/components/order/ForDewCollection";
 import {
   IOrderData,
+  InitialData,
   ItestInformaiton,
   initialData,
 } from "@/components/order/initialDataAndTypes";
@@ -22,11 +24,15 @@ import { useAppDispatch } from "@/redux/hook";
 import { setId } from "@/redux/features/IdStore/idSlice";
 import jsPDF from "jspdf";
 import { URL } from "url";
+import Refund from "@/components/order/Refund";
+import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
+import { ITestsFromOrder } from "@/components/generateReport/initialDataAndTypes";
+import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
   const patientTypeRef: React.MutableRefObject<any> = useRef();
-  const [data, setFormData] = useState(initialData);
+  const [data, setFormData] = useState<InitialData>(initialData);
   const setData = (props: React.SetStateAction<any>) => {
     setFormData(props);
   };
@@ -41,16 +47,23 @@ const Order = () => {
   };
   const okHandler = () => {
     handlePostORder();
-    setData(initialData);
   };
   // Handling discount and vat functionality
   let vatAmount = 0;
   let discountAmount = 0;
   let totalPrice = 0;
+  let tubePrice = 0;
 
   data.tests?.length > 0 &&
     data.tests.map((param: ItestInformaiton) => {
+      // if (param.status == ENUM_TEST_STATUS.REFUNDED) {
+      //   return;
+      // }
+      if (param.status == "tube") {
+        tubePrice += param.test.price;
+      }
       totalPrice = totalPrice + param.test.price;
+
       if (param.deliveryTime > data.deliveryTime) {
         setData((preValue: any) => ({
           ...preValue,
@@ -66,12 +79,11 @@ const Order = () => {
       }
     });
 
-  data.tests?.length > 0 &&
-    data.vat > 0 &&
-    (vatAmount = Number(((data.vat / 100) * totalPrice).toFixed(2)));
-
   data.parcentDiscount > 0 &&
     data.tests.map((param: ItestInformaiton) => {
+      if (param.status == "tube" && data.discountedBy !== "free") {
+        return;
+      }
       if (Number(param.discount) > 0) {
         return;
       } else {
@@ -81,6 +93,14 @@ const Order = () => {
         discountAmount = Number((discountAmount + discount).toFixed(2));
       }
     });
+  data.tests?.length > 0 &&
+    data.vat > 0 &&
+    (vatAmount = Number(
+      (
+        (data.vat / 100) *
+        (totalPrice - discountAmount - data.cashDiscount)
+      ).toFixed(2)
+    ));
 
   const handlePostORder = async () => {
     if (mode === "view") {
@@ -97,17 +117,19 @@ const Order = () => {
     const orderData: IOrderData = {
       status: "pending",
       deliveryTime: data.deliveryTime,
-      tests: data.tests.map((testdata: ItestInformaiton) => {
-        return {
-          SL: testdata.SL,
-          status: "pending",
-          discount: Number(testdata?.discount),
-          test: testdata.test._id,
-          deliveryTime: testdata.deliveryTime,
-          remark: testdata.remark,
-        };
-      }),
-      totalPrice: totalPrice,
+      tests: data.tests
+        .filter((test) => test.status !== "tube")
+        .map((testdata: ItestInformaiton) => {
+          return {
+            SL: testdata.SL,
+            status: "pending",
+            discount: Number(testdata?.discount),
+            test: testdata.test._id,
+            deliveryTime: testdata.deliveryTime,
+            remark: testdata.remark,
+          };
+        }),
+      totalPrice: totalPrice + tubePrice,
       cashDiscount: data.cashDiscount ? data.cashDiscount : 0,
       parcentDiscount: data.parcentDiscount ? data.parcentDiscount : 0,
       dueAmount: Number(
@@ -122,6 +144,7 @@ const Order = () => {
       paid: data.paid ? data.paid : 0,
       patientType: data.patientType,
       vat: data.vat,
+      discountedBy: data.discountedBy,
     };
     if (data?.refBy && data.refBy.length > 5) {
       orderData.refBy = data.refBy as string;
@@ -164,32 +187,78 @@ const Order = () => {
     if (newWindow) {
       newWindow.document.write(decodeURIComponent(invoice.data.data));
       newWindow.document.title = "Managed By HMS system";
-
-      newWindow?.print();
     }
-
-    // const buffer = Buffer.from(invoice.data.data.data);
-    // const blob = new Blob([buffer], { type: "application/pdf" });
-
-    // const fileName = URL.createObjectURL(blob);
-    // const pdfwindow = window.open();
-    // pdfwindow.location.href = fileName;
-    // window.open(fileName)?.print();
   };
   useEffect(() => {
     if (isSuccess) {
       toaster.push(<Message type="success">Order posted Successfully</Message>);
       setModalOpen(!modalOpen);
+      setData(initialData);
+    }
+    if (isError) {
+      toaster.push(<Message type="error">! Error</Message>);
     }
   }, [isSuccess]);
-  const dispatch = useAppDispatch();
   // Handleign vew Order
   const patchAndViewHandler = (data: { mode: string; data: IOrderData }) => {
-    setModalOpen(!modalOpen);
+    setModalOpen(true);
     setMode(data.mode);
     setData(data.data as IOrderData);
-    dispatch(setId(data.data._id as string));
   };
+
+  //  For Refund =
+  const [rmodalOpen, setRmodalOpen] = useState(false);
+  const [rTest, setTest] = useState<ITestsFromOrder | undefined>();
+
+  // // for featching single data
+  const [vaccumeTubes, setVaccumetubes] = useState<IVacuumTube[]>([]);
+  useEffect(() => {
+    // 2. setting the tubes
+
+    if (data.tests.length && mode == ENUM_MODE.NEW) {
+      const tests = data.tests.filter((test) => test.status !== "tube");
+      const tubes: IVacuumTube[] = [];
+      tests.forEach((testInfo: ItestInformaiton) => {
+        const test = testInfo.test;
+
+        if (test.hasTestTube) {
+          test.testTube.forEach((vTube: IVacuumTube, index) => {
+            const doesExistes = tubes.length
+              ? tubes.find((tubes: IVacuumTube) => tubes.label == vTube.label)
+              : false;
+
+            if (!doesExistes) {
+              tubes.push(vTube);
+            }
+          });
+        }
+      });
+      setVaccumetubes(tubes);
+    }
+  }, [data]);
+  useEffect(() => {
+    const orderData = JSON.parse(JSON.stringify(data));
+    const tests = orderData.tests;
+    if (vaccumeTubes.length && tests.length && ENUM_MODE.NEW) {
+      const filteredTest = tests.filter(
+        (test: ItestInformaiton) => test.status !== "tube"
+      );
+      vaccumeTubes.forEach((tube, index: number) => {
+        filteredTest.push({
+          test: tube,
+          deliveryTime: new Date().toLocaleDateString(),
+          status: "tube",
+          remark: "",
+          discount: 0,
+          SL: filteredTest.length + 1,
+        });
+      });
+      orderData.tests = filteredTest;
+      if (JSON.stringify(tests) !== JSON.stringify(filteredTest)) {
+        setData(orderData);
+      }
+    }
+  }, [vaccumeTubes]);
 
   return (
     <div>
@@ -208,21 +277,26 @@ const Order = () => {
       <div>
         <RModal
           open={modalOpen}
-          title="Generate New Bill"
+          title={
+            mode == ENUM_MODE.VIEW ? "Bill Information" : " Generate New Bill"
+          }
           size="full"
           cancelHandler={cancelHandler}
           okHandler={okHandler}
         >
           <>
-            <h2 className="text-4xl font-bold text-center">
-              {mode == ENUM_MODE.VIEW
-                ? "Bill Information"
-                : " Generate New Bill"}
-            </h2>
-
+            <div>
+              <Refund
+                open={rmodalOpen}
+                order={data as unknown as IOrderData}
+                setOpen={setRmodalOpen}
+                test={rTest as unknown as ITestsFromOrder}
+                key={"rms"}
+              />
+            </div>
             <div>
               <PatientInformation
-                data={data}
+                data={data as unknown as InitialData}
                 forwardedRefForUnregisterd={refForUnregistered}
                 setFormData={setData as React.SetStateAction<any>}
                 forwardedRefForPatientType={patientTypeRef}
@@ -236,6 +310,8 @@ const Order = () => {
                 formData={data}
                 setFormData={setData}
                 mode={mode}
+                setRModalOpen={setRmodalOpen}
+                setRTest={setTest}
               />
             </div>
 
@@ -268,6 +344,8 @@ const Order = () => {
                 discountAmount={discountAmount}
                 totalPrice={totalPrice}
                 vatAmount={vatAmount}
+                tubePrice={tubePrice}
+                order={data as unknown as IOrderData}
               />
 
               <div className="flex justify-end">
@@ -301,6 +379,9 @@ const Order = () => {
           patchHandler={patchAndViewHandler}
           mode={mode}
           setMode={setMode}
+          setFormData={
+            setFormData as unknown as React.Dispatch<SetStateAction<IOrderData>>
+          }
         />
       </div>
     </div>

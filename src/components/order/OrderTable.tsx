@@ -2,7 +2,12 @@ import {
   useDeleteTestMutation,
   useGetTestsQuery,
 } from "@/redux/api/test/testSlice";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import React, {
+  SetStateAction,
+  SyntheticEvent,
+  useEffect,
+  useState,
+} from "react";
 import {
   Button,
   Form,
@@ -14,32 +19,46 @@ import {
 } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
 import VisibleIcon from "@rsuite/icons/Visible";
-import { ITest } from "@/types/allDepartmentInterfaces";
+import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
-import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
+import {
+  useGetOrderQuery,
+  useLazyGetSingleOrderQuery,
+} from "@/redux/api/order/orderSlice";
 import { IOrderData } from "./initialDataAndTypes";
 import { useAppDispatch } from "@/redux/hook";
 import { setId } from "@/redux/features/IdStore/idSlice";
+import { ENUM_MODE } from "@/enum/Mode";
+import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
+import { useLazyGetSingleVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
   patchHandler,
   mode,
   setMode,
+  setFormData,
 }: {
   patchHandler?: (data: { data: IOrderData; mode: string }) => void;
   mode?: string;
   setMode?: (data: string) => void;
+  setFormData: React.Dispatch<SetStateAction<IOrderData>>;
 }) => {
+  const [
+    getSingle,
+    {
+      isLoading: singleFeatchLoaing,
+      isFetching: singleFeatching,
+      data: refeachedData,
+    },
+  ] = useLazyGetSingleOrderQuery();
+
   // For delete
   const [deleteData, setDeleteData] = useState<string>();
   const [deleteOpen, setDeleteOpen] = useState<boolean>(false);
   const [deleteTest, { isSuccess: deleteSuccess, isError: deleteError }] =
     useDeleteTestMutation();
-  const handleDeletOpen = (id: string) => {
-    setDeleteOpen(!deleteOpen);
-    setDeleteData(id);
-  };
+
   const okHandler = () => {
     deleteTest(deleteData);
     setDeleteOpen(!deleteOpen);
@@ -49,6 +68,24 @@ const OrderTable = ({
     setDeleteData(undefined);
   };
 
+  // for vaccumeTubes
+  const [getTubes, { isLoading: tubeLoading }] =
+    useLazyGetSingleVacuumTubeQuery();
+  const [vaccumeTubes, setVaccumeTubes] = useState<string[]>([]);
+
+  const patchHanlders = async (id: string) => {
+    const result = await getSingle(id);
+
+    if ("data" in result) {
+      const data = JSON.parse(JSON.stringify(result.data.data[0]));
+
+      patchHandler &&
+        patchHandler({
+          data: JSON.parse(JSON.stringify(data)) as unknown as IOrderData,
+          mode: ENUM_MODE.VIEW,
+        });
+    }
+  };
   useEffect(() => {
     if (deleteSuccess) {
       toaster.push(
@@ -62,7 +99,24 @@ const OrderTable = ({
         </Message>
       );
     }
-  }, [deleteSuccess, deleteError]);
+    if (
+      !singleFeatching &&
+      !singleFeatchLoaing &&
+      refeachedData?.data?.length > 0
+    ) {
+      setFormData(
+        JSON.parse(
+          JSON.stringify(refeachedData.data[0])
+        ) as unknown as IOrderData
+      );
+    }
+  }, [
+    deleteSuccess,
+    deleteError,
+    singleFeatching,
+    refeachedData,
+    singleFeatchLoaing,
+  ]);
   // For search
   const [searchData, setSearchData] = useState({
     sortBy: "createdAt",
@@ -137,7 +191,7 @@ const OrderTable = ({
       <Table
         height={500}
         data={testData?.data}
-        loading={testLoading}
+        loading={testLoading || singleFeatchLoaing || singleFeatching}
         className="w-full"
         bordered
         cellBordered
@@ -202,10 +256,11 @@ const OrderTable = ({
                   startIcon={<VisibleIcon />}
                   onClick={() => {
                     if (patchHandler) {
-                      patchHandler({
-                        data: rowdate as IOrderData,
-                        mode: "view",
-                      });
+                      // patchHandler({
+                      //   data: rowdate as IOrderData,
+                      //   mode: ENUM_MODE.VIEW,
+                      // });
+                      patchHanlders(rowdate?.oid);
                     }
                   }}
                 />

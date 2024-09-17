@@ -111,7 +111,7 @@ const PayModel = ({
             </Col>
           </Row>
         </Grid>
-        <div className="mt-5 ">
+        <div className="mt-5">
           <Button
             onClick={() => {
               setPayModel(false);

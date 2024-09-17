@@ -299,7 +299,7 @@ const NewDoctor = ({
                   <Button
                     appearance="primary"
                     onClick={() => setPayModel(!payModel)}
-                    className="mr-5"
+                    className="mr-1"
                   >
                     Pay
                   </Button>

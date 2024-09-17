@@ -11,7 +11,7 @@ const order = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order"],
+      invalidatesTags: ["order", "singleOrder"],
     }),
 
     getOrder: build.query({
@@ -24,6 +24,15 @@ const order = baseApi.injectEndpoints({
       }),
       providesTags: ["order"],
     }),
+    getSingleOrder: build.query({
+      query: (data: string) => ({
+        url: `/order/${data}`,
+        method: "GET",
+
+        contentType: "application/json",
+      }),
+      providesTags: ["singleOrder"],
+    }),
     patchOrder: build.mutation({
       query: (data: { id: string; data: Partial<IOrderData> }) => ({
         url: `/order/${data.id}`,
@@ -32,7 +41,7 @@ const order = baseApi.injectEndpoints({
         data: data.data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order"],
+      invalidatesTags: ["order", "singleOrder"],
     }),
     getInvoice: build.query({
       query: (data) => ({
@@ -52,16 +61,29 @@ const order = baseApi.injectEndpoints({
         data: { amount: data.amount },
         contentType: "application/json",
       }),
-      invalidatesTags: ["order"],
+      invalidatesTags: ["order", "singleOrder"],
+    }),
+    singleStatusChanger: build.mutation({
+      query: (data: { oid: string; status: string; reportGroup: string }) => ({
+        url: `/order/statusChange/${data.oid}`,
+        method: "POST",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+      invalidatesTags: ["order", "singleOrder"],
     }),
   }),
 });
 
 export const {
+  useGetSingleOrderQuery,
+  useLazyGetSingleOrderQuery,
   usePostOrderMutation,
   useGetOrderQuery,
   usePatchOrderMutation,
   useLazyGetInvoiceQuery,
   useLazyGetOrderQuery,
   useDewColletcionMutation,
+  useSingleStatusChangerMutation,
 } = order;

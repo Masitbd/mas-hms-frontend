@@ -1,14 +1,13 @@
+import { ENUM_MODE } from "@/enum/Mode";
 import {
   useDeleteTestMutation,
   useGetTestsQuery,
 } from "@/redux/api/test/testSlice";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import { ITest } from "@/types/allDepartmentInterfaces";
+import VisibleIcon from "@rsuite/icons/Visible";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Message, Pagination, Table, toaster } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
-import VisibleIcon from "@rsuite/icons/Visible";
-import { ITest } from "@/types/allDepartmentInterfaces";
-import { ENUM_MODE } from "@/enum/Mode";
-import Loading from "@/app/loading";
 
 const { Column, HeaderCell, Cell } = Table;
 const TestTable = ({
@@ -66,6 +65,21 @@ const TestTable = ({
     isError: TesError,
     isFetching,
   } = useGetTestsQuery(searchData);
+
+  //pagination
+  const [limit, setLimit] = React.useState(10);
+  const [page, setPage] = React.useState(1);
+
+  const handleChangeLimit = (dataKey: React.SetStateAction<number>) => {
+    setPage(1);
+    setLimit(dataKey);
+  };
+
+  const data = testData?.data.data.filter((v: any, i: number) => {
+    const start = limit * (page - 1);
+    const end = start + limit;
+    return i >= start && i < end;
+  });
 
   return (
     <div>
@@ -154,6 +168,25 @@ const TestTable = ({
           </Cell>
         </Column>
       </Table>
+      <div style={{ padding: 20 }}>
+        <Pagination
+          prev
+          next
+          first
+          last
+          ellipsis
+          boundaryLinks
+          maxButtons={5}
+          size="xs"
+          layout={["total", "-", "limit", "|", "pager", "skip"]}
+          total={testData?.data.data.length}
+          limitOptions={[10, 30, 50]}
+          limit={limit}
+          activePage={page}
+          onChangePage={setPage}
+          onChangeLimit={handleChangeLimit}
+        />
+      </div>
       <div>
         <Pagination
           prev
