@@ -67,6 +67,14 @@ const financialReport = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    getRefByWiseIncomeStatement: build.query({
+      query: (data) => ({
+        url: `/financialReport/incomeStatement/refByWise`,
+        method: "get",
+        params: data,
+        contentType: "application/json",
+      }),
+    }),
   }),
 });
 
@@ -82,4 +90,5 @@ export const {
   useLazyGetTestWiseDoctorPerformanceQuery,
   useLazyGetDeptWiseDoctorPerformanceQuery,
   useGetClientWiseIncomeStatementQuery,
+  useGetRefByWiseIncomeStatementQuery,
 } = financialReport;

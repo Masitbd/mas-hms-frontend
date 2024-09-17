@@ -113,9 +113,11 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
                 record._id, // Bill No
                 record.totalPrice.toFixed(2), // Bill Amount
                 record.totalDiscount.toFixed(2), // Total Discount
-                (record.totalPrice + record.vat).toFixed(2), // Total Amount
+                (record.totalPrice - record.totalDiscount).toFixed(2), // Total Amount
                 record.vat.toFixed(2), // VAT
-                (record.totalPrice + record.vat).toFixed(2), // Total + VAT
+                (record.totalPrice + record.vat - record.totalDiscount).toFixed(
+                  2
+                ), // Total + VAT
                 record.paid.toFixed(2), // Amount Paid
                 record.dueAmount.toFixed(2), // Due
               ]),
@@ -197,11 +199,11 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
                 <div className="py-1 ps-1">{patient?.totalPrice}</div>
                 <div className="py-1 ps-1">{patient?.totalDiscount}</div>
                 <div className="py-1 ps-1">
-                  {patient?.totalPrice + patient.vat}
+                  {patient?.totalPrice - patient.totalDiscount}
                 </div>
                 <div className="py-1 ps-1">{patient.vat}</div>
                 <div className="py-1 ps-1">
-                  {patient?.totalPrice + patient.vat}
+                  {patient?.totalPrice + patient.vat - patient.totalDiscount}
                 </div>
                 <div className="py-1 ps-1">{patient?.paid}</div>
                 <div className="py-1 ps-1">{patient?.dueAmount}</div>
