@@ -6,6 +6,7 @@ import {
   IdefaultDate,
 } from "@/components/financialReport/comission/initialDataAndTypes";
 import { useGetOverAllComissionQuery } from "@/redux/api/financialReport/financialReportSlice";
+import pdfMake from "pdfmake/build/pdfmake";
 import React, {
   Dispatch,
   SetStateAction,
@@ -13,13 +14,14 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { DatePicker, SelectPicker, Table } from "rsuite";
+import { Button, DatePicker, SelectPicker, Table } from "rsuite";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const Comission = () => {
   const { HeaderCell, Cell, Column } = Table;
   const [date, setDate] = useState<IdefaultDate>(defaultDate as IdefaultDate);
-  const [totalexp, setTotalExp] = useState(0);
-  const [totaoSell, setTotalSell] = useState(0);
   const dateChangeHandler = (value: Partial<IdefaultDate>) => {
     setDate((prevValue) => ({ ...prevValue, ...value }));
   };
@@ -30,22 +32,95 @@ const Comission = () => {
   } = useGetOverAllComissionQuery(date);
   const loading = comissionLoading || comissionFeatching;
 
-  useEffect(() => {
-    if (commissionData?.data.length) {
-      setTotalExp(
-        commissionData.data.reduce(
-          (acc: number, curr: { exp: number }) => acc + curr.exp,
-          0
-        )
-      );
-      setTotalSell(
-        commissionData.data.reduce(
-          (acc: number, curr: { sell: any }) => acc + curr.sell,
-          0
-        )
-      );
-    }
-  }, [commissionData]);
+  // For printing
+
+  const generatePDF = () => {
+    const documentDefinition: any = {
+      pageOrientation: "landscape",
+      defaultStyle: {
+        fontSize: 12,
+      },
+      pageMargins: [20, 20, 20, 20],
+      content: [
+        {
+          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
+          style: "header",
+          alignment: "center",
+        },
+        {
+          text: "Kachari Paira Danga, Nageswori, Kurigram",
+          alignment: "center",
+        },
+        {
+          text: "HelpLine: 01755546392 (24 Hours Open)",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `Overall Commission Report: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          style: "subheader",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+
+        // Static Table Header
+        {
+          table: {
+            widths: [80, 80, 400, 100, 100], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                { text: "SL", style: "tableHeader" },
+                { text: "Code", style: "tableHeader" },
+                { text: "Doctor", style: "tableHeader" },
+                { text: "Sell", style: "tableHeader" },
+                { text: "Exp", style: "tableHeader" },
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+        {
+          table: {
+            widths: [80, 80, 400, 100, 100], // Fixed column widths
+            body: commissionData.data.map((cd: any) => [
+              cd.SL,
+              cd.doctor?.code ? cd?.doctor?.code : " ",
+              cd?.doctor?.name,
+              cd?.sell,
+              cd?.exp,
+            ]),
+          },
+        },
+        ,
+      ],
+      styles: {
+        header: {
+          fontSize: 16,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 12,
+          italics: true,
+          color: "red",
+        },
+        groupHeader: {
+          fontSize: 12,
+          bold: true,
+          border: true,
+        },
+        tableHeader: {
+          bold: true,
+          fillColor: "#eeeeee",
+          alignment: "center",
+        },
+      },
+    };
+
+    // Open the print dialog
+    pdfMake.createPdf(documentDefinition).print();
+  };
+
   return (
     <div className="my-5 border  shadow-lg mx-5">
       <div className="bg-[#3498ff] text-white px-2 py-2">
@@ -64,7 +139,6 @@ const Comission = () => {
                 event: SyntheticEvent<Element, Event>
               ) => {
                 if (value) {
-                  console.log(value);
                   const data = { from: value };
                   dateChangeHandler(data);
                 }
@@ -91,6 +165,24 @@ const Comission = () => {
               oneTap
             />
           </div>
+        </div>
+        <div>
+          {commissionData?.data?.length ? (
+            <>
+              <br />
+              <div>
+                <Button
+                  onClick={() => generatePDF()}
+                  appearance="primary"
+                  color="blue"
+                >
+                  Print
+                </Button>
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 
@@ -134,16 +226,6 @@ const Comission = () => {
                 <Cell dataKey="exp" />
               </Column>
             </Table>
-            <div className="grid grid-cols-12">
-              <div className="col-start-7">
-                <h3 className="font-bold">Total Sell</h3>
-                <div>{totaoSell}</div>
-              </div>
-              <div className="col-start-10">
-                <h3 className="font-bold">Total Exp</h3>
-                <div>{totalexp}</div>
-              </div>
-            </div>
           </div>
         )}
       </div>
