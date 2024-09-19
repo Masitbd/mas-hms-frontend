@@ -26,6 +26,10 @@ export interface DepartmentItem {
 }
 
 interface OverallItem {
+  discount: any;
+  commission: any;
+  total: any;
+  percent: any;
   departments: DepartmentItem[];
   testNames: string[];
   oid: string;

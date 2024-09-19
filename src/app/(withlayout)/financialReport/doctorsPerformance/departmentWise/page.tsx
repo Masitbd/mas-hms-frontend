@@ -10,8 +10,12 @@ import {
   useLazyGetTestWiseDoctorPerformanceQuery,
 } from "@/redux/api/financialReport/financialReportSlice";
 import { IDoctor } from "@/types/allDepartmentInterfaces";
+import pdfMake from "pdfmake/build/pdfmake";
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { DatePicker, SelectPicker, Table } from "rsuite";
+import { Button, DatePicker, SelectPicker, Table } from "rsuite";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const DepartmentWisePeformance = () => {
   const { data: doctorsData, isLoading: isDoctorDataLoading } =
@@ -29,7 +33,7 @@ const DepartmentWisePeformance = () => {
       isFetching: isPerformanceDataFeatching,
     },
   ] = useLazyGetDeptWiseDoctorPerformanceQuery();
-  const [performanceData, setPerformanceData] = useState();
+  const [performanceData, setPerformanceData] = useState([]);
   useEffect(() => {
     if (refby) {
       (async function () {
@@ -45,6 +49,105 @@ const DepartmentWisePeformance = () => {
       })();
     }
   }, [refby, date]);
+
+  const generatePDF = () => {
+    const documentDefinition: any = {
+      pageOrientation: "landscape",
+      defaultStyle: {
+        fontSize: 12,
+      },
+      pageMargins: [20, 20, 20, 20],
+      content: [
+        {
+          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
+          style: "header",
+          alignment: "center",
+        },
+        {
+          text: "Kachari Paira Danga, Nageswori, Kurigram",
+          alignment: "center",
+        },
+        {
+          text: "HelpLine: 01755546392 (24 Hours Open)",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `RefBy And Department Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          style: "subheader",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+
+        // Static Table Header
+        {
+          table: {
+            widths: [140, 60, 60, 60, 60, 60, 60, 80, 60, 60], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                { text: "Particular", style: "tableHeader" },
+                { text: "Rate", style: "tableHeader" },
+                { text: "Quantity", style: "tableHeader" },
+                { text: "Amount", style: "tableHeader" },
+                { text: "Discount ", style: "tableHeader" },
+                { text: "Total", style: "tableHeader" },
+                { text: "VAT", style: "tableHeader" },
+                { text: "Total + VAT", style: "tableHeader" },
+                { text: "Paid", style: "tableHeader" },
+                { text: "Due", style: "tableHeader" },
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+
+        {
+          table: {
+            widths: [140, 60, 60, 60, 60, 60, 60, 80, 60, 60], // Fixed column widths
+            body: performanceData.map((pd: any) => [
+              pd?._id,
+              pd?.price,
+              pd?.quantity,
+              pd?.totalPrice,
+              pd?.totalDiscount,
+              Math.ceil(pd?.totalPrice - pd?.totalDiscount),
+              pd?.vat,
+              Math.ceil(pd?.totalPrice - pd?.totalDiscount + pd?.vat),
+              pd?.paid,
+              Math.ceil(
+                pd?.totalPrice - pd?.totalDiscount + pd?.vat - pd?.paid
+              ),
+            ]),
+          },
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 16,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 12,
+          italics: true,
+          color: "red",
+        },
+        groupHeader: {
+          fontSize: 12,
+          bold: true,
+          border: true,
+        },
+        tableHeader: {
+          bold: true,
+          fillColor: "#eeeeee",
+          alignment: "center",
+        },
+      },
+    };
+
+    // Open the print dialog
+    pdfMake.createPdf(documentDefinition).print();
+  };
 
   return (
     <div className="">
@@ -111,6 +214,22 @@ const DepartmentWisePeformance = () => {
                 oneTap
               />
             </div>
+          </div>
+          <div>
+            {performanceData.length ? (
+              <>
+                <br />
+                <Button
+                  onClick={() => generatePDF()}
+                  appearance="primary"
+                  color="blue"
+                >
+                  Print
+                </Button>
+              </>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div className="my-5 px-2">
