@@ -66,45 +66,77 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
         },
 
         // Static Table Header
-        {
-          table: {
-            widths: [80, 80, 80, 80, 80, 80], // Fixed column widths
-            headerRows: 1,
-            body: [
-              [
-                { text: "Date", style: "tableHeader" },
-                { text: "Time", style: "tableHeader" },
-                { text: "Bill No", style: "tableHeader" },
-                { text: "Patient", style: "tableHeader" },
-                { text: "User Name", style: "tableHeader" },
-                { text: "Amount", style: "tableHeader" },
-              ],
-            ],
-          },
-          margin: [0, 0, 0, 10],
-        },
 
         // Dynamic content for each group
         ...data.flatMap((group) => [
           {
             text: group?.user || "No Name",
             style: "groupHeader",
-            margin: [0, 10, 0, 10],
+            margin: [0, 20, 0, 5],
           },
           {
             table: {
-              widths: [80, 80, 80, 80, 80, 80],
+              widths: ["*"], // Single column table
+              body: [
+                [
+                  {
+                    text: "Dew Bills",
+                    style: "groupHeader",
+                    margin: [0, 10, 0, 10],
+                    border: [true, true, true, true],
+                  },
+                ],
+              ],
+            },
+          },
+          {
+            table: {
+              widths: ["*", "*", "*", 120, 120, "*"],
               body: [
                 ["Date", "Time", "Bill No", "Patient", "User Name", "Amount"],
                 ...group?.dewBills?.map((record) => [
-                  record.createdAt.slice(0, 10),
+                  record?.createdAt.slice(0, 10),
                   moment(record.createdAt)
                     .utcOffset(6 * 60)
                     .format("HH:mm:ss"),
-                  record.oid,
-                  record.patient,
-                  record.user,
-                  record.amount,
+                  record?.oid ?? " ",
+                  record?.patient ?? " ",
+                  record?.user ?? " ",
+                  record?.amount ?? " ",
+                ]),
+              ],
+            },
+          },
+
+          {
+            table: {
+              widths: ["*"], // Single column table
+              body: [
+                [
+                  {
+                    text: "New Bills",
+                    style: "groupHeader",
+                    margin: [0, 10, 0, 10],
+                    border: [true, true, true, true],
+                  },
+                ],
+              ],
+            },
+          },
+          {
+            table: {
+              widths: ["*", "*", "*", 120, 120, "*"],
+              body: [
+                ["Date", "Time", "Bill No", "Patient", "User Name", "Amount"],
+                ...group?.newBills?.map((record) => [
+                  record?.createdAt.slice(0, 10),
+                  moment(record.createdAt)
+                    .utcOffset(6 * 60)
+                    .format("HH:mm:ss"),
+                  record?.oid ?? " ",
+                  record?.patient ?? " ",
+                  record?.user ?? " ",
+                  record?.amount ?? " ",
                 ]),
               ],
             },

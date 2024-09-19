@@ -65,7 +65,7 @@ const IncomeStatementPage = () => {
       <div className="my-5 border  shadow-lg mx-5">
         <div className="bg-[#3498ff] text-white px-2 py-2">
           <h2 className="text-center text-xl font-semibold">
-            Test Wise Income Statement
+            Income Statement
           </h2>
         </div>
         <div className="px-2">
