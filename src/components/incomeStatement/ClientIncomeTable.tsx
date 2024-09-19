@@ -8,11 +8,11 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 type TRecord = {
   oid: string;
-  uuid?: string;
+  totalDiscount: number;
   totalPrice: number;
   totalTestPrice: number;
-  cashDiscount: number;
-  parcentDiscount: number;
+  _id: string;
+  createdAt: string;
   dueAmount: number;
   paid: number;
   vat: number;
@@ -20,7 +20,7 @@ type TRecord = {
 
 type TGroup = {
   records: TRecord[];
-  groupDate: string;
+  name: string;
 };
 
 interface IncomeShowTableProps {
@@ -29,7 +29,7 @@ interface IncomeShowTableProps {
   endDate: Date | null;
 }
 
-const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
+const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
   data,
   startDate,
   endDate,
@@ -57,7 +57,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           margin: [0, 0, 0, 20],
         },
         {
-          text: `Investigation Income Statement: Between ${
+          text: `Investigation Income Statement for each client: Between ${
             startDate ? formatDateString(startDate) : "N/A"
           } to ${endDate ? formatDateString(endDate) : "N/A"}`,
           style: "subheader",
@@ -72,10 +72,9 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
             headerRows: 1,
             body: [
               [
+                { text: "Date", style: "tableHeader" },
                 { text: "Bill No", style: "tableHeader" },
                 { text: "Bill Amount", style: "tableHeader" },
-                { text: "Discount(%)", style: "tableHeader" },
-                { text: "Discount +", style: "tableHeader" },
                 { text: "Total Discount", style: "tableHeader" },
                 { text: "Total Amount", style: "tableHeader" },
                 { text: "VAT", style: "tableHeader" },
@@ -91,24 +90,36 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
         // Dynamic content for each group
         ...data.map((group) => [
           {
-            text: ` ${group?.groupDate}`,
-            style: "groupHeader",
-            margin: [0, 10, 0, 10],
+            table: {
+              widths: ["*"], // Single column table
+              body: [
+                [
+                  {
+                    text: group?.name,
+                    style: "groupHeader",
+                    margin: [0, 10, 0, 10],
+                    border: [true, true, true, true],
+                  },
+                ],
+              ],
+            },
+            layout: "lightHorizontalLines", // Optional, adds light horizontal lines
           },
           {
             table: {
               widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
               body: group.records.map((record) => [
-                record.oid,
-                record.totalPrice.toFixed(2),
-                `${record.parcentDiscount}%`,
-                record.cashDiscount.toFixed(2),
-                record.cashDiscount,
-                record.totalTestPrice,
-                record.vat.toFixed(2),
-                (record.totalPrice + record.vat).toFixed(2),
-                record.paid,
-                record.dueAmount,
+                record.createdAt.slice(0, 10), // Date
+                record._id, // Bill No
+                record.totalPrice.toFixed(2), // Bill Amount
+                record.totalDiscount.toFixed(2), // Total Discount
+                (record.totalPrice - record.totalDiscount).toFixed(2), // Total Amount
+                record.vat.toFixed(2), // VAT
+                (record.totalPrice + record.vat - record.totalDiscount).toFixed(
+                  2
+                ), // Total + VAT
+                record.paid.toFixed(2), // Amount Paid
+                record.dueAmount.toFixed(2), // Due
               ]),
             },
           },
@@ -127,6 +138,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
         groupHeader: {
           fontSize: 12,
           bold: true,
+          border: true,
         },
         tableHeader: {
           bold: true,
@@ -149,7 +161,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
         <p>Kachari Paira Danga, Nageswori, Kurigram</p>
         <p>HelpLine: 01755546392 (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement: Between{" "}
+          Investigation Income Statement for each client : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>
@@ -157,10 +169,9 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
 
       <div className="w-full">
         <div className="grid grid-cols-10 bg-gray-100 font-semibold text-center p-2">
+          <div>Date</div>
           <div>Bill No</div>
           <div>Bill Amount</div>
-          <div>Discount(%)</div>
-          <div>Discount +</div>
           <div>Total Discount</div>
           <div>Total Amount</div>
           <div>VAT</div>
@@ -168,36 +179,36 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           <div>Amount Paid</div>
           <div>Due</div>
         </div>
-        {data.map((group, groupIndex) => (
-          <div key={groupIndex} className="mb-8">
+        {data?.map((group, groupIndex) => (
+          <div key={groupIndex} className="mb-3">
             {/* Group Date Row */}
-            <div className="text-lg font-semibold p-2 mb-2">
-              {group.groupDate}
+
+            <div className="border border-black p-2 font-bold" key={groupIndex}>
+              {group?.name}
             </div>
 
-            {/* Records Table */}
-            <div className="w-full border-t ">
-              {/* Table Header */}
-
-              {/* Records Rows */}
-              {group.records.map((record, recordIndex) => (
-                <div
-                  key={recordIndex}
-                  className="grid grid-cols-10 text-center p-2 border-b"
-                >
-                  <div>{record.oid}</div>
-                  <div>{record.totalPrice}</div>
-                  <div>{record.parcentDiscount}</div>
-                  <div>{record.cashDiscount}</div>
-                  <div>{record.cashDiscount}</div>
-                  <div>{record.totalTestPrice}</div>
-                  <div>{record.vat}</div>
-                  <div>{record.totalPrice + record.vat}</div>
-                  <div>{record.paid}</div>
-                  <div>{record.dueAmount}</div>
+            {group?.records?.map((patient, ptindex) => (
+              <div
+                key={ptindex}
+                className="grid grid-cols-9 border border-black "
+              >
+                <div className="py-1 ps-1">
+                  {patient?.createdAt.slice(0, 10)}
                 </div>
-              ))}
-            </div>
+                <div className="py-1 ps-1">{patient?._id}</div>
+                <div className="py-1 ps-1">{patient?.totalPrice}</div>
+                <div className="py-1 ps-1">{patient?.totalDiscount}</div>
+                <div className="py-1 ps-1">
+                  {patient?.totalPrice - patient.totalDiscount}
+                </div>
+                <div className="py-1 ps-1">{patient.vat}</div>
+                <div className="py-1 ps-1">
+                  {patient?.totalPrice + patient.vat - patient.totalDiscount}
+                </div>
+                <div className="py-1 ps-1">{patient?.paid}</div>
+                <div className="py-1 ps-1">{patient?.dueAmount}</div>
+              </div>
+            ))}
           </div>
         ))}
       </div>
@@ -212,4 +223,4 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
   );
 };
 
-export default IncomeShowTable;
+export default ClientIncomeTable;

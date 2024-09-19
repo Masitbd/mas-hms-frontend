@@ -1,35 +1,41 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
 import { formatDate, IFormValues } from "../income-statement/page";
-import { useGetEmployeeIncomeStatementQuery } from "@/redux/api/income-statement/Income.api";
-import EmployeeIncomeShowTable from "@/components/incomeStatement/EmployeeIncomeTable";
 
-const EmployeeIncmeStatementPage = () => {
+import { useGetClientWiseIncomeStatementQuery } from "@/redux/api/financialReport/financialReportSlice";
+import ClientIncomeTable from "@/components/incomeStatement/ClientIncomeTable";
+
+const ClientWiseIncomeStatement = () => {
   const [isSearchEnable, setIsSearchEnable] = useState(false);
-  const query: Record<string, any> = {};
-
   const [formValue, setFormValue] = useState<IFormValues>({
     startDate: null,
     endDate: null,
   });
 
+  // Handle form value change
   const handleChange = (value: Record<string, any>) => {
     setFormValue({
-      startDate: value.startDate || null,
+      startDate: value.startDate,
       endDate: value.endDate || null,
     });
   };
 
-  if (formValue.startDate) query.startDate = formValue.startDate;
-  if (formValue.endDate) query.endDate = formValue.endDate;
+  // Query object
+  const query: { from?: Date; to?: Date } = {};
+  if (formValue.startDate) query.from = formValue.startDate;
+  if (formValue.endDate) query.to = formValue.endDate;
 
-  const { data: employeeIncome } = useGetEmployeeIncomeStatementQuery(query, {
-    skip: !isSearchEnable,
-  });
+  // Call the query when search is enabled
+  const { data: clientIncomes } = useGetClientWiseIncomeStatementQuery(
+    query, // Pass the constructed query object
+    {
+      skip: !isSearchEnable, // Only run the query when search is enabled
+    }
+  );
 
-  // console.log(employeeIncome, "income res");
+  const [transformedData, setTransformedData] = useState([]);
 
   // Handle form submission
   const handleSubmit = async (
@@ -45,12 +51,39 @@ const EmployeeIncmeStatementPage = () => {
     }
   };
 
+  // Create a map from names to mainDocs
+  useEffect(() => {
+    if (clientIncomes?.data?.length > 0) {
+      const firstItem = clientIncomes.data[0];
+      const { mainDocs = [], nameWiseTotalDocs = [] } = firstItem;
+
+      // Create a map from names to an array of mainDocs entries
+      const nameToMainDocsMap = new Map();
+      mainDocs.forEach((doc: any) => {
+        const name = doc.patient.name;
+        if (!nameToMainDocsMap.has(name)) {
+          nameToMainDocsMap.set(name, []);
+        }
+        nameToMainDocsMap.get(name).push(doc);
+      });
+
+      // Create the new array
+      const result = nameWiseTotalDocs.map((nameDoc: any) => ({
+        name: nameDoc._id,
+        records: nameToMainDocsMap.get(nameDoc._id) || [],
+      }));
+
+      // Set the transformed data in the state
+      setTransformedData(result);
+    }
+  }, [clientIncomes]);
+
   return (
     <div className="">
       <div className="my-5 border  shadow-lg mx-5">
         <div className="bg-[#3498ff] text-white px-2 py-2">
           <h2 className="text-center text-xl font-semibold">
-            Employee Income Statement
+            Client Wise Income Statement
           </h2>
         </div>
         <div className="mx-2">
@@ -96,9 +129,9 @@ const EmployeeIncmeStatementPage = () => {
             </Button>
           </Form>
 
-          {employeeIncome && employeeIncome?.data?.length > 0 && (
-            <EmployeeIncomeShowTable
-              data={employeeIncome.data}
+          {clientIncomes && clientIncomes?.data?.length > 0 && (
+            <ClientIncomeTable
+              data={transformedData}
               startDate={formValue.startDate}
               endDate={formValue.endDate}
             />
@@ -109,4 +142,4 @@ const EmployeeIncmeStatementPage = () => {
   );
 };
 
-export default EmployeeIncmeStatementPage;
+export default ClientWiseIncomeStatement;

@@ -11,7 +11,11 @@ import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { useLazyGetSingleDoctorPerformanceQuery } from "@/redux/api/financialReport/financialReportSlice";
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { DatePicker, SelectPicker, Table } from "rsuite";
+import { Button, DatePicker, SelectPicker, Table } from "rsuite";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfMake from "pdfmake/build/pdfmake";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const SIngleReport = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -86,6 +90,166 @@ const SIngleReport = () => {
     }
   }, [performanceData]);
 
+  ///! For pdf and will be moved to another page
+
+  const generatePDF = () => {
+    const detailedComissionDepartmentWidth = colNames.map((cn) => "*");
+    const documentDefinition: any = {
+      pageOrientation: "landscape",
+      defaultStyle: {
+        fontSize: 12,
+      },
+      pageMargins: [20, 20, 20, 20],
+      content: [
+        {
+          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
+          style: "header",
+          alignment: "center",
+        },
+        {
+          text: "Kachari Paira Danga, Nageswori, Kurigram",
+          alignment: "center",
+        },
+        {
+          text: "HelpLine: 01755546392 (24 Hours Open)",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `Overall Commission Summery: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          style: "subheader",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        // For detailed comission table header
+        {
+          table: {
+            widths: [90, 80, 120, 150, ...detailedComissionDepartmentWidth], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                { text: "Patient Id", style: "tableHeader" },
+                { text: "Order Id", style: "tableHeader" },
+                { text: "Name", style: "tableHeader" },
+                { text: "Tests", style: "tableHeader" },
+                ...colNames?.map((cn) => {
+                  return { text: cn, style: "tableHeader" };
+                }),
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+        // For detailed comission table
+        {
+          table: {
+            widths: [90, 80, 120, 150, ...detailedComissionDepartmentWidth], // Fixed column widths
+            headerRows: 1,
+            body: performanceData?.overall.map((pd) => {
+              const tests = pd?.testNames.join(",");
+
+              return [
+                pd?.uuid,
+                pd?.oid,
+                pd?.name,
+                tests,
+                ...colNames?.map((cn) => {
+                  const department = pd?.departments.find((d) => d.name == cn);
+                  const amount = department ? department?.price : 0;
+
+                  return amount;
+                }),
+              ];
+            }),
+          },
+          margin: [0, 0, 0, 0],
+        },
+
+        // For overall comission,
+        {
+          text: "Overall",
+          alignment: "center",
+          margin: [0, 0, 0, 10],
+          fontSize: 16,
+        },
+        /// Over all table header
+        {
+          table: {
+            widths: [200, 200, "*", "*", "*"], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                { text: "Department", style: "tableHeader" },
+                { text: "Calculation", style: "tableHeader" },
+                { text: "Amount", style: "tableHeader" },
+                { text: "Discount", style: "tableHeader" },
+                { text: "Net Amount", style: "tableHeader" },
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+        // Overall Table
+        {
+          table: {
+            widths: [200, 200, "*", "*", "*"], // Fixed column widths
+            headerRows: 1,
+            body: performanceData?.summery?.map((pd) => {
+              const cd = [pd?.total, "X", pd?.percent, "%"].join(" ");
+              return [
+                pd?._id,
+                cd,
+                pd?.commission + pd?.discount,
+                pd?.discount,
+                pd?.commission,
+              ];
+            }),
+          },
+          margin: [0, 0, 0, 0],
+        },
+        {
+          table: {
+            widths: [410, "*", "*", "*"], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                "Total",
+                total?.totalCommission,
+                total?.totalDiscount,
+                total?.netCommission,
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 16,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 12,
+          italics: true,
+          color: "red",
+        },
+        groupHeader: {
+          fontSize: 12,
+          bold: true,
+          border: true,
+        },
+        tableHeader: {
+          bold: true,
+          fillColor: "#eeeeee",
+          alignment: "center",
+        },
+      },
+    };
+
+    // Open the print dialog
+    pdfMake.createPdf(documentDefinition).print();
+  };
+
   return (
     <div className="">
       <div className="my-5 border  shadow-lg mx-5">
@@ -151,6 +315,24 @@ const SIngleReport = () => {
                 oneTap
               />
             </div>
+          </div>
+          <div>
+            {performanceData?.overall?.length ? (
+              <>
+                <br />
+                <div>
+                  <Button
+                    onClick={() => generatePDF()}
+                    appearance="primary"
+                    color="blue"
+                  >
+                    Print
+                  </Button>
+                </div>
+              </>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div>
@@ -270,7 +452,7 @@ const SIngleReport = () => {
                   </Column>
                 </Table>
               </div>
-              <div className="grid grid-cols-10 gap-5 border-double border-b-2">
+              <div className="grid grid-cols-10 gap-5 ">
                 <div className="col-span-2 text-center font-bold">Total</div>
                 <div className="col-span-2 col-start-5 font-bold">
                   {total?.totalCommission}

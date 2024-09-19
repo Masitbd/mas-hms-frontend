@@ -35,41 +35,47 @@ const DueBillspage = () => {
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-center my-10">
-        Investigation Due Bills
-      </h1>
-      {/*  form for input oid */}
-      <div className="my-5">
-        <Form
-          autoCapitalize="true"
-          className="flex  items-center gap-5 justify-center"
-          onSubmit={handleSubmit}
-          onChange={handleFormChange}
-        >
-          <Form.Group controlId="oid">
-            <Form.ControlLabel>Patient OID</Form.ControlLabel>
-            <Form.Control
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">
+            Due Bills Details
+          </h2>
+        </div>
+        <div className="mx-2">
+          {/*  form for input oid */}
+          <div className="my-5">
+            <Form
               autoCapitalize="true"
-              defaultValue="HMS-"
-              name="oid"
-            />
-          </Form.Group>
+              className="flex  items-center gap-5 justify-center"
+              onSubmit={handleSubmit}
+              onChange={handleFormChange}
+            >
+              <Form.Group controlId="oid">
+                <Form.ControlLabel>Patient OID</Form.ControlLabel>
+                <Form.Control
+                  autoCapitalize="true"
+                  defaultValue="HMS-"
+                  name="oid"
+                />
+              </Form.Group>
 
-          <Button
-            className="max-h-11 "
-            size="sm"
-            appearance="primary"
-            type="submit"
-          >
-            Search
-          </Button>
-        </Form>
+              <Button
+                className="max-h-11 "
+                size="sm"
+                appearance="primary"
+                type="submit"
+              >
+                Search
+              </Button>
+            </Form>
+          </div>
+
+          {dueData && dueData?.data?.length > 0 && (
+            <DueStatemnetTable data={dueData.data} />
+          )}
+        </div>
       </div>
-
-      {dueData && dueData?.data?.length > 0 && (
-        <DueStatemnetTable data={dueData.data} />
-      )}
     </div>
   );
 };

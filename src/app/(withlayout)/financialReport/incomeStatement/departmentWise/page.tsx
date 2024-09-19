@@ -5,11 +5,16 @@ import {
   IdefaultDate,
 } from "@/components/financialReport/comission/initialDataAndTypes";
 import {
+  useGetClientWiseIncomeStatementQuery,
   useGetDeptWiseIncomeStatementQuery,
   useGetTestWiseIncomeStatementQuery,
 } from "@/redux/api/financialReport/financialReportSlice";
 import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
-import { DatePicker, Table } from "rsuite";
+import { Button, DatePicker, Table } from "rsuite";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfMake from "pdfmake/build/pdfmake";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const DepartmentWiseIncomeStatement = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -23,6 +28,111 @@ const DepartmentWiseIncomeStatement = () => {
     isLoading: financialReportLoading,
     isFetching: financialReportReacthing,
   } = useGetDeptWiseIncomeStatementQuery(date);
+
+  const generatePDF = () => {
+    const documentDefinition: any = {
+      pageOrientation: "landscape",
+      defaultStyle: {
+        fontSize: 12,
+      },
+      pageMargins: [20, 20, 20, 20],
+      content: [
+        {
+          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
+          style: "header",
+          alignment: "center",
+        },
+        {
+          text: "Kachari Paira Danga, Nageswori, Kurigram",
+          alignment: "center",
+        },
+        {
+          text: "HelpLine: 01755546392 (24 Hours Open)",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `Department wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          style: "subheader",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+
+        // Static Table Header
+        {
+          table: {
+            widths: [200, "*", "*", "*", "*", "*", "*", "*", "*", "*"], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                { text: "Particular", style: "tableHeader" },
+                { text: "Rate", style: "tableHeader" },
+                { text: "Quantity", style: "tableHeader" },
+                { text: "Amount", style: "tableHeader" },
+                { text: "Vat", style: "tableHeader" },
+                { text: "Vat + sell", style: "tableHeader" },
+                { text: "Discount", style: "tableHeader" },
+                { text: "Total", style: "tableHeader" },
+                { text: "Paid", style: "tableHeader" },
+                { text: "Dew", style: "tableHeader" },
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+
+        {
+          table: {
+            widths: [200, "*", "*", "*", "*", "*", "*", "*", "*", "*"], // Fixed column widths
+            body: financialReportData?.data.map((pd: any) => {
+              const dew =
+                pd.sell + pd.vat - (pd?.discount ? pd.discount : 0) - pd.pa;
+
+              return [
+                pd?._id,
+                pd.sell && pd.quantity > 0
+                  ? (pd.sell / pd.quantity).toFixed(2)
+                  : 0,
+                pd?.quantity,
+                pd?.sell,
+                pd?.vat,
+                pd.sell + pd.vat,
+                pd?.discount,
+                pd.sell + pd.vat - (pd?.discount ? pd.discount : 0),
+                pd?.pa,
+
+                dew > 0 ? dew : 0,
+              ];
+            }),
+          },
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 16,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 12,
+          italics: true,
+          color: "red",
+        },
+        groupHeader: {
+          fontSize: 12,
+          bold: true,
+          border: true,
+        },
+        tableHeader: {
+          bold: true,
+          fillColor: "#eeeeee",
+          alignment: "center",
+        },
+      },
+    };
+
+    // Open the print dialog
+    pdfMake.createPdf(documentDefinition).print();
+  };
 
   return (
     <div className="">
@@ -69,6 +179,22 @@ const DepartmentWiseIncomeStatement = () => {
                 oneTap
               />
             </div>
+          </div>
+          <div>
+            {financialReportData?.data.length ? (
+              <>
+                <br />
+                <Button
+                  onClick={() => generatePDF()}
+                  appearance="primary"
+                  color="blue"
+                >
+                  Print
+                </Button>
+              </>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div className="my-5 px-2">

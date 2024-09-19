@@ -1,35 +1,43 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
 import { formatDate, IFormValues } from "../income-statement/page";
-import { useGetEmployeeIncomeStatementQuery } from "@/redux/api/income-statement/Income.api";
-import EmployeeIncomeShowTable from "@/components/incomeStatement/EmployeeIncomeTable";
 
-const EmployeeIncmeStatementPage = () => {
+import { useGetEmployeeLedgerQuery } from "@/redux/api/financialReport/financialReportSlice";
+import EmployeeLedgerTable from "@/components/incomeStatement/EmployeeLedger";
+
+const EmployeeLedgerPage = () => {
   const [isSearchEnable, setIsSearchEnable] = useState(false);
-  const query: Record<string, any> = {};
-
   const [formValue, setFormValue] = useState<IFormValues>({
     startDate: null,
     endDate: null,
   });
 
+  // Handle form value change
   const handleChange = (value: Record<string, any>) => {
     setFormValue({
-      startDate: value.startDate || null,
+      startDate: value.startDate,
       endDate: value.endDate || null,
     });
   };
 
-  if (formValue.startDate) query.startDate = formValue.startDate;
-  if (formValue.endDate) query.endDate = formValue.endDate;
+  // Query object
+  const query: { from?: Date; to?: Date } = {};
+  if (formValue.startDate) query.from = formValue.startDate;
+  if (formValue.endDate) query.to = formValue.endDate;
 
-  const { data: employeeIncome } = useGetEmployeeIncomeStatementQuery(query, {
-    skip: !isSearchEnable,
-  });
+  // Call the query when search is enabled
+  const { data: employeeLdgers } = useGetEmployeeLedgerQuery(
+    query, // Pass the constructed query object
+    {
+      skip: !isSearchEnable, // Only run the query when search is enabled
+    }
+  );
 
-  // console.log(employeeIncome, "income res");
+  // console.log("data", employeeLdgers);
+
+  const [transformedData, setTransformedData] = useState([]);
 
   // Handle form submission
   const handleSubmit = async (
@@ -45,13 +53,43 @@ const EmployeeIncmeStatementPage = () => {
     }
   };
 
+  // Create a map from names to mainDocs
+  useEffect(() => {
+    if (employeeLdgers?.data) {
+      const { dewBills = [], newBills = [] } = employeeLdgers?.data;
+
+      const userMap = new Map();
+
+      dewBills.forEach((dewBill: any) => {
+        const user = dewBill.user || "Unknown"; // Handle missing user case
+        if (!userMap.has(user)) {
+          userMap.set(user, { dewBills: [], newBills: [] });
+        }
+        userMap.get(user).dewBills.push(dewBill);
+      });
+
+      newBills.forEach((newBill: any) => {
+        const user = newBill.user || "Unknown"; // Handle missing user case
+        if (!userMap.has(user)) {
+          userMap.set(user, { dewBills: [], newBills: [] });
+        }
+        userMap.get(user).newBills.push(newBill);
+      });
+
+      const groupedData: any = Array.from(userMap, ([user, bills]) => ({
+        user,
+        ...bills,
+      })).sort();
+
+      setTransformedData(groupedData);
+    }
+  }, [employeeLdgers]);
+
   return (
     <div className="">
       <div className="my-5 border  shadow-lg mx-5">
         <div className="bg-[#3498ff] text-white px-2 py-2">
-          <h2 className="text-center text-xl font-semibold">
-            Employee Income Statement
-          </h2>
+          <h2 className="text-center text-xl font-semibold">Employee ledger</h2>
         </div>
         <div className="mx-2">
           <Form
@@ -96,9 +134,9 @@ const EmployeeIncmeStatementPage = () => {
             </Button>
           </Form>
 
-          {employeeIncome && employeeIncome?.data?.length > 0 && (
-            <EmployeeIncomeShowTable
-              data={employeeIncome.data}
+          {employeeLdgers && employeeLdgers?.data && (
+            <EmployeeLedgerTable
+              data={transformedData}
               startDate={formValue.startDate}
               endDate={formValue.endDate}
             />
@@ -109,4 +147,4 @@ const EmployeeIncmeStatementPage = () => {
   );
 };
 
-export default EmployeeIncmeStatementPage;
+export default EmployeeLedgerPage;
