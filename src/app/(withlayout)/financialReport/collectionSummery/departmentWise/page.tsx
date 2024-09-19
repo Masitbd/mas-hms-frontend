@@ -9,7 +9,10 @@ import {
   useGetDeptWiseIncomeStatementQuery,
 } from "@/redux/api/financialReport/financialReportSlice";
 import React, { SyntheticEvent, useState } from "react";
-import { DatePicker, Table } from "rsuite";
+import { Button, DatePicker, Table } from "rsuite";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfMake from "pdfmake/build/pdfmake";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const DepartmentWIseCollectionSUmmery = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -23,6 +26,91 @@ const DepartmentWIseCollectionSUmmery = () => {
     isLoading: financialReportLoading,
     isFetching: financialReportReacthing,
   } = useGetDeptWiseCollectionSummeryQuery(date);
+
+  const generatePDF = () => {
+    const documentDefinition: any = {
+      pageOrientation: "landscape",
+      defaultStyle: {
+        fontSize: 12,
+      },
+      pageMargins: [20, 20, 20, 20],
+      content: [
+        {
+          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
+          style: "header",
+          alignment: "center",
+        },
+        {
+          text: "Kachari Paira Danga, Nageswori, Kurigram",
+          alignment: "center",
+        },
+        {
+          text: "HelpLine: 01755546392 (24 Hours Open)",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `Department wise Collection Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          style: "subheader",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+
+        // Static Table Header
+        {
+          table: {
+            widths: [400, "*", "*", "*"], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                { text: "Particular", style: "tableHeader" },
+                { text: "Amount Paid", style: "tableHeader" },
+                { text: "Vat", style: "tableHeader" },
+                { text: "Total", style: "tableHeader" },
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+
+        {
+          table: {
+            widths: [400, "*", "*", "*"], // Fixed column widths
+            body: financialReportData?.data.map((pd: any) => [
+              pd?._id,
+              pd?.paid,
+              pd?.vat,
+              pd?.totalPaid,
+            ]),
+          },
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 16,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 12,
+          italics: true,
+          color: "red",
+        },
+        groupHeader: {
+          fontSize: 12,
+          bold: true,
+          border: true,
+        },
+        tableHeader: {
+          bold: true,
+          fillColor: "#eeeeee",
+          alignment: "center",
+        },
+      },
+    };
+
+    // Open the print dialog
+    pdfMake.createPdf(documentDefinition).print();
+  };
 
   return (
     <div className="">
@@ -70,6 +158,22 @@ const DepartmentWIseCollectionSUmmery = () => {
               />
             </div>
           </div>
+          <div>
+            {financialReportData?.data?.length ? (
+              <>
+                <br />
+                <Button
+                  onClick={() => generatePDF()}
+                  appearance="primary"
+                  color="blue"
+                >
+                  Print
+                </Button>
+              </>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
         <div className="my-5 px-2">
           <div>
@@ -102,7 +206,7 @@ const DepartmentWIseCollectionSUmmery = () => {
               </Column>
               <Column flexGrow={1}>
                 <HeaderCell children={"Total"} />
-                <Cell dataKey="totalPaid" />
+                <Cell dataKey="" />
               </Column>
             </Table>
           </div>

@@ -117,7 +117,9 @@ const TestWiseDoctorsPerformance = () => {
               Math.ceil(pd?.totalPrice - pd?.totalDiscount + pd?.vat),
               pd?.paid,
               Math.ceil(
-                pd?.totalPrice - pd?.totalDiscount + pd?.vat - pd?.paid
+                pd?.totalPrice - pd?.totalDiscount + pd?.vat - pd?.paid > 0
+                  ? pd?.totalPrice - pd?.totalDiscount + pd?.vat - pd?.paid
+                  : 0
               ),
             ]),
           },

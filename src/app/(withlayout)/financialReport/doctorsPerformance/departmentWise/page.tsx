@@ -13,6 +13,9 @@ import { IDoctor } from "@/types/allDepartmentInterfaces";
 import pdfMake from "pdfmake/build/pdfmake";
 import React, { SyntheticEvent, useEffect, useState } from "react";
 import { Button, DatePicker, SelectPicker, Table } from "rsuite";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const DepartmentWisePeformance = () => {
   const { data: doctorsData, isLoading: isDoctorDataLoading } =

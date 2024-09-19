@@ -6,7 +6,16 @@ import {
 } from "@/components/financialReport/comission/initialDataAndTypes";
 import { useGetTestWiseIncomeStatementQuery } from "@/redux/api/financialReport/financialReportSlice";
 import React, { SyntheticEvent, useEffect, useState } from "react";
-import { DatePicker, Table } from "rsuite";
+import { Button, DatePicker, Table } from "rsuite";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import pdfMake from "pdfmake/build/pdfmake";
+import {
+  TestWiseIncomeStatementTubePrice,
+  TestWiseIncomeStatementReportGroupWiseData,
+  TestWiseIncomeStatementTestWiseDoc,
+} from "@/components/FInancialStatement/types";
+
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const TestWIseIncomeStatement = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -59,6 +68,260 @@ const TestWIseIncomeStatement = () => {
     }
   }, [financialReportData, financialReportLoading, financialReportReacthing]);
 
+  // For pdf
+
+  const generatePDF = () => {
+    const total = JSON.parse(
+      JSON.stringify(financialReportData?.data[0]?.total[0])
+    );
+
+    const tubes = financialReportData?.data[0]?.tubePrice;
+    const tubesTableData = [];
+
+    if (tubes.length) {
+      tubes.map((t: TestWiseIncomeStatementTubePrice) => {
+        total.sell += t.sell;
+        total.vat += t.vat;
+        total.quantity += t.quantity;
+        total.pa += t.pa;
+        total.f = "t";
+      });
+      tubesTableData.push(
+        {
+          table: {
+            widths: ["*"], // Single column table
+            body: [
+              [
+                {
+                  text: "Tubes",
+                  style: "groupHeader",
+                  margin: [0, 10, 0, 10],
+                  border: [true, true, true, true],
+                },
+              ],
+            ],
+          },
+        },
+        {
+          table: {
+            widths: [200, "*", "*", "*", "*", "*", "*", "*", "*", "*"], // Fixed column widths
+            body: financialReportData?.data[0]?.tubePrice?.map(
+              (td: TestWiseIncomeStatementTubePrice) => {
+                const dew = td.sell + td.vat - td.pa;
+                return [
+                  td?._id, // Date
+                  td.price, // Bill No
+                  td.quantity, // Bill Amount
+                  td.sell, // Total Discount
+                  td?.vat,
+                  td?.vat + td?.sell,
+                  0, // Amount Paid
+                  td?.sell + td?.vat, // Due
+                  td?.pa,
+                  dew > 0 ? dew : 0,
+                ];
+              }
+            ),
+          },
+        }
+      );
+    }
+
+    const documentDefinition: any = {
+      pageOrientation: "landscape",
+      defaultStyle: {
+        fontSize: 12,
+      },
+      pageMargins: [20, 20, 20, 20],
+      content: [
+        {
+          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
+          style: "header",
+          alignment: "center",
+        },
+        {
+          text: "Kachari Paira Danga, Nageswori, Kurigram",
+          alignment: "center",
+        },
+        {
+          text: "HelpLine: 01755546392 (24 Hours Open)",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+        {
+          text: `Test Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          style: "subheader",
+          alignment: "center",
+          margin: [0, 0, 0, 20],
+        },
+
+        // Static Table Header
+        {
+          table: {
+            widths: [200, "*", "*", "*", "*", "*", "*", "*", "*", "*"], // Fixed column widths
+            headerRows: 1,
+            body: [
+              [
+                { text: "Particular", style: "tableHeader" },
+                { text: "Rate", style: "tableHeader" },
+                { text: "Quantity", style: "tableHeader" },
+                { text: "Amount", style: "tableHeader" },
+                { text: "Discount ", style: "tableHeader" },
+                { text: "Total", style: "tableHeader" },
+                { text: "VAT", style: "tableHeader" },
+                { text: "Total + VAT", style: "tableHeader" },
+                { text: "Paid", style: "tableHeader" },
+                { text: "Due", style: "tableHeader" },
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 0],
+        },
+
+        financialReportData?.data[0]?.reportGroupWiseData?.map(
+          (rgwd: TestWiseIncomeStatementReportGroupWiseData) => {
+            const testsAccordingRg =
+              financialReportData?.data[0]?.testWiseDocs.filter(
+                (td: TestWiseIncomeStatementTestWiseDoc) => td.rg == rgwd?._id
+              );
+            const price = (rgwd.sell / rgwd.quantity).toFixed(2) || 0;
+            const dew =
+              rgwd.sell +
+              rgwd.vat -
+              (rgwd?.discount ? rgwd.discount : 0) -
+              rgwd.pa;
+
+            return [
+              {
+                table: {
+                  widths: ["*"], // Single column table
+                  body: [
+                    [
+                      {
+                        text: rgwd?._id,
+                        style: "groupHeader",
+                        margin: [0, 10, 0, 10],
+                        border: [true, true, true, true],
+                      },
+                    ],
+                  ],
+                },
+              },
+              {
+                table: {
+                  widths: [200, "*", "*", "*", "*", "*", "*", "*", "*", "*"], // Fixed column widths
+                  body: testsAccordingRg.map(
+                    (td: TestWiseIncomeStatementTestWiseDoc) => {
+                      const dew =
+                        td.sell +
+                        td.vat -
+                        (td?.discount ? td.discount : 0) -
+                        td.pa;
+                      return [
+                        td?._id, // Date
+                        td.price, // Bill No
+                        td.quantity, // Bill Amount
+                        td.sell, // Total Discount
+                        td?.vat,
+                        td?.vat + td?.sell,
+                        td?.discount, // Amount Paid
+                        td?.sell + td?.vat - td?.discount, // Due
+                        td?.pa,
+                        dew > 0 ? dew : 0,
+                      ];
+                    }
+                  ),
+                },
+              },
+              {
+                table: {
+                  widths: [200, "*", "*", "*", "*", "*", "*", "*", "*", "*"], // Fixed column widths
+                  body: [
+                    [
+                      "Total", // Date
+                      price, // Bill No
+                      rgwd.quantity, // Bill Amount
+                      rgwd.sell, // Total Discount
+                      rgwd?.vat,
+                      rgwd?.vat + rgwd?.sell,
+                      rgwd?.discount, // Amount Paid
+                      rgwd?.sell + rgwd?.vat - rgwd?.discount, // Due
+                      rgwd?.pa,
+                      dew > 0 ? dew : 0,
+                    ],
+                  ],
+                },
+              },
+            ];
+          }
+        ),
+        tubesTableData,
+        {
+          table: {
+            widths: ["*"], // Single column table
+            body: [
+              [
+                {
+                  text: "Grand Total",
+                  style: "groupHeader",
+                  margin: [0, 10, 0, 10],
+                  border: [true, true, true, true],
+                },
+              ],
+            ],
+          },
+          margin: [0, 10, 0, 0],
+        },
+        {
+          table: {
+            widths: [200, "*", "*", "*", "*", "*", "*", "*", "*", "*"], // Single column table
+            body: [
+              [
+                "Grand Total",
+                Math.ceil(total?.sell / total?.quantity), // Bill No
+                total.quantity, // Bill Amount
+                total.sell, // Total Discount
+                total?.vat,
+                total?.vat + total?.sell,
+                total?.discount, // Amount Paid
+                total?.sell + total?.vat - total?.discount, // Due
+                total?.pa,
+                total?.sell +
+                  total?.vat -
+                  (total?.discount ? total.discount : 0) -
+                  total?.pa,
+              ],
+            ],
+          },
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 16,
+          bold: true,
+        },
+        subheader: {
+          fontSize: 12,
+          italics: true,
+          color: "red",
+        },
+        groupHeader: {
+          fontSize: 12,
+          bold: true,
+          border: true,
+        },
+        tableHeader: {
+          bold: true,
+          fillColor: "#eeeeee",
+          alignment: "center",
+        },
+      },
+    };
+
+    // Open the print dialog
+    pdfMake.createPdf(documentDefinition).print();
+  };
+
   return (
     <div className="">
       <div className="my-5 border  shadow-lg mx-5">
@@ -104,6 +367,22 @@ const TestWIseIncomeStatement = () => {
                 oneTap
               />
             </div>
+          </div>
+          <div>
+            {financialReportData?.data[0]?.testWiseDocs?.length ? (
+              <>
+                <br />
+                <Button
+                  onClick={() => generatePDF()}
+                  appearance="primary"
+                  color="blue"
+                >
+                  Print
+                </Button>
+              </>
+            ) : (
+              ""
+            )}
           </div>
         </div>
         <div className="my-5 px-2">
@@ -232,13 +511,6 @@ const TestWIseIncomeStatement = () => {
               </Column>
             </Table>
           </div>
-
-          {/* <div className="mt-5">
-            <h2 className="text-center font-serif text-2xl font-bold">
-              Overall
-            </h2>
-          </div>
-          <div></div> */}
         </div>
       </div>
 
