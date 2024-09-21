@@ -2,11 +2,12 @@
 
 import React, { FormEvent, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
-import { formatDate, IFormValues } from "../income-statement/page";
+import { IFormValues } from "../income-statement/page";
 
 import EmployeeIncomeShowTable from "@/components/incomeStatement/EmployeeIncomeTable";
 import { useGetEmployeeIncomeStatementSummeryQuery } from "@/redux/api/income-statement/Income.api";
 import EmployeeIncomeSummeryTable from "@/components/incomeStatement/EmployeeIncomeSummeryTable";
+import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 
 const EmpIncomeSummeryPage = () => {
   const [isSearchEnable, setIsSearchEnable] = useState(false);

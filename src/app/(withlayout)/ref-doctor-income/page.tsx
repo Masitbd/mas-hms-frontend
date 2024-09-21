@@ -2,11 +2,12 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
-import { formatDate, IFormValues } from "../income-statement/page";
+import { IFormValues } from "../income-statement/page";
 import { useGetRefByWiseIncomeStatementQuery } from "@/redux/api/financialReport/financialReportSlice";
 import RefDoctorTable, {
   TGroup,
 } from "@/components/incomeStatement/RefDoctorTable";
+import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 
 const RefDoctorIncomePage = () => {
   const [isSearchEnable, setIsSearchEnable] = useState(false);

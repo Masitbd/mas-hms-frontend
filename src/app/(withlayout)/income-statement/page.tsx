@@ -1,6 +1,7 @@
 "use client";
 
 import IncomeShowTable from "@/components/incomeStatement/IncomeShowTable";
+import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 import { useGetIncomeStatementMutation } from "@/redux/api/income-statement/Income.api";
 import React, { FormEvent, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
@@ -9,15 +10,6 @@ export interface IFormValues {
   startDate: Date | null;
   endDate: Date | null;
 }
-
-// function to format date as yyyy-MM-dd
-export const formatDate = (date: Date | null): string => {
-  if (!date) return "";
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-indexed
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
 
 const IncomeStatementPage = () => {
   const [getIncome, { data, isLoading }] = useGetIncomeStatementMutation();
