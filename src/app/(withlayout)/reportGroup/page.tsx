@@ -1,6 +1,8 @@
 "use client";
 import NewReportGroupModal from "@/components/reportGroup/NewReportGroupModel";
 import ReportGroupTable from "@/components/reportGroup/ReportGroupTable";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { usePostReportGroupMutation } from "@/redux/api/reportGroup/reportGroupSlice";
 import React, { useEffect, useState } from "react";
 import { Button } from "rsuite";
@@ -28,14 +30,18 @@ const ReportGroup = () => {
   }, [conditionLoading, isError, isSuccess]);
   return (
     <div className="my-5 px-5">
-      <div className="my-4">
-        <Button
-          appearance="primary"
-          onClick={() => setPostModalOpen(!postModalOpen)}
-        >
-          Add New Report Group
-        </Button>
-      </div>
+      <AuthCheckerForComponent
+        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+      >
+        <div className="my-4">
+          <Button
+            appearance="primary"
+            onClick={() => setPostModalOpen(!postModalOpen)}
+          >
+            Add New Report Group
+          </Button>
+        </div>
+      </AuthCheckerForComponent>
 
       <div>
         <NewReportGroupModal

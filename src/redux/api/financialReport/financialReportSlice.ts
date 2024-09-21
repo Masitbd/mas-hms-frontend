@@ -67,7 +67,7 @@ const financialReport = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
- //  get employee ledger
+    //  get employee ledger
     getEmployeeLedger: build.query({
       query: (data) => ({
         url: `/financialReport/employeeLedger`,
@@ -82,6 +82,22 @@ const financialReport = baseApi.injectEndpoints({
         url: `/financialReport/incomeStatement/refByWise`,
         method: "get",
         params: data,
+        contentType: "application/json",
+      }),
+    }),
+    getAllTests: build.query({
+      query: () => ({
+        url: `/financialReport/tests`,
+        method: "get",
+
+        contentType: "application/json",
+      }),
+    }),
+    getAllDoctors: build.query({
+      query: () => ({
+        url: `/financialReport/doctors`,
+        method: "get",
+
         contentType: "application/json",
       }),
     }),
@@ -102,4 +118,6 @@ export const {
   useGetClientWiseIncomeStatementQuery,
   useGetEmployeeLedgerQuery,
   useGetRefByWiseIncomeStatementQuery,
+  useGetAllDoctorsQuery,
+  useGetAllTestsQuery,
 } = financialReport;

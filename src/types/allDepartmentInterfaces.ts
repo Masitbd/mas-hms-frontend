@@ -48,7 +48,8 @@ export type IDoctor = {
   phone: string;
   image?: string;
   account_number?: string; // as account.uuid
-  account_id?: IAccount; // as account_.id
+  account_id?: IAccount; // as account_.id,
+  address?: string;
 };
 export type ITransaction = {
   _id?: string;

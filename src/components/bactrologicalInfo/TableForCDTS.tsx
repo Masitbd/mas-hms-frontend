@@ -13,6 +13,8 @@ import {
   useGetMiscQuery,
 } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import swal from "sweetalert";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const TableForCDTS = (props: { title: string }) => {
   const { title } = props;
@@ -45,16 +47,20 @@ const TableForCDTS = (props: { title: string }) => {
   return (
     <div>
       <div>
-        <Button
-          onClick={() => {
-            setOpen(true);
-            setMode(ENUM_MODE.NEW);
-          }}
-          color="blue"
-          appearance="primary"
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
         >
-          ADD {title}
-        </Button>
+          <Button
+            onClick={() => {
+              setOpen(true);
+              setMode(ENUM_MODE.NEW);
+            }}
+            color="blue"
+            appearance="primary"
+          >
+            ADD {title}
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <NewAndPatchCDT
@@ -76,32 +82,39 @@ const TableForCDTS = (props: { title: string }) => {
             <HeaderCell children="Value" />
             <Cell dataKey="value" />
           </Column>
+
           <Column flexGrow={4}>
             <HeaderCell children="Action" />
             <Cell>
               {(rowData: IMiscellaneous) => (
                 <>
-                  <Button
-                    onClick={() => {
-                      setPatchData(rowData);
-                      setMode(ENUM_MODE.EDIT);
-                      setOpen(true);
-                    }}
-                    className="mr-2"
-                    appearance="primary"
-                    color="blue"
+                  <AuthCheckerForComponent
+                    requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
                   >
-                    Edit
-                  </Button>
-                  <Button
-                    appearance="primary"
-                    color="red"
-                    onClick={() => {
-                      deleteHandler(rowData);
-                    }}
-                  >
-                    Delete
-                  </Button>
+                    <>
+                      <Button
+                        onClick={() => {
+                          setPatchData(rowData);
+                          setMode(ENUM_MODE.EDIT);
+                          setOpen(true);
+                        }}
+                        className="mr-2"
+                        appearance="primary"
+                        color="blue"
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        appearance="primary"
+                        color="red"
+                        onClick={() => {
+                          deleteHandler(rowData);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </>
+                  </AuthCheckerForComponent>
                 </>
               )}
             </Cell>

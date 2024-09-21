@@ -1,12 +1,12 @@
 import { IPatient1 } from "@/app/(withlayout)/patient/page";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
-import {
-  useDeleteTestMutation
-} from "@/redux/api/test/testSlice";
+import { useDeleteTestMutation } from "@/redux/api/test/testSlice";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { useEffect, useState } from "react";
 import { Button, Form, Message, Table, toaster } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const { Column, HeaderCell, Cell } = Table;
 const PatientTable = ({
@@ -109,24 +109,36 @@ const PatientTable = ({
                 >
                   Delete
                 </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() =>
-                    patchHandler({ data: rowdate as IPatient1, mode: "patch" })
-                  }
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PATIENT]}
                 >
-                  Edit
-                </Button>
-                <Button
-                  // appearance="transparent"
-                  className="ml-2"
-                  startIcon={<VisibleIcon />}
-                  onClick={() => {
-                    patchHandler({ data: rowdate as IPatient1, mode: "watch" });
-                  }}
-                />
+                  <>
+                    <Button
+                      appearance="ghost"
+                      color="blue"
+                      className="ml-2"
+                      onClick={() =>
+                        patchHandler({
+                          data: rowdate as IPatient1,
+                          mode: "patch",
+                        })
+                      }
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      // appearance="transparent"
+                      className="ml-2"
+                      startIcon={<VisibleIcon />}
+                      onClick={() => {
+                        patchHandler({
+                          data: rowdate as IPatient1,
+                          mode: "watch",
+                        });
+                      }}
+                    />
+                  </>
+                </AuthCheckerForComponent>
               </>
             )}
           </Cell>

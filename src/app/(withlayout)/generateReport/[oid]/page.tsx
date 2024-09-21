@@ -4,7 +4,9 @@ import ForMicrobiology from "@/components/generateReport/ForMicrobiology";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
 import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import {
   useGetOrderQuery,
   useGetSingleOrderQuery,
@@ -89,7 +91,16 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
   if (OrderDataLoading || reportGroupDataLoading) {
     return <Loading />;
   } else {
-    return resultGeneratorComponent;
+    return (
+      <AuthCheckerForComponent
+        requiredPermission={[
+          ENUM_USER_PEMISSION.MANAGE_LAB_REPORTS,
+          ENUM_USER_PEMISSION.GET_LAB_REPORTS,
+        ]}
+      >
+        {resultGeneratorComponent}
+      </AuthCheckerForComponent>
+    );
   }
 };
 

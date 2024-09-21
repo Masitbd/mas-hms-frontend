@@ -16,6 +16,8 @@ import RModal from "../ui/Modal";
 import AvailableTestSection from "./AvailableTestSection";
 import { IParamsForTestInformation } from "./initialDataAndTypes";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 export type ITestGenerateType = {
   modeSingleType: string;
   modeType: string;
@@ -202,17 +204,21 @@ const TestInformation = (params: IParamsForTestInformation) => {
                       </Button>
                     </div>
                     {rowData.status == "pending" && (
-                      <Button
-                        className="ml-2 "
-                        onClick={() => {
-                          setRModalOpen && setRModalOpen(true);
-                          setRTest && setRTest(rowData as ITestsFromOrder);
-                        }}
-                        appearance="primary"
-                        color="orange"
+                      <AuthCheckerForComponent
+                        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}
                       >
-                        Refund
-                      </Button>
+                        <Button
+                          className="ml-2 "
+                          onClick={() => {
+                            setRModalOpen && setRModalOpen(true);
+                            setRTest && setRTest(rowData as ITestsFromOrder);
+                          }}
+                          appearance="primary"
+                          color="orange"
+                        >
+                          Refund
+                        </Button>
+                      </AuthCheckerForComponent>
                     )}
                   </>
                 )}

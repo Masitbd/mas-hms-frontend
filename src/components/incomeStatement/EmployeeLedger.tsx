@@ -80,7 +80,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
               body: [
                 [
                   {
-                    text: "Dew Bills",
+                    text: "Due Bills",
                     style: "groupHeader",
                     margin: [0, 10, 0, 10],
                     border: [true, true, true, true],

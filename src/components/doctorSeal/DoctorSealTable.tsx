@@ -1,9 +1,14 @@
 import { Button, Table } from "rsuite";
 
 import { ENUM_MODE } from "@/enum/Mode";
-import { useDeleteSealMutation, useGetSealQuery } from "@/redux/api/doctorSeal/doctorSealSlice";
+import {
+  useDeleteSealMutation,
+  useGetSealQuery,
+} from "@/redux/api/doctorSeal/doctorSealSlice";
 import swal from "sweetalert";
 import { IDoctorSeal, IPropsForTable } from "../comment/typesAdInitialData";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
   const { data: sealData, isLoading: sealDataLoading } =
@@ -47,7 +52,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
       const message = (result as { data: { message: string } })?.data.message;
       swal(`Success! ${message}!`, {
         icon: "success",
-      })
+      });
     }
   };
 
@@ -74,9 +79,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
             {(rowdata: IDoctorSeal) => (
               <>
                 {rowdata?.seal ? (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: rowdata.seal }}
-                  ></div>
+                  <div dangerouslySetInnerHTML={{ __html: rowdata.seal }}></div>
                 ) : (
                   ""
                 )}
@@ -90,7 +93,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
             {(rowdata: IDoctorSeal) => (
               <>
                 <Button
-                  className='ml-5'
+                  className="ml-5"
                   appearance="primary"
                   color="blue"
                   onClick={() =>
@@ -99,24 +102,30 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                 >
                   View
                 </Button>
-                <Button
-                  className='ml-5'
-                  appearance="primary"
-                  color="green"
-                  onClick={() =>
-                    viewAndEditButtonHandler(rowdata, ENUM_MODE.EDIT)
-                  }
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
                 >
-                  Edit
-                </Button>
-                <Button
-                  className='ml-5'
-                  appearance="primary"
-                  color="red"
-                  onClick={() => DeleteButtonHandler(rowdata)}
-                >
-                  Delete
-                </Button>
+                  <>
+                    <Button
+                      className="ml-5"
+                      appearance="primary"
+                      color="green"
+                      onClick={() =>
+                        viewAndEditButtonHandler(rowdata, ENUM_MODE.EDIT)
+                      }
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      className="ml-5"
+                      appearance="primary"
+                      color="red"
+                      onClick={() => DeleteButtonHandler(rowdata)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                </AuthCheckerForComponent>
               </>
             )}
           </Cell>

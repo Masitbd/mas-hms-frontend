@@ -45,7 +45,7 @@ const userMenuItem = [
     title: "Users",
     href: "/users",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_ALL_USER,
+      ENUM_USER_PEMISSION.GET_USER,
       ENUM_USER_PEMISSION.MANAGE_USER,
     ],
   },
@@ -68,38 +68,11 @@ const userMenuItem = [
 
 const testMenuItem = [
   {
-    key: "1",
-    title: "Pdrv",
-    href: "/pdrv",
-    requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
-    ],
-  },
-  {
-    key: "2",
-    title: "Bacteria",
-    href: "/bacteria",
-    requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
-    ],
-  },
-  {
-    key: "3",
-    title: "Condition",
-    href: "/condition",
-    requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
-    ],
-  },
-  {
     key: "4",
     title: "Department",
     href: "/department",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.GET_DEPARTMENT,
       ENUM_USER_PEMISSION.MANAGE_TESTS,
     ],
   },
@@ -108,8 +81,8 @@ const testMenuItem = [
     title: "Hospital Group",
     href: "/hospitalGroup",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.GET_HOSPITAL_GROUP,
+      ENUM_USER_PEMISSION.MANAGE_HOSPITAL_GROUP,
     ],
   },
   {
@@ -198,8 +171,8 @@ const testMenuItem = [
     title: "Test Reports",
     href: "/testReport",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.GET_LAB_REPORTS,
+      ENUM_USER_PEMISSION.MANAGE_LAB_REPORTS,
     ],
   },
   {
@@ -227,54 +200,75 @@ const financialReportItem = [
     key: "1",
     title: "Overall Commission",
     href: "/financialReport/commission",
-    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
   },
   {
     key: "2",
     title: "Doctor's Performance",
     href: "/financialReport/commission/single",
-    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
   },
 
   {
     key: "3",
     title: "Income Statement- Test Wise",
     href: "/financialReport/incomeStatement/testWise",
-    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
   },
   {
     key: "4",
     title: "Income Statement- Department Wise",
     href: "/financialReport/incomeStatement/departmentWise",
-    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
   },
 
   {
     key: "5",
     title: "Collection Summery- Department Wise",
     href: "/financialReport/collectionSummery/departmentWise",
-    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
   },
 
   {
     key: "6",
     title: "Doctor Performance - Test Wise",
     href: "/financialReport/doctorsPerformance/testWise",
-    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
   },
   {
     key: "6",
     title: "Doctor Performance - Department Wise",
     href: "/financialReport/doctorsPerformance/departmentWise",
-    requiredPermission: [ENUM_USER_PEMISSION.SUPER_ADMIN],
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
   },
   {
     key: "17",
     title: "Income Statement",
     href: "/income-statement",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
   {
@@ -282,8 +276,8 @@ const financialReportItem = [
     title: " Employee Income Statement",
     href: "/employee-income-statement",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
   {
@@ -291,8 +285,8 @@ const financialReportItem = [
     title: "Employee Income Statement Summery",
     href: "/emp-income-summery",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
   {
@@ -300,8 +294,8 @@ const financialReportItem = [
     title: "Due Bills Details",
     href: "/due-bills",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
   {
@@ -309,8 +303,8 @@ const financialReportItem = [
     title: "Clientwise Inocme Statement",
     href: "/client-statement",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
   {
@@ -318,8 +312,35 @@ const financialReportItem = [
     title: "Employee Ledger Summery",
     href: "/employee-ledger",
     requiredPermission: [
-      ENUM_USER_PEMISSION.GET_TESTS,
-      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "23",
+    title: "Income By Refd Doctor",
+    href: "/ref-doctor-income",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "24",
+    title: "Doctors",
+    href: "/financialReport/doctors",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "25",
+    title: "Tests",
+    href: "/financialReport/tests",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
 ];
@@ -420,41 +441,48 @@ const Sidebar = () => {
                   </AuthCheckerForComponent>
                 ))}
               </Nav.Menu>
-              <Nav.Menu
-                eventKey="7"
-                trigger="hover"
-                title="Financial Reports"
-                icon={<GearCircleIcon />}
-                placement="rightStart"
+              <AuthCheckerForComponent
+                requiredPermission={[
+                  ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+                  ENUM_USER_PEMISSION.SUPER_ADMIN,
+                ]}
               >
-                {financialReportItem.map((item, index) => (
-                  <AuthCheckerForComponent
-                    requiredPermission={item.requiredPermission as number[]}
-                    key={index}
-                  >
-                    <Nav.Item
-                      eventKey={`7-${item.key}`}
-                      href={item.href}
-                      as={NavLink}
-                      key={Number(item.key) + 20}
-                      onClick={() => setSelectedItem(item.href)}
-                      style={
-                        selectedItem === item.href
-                          ? {
-                              backgroundColor: "#3498ff",
-                              color: "white",
-                              borderRadius: "5px",
-                            }
-                          : {
-                              color: "black",
-                            }
-                      }
+                <Nav.Menu
+                  eventKey="7"
+                  trigger="hover"
+                  title="Financial Reports"
+                  icon={<GearCircleIcon />}
+                  placement="rightStart"
+                >
+                  {financialReportItem.map((item, index) => (
+                    <AuthCheckerForComponent
+                      requiredPermission={item.requiredPermission as number[]}
+                      key={index}
                     >
-                      {item.title}
-                    </Nav.Item>
-                  </AuthCheckerForComponent>
-                ))}
-              </Nav.Menu>
+                      <Nav.Item
+                        eventKey={`7-${item.key}`}
+                        href={item.href}
+                        as={NavLink}
+                        key={Number(item.key) + 20}
+                        onClick={() => setSelectedItem(item.href)}
+                        style={
+                          selectedItem === item.href
+                            ? {
+                                backgroundColor: "#3498ff",
+                                color: "white",
+                                borderRadius: "5px",
+                              }
+                            : {
+                                color: "black",
+                              }
+                        }
+                      >
+                        {item.title}
+                      </Nav.Item>
+                    </AuthCheckerForComponent>
+                  ))}
+                </Nav.Menu>
+              </AuthCheckerForComponent>
             </Nav>
           </Sidenav.Body>
         </Sidenav>

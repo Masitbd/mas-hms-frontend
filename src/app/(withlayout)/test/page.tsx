@@ -6,7 +6,9 @@ import {
 import TestForm from "@/components/Test/TestForm";
 import TestTable from "@/components/Test/TestTable";
 import RModal from "@/components/ui/Modal";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { ENUM_MODE } from "@/enum/Mode";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import {
   useGetTestsQuery,
   usePatchTestMutation,
@@ -166,13 +168,17 @@ const Test = () => {
         </RModal>
       </div>
       <div className="my-5">
-        <Button
-          onClick={() => modalHandler()}
-          appearance="primary"
-          color="blue"
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
         >
-          Add New Test
-        </Button>
+          <Button
+            onClick={() => modalHandler()}
+            appearance="primary"
+            color="blue"
+          >
+            Add New Test
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div className="mx-5">
         <TestTable patchHandler={patchHandler} />

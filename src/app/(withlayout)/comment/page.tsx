@@ -5,7 +5,9 @@ import {
   IComment,
   InitalCommentData,
 } from "@/components/comment/typesAdInitialData";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { ENUM_MODE } from "@/enum/Mode";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import React, { useState } from "react";
 import { Button } from "rsuite";
 
@@ -27,13 +29,17 @@ const Comment = () => {
   return (
     <div>
       <div className="my-3">
-        <Button
-          appearance="primary"
-          color="blue"
-          onClick={() => commentModalHandler(true)}
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
         >
-          Add New Comment
-        </Button>
+          <Button
+            appearance="primary"
+            color="blue"
+            onClick={() => commentModalHandler(true)}
+          >
+            Add New Comment
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <NewAndUpdate

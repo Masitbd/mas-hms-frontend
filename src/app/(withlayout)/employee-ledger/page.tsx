@@ -2,10 +2,11 @@
 
 import React, { FormEvent, useEffect, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
-import { formatDate, IFormValues } from "../income-statement/page";
+import { IFormValues } from "../income-statement/page";
 
 import { useGetEmployeeLedgerQuery } from "@/redux/api/financialReport/financialReportSlice";
 import EmployeeLedgerTable from "@/components/incomeStatement/EmployeeLedger";
+import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 
 const EmployeeLedgerPage = () => {
   const [isSearchEnable, setIsSearchEnable] = useState(false);

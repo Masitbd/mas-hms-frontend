@@ -34,6 +34,8 @@ import ReportViewerMicro from "./ReportViewerMicro";
 import Margin from "./Margin";
 import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 const ForMicrobiology = (props: IPropsForMicroBiology) => {
   const [updata, setUpdate] = useState(1);
   const [patchReport, { isLoading: patchLoading }] = usePatchReporMutation();
@@ -207,29 +209,33 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
         <div className="mb-5 mx-5">
           <Comment result={result} setResult={setResult} />
         </div>
-        <div className="mb-5 mx-5 grid grid-cols-12 gap-5">
-          <Button
-            className="col-start-11"
-            appearance="primary"
-            color="red"
-            onClick={() => {
-              setResult(InitialValueForMicro);
-              router.push(`/testReport/${order.oid}`);
-            }}
-            loading={postLoading || patchLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            className="col-start-12"
-            appearance="primary"
-            color="blue"
-            onClick={() => hanldePost()}
-            loading={postLoading || patchLoading}
-          >
-            Post
-          </Button>
-        </div>
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_LAB_REPORTS]}
+        >
+          <div className="mb-5 mx-5 grid grid-cols-12 gap-5">
+            <Button
+              className="col-start-11"
+              appearance="primary"
+              color="red"
+              onClick={() => {
+                setResult(InitialValueForMicro);
+                router.push(`/testReport/${order.oid}`);
+              }}
+              loading={postLoading || patchLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="col-start-12"
+              appearance="primary"
+              color="blue"
+              onClick={() => hanldePost()}
+              loading={postLoading || patchLoading}
+            >
+              Post
+            </Button>
+          </div>
+        </AuthCheckerForComponent>
       </>
     );
   }

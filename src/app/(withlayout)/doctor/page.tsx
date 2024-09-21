@@ -3,6 +3,8 @@
 import DoctorsTable from "@/components/doctor/DoctorsTable";
 import NewDoctor from "@/components/doctor/NewDoctor";
 import RModal from "@/components/ui/Modal";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 
 import { useEffect, useState } from "react";
@@ -19,7 +21,6 @@ const initialDataOfDoctor = {
   image: "",
   code: "",
 } as IDoctor;
-
 
 const Doctor = () => {
   const [postModelOpen, setPostModelOpen] = useState(false);
@@ -41,12 +42,16 @@ const Doctor = () => {
   return (
     <div className="my-5 px-5">
       <div className="my-4">
-        <Button
-          appearance="primary"
-          onClick={() => setPostModelOpen(!postModelOpen)}
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_DOCTORS]}
         >
-          Add New Doctor
-        </Button>
+          <Button
+            appearance="primary"
+            onClick={() => setPostModelOpen(!postModelOpen)}
+          >
+            Add New Doctor
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <RModal
@@ -57,8 +62,8 @@ const Doctor = () => {
             mode === "new"
               ? "Add New Doctor"
               : mode === "patch"
-                ? "Edit Doctor's Fields"
-                : "Doctor's Details"
+              ? "Edit Doctor's Fields"
+              : "Doctor's Details"
           }
         >
           <NewDoctor

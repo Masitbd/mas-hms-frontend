@@ -3,12 +3,13 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
 import { IFormValues } from "../income-statement/page";
-
-import { useGetClientWiseIncomeStatementQuery } from "@/redux/api/financialReport/financialReportSlice";
-import ClientIncomeTable from "@/components/incomeStatement/ClientIncomeTable";
+import { useGetRefByWiseIncomeStatementQuery } from "@/redux/api/financialReport/financialReportSlice";
+import RefDoctorTable, {
+  TGroup,
+} from "@/components/incomeStatement/RefDoctorTable";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 
-const ClientWiseIncomeStatement = () => {
+const RefDoctorIncomePage = () => {
   const [isSearchEnable, setIsSearchEnable] = useState(false);
   const [formValue, setFormValue] = useState<IFormValues>({
     startDate: null,
@@ -29,14 +30,16 @@ const ClientWiseIncomeStatement = () => {
   if (formValue.endDate) query.to = formValue.endDate;
 
   // Call the query when search is enabled
-  const { data: clientIncomes } = useGetClientWiseIncomeStatementQuery(
+  const { data: refIncomes } = useGetRefByWiseIncomeStatementQuery(
     query, // Pass the constructed query object
     {
       skip: !isSearchEnable, // Only run the query when search is enabled
     }
   );
 
-  const [transformedData, setTransformedData] = useState([]);
+  const [transformedData, setTransformedData] = useState<TGroup | null>(null);
+
+  console.log("result", transformedData);
 
   // Handle form submission
   const handleSubmit = async (
@@ -53,38 +56,88 @@ const ClientWiseIncomeStatement = () => {
   };
 
   // Create a map from names to mainDocs
-  useEffect(() => {
-    if (clientIncomes?.data?.length > 0) {
-      const firstItem = clientIncomes.data[0];
-      const { mainDocs = [], nameWiseTotalDocs = [] } = firstItem;
+  // useEffect(() => {
+  //   if (refIncomes?.data?.length > 0) {
+  //     const firstItem = refIncomes.data[0];
+  //     const { mainDocs = [], nameWiseTotalDocs = [] } = firstItem;
 
-      // Create a map from names to an array of mainDocs entries
-      const nameToMainDocsMap = new Map();
+  //     // Create a map from refBy (title + name) to an array of mainDocs entries
+  //     const refByToMainDocsMap = new Map();
+  //     mainDocs.forEach((doc: any) => {
+  //       const { title, name } = doc.refBy;
+  //       const refByKey = `${title} ${name}`; // Combine title and name as the key
+
+  //       if (!refByToMainDocsMap.has(refByKey)) {
+  //         refByToMainDocsMap.set(refByKey, []);
+  //       }
+
+  //       refByToMainDocsMap.get(refByKey).push(doc); // Add document to the correct refBy
+  //     });
+
+  //     // Create the new array
+  //     const result: any = Array.from(
+  //       refByToMainDocsMap,
+  //       ([refBy, records]) => ({
+  //         refBy, // e.g., "Dr. Mohammad Abul Hossain"
+  //         records, // All documents associated with this refBy
+  //       })
+  //     );
+
+  //     // Set the transformed data in the state
+  //     setTransformedData(result);
+  //   }
+  // }, [refIncomes]);
+
+  useEffect(() => {
+    if (refIncomes?.data?.length > 0) {
+      const firstItem = refIncomes.data[0];
+      const {
+        mainDocs = [],
+        refByWiseTotalDocs = [],
+        grandTotalDocs = [],
+      } = firstItem;
+
+      // Create a map from refBy (title + name) to an array of mainDocs entries
+      const refByToMainDocsMap = new Map();
       mainDocs.forEach((doc: any) => {
-        const name = doc.patient.name;
-        if (!nameToMainDocsMap.has(name)) {
-          nameToMainDocsMap.set(name, []);
+        const { title, name } = doc.refBy;
+        const refByKey = `${title} ${name}`; // Combine title and name as the key
+
+        if (!refByToMainDocsMap.has(refByKey)) {
+          refByToMainDocsMap.set(refByKey, []);
         }
-        nameToMainDocsMap.get(name).push(doc);
+
+        refByToMainDocsMap.get(refByKey).push(doc); // Add document to the correct refBy
       });
 
-      // Create the new array
-      const result = nameWiseTotalDocs.map((nameDoc: any) => ({
-        name: nameDoc._id,
-        records: nameToMainDocsMap.get(nameDoc._id) || [],
+      // Create the new array for refByWiseTotalDocs
+      const refByWiseDocs = refByWiseTotalDocs.map((item: any) => ({
+        refBy: `${item.refBy.title} ${item.refBy.name}`,
+        totalPrice: item.totalPrice,
+        totalDiscount: item.totalDiscount,
+        quantity: item.quantity,
+        records:
+          refByToMainDocsMap.get(`${item.refBy.title} ${item.refBy.name}`) ||
+          [],
       }));
 
+      // Merge refByWiseTotalDocs with grandTotalDocs
+      const transformedData = {
+        refByWiseDocs, // Grouped docs by refBy
+        grandTotalDocs: grandTotalDocs.length ? grandTotalDocs[0] : {}, // Grand total summary
+      };
+
       // Set the transformed data in the state
-      setTransformedData(result);
+      setTransformedData(transformedData);
     }
-  }, [clientIncomes]);
+  }, [refIncomes]);
 
   return (
     <div className="">
       <div className="my-5 border  shadow-lg mx-5">
         <div className="bg-[#3498ff] text-white px-2 py-2">
           <h2 className="text-center text-xl font-semibold">
-            Client Wise Income Statement
+            Ref Doctor Wise Income Statement
           </h2>
         </div>
         <div className="mx-2">
@@ -130,8 +183,8 @@ const ClientWiseIncomeStatement = () => {
             </Button>
           </Form>
 
-          {clientIncomes && clientIncomes?.data?.length > 0 && (
-            <ClientIncomeTable
+          {transformedData && (
+            <RefDoctorTable
               data={transformedData}
               startDate={formValue.startDate}
               endDate={formValue.endDate}
@@ -143,4 +196,4 @@ const ClientWiseIncomeStatement = () => {
   );
 };
 
-export default ClientWiseIncomeStatement;
+export default RefDoctorIncomePage;

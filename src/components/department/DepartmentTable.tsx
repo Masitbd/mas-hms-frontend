@@ -1,4 +1,6 @@
 "use client";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import {
   useDeleteDepartmentMutation,
   useGetDepartmentQuery,
@@ -18,7 +20,6 @@ const DepartmentTable = ({
   setPostModelOpen,
 }: TableType<IDepartment>) => {
   const { data: defaultData, isLoading } = useGetDepartmentQuery(undefined);
-  console.log(defaultData);
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -33,14 +34,13 @@ const DepartmentTable = ({
     const end = start + limit;
     return i >= start && i < end;
   });
-  console.log(data);
   //   For delete
   const [deleteItem] = useDeleteDepartmentMutation();
 
   const deleteHandler = async (id: string) => {
     swal({
       title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this Department!",
+      text: "Once deleted, you will not be able to recover this Data!",
       icon: "warning",
       buttons: ["Cancel", "Delete"],
       dangerMode: true,
@@ -100,27 +100,31 @@ const DepartmentTable = ({
           <HeaderCell>Action</HeaderCell>
           <Cell align="center">
             {(rowdate) => (
-              <>
-                <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => deleteHandler(rowdate._id)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() => {
-                    setPatchData(rowdate as IDepartment);
-                    setPostModelOpen(!open);
-                    setMode("patch");
-                  }}
-                >
-                  Edit
-                </Button>
-              </>
+              <AuthCheckerForComponent
+                requiredPermission={[ENUM_USER_PEMISSION.MANAGE_DEPARTMENT]}
+              >
+                <>
+                  <Button
+                    appearance="ghost"
+                    color="red"
+                    onClick={() => deleteHandler(rowdate._id)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    appearance="ghost"
+                    color="blue"
+                    className="ml-2"
+                    onClick={() => {
+                      setPatchData(rowdate as IDepartment);
+                      setPostModelOpen(!open);
+                      setMode("patch");
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </>
+              </AuthCheckerForComponent>
             )}
           </Cell>
         </Column>
