@@ -322,6 +322,15 @@ const financialReportItem = [
       ENUM_USER_PEMISSION.MANAGE_TESTS,
     ],
   },
+  {
+    key: "23",
+    title: "Income By Refd Doctor",
+    href: "/ref-doctor-income",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
 ];
 
 const Sidebar = () => {
