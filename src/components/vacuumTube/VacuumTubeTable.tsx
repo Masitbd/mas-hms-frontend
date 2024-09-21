@@ -1,5 +1,10 @@
 "use client";
-import { useDeleteVacuumTubeMutation, useGetVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import {
+  useDeleteVacuumTubeMutation,
+  useGetVacuumTubeQuery,
+} from "@/redux/api/vacuumTube/vacuumTubeSlice";
 import { IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { TableType } from "@/types/componentsType";
 import { useState } from "react";
@@ -11,10 +16,15 @@ type VacuumTubeType = {
   open: boolean;
   setPatchData: (patchData: IVacuumTube) => void;
   setMode: (mode: string) => void;
-}
+};
 
 const { Column, HeaderCell, Cell } = Table;
-const VacuumTubeTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableType<IVacuumTube>) => {
+const VacuumTubeTable = ({
+  setPatchData,
+  setMode,
+  open,
+  setPostModelOpen,
+}: TableType<IVacuumTube>) => {
   const { data: defaultData, isLoading } = useGetVacuumTubeQuery(undefined);
   console.log(defaultData);
 
@@ -33,12 +43,9 @@ const VacuumTubeTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
   });
   console.log(data);
   //   For delete
-  const [
-    deleteItem
-  ] = useDeleteVacuumTubeMutation();
+  const [deleteItem] = useDeleteVacuumTubeMutation();
 
   const deleteHandler = async (id: string) => {
-
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this Vacuum Tube!",
@@ -47,25 +54,27 @@ const VacuumTubeTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-
-        const result = await deleteItem(id)
-        console.log(result, 'delete result')
-        if ('error' in result) {
-          const errorMessage = (result as { error: { data: { message: string } } })?.error.data.message;
+        const result = await deleteItem(id);
+        console.log(result, "delete result");
+        if ("error" in result) {
+          const errorMessage = (
+            result as { error: { data: { message: string } } }
+          )?.error.data.message;
           swal(errorMessage, {
             icon: "warning",
           });
         }
-        if ('data' in result) {
-          const message = (result as { data: { message: string } })?.data.message;
+        if ("data" in result) {
+          const message = (result as { data: { message: string } })?.data
+            .message;
           swal(`Done! ${message}!`, {
             icon: "success",
-          })
+          });
         }
       } else {
         swal("Your Vacuum Tube is safe!");
       }
-    })
+    });
   };
 
   return (
@@ -96,27 +105,31 @@ const VacuumTubeTable = ({ setPatchData, setMode, open, setPostModelOpen }: Tabl
           <HeaderCell>Action</HeaderCell>
           <Cell align="center">
             {(rowdate) => (
-              <>
-                <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => deleteHandler(rowdate._id)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() => {
-                    setPatchData(rowdate as IVacuumTube);
-                    setPostModelOpen(!open)
-                    setMode("patch")
-                  }}
-                >
-                  Edit
-                </Button>
-              </>
+              <AuthCheckerForComponent
+                requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+              >
+                <>
+                  <Button
+                    appearance="ghost"
+                    color="red"
+                    onClick={() => deleteHandler(rowdate._id)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    appearance="ghost"
+                    color="blue"
+                    className="ml-2"
+                    onClick={() => {
+                      setPatchData(rowdate as IVacuumTube);
+                      setPostModelOpen(!open);
+                      setMode("patch");
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </>
+              </AuthCheckerForComponent>
             )}
           </Cell>
         </Column>

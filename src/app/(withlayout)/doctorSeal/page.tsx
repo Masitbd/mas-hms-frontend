@@ -1,15 +1,21 @@
 "use client";
 
-import { IDoctorSeal, InitialDoctorSealData } from "@/components/comment/typesAdInitialData";
+import {
+  IDoctorSeal,
+  InitialDoctorSealData,
+} from "@/components/comment/typesAdInitialData";
 import DoctorSealTable from "@/components/doctorSeal/DoctorSealTable";
 import NewAndUpdateSeal from "@/components/doctorSeal/NewAndUpdateSeal";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { ENUM_MODE } from "@/enum/Mode";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { useState } from "react";
 import { Button } from "rsuite";
 
-
 const Comment = () => {
-  const [doctorSeal, setDoctorSeal] = useState<IDoctorSeal | null>(InitialDoctorSealData);
+  const [doctorSeal, setDoctorSeal] = useState<IDoctorSeal | null>(
+    InitialDoctorSealData
+  );
   const [modalOpen, setModalOpen] = useState(false);
   const [mode, setMode] = useState(ENUM_MODE.NEW);
 
@@ -26,13 +32,17 @@ const Comment = () => {
   return (
     <div>
       <div className="my-3">
-        <Button
-          appearance="primary"
-          color="blue"
-          onClick={() => sealModalHandler(true)}
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
         >
-          Add New Doctor Seal
-        </Button>
+          <Button
+            appearance="primary"
+            color="blue"
+            onClick={() => sealModalHandler(true)}
+          >
+            Add New Doctor Seal
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <NewAndUpdateSeal

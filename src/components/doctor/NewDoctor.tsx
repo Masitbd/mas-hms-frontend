@@ -25,6 +25,8 @@ import {
 import swal from "sweetalert";
 import RModal from "../ui/Modal";
 import PayModel from "./PayModel";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -252,36 +254,38 @@ const NewDoctor = ({
               </Row>
             </Grid>
             {mode === "watch" && transaction !== undefined && (
-              <Table
-                height={600}
-                data={transaction?.data}
-                loading={isLoading}
-                bordered
-                cellBordered
-                rowHeight={65}
-                className="text-md mt-6"
+              <AuthCheckerForComponent
+                requiredPermission={[ENUM_USER_PEMISSION.GET_DOCTORS_COMISSION]}
               >
-                <Column flexGrow={2}>
-                  <HeaderCell>{"Doctor's uuid"}</HeaderCell>
-                  <Cell dataKey="uuid" />
-                </Column>
-                <Column flexGrow={2}>
-                  <HeaderCell>{"Doctor's amount"}</HeaderCell>
-                  <Cell dataKey="amount" />
-                </Column>
-                <Column flexGrow={1}>
-                  <HeaderCell>{"Doctor's transaction Type"}</HeaderCell>
-                  <Cell dataKey="transactionType" />
-                </Column>
-                <Column flexGrow={2}>
-                  <HeaderCell>{"Doctor's ref"}</HeaderCell>
-                  <Cell dataKey="ref" />
-                </Column>
-                <Column flexGrow={3}>
-                  <HeaderCell>{"Doctor's description"}</HeaderCell>
-                  <Cell dataKey="description" />
-                </Column>
-              </Table>
+                <Table
+                  autoHeight
+                  data={transaction?.data}
+                  loading={isLoading}
+                  bordered
+                  cellBordered
+                  rowHeight={65}
+                  className="text-md mt-6"
+                  wordWrap
+                >
+                  <Column flexGrow={2}>
+                    <HeaderCell>{"Doctor's uuid"}</HeaderCell>
+                    <Cell dataKey="uuid" />
+                  </Column>
+                  <Column flexGrow={2}>
+                    <HeaderCell>{"Doctor's amount"}</HeaderCell>
+                    <Cell dataKey="amount" />
+                  </Column>
+                  <Column flexGrow={1}>
+                    <HeaderCell>{"Doctor's transaction Type"}</HeaderCell>
+                    <Cell dataKey="transactionType" />
+                  </Column>
+
+                  <Column flexGrow={3}>
+                    <HeaderCell>{"Doctor's description"}</HeaderCell>
+                    <Cell dataKey="description" />
+                  </Column>
+                </Table>
+              </AuthCheckerForComponent>
             )}
 
             <Form.Group className="mt-5">
@@ -296,13 +300,19 @@ const NewDoctor = ({
                     Submit
                   </Button>
                 ) : (
-                  <Button
-                    appearance="primary"
-                    onClick={() => setPayModel(!payModel)}
-                    className="mr-1"
+                  <AuthCheckerForComponent
+                    requiredPermission={[
+                      ENUM_USER_PEMISSION.MANAGE_DOCTOR_COMMISSION,
+                    ]}
                   >
-                    Pay
-                  </Button>
+                    <Button
+                      appearance="primary"
+                      onClick={() => setPayModel(!payModel)}
+                      className="mr-1"
+                    >
+                      Pay
+                    </Button>
+                  </AuthCheckerForComponent>
                 )}
                 <Button
                   appearance="default"

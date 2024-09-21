@@ -2,6 +2,8 @@
 import RModal from "@/components/ui/Modal";
 import NewVacuumTube from "@/components/vacuumTube/NewVacuumTube";
 import VacuumTubeTable from "@/components/vacuumTube/VacuumTubeTable";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { useEffect, useState } from "react";
 
@@ -19,7 +21,7 @@ const VacuumTube = () => {
   const [mode, setMode] = useState("new");
 
   useEffect(() => {
-    if (mode === 'new') {
+    if (mode === "new") {
       setPatchData({
         label: "",
         description: "",
@@ -29,26 +31,46 @@ const VacuumTube = () => {
     }
   }, [mode, setPatchData]);
 
-
   return (
     <div className="my-5 px-5">
       <div className="my-4">
-        <Button
-          appearance="primary"
-          onClick={() => setPostModelOpen(!postModelOpen)}
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
         >
-          Add New VacuumTube
-        </Button>
+          <Button
+            appearance="primary"
+            onClick={() => setPostModelOpen(!postModelOpen)}
+          >
+            Add New VacuumTube
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <RModal
           open={postModelOpen}
           size="xs"
-          title={mode === "new" ? "Add New VacuumTube" : mode === "patch" ? "Edit VacuumTube Fields" : "VacuumTube Details"}
+          title={
+            mode === "new"
+              ? "Add New VacuumTube"
+              : mode === "patch"
+              ? "Edit VacuumTube Fields"
+              : "VacuumTube Details"
+          }
         >
-          <NewVacuumTube defaultData={patchData} setMode={setMode} mode={mode} open={postModelOpen} setPostModelOpen={setPostModelOpen} />
+          <NewVacuumTube
+            defaultData={patchData}
+            setMode={setMode}
+            mode={mode}
+            open={postModelOpen}
+            setPostModelOpen={setPostModelOpen}
+          />
         </RModal>
-        <VacuumTubeTable setPatchData={setPatchData} setMode={setMode} open={postModelOpen} setPostModelOpen={setPostModelOpen} />
+        <VacuumTubeTable
+          setPatchData={setPatchData}
+          setMode={setMode}
+          open={postModelOpen}
+          setPostModelOpen={setPostModelOpen}
+        />
       </div>
     </div>
   );

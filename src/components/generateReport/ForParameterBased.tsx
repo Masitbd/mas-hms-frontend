@@ -27,6 +27,8 @@ import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
 import { useGetSingleDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import ForDescriptionBased from "./ForDescriptionBased";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -333,26 +335,30 @@ const ForParameterBased = (props: IPropsForParameter) => {
           <Comment result={result} setResult={setResult} />
         </div>
 
-        <div className="flex flex-row justify-end  my-5 w-3/4">
-          <Button
-            appearance="primary"
-            color="red"
-            size="lg"
-            onClick={() => router.push(`/testReport/${order.oid}`)}
-          >
-            Cancel
-          </Button>
-          <Button
-            appearance="primary"
-            color="blue"
-            className="ml-5"
-            size="lg"
-            onClick={handleSubmit}
-            loading={patchLoading || postLoading}
-          >
-            Post
-          </Button>
-        </div>
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_LAB_REPORTS]}
+        >
+          <div className="flex flex-row justify-end  my-5 w-3/4">
+            <Button
+              appearance="primary"
+              color="red"
+              size="lg"
+              onClick={() => router.push(`/testReport/${order.oid}`)}
+            >
+              Cancel
+            </Button>
+            <Button
+              appearance="primary"
+              color="blue"
+              className="ml-5"
+              size="lg"
+              onClick={handleSubmit}
+              loading={patchLoading || postLoading}
+            >
+              Post
+            </Button>
+          </div>
+        </AuthCheckerForComponent>
       </div>
     );
   }

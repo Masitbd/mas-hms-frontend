@@ -4,15 +4,22 @@ import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
 
-import { useDeleteHospitalGroupMutation, useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
+import {
+  useDeleteHospitalGroupMutation,
+  useGetHospitalGroupQuery,
+} from "@/redux/api/hospitalGroup/hospitalGroupSlice";
 import { TableType } from "@/types/componentsType";
-
-
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const { Column, HeaderCell, Cell } = Table;
-const HospitalGroupTable = ({ setMode, open, setPatchData, setPostModelOpen }: TableType<IHospitalGroup>) => {
+const HospitalGroupTable = ({
+  setMode,
+  open,
+  setPatchData,
+  setPostModelOpen,
+}: TableType<IHospitalGroup>) => {
   const { data: defaultData, isLoading } = useGetHospitalGroupQuery(undefined);
-  console.log(defaultData);
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -27,14 +34,11 @@ const HospitalGroupTable = ({ setMode, open, setPatchData, setPostModelOpen }: T
     const end = start + limit;
     return i >= start && i < end;
   });
-  console.log(data);
+
   //   For delete
-  const [
-    deleteItem
-  ] = useDeleteHospitalGroupMutation();
+  const [deleteItem] = useDeleteHospitalGroupMutation();
 
   const deleteHandler = async (id: string) => {
-
     swal({
       title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this Hospital Group!",
@@ -43,28 +47,28 @@ const HospitalGroupTable = ({ setMode, open, setPatchData, setPostModelOpen }: T
       dangerMode: true,
     }).then(async (willDelete) => {
       if (willDelete) {
-
-        const result = await deleteItem(id)
-        console.log(result, 'delete result')
-        if ('error' in result) {
-          const errorMessage = (result as { error: { data: { message: string } } })?.error.data.message;
+        const result = await deleteItem(id);
+        console.log(result, "delete result");
+        if ("error" in result) {
+          const errorMessage = (
+            result as { error: { data: { message: string } } }
+          )?.error.data.message;
           swal(errorMessage, {
             icon: "warning",
           });
         }
-        if ('data' in result) {
-          const message = (result as { data: { message: string } })?.data.message;
+        if ("data" in result) {
+          const message = (result as { data: { message: string } })?.data
+            .message;
           swal(`Done! ${message}!`, {
             icon: "success",
-          })
+          });
         }
       } else {
         swal("Your hospital group is safe!");
       }
-    })
+    });
   };
-
-
 
   return (
     <div>
@@ -89,27 +93,31 @@ const HospitalGroupTable = ({ setMode, open, setPatchData, setPostModelOpen }: T
           <HeaderCell>Action</HeaderCell>
           <Cell align="center">
             {(rowdate) => (
-              <>
-                <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => deleteHandler(rowdate._id)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() => {
-                    setPatchData(rowdate as IHospitalGroup);
-                    setPostModelOpen(!open)
-                    setMode("patch")
-                  }}
-                >
-                  Edit
-                </Button>
-              </>
+              <AuthCheckerForComponent
+                requiredPermission={[ENUM_USER_PEMISSION.MANAGE_HOSPITAL_GROUP]}
+              >
+                <>
+                  <Button
+                    appearance="ghost"
+                    color="red"
+                    onClick={() => deleteHandler(rowdate._id)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    appearance="ghost"
+                    color="blue"
+                    className="ml-2"
+                    onClick={() => {
+                      setPatchData(rowdate as IHospitalGroup);
+                      setPostModelOpen(!open);
+                      setMode("patch");
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </>
+              </AuthCheckerForComponent>
             )}
           </Cell>
         </Column>

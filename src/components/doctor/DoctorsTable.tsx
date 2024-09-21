@@ -10,6 +10,8 @@ import VisibleIcon from "@rsuite/icons/Visible";
 import { useState } from "react";
 import { Button, Form, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 export type ISearchTermType = {
   searchTerm: string;
@@ -40,7 +42,6 @@ const DoctorsTable = ({
     const end = start + limit;
     return i >= start && i < end;
   });
-  console.log(data);
   //   For delete
   const [deleteItem] = useDeleteDoctorMutation();
 
@@ -130,25 +131,31 @@ const DoctorsTable = ({
           <Cell align="center">
             {(rowdate) => (
               <>
-                <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => deleteHandler(rowdate._id)}
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_DOCTORS]}
                 >
-                  Delete
-                </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() => {
-                    setPatchData(rowdate as IDoctor);
-                    setPostModelOpen(!open);
-                    setMode("patch");
-                  }}
-                >
-                  Edit
-                </Button>
+                  <>
+                    <Button
+                      appearance="ghost"
+                      color="red"
+                      onClick={() => deleteHandler(rowdate._id)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      appearance="ghost"
+                      color="blue"
+                      className="ml-2"
+                      onClick={() => {
+                        setPatchData(rowdate as IDoctor);
+                        setPostModelOpen(!open);
+                        setMode("patch");
+                      }}
+                    >
+                      Edit
+                    </Button>
+                  </>
+                </AuthCheckerForComponent>
                 <Button
                   // appearance="transparent"
                   className="ml-2"

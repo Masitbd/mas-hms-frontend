@@ -15,6 +15,8 @@ import {
   useGetSensitivityQuery,
 } from "@/redux/api/sensitivity/sensitivitySlict";
 import NewAndPatchSensitivity from "./NewANdPatchSensitivity";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const SensitivityTable = () => {
   const { data: miscData, isLoading: miscLoading } =
@@ -47,16 +49,20 @@ const SensitivityTable = () => {
   return (
     <div>
       <div>
-        <Button
-          onClick={() => {
-            setOpen(true);
-            setMode(ENUM_MODE.NEW);
-          }}
-          color="blue"
-          appearance="primary"
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
         >
-          ADD Antibiotic
-        </Button>
+          <Button
+            onClick={() => {
+              setOpen(true);
+              setMode(ENUM_MODE.NEW);
+            }}
+            color="blue"
+            appearance="primary"
+          >
+            ADD Antibiotic
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <NewAndPatchSensitivity
@@ -85,29 +91,33 @@ const SensitivityTable = () => {
             <HeaderCell children="Action" />
             <Cell>
               {(rowData: ISensitivity) => (
-                <>
-                  <Button
-                    onClick={() => {
-                      setPatchData(rowData);
-                      setMode(ENUM_MODE.EDIT);
-                      setOpen(true);
-                    }}
-                    className="mr-2"
-                    appearance="primary"
-                    color="blue"
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    appearance="primary"
-                    color="red"
-                    onClick={() => {
-                      deleteHandler(rowData);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </>
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+                >
+                  <>
+                    <Button
+                      onClick={() => {
+                        setPatchData(rowData);
+                        setMode(ENUM_MODE.EDIT);
+                        setOpen(true);
+                      }}
+                      className="mr-2"
+                      appearance="primary"
+                      color="blue"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      appearance="primary"
+                      color="red"
+                      onClick={() => {
+                        deleteHandler(rowData);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                </AuthCheckerForComponent>
               )}
             </Cell>
           </Column>

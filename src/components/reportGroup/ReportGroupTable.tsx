@@ -16,6 +16,8 @@ import {
   usePatchReportGroupMutation,
 } from "@/redux/api/reportGroup/reportGroupSlice";
 import ReportGroupPatchModal from "./PatchReportGroupModal";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const { Column, HeaderCell, Cell } = Table;
 const ReportGroupTable = () => {
@@ -111,21 +113,27 @@ const ReportGroupTable = () => {
           <Cell align="center">
             {(rowdate) => (
               <>
-                <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => deleteHandler(rowdate._id)}
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
                 >
-                  Delete
-                </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() => patchHandler(rowdate as ICondition)}
-                >
-                  Edit
-                </Button>
+                  <>
+                    <Button
+                      appearance="ghost"
+                      color="red"
+                      onClick={() => deleteHandler(rowdate._id)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      appearance="ghost"
+                      color="blue"
+                      className="ml-2"
+                      onClick={() => patchHandler(rowdate as ICondition)}
+                    >
+                      Edit
+                    </Button>
+                  </>
+                </AuthCheckerForComponent>
               </>
             )}
           </Cell>

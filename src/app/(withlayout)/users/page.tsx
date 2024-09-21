@@ -43,6 +43,6 @@ const ManageUsers = () => {
 
 export default withAuth(
   ManageUsers,
-  ENUM_USER_PEMISSION.GET_ALL_USER,
+  ENUM_USER_PEMISSION.GET_USER,
   ENUM_USER_PEMISSION.MANAGE_USER
 );

@@ -15,6 +15,8 @@ import {
   useGetMiscQuery,
 } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import swal from "sweetalert";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const SWD = () => {
   const { data: specimenData, isLoading: specimenDataLoading } =
@@ -76,38 +78,46 @@ const SWD = () => {
           <div>
             <div className="mt-5">
               {miscData?.data?.length == 0 ? (
-                <Button
-                  appearance="primary"
-                  color="blue"
-                  onClick={() => {
-                    setMode(ENUM_MODE.NEW);
-                    setOpen(true);
-                  }}
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
                 >
-                  Add Description
-                </Button>
+                  <Button
+                    appearance="primary"
+                    color="blue"
+                    onClick={() => {
+                      setMode(ENUM_MODE.NEW);
+                      setOpen(true);
+                    }}
+                  >
+                    Add Description
+                  </Button>
+                </AuthCheckerForComponent>
               ) : (
                 <>
-                  <div className="grid grid-cols-12  gap-5">
-                    <Button
-                      appearance="primary"
-                      color="blue"
-                      onClick={() => {
-                        setMode(ENUM_MODE.EDIT);
-                        setOpen(true);
-                        setDefaultValue(miscData?.data[0]);
-                      }}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      appearance="primary"
-                      color="red"
-                      onClick={() => deleteHandler(miscData?.data[0])}
-                    >
-                      Delete
-                    </Button>
-                  </div>
+                  <AuthCheckerForComponent
+                    requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+                  >
+                    <div className="grid grid-cols-12  gap-5">
+                      <Button
+                        appearance="primary"
+                        color="blue"
+                        onClick={() => {
+                          setMode(ENUM_MODE.EDIT);
+                          setOpen(true);
+                          setDefaultValue(miscData?.data[0]);
+                        }}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        appearance="primary"
+                        color="red"
+                        onClick={() => deleteHandler(miscData?.data[0])}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </AuthCheckerForComponent>
                   <div className="border rounded-lg border-stone-300 mt-2 mr-5 py-10 px-5">
                     {miscData?.data[0].value}
                   </div>

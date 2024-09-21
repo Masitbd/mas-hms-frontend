@@ -28,6 +28,8 @@ import Refund from "@/components/order/Refund";
 import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { ITestsFromOrder } from "@/components/generateReport/initialDataAndTypes";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const Order = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
@@ -263,16 +265,20 @@ const Order = () => {
   return (
     <div>
       <div className="my-5">
-        <Button
-          appearance="primary"
-          color="blue"
-          onClick={() => {
-            setModalOpen(!modalOpen);
-            setMode("new");
-          }}
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}
         >
-          Generate New Bill
-        </Button>
+          <Button
+            appearance="primary"
+            color="blue"
+            onClick={() => {
+              setModalOpen(!modalOpen);
+              setMode("new");
+            }}
+          >
+            Generate New Bill
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <RModal
@@ -350,16 +356,22 @@ const Order = () => {
 
               <div className="flex justify-end">
                 <div className={`${mode == ENUM_MODE.NEW && "hidden"} mr-2`}>
-                  <Button
-                    appearance="primary"
-                    color="green"
-                    size="lg"
-                    disabled={data?.dueAmount == 0}
-                    onClick={() => setDewMOdalOpen(!dewModalOpen)}
-                    className={`${mode == "new" && "invisible"}`}
+                  <AuthCheckerForComponent
+                    requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}
                   >
-                    {data.dueAmount == 0 ? "Fully Paid" : "Collect Due Ammount"}
-                  </Button>
+                    <Button
+                      appearance="primary"
+                      color="green"
+                      size="lg"
+                      disabled={data?.dueAmount == 0}
+                      onClick={() => setDewMOdalOpen(!dewModalOpen)}
+                      className={`${mode == "new" && "invisible"}`}
+                    >
+                      {data.dueAmount == 0
+                        ? "Fully Paid"
+                        : "Collect Due Ammount"}
+                    </Button>
+                  </AuthCheckerForComponent>
                 </div>
                 <Button
                   appearance="primary"

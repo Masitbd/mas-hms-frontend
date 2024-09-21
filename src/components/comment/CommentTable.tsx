@@ -6,6 +6,8 @@ import {
 import { Button, Table } from "rsuite";
 import swal from "sweetalert";
 import { IComment, IPropsForTable } from "./typesAdInitialData";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const CommentTable = (props: IPropsForTable<IComment>) => {
   const { data: commentData, isLoading: commentDataLoading } =
@@ -91,7 +93,7 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
             {(rowdata: IComment) => (
               <>
                 <Button
-                  className='ml-5'
+                  className="ml-5"
                   appearance="primary"
                   color="blue"
                   onClick={() =>
@@ -100,24 +102,30 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
                 >
                   View
                 </Button>
-                <Button
-                  className='ml-5'
-                  appearance="primary"
-                  color="green"
-                  onClick={() =>
-                    viewAndEditButtonHandler(rowdata, ENUM_MODE.EDIT)
-                  }
+                <AuthCheckerForComponent
+                  requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
                 >
-                  Edit
-                </Button>
-                <Button
-                  className='ml-5'
-                  appearance="primary"
-                  color="red"
-                  onClick={() => DeleteButtonHandler(rowdata)}
-                >
-                  Delete
-                </Button>
+                  <>
+                    <Button
+                      className="ml-5"
+                      appearance="primary"
+                      color="green"
+                      onClick={() =>
+                        viewAndEditButtonHandler(rowdata, ENUM_MODE.EDIT)
+                      }
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      className="ml-5"
+                      appearance="primary"
+                      color="red"
+                      onClick={() => DeleteButtonHandler(rowdata)}
+                    >
+                      Delete
+                    </Button>
+                  </>
+                </AuthCheckerForComponent>
               </>
             )}
           </Cell>

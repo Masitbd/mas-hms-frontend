@@ -3,14 +3,14 @@
 import DepartmentTable from "@/components/department/DepartmentTable";
 import NewDepartment from "@/components/department/NewDepartment";
 import RModal from "@/components/ui/Modal";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { IDepartment } from "@/types/allDepartmentInterfaces";
 import { useEffect, useState } from "react";
 
 import { Button } from "rsuite";
 
-
 const initialDataOfDepartment = {
-
   label: "",
   description: "",
   value: "",
@@ -22,7 +22,9 @@ const initialDataOfDepartment = {
 const Department = () => {
   const [postModelOpen, setPostModelOpen] = useState(false);
   const [mode, setMode] = useState("new");
-  const [patchData, setPatchData] = useState<IDepartment>(initialDataOfDepartment);
+  const [patchData, setPatchData] = useState<IDepartment>(
+    initialDataOfDepartment
+  );
   useEffect(() => {
     if (mode === "new") {
       setPatchData(initialDataOfDepartment);
@@ -38,12 +40,16 @@ const Department = () => {
   return (
     <div className="my-5 px-5">
       <div className="my-4">
-        <Button
-          appearance="primary"
-          onClick={() => setPostModelOpen(!postModelOpen)}
+        <AuthCheckerForComponent
+          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_DEPARTMENT]}
         >
-          Add New Department
-        </Button>
+          <Button
+            appearance="primary"
+            onClick={() => setPostModelOpen(!postModelOpen)}
+          >
+            Add New Department
+          </Button>
+        </AuthCheckerForComponent>
       </div>
       <div>
         <RModal
@@ -54,8 +60,8 @@ const Department = () => {
             mode === "new"
               ? "Add New Department"
               : mode === "patch"
-                ? "Edit Department Fields"
-                : "Department Details"
+              ? "Edit Department Fields"
+              : "Department Details"
           }
         >
           <NewDepartment

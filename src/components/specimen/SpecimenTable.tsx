@@ -1,4 +1,6 @@
 "use client";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import {
   useDeleteSpecimenMutation,
   useGetSpecimenQuery,
@@ -11,10 +13,13 @@ import swal from "sweetalert";
 
 const { Column, HeaderCell, Cell } = Table;
 
-const SpecimenTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableType<ISpecimen>) => {
+const SpecimenTable = ({
+  setPatchData,
+  setMode,
+  open,
+  setPostModelOpen,
+}: TableType<ISpecimen>) => {
   const { data: defaultData, isLoading } = useGetSpecimenQuery(undefined);
-  console.log(defaultData);
-
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
 
@@ -28,7 +33,7 @@ const SpecimenTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableT
     const end = start + limit;
     return i >= start && i < end;
   });
-  console.log(data);
+
   //   For delete
   const [deleteItem] = useDeleteSpecimenMutation();
 
@@ -88,27 +93,31 @@ const SpecimenTable = ({ setPatchData, setMode, open, setPostModelOpen }: TableT
           <HeaderCell>Action</HeaderCell>
           <Cell align="center">
             {(rowdate) => (
-              <>
-                <Button
-                  appearance="ghost"
-                  color="red"
-                  onClick={() => deleteHandler(rowdate._id)}
-                >
-                  Delete
-                </Button>
-                <Button
-                  appearance="ghost"
-                  color="blue"
-                  className="ml-2"
-                  onClick={() => {
-                    setPatchData(rowdate as ISpecimen);
-                    setPostModelOpen(!open)
-                    setMode("patch")
-                  }}
-                >
-                  Edit
-                </Button>
-              </>
+              <AuthCheckerForComponent
+                requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+              >
+                <>
+                  <Button
+                    appearance="ghost"
+                    color="red"
+                    onClick={() => deleteHandler(rowdate._id)}
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    appearance="ghost"
+                    color="blue"
+                    className="ml-2"
+                    onClick={() => {
+                      setPatchData(rowdate as ISpecimen);
+                      setPostModelOpen(!open);
+                      setMode("patch");
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </>
+              </AuthCheckerForComponent>
             )}
           </Cell>
         </Column>

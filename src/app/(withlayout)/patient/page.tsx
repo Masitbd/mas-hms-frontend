@@ -2,7 +2,9 @@
 import PatientForm from "@/components/patient/PatientForm";
 import PatientTable from "@/components/patient/PatientTable";
 import RModal from "@/components/ui/Modal";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import ImageUpload from "@/lib/AllReusableFunctions/ImageUploader";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import {
   usePatchPatientMutation,
   usePostPatientMutation,
@@ -137,15 +139,19 @@ const Patient = () => {
   }, [postPatientSuccess]);
   return (
     <div>
-      <div className="my-5">
-        <Button
-          appearance="primary"
-          color="blue"
-          onClick={() => setModalOpen(!modalOpen)}
-        >
-          Register New Patient
-        </Button>
-      </div>
+      <AuthCheckerForComponent
+        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PATIENT]}
+      >
+        <div className="my-5">
+          <Button
+            appearance="primary"
+            color="blue"
+            onClick={() => setModalOpen(!modalOpen)}
+          >
+            Register New Patient
+          </Button>
+        </div>
+      </AuthCheckerForComponent>
       <div>
         <RModal
           open={modalOpen}

@@ -42,6 +42,8 @@ import NewReportGroupModal from "../reportGroup/NewReportGroupModel";
 import Loading from "@/app/loading";
 import { IReportGroup } from "@/types/allDepartmentInterfaces";
 import ForDescriptive from "./ForDescriptive";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -279,11 +281,17 @@ const ReportGroupTab = () => {
                         <>
                           {" "}
                           <div className="absolute top-1 right-2 ">
-                            <EditIcon
-                              fill="blue"
-                              className="hover:text-2xl cursor-pointer text-lg"
-                              onClick={() => editIconClickHandler(data)}
-                            />
+                            <AuthCheckerForComponent
+                              requiredPermission={[
+                                ENUM_USER_PEMISSION.MANAGE_TESTS,
+                              ]}
+                            >
+                              <EditIcon
+                                fill="blue"
+                                className="hover:text-2xl cursor-pointer text-lg"
+                                onClick={() => editIconClickHandler(data)}
+                              />
+                            </AuthCheckerForComponent>
                           </div>
                           <div className="grid grid-cols-3 gap-5">
                             <div className="flex flex-col">
@@ -435,15 +443,21 @@ const ReportGroupTab = () => {
                                       </Button>
                                     </>
                                   ) : (
-                                    <Button
-                                      appearance="primary"
-                                      color="blue"
-                                      onClick={() => {
-                                        handleEditState(rowIndex as number);
-                                      }}
+                                    <AuthCheckerForComponent
+                                      requiredPermission={[
+                                        ENUM_USER_PEMISSION.MANAGE_TESTS,
+                                      ]}
                                     >
-                                      Edit
-                                    </Button>
+                                      <Button
+                                        appearance="primary"
+                                        color="blue"
+                                        onClick={() => {
+                                          handleEditState(rowIndex as number);
+                                        }}
+                                      >
+                                        Edit
+                                      </Button>
+                                    </AuthCheckerForComponent>
                                   )}
                                 </>
                               );
@@ -452,17 +466,24 @@ const ReportGroupTab = () => {
                         </Column>
                       </Table>
                       <div className="flex w-full justify-end">
-                        <Button
-                          appearance="primary"
-                          color="blue"
-                          onClick={() => {
-                            emptyTableData.reportTypeGroup = data._id as string;
-                            setTableData((p) => [...p, emptyTableData]);
-                          }}
-                          disabled={isNewDataOnProgress}
+                        <AuthCheckerForComponent
+                          requiredPermission={[
+                            ENUM_USER_PEMISSION.MANAGE_TESTS,
+                          ]}
                         >
-                          Add New
-                        </Button>
+                          <Button
+                            appearance="primary"
+                            color="blue"
+                            onClick={() => {
+                              emptyTableData.reportTypeGroup =
+                                data._id as string;
+                              setTableData((p) => [...p, emptyTableData]);
+                            }}
+                            disabled={isNewDataOnProgress}
+                          >
+                            Add New
+                          </Button>
+                        </AuthCheckerForComponent>
                       </div>
                     </div>
                   </>
@@ -470,17 +491,22 @@ const ReportGroupTab = () => {
               )
             )
           : ""}
+
         <Tabs.Tab
           eventKey="150"
           icon={<AddOutlineIcon className="text-2xl" />}
           title={"Add New"}
         >
           {" "}
-          <NewReportGroup
-            formData={formData as IReportGroupFormData}
-            setFormData={setFormData}
-            mode={ENUM_MODE.NEW}
-          />
+          <AuthCheckerForComponent
+            requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+          >
+            <NewReportGroup
+              formData={formData as IReportGroupFormData}
+              setFormData={setFormData}
+              mode={ENUM_MODE.NEW}
+            />
+          </AuthCheckerForComponent>
         </Tabs.Tab>
       </Tabs>
     </div>
