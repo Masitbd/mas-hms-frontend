@@ -23,9 +23,9 @@ const ClientWiseIncomeStatement = () => {
   };
 
   // Query object
-  const query: { from?: Date; to?: Date } = {};
-  if (formValue.startDate) query.from = formValue.startDate;
-  if (formValue.endDate) query.to = formValue.endDate;
+  const query: Record<string, any> = {};
+  if (formValue.startDate) query.from = formatDate(formValue.startDate);
+  if (formValue.endDate) query.to = formatDate(formValue.endDate);
 
   // Call the query when search is enabled
   const { data: clientIncomes } = useGetClientWiseIncomeStatementQuery(

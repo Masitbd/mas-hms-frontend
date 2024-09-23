@@ -24,8 +24,11 @@ const EmpIncomeSummeryPage = () => {
     });
   };
 
-  if (formValue.startDate) query.startDate = formValue.startDate;
-  if (formValue.endDate) query.endDate = formValue.endDate;
+  const formattedStartDate = formatDate(formValue.startDate);
+  const formattedEndDate = formatDate(formValue.endDate);
+
+  if (formValue.startDate) query.startDate = formattedStartDate;
+  if (formValue.endDate) query.endDate = formattedEndDate;
 
   const { data: employeeIncome } = useGetEmployeeIncomeStatementSummeryQuery(
     query,
@@ -43,8 +46,6 @@ const EmpIncomeSummeryPage = () => {
   ) => {
     if (formValue) {
       // Format the dates
-      const formattedStartDate = formatDate(formValue.startDate);
-      const formattedEndDate = formatDate(formValue.endDate);
 
       setIsSearchEnable(true);
     }
