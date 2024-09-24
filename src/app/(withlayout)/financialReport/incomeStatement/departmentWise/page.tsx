@@ -13,6 +13,8 @@ import React, { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { Button, DatePicker, Table } from "rsuite";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
+import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -29,6 +31,23 @@ const DepartmentWiseIncomeStatement = () => {
     isFetching: financialReportReacthing,
   } = useGetDeptWiseIncomeStatementQuery(date);
 
+  const {
+    data: companyInfoData,
+    isLoading: companyInfoLoading,
+    isFetching: companyInfoFeatching,
+  } = useGetDefaultQuery(undefined);
+
+  const [headers, setHeaders] = useState([]);
+  useEffect(() => {
+    (async function () {
+      if (!companyInfoFeatching && !companyInfoFeatching) {
+        await FinancialReportHeaderGenerator(companyInfoData?.data).then(
+          (data) => setHeaders(data as never[])
+        );
+      }
+    })();
+  }, [companyInfoData, companyInfoFeatching, companyInfoFeatching]);
+
   const generatePDF = () => {
     const documentDefinition: any = {
       pageOrientation: "landscape",
@@ -37,20 +56,7 @@ const DepartmentWiseIncomeStatement = () => {
       },
       pageMargins: [20, 20, 20, 20],
       content: [
-        {
-          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
-          style: "header",
-          alignment: "center",
-        },
-        {
-          text: "Kachari Paira Danga, Nageswori, Kurigram",
-          alignment: "center",
-        },
-        {
-          text: "HelpLine: 01755546392 (24 Hours Open)",
-          alignment: "center",
-          margin: [0, 0, 0, 20],
-        },
+        ...headers,
         {
           text: `Department wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
           style: "subheader",

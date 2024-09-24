@@ -42,6 +42,10 @@ export const baseApi = createApi({
     "refund",
     "singleOrder",
     "allCommission",
+    "singleCompanyInfo",
+    "companyInfo",
+    "cloudinary-secret",
+    "default-company-info",
   ],
 
   // tagTypes: tagTypes,
