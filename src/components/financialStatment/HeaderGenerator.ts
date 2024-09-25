@@ -38,7 +38,7 @@ export const FinancialReportHeaderGenerator = async (params: ICompanyInfo) => {
     }
     if (params?.name)
       header.push({
-        text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
+        text: params?.name,
         style: { fontSize: 16, bold: true },
         alignment: "center",
       });
