@@ -14,6 +14,8 @@ import {
   TestWiseIncomeStatementReportGroupWiseData,
   TestWiseIncomeStatementTestWiseDoc,
 } from "@/components/FInancialStatement/types";
+import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -70,6 +72,22 @@ const TestWIseIncomeStatement = () => {
 
   // For pdf
 
+  const {
+    data: companyInfoData,
+    isLoading: companyInfoLoading,
+    isFetching: companyInfoFeatching,
+  } = useGetDefaultQuery(undefined);
+
+  const [headers, setHeaders] = useState([]);
+  useEffect(() => {
+    (async function () {
+      if (!companyInfoFeatching && !companyInfoFeatching) {
+        await FinancialReportHeaderGenerator(companyInfoData?.data).then(
+          (data) => setHeaders(data as never[])
+        );
+      }
+    })();
+  }, [companyInfoData, companyInfoFeatching, companyInfoFeatching]);
   const generatePDF = () => {
     const total = JSON.parse(
       JSON.stringify(financialReportData?.data[0]?.total[0])
@@ -134,20 +152,7 @@ const TestWIseIncomeStatement = () => {
       },
       pageMargins: [20, 20, 20, 20],
       content: [
-        {
-          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
-          style: "header",
-          alignment: "center",
-        },
-        {
-          text: "Kachari Paira Danga, Nageswori, Kurigram",
-          alignment: "center",
-        },
-        {
-          text: "HelpLine: 01755546392 (24 Hours Open)",
-          alignment: "center",
-          margin: [0, 0, 0, 20],
-        },
+        ...headers,
         {
           text: `Test Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
           style: "subheader",
