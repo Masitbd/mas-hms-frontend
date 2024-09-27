@@ -20,6 +20,7 @@ import {
   Grid,
   Row,
   Schema,
+  SelectPicker,
   Table,
 } from "rsuite";
 import swal from "sweetalert";
@@ -27,6 +28,9 @@ import RModal from "../ui/Modal";
 import PayModel from "./PayModel";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import { Textarea } from "../companyInfo/TextArea";
+import { useGetEmployeeQuery } from "@/redux/api/employee/employeeSlice";
+import { IEmployeeRegistration } from "../employee/TypesAndDefaults";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -44,10 +48,14 @@ const NewDoctor = ({
   const { data: account, refetch } = useGetSingleAccountQuery(
     defaultData.account_number as string
   );
-
   const { data: transaction, isLoading } = useGetSingleByUuidTransactionQuery(
     defaultData.account_number as string
   );
+  const {
+    data: employeeData,
+    isLoading: employeeDataLoading,
+    isFetching: employeeDataFeatching,
+  } = useGetEmployeeQuery({});
 
   const model = Schema.Model({
     title: StringType().isRequired("This field is required."),
@@ -56,15 +64,16 @@ const NewDoctor = ({
 
   const [doctorData, setDoctorData] = useState<IDoctor>(defaultData);
 
-  const [postDoctor] = usePostDoctorMutation();
-  const [patchDoctor] = usePatchDoctorMutation();
+  const [postDoctor, { isLoading: postDoctorLoading }] =
+    usePostDoctorMutation();
+  const [patchDoctor, { isLoading: patchDctorLoading }] =
+    usePatchDoctorMutation();
 
   useEffect(() => {
     refetch();
   }, [refetch]);
 
   const handleSubmit = async () => {
-    console.log(fileInput.current?.files?.[0]);
     if (formRef.current.check()) {
       await ImageUpload(fileInput.current?.files?.[0], (value) => {
         return (doctorData.image = value as string);
@@ -131,11 +140,14 @@ const NewDoctor = ({
                 phone: formValue.phone,
                 image: "",
                 code: formValue.code,
+                address: formValue.address,
+                assignedME: formValue.assignedME,
               });
             }}
             ref={formRef}
             model={model}
             readOnly={mode === "watch"}
+            fluid
           >
             <Grid fluid>
               <Row>
@@ -179,6 +191,35 @@ const NewDoctor = ({
                   <Form.Group controlId="phone">
                     <Form.ControlLabel>{`Doctor's phone number`}</Form.ControlLabel>
                     <Form.Control name="phone" />
+                  </Form.Group>
+                </Col>
+                <Col sm={12} className="mt-6">
+                  <Form.Group controlId="assignedME">
+                    <Form.ControlLabel>{`Marketing Executive`}</Form.ControlLabel>
+                    <Form.Control
+                      name="assignedME"
+                      accepter={SelectPicker}
+                      block
+                      data={employeeData?.data?.data?.map(
+                        (ed: IEmployeeRegistration) => {
+                          return { label: ed.name, value: ed?._id };
+                        }
+                      )}
+                      loading={employeeDataFeatching || employeeDataLoading}
+                      onClean={() => {
+                        const newData = Object.assign({}, doctorData);
+                        if (Object.hasOwn(employeeData, "assignedME")) {
+                          delete newData.assignedME;
+                        }
+                        setDoctorData(newData);
+                      }}
+                    />
+                  </Form.Group>
+                </Col>
+                <Col sm={12} className="mt-6">
+                  <Form.Group controlId="address">
+                    <Form.ControlLabel>{`Doctor's Address`}</Form.ControlLabel>
+                    <Form.Control name="address" accepter={Textarea} />
                   </Form.Group>
                 </Col>
                 {mode === "watch" && (

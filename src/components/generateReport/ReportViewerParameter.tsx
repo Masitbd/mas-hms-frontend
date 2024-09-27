@@ -169,7 +169,7 @@ const ReportViewerParameter = React.forwardRef(
           )}
           <div>
             {params?.testResult?.seal ? (
-              <div className="flex justify-end items-end font-serif mt-5">
+              <div className="grid grid-cols-1 place-items-end font-serif mt-5 text-sm ">
                 <div
                   className="whitespace-pre"
                   dangerouslySetInnerHTML={{

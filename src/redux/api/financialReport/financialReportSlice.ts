@@ -101,6 +101,14 @@ const financialReport = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    getEmployeePerformance: build.query({
+      query: (params: { from: Date; to: Date; id?: string }) => ({
+        url: `/financialReport/marketing-executive-performance`,
+        method: "get",
+        contentType: "application/json",
+        params: params,
+      }),
+    }),
   }),
 });
 
@@ -120,4 +128,5 @@ export const {
   useGetRefByWiseIncomeStatementQuery,
   useGetAllDoctorsQuery,
   useGetAllTestsQuery,
+  useGetEmployeePerformanceQuery,
 } = financialReport;

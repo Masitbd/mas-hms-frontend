@@ -46,6 +46,8 @@ export const baseApi = createApi({
     "companyInfo",
     "cloudinary-secret",
     "default-company-info",
+    "employee",
+    "singleEmployee",
   ],
 
   // tagTypes: tagTypes,

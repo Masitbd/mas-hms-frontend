@@ -193,6 +193,24 @@ const testMenuItem = [
       ENUM_USER_PEMISSION.MANAGE_TESTS,
     ],
   },
+  {
+    key: "17",
+    title: "Company Info",
+    href: "/companyInfo",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_COMPANY_INFO,
+      ENUM_USER_PEMISSION.MANAGE_COMPANY_INFO,
+    ],
+  },
+  {
+    key: "18",
+    title: "Employee",
+    href: "/employee",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_EMPLOYEE,
+      ENUM_USER_PEMISSION.MANAGE_EMPLOYEE,
+    ],
+  },
 ];
 
 const financialReportItem = [
@@ -338,6 +356,15 @@ const financialReportItem = [
     key: "25",
     title: "Tests",
     href: "/financialReport/tests",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "26",
+    title: "Employee Performance",
+    href: "/financialReport/employee-performance",
     requiredPermission: [
       ENUM_USER_PEMISSION.SUPER_ADMIN,
       ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
