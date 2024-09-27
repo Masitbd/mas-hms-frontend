@@ -13,7 +13,7 @@ const LogoUploader = ({
   image: any;
   setImage: Dispatch<SetStateAction<any>>;
   defaultImage: string;
-  forwordedRef: React.MutableRefObject<UploaderInstance>;
+  forwordedRef?: React.MutableRefObject<UploaderInstance>;
 }) => {
   const toaster = useToaster();
   const [uploading, setUploading] = React.useState(false);

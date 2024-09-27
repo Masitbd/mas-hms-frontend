@@ -51,8 +51,12 @@ const RModal = ({
             >
               Cancel
             </Button>
-            <Button onClick={okHandler} appearance="primary">
-              {loading ? <Loader></Loader> : "OK"}
+            <Button
+              onClick={okHandler}
+              appearance="primary"
+              loading={loading ? loading : false}
+            >
+              OK
             </Button>
           </Modal.Footer>
         )}

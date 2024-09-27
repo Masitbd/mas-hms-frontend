@@ -50,6 +50,7 @@ export type IDoctor = {
   account_number?: string; // as account.uuid
   account_id?: IAccount; // as account_.id,
   address?: string;
+  assignedME?: string;
 };
 export type ITransaction = {
   _id?: string;
