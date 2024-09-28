@@ -10,10 +10,10 @@ type TRecord = {
   oid: string;
   uuid?: string;
   totalPrice: number;
-  totalTestPrice: number;
+  totalDis: number;
   cashDiscount: number;
-  parcentDiscount: number;
-  dueAmount: number;
+  parcentDiscountAmount: number;
+  totalAmount: number;
   paid: number;
   vat: number;
 };
@@ -34,6 +34,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
   startDate,
   endDate,
 }) => {
+  console.log("data", data);
   const generatePDF = () => {
     const documentDefinition: any = {
       pageOrientation: "landscape",
@@ -100,15 +101,15 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
               body: group.records.map((record) => [
                 record.oid,
-                record.totalPrice.toFixed(2),
-                `${record.parcentDiscount}%`,
-                record.cashDiscount.toFixed(2),
+                record.totalPrice,
+                record.parcentDiscountAmount,
                 record.cashDiscount,
-                record.totalTestPrice,
-                record.vat.toFixed(2),
-                (record.totalPrice + record.vat).toFixed(2),
+                record.totalDis,
+                record.totalPrice - record.totalDis,
+                record.vat,
+                record.totalAmount,
                 record.paid,
-                record.dueAmount,
+                record.totalAmount - record.paid,
               ]),
             },
           },
@@ -187,14 +188,14 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                 >
                   <div>{record.oid}</div>
                   <div>{record.totalPrice}</div>
-                  <div>{record.parcentDiscount}</div>
+                  <div>{record.parcentDiscountAmount}</div>
                   <div>{record.cashDiscount}</div>
-                  <div>{record.cashDiscount}</div>
-                  <div>{record.totalTestPrice}</div>
+                  <div>{record.totalDis}</div>
+                  <div>{record.totalPrice - record.totalDis}</div>
                   <div>{record.vat}</div>
-                  <div>{record.totalPrice + record.vat}</div>
+                  <div>{record.totalAmount}</div>
                   <div>{record.paid}</div>
-                  <div>{record.dueAmount}</div>
+                  <div>{record.totalAmount - record.paid}</div>
                 </div>
               ))}
             </div>

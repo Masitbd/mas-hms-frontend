@@ -23,8 +23,8 @@ const EmployeeIncmeStatementPage = () => {
     });
   };
 
-  if (formValue.startDate) query.startDate = formValue.startDate;
-  if (formValue.endDate) query.endDate = formValue.endDate;
+  if (formValue.startDate) query.startDate = formatDate(formValue.startDate);
+  if (formValue.endDate) query.endDate = formatDate(formValue.endDate);
 
   const { data: employeeIncome } = useGetEmployeeIncomeStatementQuery(query, {
     skip: !isSearchEnable,
@@ -38,10 +38,6 @@ const EmployeeIncmeStatementPage = () => {
     event?: React.FormEvent<HTMLFormElement>
   ) => {
     if (formValue) {
-      // Format the dates
-      const formattedStartDate = formatDate(formValue.startDate);
-      const formattedEndDate = formatDate(formValue.endDate);
-
       setIsSearchEnable(true);
     }
   };

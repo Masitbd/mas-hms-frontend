@@ -24,9 +24,9 @@ const ClientWiseIncomeStatement = () => {
   };
 
   // Query object
-  const query: { from?: Date; to?: Date } = {};
-  if (formValue.startDate) query.from = formValue.startDate;
-  if (formValue.endDate) query.to = formValue.endDate;
+  const query: Record<string, any> = {};
+  if (formValue.startDate) query.from = formatDate(formValue.startDate);
+  if (formValue.endDate) query.to = formatDate(formValue.endDate);
 
   // Call the query when search is enabled
   const { data: clientIncomes } = useGetClientWiseIncomeStatementQuery(
@@ -94,31 +94,7 @@ const ClientWiseIncomeStatement = () => {
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
-            <Form.Group controlId="startDate">
-              <Form.ControlLabel>Start Date</Form.ControlLabel>
-              <DatePicker
-                oneTap
-                name="startDate"
-                format="yyyy-MM-dd"
-                value={formValue.startDate}
-                onChange={(date: Date | null) =>
-                  setFormValue((prev) => ({ ...prev, startDate: date }))
-                }
-              />
-            </Form.Group>
-
-            <Form.Group controlId="endDate">
-              <Form.ControlLabel>End Date</Form.ControlLabel>
-              <DatePicker
-                oneTap
-                name="endDate"
-                format="yyyy-MM-dd"
-                value={formValue.endDate}
-                onChange={(date: Date | null) =>
-                  setFormValue((prev) => ({ ...prev, endDate: date }))
-                }
-              />
-            </Form.Group>
+           
 
             <Button
               className="max-h-11 mt-5"

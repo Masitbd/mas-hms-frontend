@@ -24,9 +24,9 @@ const EmployeeLedgerPage = () => {
   };
 
   // Query object
-  const query: { from?: Date; to?: Date } = {};
-  if (formValue.startDate) query.from = formValue.startDate;
-  if (formValue.endDate) query.to = formValue.endDate;
+  const query: Record<string, any> = {};
+  if (formValue.startDate) query.from = formatDate(formValue.startDate);
+  if (formValue.endDate) query.to = formatDate(formValue.endDate);
 
   // Call the query when search is enabled
   const { data: employeeLdgers } = useGetEmployeeLedgerQuery(
@@ -46,10 +46,6 @@ const EmployeeLedgerPage = () => {
     event?: React.FormEvent<HTMLFormElement>
   ) => {
     if (formValue) {
-      // Format the dates
-      const formattedStartDate = formatDate(formValue.startDate);
-      const formattedEndDate = formatDate(formValue.endDate);
-
       setIsSearchEnable(true);
     }
   };
