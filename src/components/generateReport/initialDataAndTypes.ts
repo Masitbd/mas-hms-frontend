@@ -17,7 +17,7 @@ export type ITestsFromOrder = {
   test: ITest;
   status: string;
   discount: number;
-  ramark: string;
+  remark?: string;
 };
 
 export type IPropsForParameter = {

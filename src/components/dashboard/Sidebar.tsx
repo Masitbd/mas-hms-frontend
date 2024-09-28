@@ -211,6 +211,16 @@ const testMenuItem = [
       ENUM_USER_PEMISSION.MANAGE_EMPLOYEE,
     ],
   },
+  {
+    key: "18",
+    title: "Label Print",
+    href: "/label-print",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+      ENUM_USER_PEMISSION.GET_ORDER,
+    ],
+  },
 ];
 
 const financialReportItem = [

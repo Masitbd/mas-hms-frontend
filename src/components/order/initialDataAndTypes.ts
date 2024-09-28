@@ -66,7 +66,7 @@ export type IOrderData = {
   _id?: string;
   uuid?: string;
   patient?: Partial<IPatient>;
-  refBy?: string;
+  refBy?: string | IDoctor;
   status: string;
   deliveryTime: Date;
   tests: {
@@ -74,6 +74,7 @@ export type IOrderData = {
     status: string;
     discount: number;
     test: string | undefined | ITest;
+    remark?: string;
   }[];
   totalPrice: number;
   cashDiscount: number;
