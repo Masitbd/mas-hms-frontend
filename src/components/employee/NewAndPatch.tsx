@@ -25,6 +25,8 @@ import {
   usePostEmployeeMutation,
 } from "@/redux/api/employee/employeeSlice";
 
+import swal from "sweetalert";
+
 const NewAndPatch = (props: IPropsForEmployeeRegistration) => {
   const ref = useRef<FormInstance>(null);
   const { data, mode, setData, setModalOpen, setMode, modalOpen } = props;

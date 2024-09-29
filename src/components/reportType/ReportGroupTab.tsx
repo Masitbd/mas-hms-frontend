@@ -1,6 +1,8 @@
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import { ENUM_MODE } from "@/enum/Mode";
 import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
+import "rsuite/dist/rsuite.min.css";
+import "./TabsResponsive.css";
 import {
   useGetReportGroupQuery,
   useLazyGetReportGroupQuery,
@@ -254,261 +256,263 @@ const ReportGroupTab = () => {
           )}
         </Dropdown>
       </div>
-
-      <Tabs
-        defaultActiveKey={defaultTabActiveKey}
-        onSelect={(eventKey) =>
-          setReportTypeFilterOption({ reportTypeGroup: eventKey })
-        }
-        className="overflow-x-"
-      >
-        {groupData?.data.length > 0
-          ? groupData?.data.map(
-              (data: Partial<IReportGroupFormData>, index: number) => (
-                <Tabs.Tab eventKey={data?._id} title={data.group} key={index}>
-                  <>
-                    <div className="border border-stone-200 py-5 px-3 mr-5 rounded-md relative">
-                      {reportTypeGroupMode == ENUM_MODE.EDIT ? (
-                        <NewReportGroup
-                          formData={
-                            reportTypeGroupData as unknown as IReportGroupFormData
-                          }
-                          mode={reportTypeGroupMode}
-                          setFormData={setReportTypeGroupData as any}
-                          setMode={setReportTypeGroupMode as any}
-                        />
-                      ) : (
-                        <>
-                          {" "}
-                          <div className="absolute top-1 right-2 ">
-                            <AuthCheckerForComponent
-                              requiredPermission={[
-                                ENUM_USER_PEMISSION.MANAGE_TESTS,
-                              ]}
-                            >
-                              <EditIcon
-                                fill="blue"
-                                className="hover:text-2xl cursor-pointer text-lg"
-                                onClick={() => editIconClickHandler(data)}
-                              />
-                            </AuthCheckerForComponent>
-                          </div>
-                          <div className="grid grid-cols-3 gap-5">
-                            <div className="flex flex-col">
-                              <div className="font-bold">Group</div>
-                              <div>{data?.group}</div>
+      <div className="multi-line-tabs">
+        <Tabs
+          defaultActiveKey={defaultTabActiveKey}
+          onSelect={(eventKey) =>
+            setReportTypeFilterOption({ reportTypeGroup: eventKey })
+          }
+          className=""
+        >
+          {groupData?.data.length > 0
+            ? groupData?.data.map(
+                (data: Partial<IReportGroupFormData>, index: number) => (
+                  <Tabs.Tab eventKey={data?._id} title={data.group} key={index}>
+                    <>
+                      <div className="border border-stone-200 py-5 px-3 mr-5 rounded-md relative">
+                        {reportTypeGroupMode == ENUM_MODE.EDIT ? (
+                          <NewReportGroup
+                            formData={
+                              reportTypeGroupData as unknown as IReportGroupFormData
+                            }
+                            mode={reportTypeGroupMode}
+                            setFormData={setReportTypeGroupData as any}
+                            setMode={setReportTypeGroupMode as any}
+                          />
+                        ) : (
+                          <>
+                            {" "}
+                            <div className="absolute top-1 right-2 ">
+                              <AuthCheckerForComponent
+                                requiredPermission={[
+                                  ENUM_USER_PEMISSION.MANAGE_TESTS,
+                                ]}
+                              >
+                                <EditIcon
+                                  fill="blue"
+                                  className="hover:text-2xl cursor-pointer text-lg"
+                                  onClick={() => editIconClickHandler(data)}
+                                />
+                              </AuthCheckerForComponent>
                             </div>
-                            <div className="flex flex-col">
-                              <div className="font-bold">Report Group</div>
-                              <div>{data?.reportGroup?.label}</div>
-                            </div>
-                            {/* <div className="flex flex-col">
+                            <div className="grid grid-cols-3 gap-5">
+                              <div className="flex flex-col">
+                                <div className="font-bold">Group</div>
+                                <div>{data?.group}</div>
+                              </div>
+                              <div className="flex flex-col">
+                                <div className="font-bold">Report Group</div>
+                                <div>{data?.reportGroup?.label}</div>
+                              </div>
+                              {/* <div className="flex flex-col">
                               <div className="font-bold">Department</div>
                               <div>{data?.department?.label}</div>
                             </div> */}
-                            <div className="flex flex-col">
-                              <div className="font-bold">Report Type</div>
-                              <div>{data?.resultType}</div>
+                              <div className="flex flex-col capitalize">
+                                <div className="font-bold">Report Type</div>
+                                <div>{data?.resultType}</div>
+                              </div>
                             </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    <div className=" border border-stone-200  py-5 px-3 mr-5 rounded-md my-5">
-                      <Table
-                        className="w-full"
-                        data={tableData}
-                        loading={reportTypeLoading}
-                        wordWrap="break-word"
-                        rowHeight={70}
-                        height={500}
-                      >
-                        {selectedReportGroup?.testResultType == "parameter" && (
-                          <>
-                            <Column flexGrow={1}>
-                              <HeaderCell>Investigation</HeaderCell>
-                              <EditableCell
-                                dataKey={"investigation"}
-                                onChange={handleChange}
-                              />
-                            </Column>
-                            <Column flexGrow={2}>
-                              <HeaderCell>Test</HeaderCell>
-                              <EditableCell
-                                dataKey={"test"}
-                                onChange={handleChange}
-                              />
-                            </Column>
-                            <Column flexGrow={1}>
-                              <HeaderCell>Normal Value</HeaderCell>
-                              <EditableCell
-                                dataKey={"normalValue"}
-                                onChange={handleChange}
-                              />
-                            </Column>
-                            <Column flexGrow={1}>
-                              <HeaderCell>Unit</HeaderCell>
-                              <EditableCell
-                                dataKey={"unit"}
-                                onChange={handleChange}
-                              />
-                            </Column>
-                            <Column flexGrow={1}>
-                              <HeaderCell>Remark</HeaderCell>
-                              <EditableCell
-                                dataKey={"remark"}
-                                onChange={handleChange}
-                              />
-                            </Column>
-                            <Column flexGrow={1}>
-                              <HeaderCell>Default Values</HeaderCell>
-                              <EditableCell
-                                dataKey={"defaultValue"}
-                                onChange={handleChange}
-                                as={TagInput}
-                              />
-                            </Column>
                           </>
                         )}
-                        {selectedReportGroup?.testResultType ==
-                          "descriptive" && (
-                          <>
-                            <Column flexGrow={1}>
-                              <HeaderCell>Investigation</HeaderCell>
-                              <EditableCell
-                                dataKey={"investigation"}
-                                onChange={handleChange}
-                              />
-                            </Column>
-                            <Column flexGrow={1}>
-                              <HeaderCell>Title</HeaderCell>
-                              <EditableCell
-                                dataKey={"label"}
-                                onChange={handleChange}
-                              />
-                            </Column>
-                            <Column flexGrow={3}>
-                              <HeaderCell>Description</HeaderCell>
-                              <Cell>
-                                {(rowdata, index) => (
-                                  <ForDescriptive
-                                    data={
-                                      rowdata as {
-                                        status: string;
-                                        description: string;
-                                      }
-                                    }
-                                    index={index as number}
-                                    handleCHange={handleChange}
-                                  />
-                                )}
-                              </Cell>
-                            </Column>
-                          </>
-                        )}
-                        <Column flexGrow={1}>
-                          <HeaderCell>Action</HeaderCell>
-                          <Cell>
-                            {(rowData, rowIndex) => {
-                              return (
-                                <>
-                                  {rowData?.status === ENUM_MODE.NEW ||
-                                  rowData?.status === ENUM_MODE.EDIT ? (
-                                    <>
-                                      <Button
-                                        appearance="ghost"
-                                        color="green"
-                                        className="mr-2"
-                                        onClick={() =>
-                                          saveHandler(rowIndex as number)
-                                        }
-                                        loading={
-                                          postReportTypeLoading ||
-                                          patchReportTypeLoading
-                                        }
-                                      >
-                                        Save
-                                      </Button>
-                                      <Button
-                                        appearance="ghost"
-                                        color="red"
-                                        onClick={cancelHandler}
-                                        loading={
-                                          postReportTypeLoading ||
-                                          patchReportTypeLoading
-                                        }
-                                      >
-                                        Cancel
-                                      </Button>
-                                    </>
-                                  ) : (
-                                    <AuthCheckerForComponent
-                                      requiredPermission={[
-                                        ENUM_USER_PEMISSION.MANAGE_TESTS,
-                                      ]}
-                                    >
-                                      <Button
-                                        appearance="primary"
-                                        color="blue"
-                                        onClick={() => {
-                                          handleEditState(rowIndex as number);
-                                        }}
-                                      >
-                                        Edit
-                                      </Button>
-                                    </AuthCheckerForComponent>
-                                  )}
-                                </>
-                              );
-                            }}
-                          </Cell>
-                        </Column>
-                      </Table>
-                      <div className="flex w-full justify-end">
-                        <AuthCheckerForComponent
-                          requiredPermission={[
-                            ENUM_USER_PEMISSION.MANAGE_TESTS,
-                          ]}
-                        >
-                          <Button
-                            appearance="primary"
-                            color="blue"
-                            onClick={() => {
-                              emptyTableData.reportTypeGroup =
-                                data._id as string;
-                              setTableData((p) => [...p, emptyTableData]);
-                            }}
-                            disabled={isNewDataOnProgress}
-                          >
-                            Add New
-                          </Button>
-                        </AuthCheckerForComponent>
                       </div>
-                    </div>
-                  </>
-                </Tabs.Tab>
-              )
-            )
-          : ""}
 
-        <Tabs.Tab
-          eventKey="150"
-          icon={<AddOutlineIcon className="text-2xl" />}
-          title={"Add New"}
-        >
-          {" "}
-          <AuthCheckerForComponent
-            requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+                      <div className=" border border-stone-200  py-5 px-3 mr-5 rounded-md my-5">
+                        <Table
+                          className="w-full"
+                          data={tableData}
+                          loading={reportTypeLoading}
+                          wordWrap="break-word"
+                          rowHeight={70}
+                          autoHeight
+                        >
+                          {selectedReportGroup?.testResultType ==
+                            "parameter" && (
+                            <>
+                              <Column flexGrow={1}>
+                                <HeaderCell>Investigation</HeaderCell>
+                                <EditableCell
+                                  dataKey={"investigation"}
+                                  onChange={handleChange}
+                                />
+                              </Column>
+                              <Column flexGrow={2}>
+                                <HeaderCell>Test</HeaderCell>
+                                <EditableCell
+                                  dataKey={"test"}
+                                  onChange={handleChange}
+                                />
+                              </Column>
+                              <Column flexGrow={1}>
+                                <HeaderCell>Normal Value</HeaderCell>
+                                <EditableCell
+                                  dataKey={"normalValue"}
+                                  onChange={handleChange}
+                                />
+                              </Column>
+                              <Column flexGrow={1}>
+                                <HeaderCell>Unit</HeaderCell>
+                                <EditableCell
+                                  dataKey={"unit"}
+                                  onChange={handleChange}
+                                />
+                              </Column>
+                              <Column flexGrow={1}>
+                                <HeaderCell>Remark</HeaderCell>
+                                <EditableCell
+                                  dataKey={"remark"}
+                                  onChange={handleChange}
+                                />
+                              </Column>
+                              <Column flexGrow={1}>
+                                <HeaderCell>Default Values</HeaderCell>
+                                <EditableCell
+                                  dataKey={"defaultValue"}
+                                  onChange={handleChange}
+                                  as={TagInput}
+                                />
+                              </Column>
+                            </>
+                          )}
+                          {selectedReportGroup?.testResultType ==
+                            "descriptive" && (
+                            <>
+                              <Column flexGrow={1}>
+                                <HeaderCell>Investigation</HeaderCell>
+                                <EditableCell
+                                  dataKey={"investigation"}
+                                  onChange={handleChange}
+                                />
+                              </Column>
+                              <Column flexGrow={1}>
+                                <HeaderCell>Title</HeaderCell>
+                                <EditableCell
+                                  dataKey={"label"}
+                                  onChange={handleChange}
+                                />
+                              </Column>
+                              <Column flexGrow={3}>
+                                <HeaderCell>Description</HeaderCell>
+                                <Cell>
+                                  {(rowdata, index) => (
+                                    <ForDescriptive
+                                      data={
+                                        rowdata as {
+                                          status: string;
+                                          description: string;
+                                        }
+                                      }
+                                      index={index as number}
+                                      handleCHange={handleChange}
+                                    />
+                                  )}
+                                </Cell>
+                              </Column>
+                            </>
+                          )}
+                          <Column flexGrow={1}>
+                            <HeaderCell>Action</HeaderCell>
+                            <Cell>
+                              {(rowData, rowIndex) => {
+                                return (
+                                  <>
+                                    {rowData?.status === ENUM_MODE.NEW ||
+                                    rowData?.status === ENUM_MODE.EDIT ? (
+                                      <>
+                                        <Button
+                                          appearance="ghost"
+                                          color="green"
+                                          className="mr-2"
+                                          onClick={() =>
+                                            saveHandler(rowIndex as number)
+                                          }
+                                          loading={
+                                            postReportTypeLoading ||
+                                            patchReportTypeLoading
+                                          }
+                                        >
+                                          Save
+                                        </Button>
+                                        <Button
+                                          appearance="ghost"
+                                          color="red"
+                                          onClick={cancelHandler}
+                                          loading={
+                                            postReportTypeLoading ||
+                                            patchReportTypeLoading
+                                          }
+                                        >
+                                          Cancel
+                                        </Button>
+                                      </>
+                                    ) : (
+                                      <AuthCheckerForComponent
+                                        requiredPermission={[
+                                          ENUM_USER_PEMISSION.MANAGE_TESTS,
+                                        ]}
+                                      >
+                                        <Button
+                                          appearance="primary"
+                                          color="blue"
+                                          onClick={() => {
+                                            handleEditState(rowIndex as number);
+                                          }}
+                                        >
+                                          Edit
+                                        </Button>
+                                      </AuthCheckerForComponent>
+                                    )}
+                                  </>
+                                );
+                              }}
+                            </Cell>
+                          </Column>
+                        </Table>
+                        <div className="flex w-full justify-end">
+                          <AuthCheckerForComponent
+                            requiredPermission={[
+                              ENUM_USER_PEMISSION.MANAGE_TESTS,
+                            ]}
+                          >
+                            <Button
+                              appearance="primary"
+                              color="blue"
+                              onClick={() => {
+                                emptyTableData.reportTypeGroup =
+                                  data._id as string;
+                                setTableData((p) => [...p, emptyTableData]);
+                              }}
+                              disabled={isNewDataOnProgress}
+                            >
+                              Add New
+                            </Button>
+                          </AuthCheckerForComponent>
+                        </div>
+                      </div>
+                    </>
+                  </Tabs.Tab>
+                )
+              )
+            : ""}
+
+          <Tabs.Tab
+            eventKey="150"
+            icon={<AddOutlineIcon className="text-2xl" />}
+            title={"Add New"}
           >
-            <NewReportGroup
-              formData={formData as IReportGroupFormData}
-              setFormData={setFormData}
-              mode={ENUM_MODE.NEW}
-            />
-          </AuthCheckerForComponent>
-        </Tabs.Tab>
-      </Tabs>
+            {" "}
+            <AuthCheckerForComponent
+              requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+            >
+              <NewReportGroup
+                formData={formData as IReportGroupFormData}
+                setFormData={setFormData}
+                mode={ENUM_MODE.NEW}
+              />
+            </AuthCheckerForComponent>
+          </Tabs.Tab>
+        </Tabs>
+      </div>
     </div>
   );
 };

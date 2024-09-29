@@ -28,45 +28,52 @@ const HospitalGroup = () => {
   }, [mode, setPatchData]);
   //
   return (
-    <div className="my-5 px-5">
-      <div className="my-4">
-        <AuthCheckerForComponent
-          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_HOSPITAL_GROUP]}
-        >
-          <Button
-            appearance="primary"
-            onClick={() => setPostModelOpen(!postModelOpen)}
-          >
-            Add New Hospital Group
-          </Button>
-        </AuthCheckerForComponent>
-      </div>
-      <div>
-        <RModal
-          open={postModelOpen}
-          size="xs"
-          title={
-            mode === "new"
-              ? "Add New Hospital Group"
-              : mode === "patch"
-              ? "Edit Hospital Group Fields"
-              : "Hospital Group Details"
-          }
-        >
-          <NewHospitalGroup
-            defaultData={patchData}
-            setMode={setMode}
-            mode={mode}
-            open={postModelOpen}
-            setPostModelOpen={setPostModelOpen}
-          />
-        </RModal>
-        <HospitalGroupTable
-          setPatchData={setPatchData}
-          setMode={setMode}
-          open={postModelOpen}
-          setPostModelOpen={setPostModelOpen}
-        />
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Hospital Group</h2>
+        </div>
+        <div className="p-2">
+          <div className="my-4">
+            <AuthCheckerForComponent
+              requiredPermission={[ENUM_USER_PEMISSION.MANAGE_HOSPITAL_GROUP]}
+            >
+              <Button
+                appearance="primary"
+                onClick={() => setPostModelOpen(!postModelOpen)}
+              >
+                Add New Hospital Group
+              </Button>
+            </AuthCheckerForComponent>
+          </div>
+          <div>
+            <RModal
+              open={postModelOpen}
+              size="xs"
+              title={
+                mode === "new"
+                  ? "Add New Hospital Group"
+                  : mode === "patch"
+                  ? "Edit Hospital Group Fields"
+                  : "Hospital Group Details"
+              }
+            >
+              <NewHospitalGroup
+                defaultData={patchData}
+                setMode={setMode}
+                mode={mode}
+                open={postModelOpen}
+                setPostModelOpen={setPostModelOpen}
+              />
+            </RModal>
+            <HospitalGroupTable
+              setPatchData={setPatchData}
+              setMode={setMode}
+              open={postModelOpen}
+              setPostModelOpen={setPostModelOpen}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

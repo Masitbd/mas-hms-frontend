@@ -3,13 +3,8 @@ import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import Image from "next/image";
 import { useState } from "react";
-import {
-  Avatar,
-  DatePicker,
-  Form,
-  InputPicker
-} from "rsuite";
-import swal from 'sweetalert';
+import { Avatar, DatePicker, Form, InputPicker } from "rsuite";
+import swal from "sweetalert";
 
 const PatientForm = ({
   defaultValue,
@@ -51,11 +46,13 @@ const PatientForm = ({
     { label: "B+", value: "B+" },
     { label: "B-", value: "B-" },
     { label: "O+", value: "O+" },
-    { label: "O-", value: "O-" }
+    { label: "O-", value: "O-" },
   ];
-  console.log(formData)
   const { data: doctorData } = useGetDoctorQuery(undefined);
-  const [selected, setSelected] = useState<ArrayBuffer | string | undefined>('')
+  const [selected, setSelected] = useState<ArrayBuffer | string | undefined>(
+    ""
+  );
+
   return (
     <div className=" px-5 ">
       <div className="my-5">
@@ -64,32 +61,34 @@ const PatientForm = ({
       </div>
       <div></div>
       <Form
-        onChange={(e) => setfromData({
-          name: e.name,
-          fatherName: e.fatherName,
-          motherName: e.motherName,
-          age: e.age,
-          gender: e.gender,
-          permanentAddress: e.permanentAddress,
-          presentAddress: e.presentAddress,
-          maritalStatus: e.maritalStatus,
-          dateOfBirth: e.dateOfBirth,
-          district: e.district,
-          religion: e.religion,
-          nationality: e.nationality,
-          admissionDate: e.admissionDate,
-          bloodGroup: e.bloodGroup,
-          passportNo: e.passportNo,
-          courseDuration: e.courseDuration,
-          typeOfDisease: e.typeOfDisease,
-          nationalID: e.nationalID,
-          totalAmount: e.totalAmount,
-          ref_by: e.ref_by,
-          consultant: e.consultant,
-          phone: e.phone,
-          email: e.email,
-          image: e.image,
-        })}
+        onChange={(e) =>
+          setfromData({
+            name: e.name,
+            fatherName: e.fatherName,
+            motherName: e.motherName,
+            age: e.age,
+            gender: e.gender,
+            permanentAddress: e.permanentAddress,
+            presentAddress: e.presentAddress,
+            maritalStatus: e.maritalStatus,
+            dateOfBirth: e.dateOfBirth,
+            district: e.district,
+            religion: e.religion,
+            nationality: e.nationality,
+            admissionDate: e.admissionDate,
+            bloodGroup: e.bloodGroup,
+            passportNo: e.passportNo,
+            courseDuration: e.courseDuration,
+            typeOfDisease: e.typeOfDisease,
+            nationalID: e.nationalID,
+            totalAmount: e.totalAmount,
+            ref_by: e.ref_by,
+            consultant: e.consultant,
+            phone: e.phone,
+            email: e.email,
+            image: e.image,
+          })
+        }
         ref={forwardedRef}
         model={model}
         className="grid grid-cols-3 gap-5 justify-center w-full"
@@ -145,7 +144,11 @@ const PatientForm = ({
         </Form.Group>
         <Form.Group controlId="dateOfBirth">
           <Form.ControlLabel>Date Of Birth</Form.ControlLabel>
-          <Form.Control name="dateOfBirth"  format="dd.MM.yyyy"  accepter={DatePicker} />
+          <Form.Control
+            name="dateOfBirth"
+            format="dd.MM.yyyy"
+            accepter={DatePicker}
+          />
         </Form.Group>
         <Form.Group controlId="email">
           <Form.ControlLabel>Email</Form.ControlLabel>
@@ -176,7 +179,11 @@ const PatientForm = ({
         </Form.Group>
         <Form.Group controlId="admissionDate">
           <Form.ControlLabel>Admission Date</Form.ControlLabel>
-          <Form.Control name="admissionDate" format="dd.MM.yyyy" accepter={DatePicker} />
+          <Form.Control
+            name="admissionDate"
+            format="dd.MM.yyyy"
+            accepter={DatePicker}
+          />
         </Form.Group>
         <Form.Group controlId="bloodGroup">
           <Form.ControlLabel>Blood Group</Form.ControlLabel>
@@ -229,45 +236,49 @@ const PatientForm = ({
             className="w-full"
           />
         </Form.Group>
-        {
-          mode === "watch" ? (defaultValue.image ? (
-            <Image src={defaultValue.image} alt='profile' width={300} height={250} />
-          ) : null) : (<Form.Group controlId="patientPhoto">
+        {mode === "watch" ? (
+          defaultValue.image ? (
+            <Image
+              src={defaultValue.image}
+              alt="profile"
+              width={300}
+              height={250}
+            />
+          ) : null
+        ) : (
+          <Form.Group controlId="patientPhoto">
             <Form.ControlLabel>{`Patient's Photo`}</Form.ControlLabel>
             <Form.Group controlId="file">
               <Form.ControlLabel>{`Please Select image`}</Form.ControlLabel>
-              <input type="file" accept="image/jpeg, image/png" onChange={() => {
-                const reader = new FileReader();
-                const file = fileRef.current?.files?.[0];
-                if (!file) {
-                  console.log('no file selected')
-                  return;
-                }
-                if (!file.type.startsWith('image/')) {
-                  swal(`InValid file type. please select on image`, {
-                    icon: "warning",
-                  })
-                  return;
-                }
-                reader.readAsDataURL(file as Blob)
-                reader.onload = (e) => {
-                  setSelected(e.target?.result ?? '')
-                }
-
-              }} ref={fileRef} />
+              <input
+                type="file"
+                accept="image/jpeg, image/png"
+                onChange={() => {
+                  const reader = new FileReader();
+                  const file = fileRef.current?.files?.[0];
+                  if (!file) {
+                    console.log("no file selected");
+                    return;
+                  }
+                  if (!file.type.startsWith("image/")) {
+                    swal(`InValid file type. please select on image`, {
+                      icon: "warning",
+                    });
+                    return;
+                  }
+                  reader.readAsDataURL(file as Blob);
+                  reader.onload = (e) => {
+                    setSelected(e.target?.result ?? "");
+                  };
+                }}
+                ref={fileRef}
+              />
             </Form.Group>
-            {
-              selected && (
-                <Avatar
-                  size='lg'
-                  src={selected as string}
-                  alt="@SevenOutman"
-                />
-              )
-            }
-
-          </Form.Group>)
-        }
+            {selected && (
+              <Avatar size="lg" src={selected as string} alt="@SevenOutman" />
+            )}
+          </Form.Group>
+        )}
       </Form>
       {/* Result Fields */}
     </div>

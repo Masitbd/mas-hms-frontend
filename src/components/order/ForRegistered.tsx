@@ -13,7 +13,7 @@ const ForRegistered = (param: IRegisteredPatient) => {
           </h4>
           <hr />
         </div>
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-3 gap-3">
           <div className="flex flex-col">
             <h2 className="font-bold">Name</h2>
             {param.formData.patient.name}
@@ -58,7 +58,7 @@ const ForRegistered = (param: IRegisteredPatient) => {
                 deliveryTime: fromValue.deliveryTime,
               }));
             }}
-            className="grid grid-cols-3"
+            className="grid grid-cols-3 gap-5"
             formValue={param.formData}
           >
             <Form.Group controlId="refBy">

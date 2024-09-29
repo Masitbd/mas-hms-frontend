@@ -11,32 +11,39 @@ const ManageUsers = () => {
   const [newUserModal, setNewUserModal] = useState(false);
   const [mode, setMode] = useState("");
   return (
-    <div>
-      <div className="my-5">
-        <AuthCkeckerForComponent
-          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_USER]}
-        >
-          <Button
-            onClick={() => {
-              setNewUserModal(!newUserModal);
-              setMode("new");
-            }}
-            appearance="primary"
-            color="blue"
-          >
-            Add new user
-          </Button>
-        </AuthCkeckerForComponent>
-        <div>
-          <NewUserModal
-            open={newUserModal}
-            setOpen={setNewUserModal}
-            mode={mode}
-            setMode={setMode}
-          />
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Users</h2>
+        </div>
+        <div className="p-2">
+          <div className="my-5">
+            <AuthCkeckerForComponent
+              requiredPermission={[ENUM_USER_PEMISSION.MANAGE_USER]}
+            >
+              <Button
+                onClick={() => {
+                  setNewUserModal(!newUserModal);
+                  setMode("new");
+                }}
+                appearance="primary"
+                color="blue"
+              >
+                Add new user
+              </Button>
+            </AuthCkeckerForComponent>
+            <div>
+              <NewUserModal
+                open={newUserModal}
+                setOpen={setNewUserModal}
+                mode={mode}
+                setMode={setMode}
+              />
+            </div>
+          </div>
+          <UserTable mode={mode} setMode={setMode} />
         </div>
       </div>
-      <UserTable mode={mode} setMode={setMode} />
     </div>
   );
 };

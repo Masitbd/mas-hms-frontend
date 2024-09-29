@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import {
@@ -30,36 +31,43 @@ const Comment = () => {
   };
 
   return (
-    <div>
-      <div className="my-3">
-        <AuthCheckerForComponent
-          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
-        >
-          <Button
-            appearance="primary"
-            color="blue"
-            onClick={() => sealModalHandler(true)}
-          >
-            Add New Doctor Seal
-          </Button>
-        </AuthCheckerForComponent>
-      </div>
-      <div>
-        <NewAndUpdateSeal
-          data={doctorSeal as IDoctorSeal}
-          open={modalOpen}
-          setData={sealDataHandler}
-          setOpen={sealModalHandler}
-          mode={mode}
-          setMode={modeHandler}
-        />
-      </div>
-      <div>
-        <DoctorSealTable
-          setData={sealDataHandler}
-          setMode={modeHandler}
-          setModalOpen={sealModalHandler}
-        />
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Doctor's seal</h2>
+        </div>
+        <div className="p-2">
+          <div className="my-3">
+            <AuthCheckerForComponent
+              requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+            >
+              <Button
+                appearance="primary"
+                color="blue"
+                onClick={() => sealModalHandler(true)}
+              >
+                Add New Doctor Seal
+              </Button>
+            </AuthCheckerForComponent>
+          </div>
+          <div>
+            <NewAndUpdateSeal
+              data={doctorSeal as IDoctorSeal}
+              open={modalOpen}
+              setData={sealDataHandler}
+              setOpen={sealModalHandler}
+              mode={mode}
+              setMode={modeHandler}
+            />
+          </div>
+          <div>
+            <DoctorSealTable
+              setData={sealDataHandler}
+              setMode={modeHandler}
+              setModalOpen={sealModalHandler}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
