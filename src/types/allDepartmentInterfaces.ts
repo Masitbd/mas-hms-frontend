@@ -1,5 +1,6 @@
 import { IBacteria } from "@/app/(withlayout)/bacteria/page";
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
+import { IEmployeeRegistration } from "@/components/employee/TypesAndDefaults";
 
 export type ICondition = {
   _id?: string;
@@ -50,7 +51,7 @@ export type IDoctor = {
   account_number?: string; // as account.uuid
   account_id?: IAccount; // as account_.id,
   address?: string;
-  assignedME?: string;
+  assignedME?: string | IEmployeeRegistration;
 };
 export type ITransaction = {
   _id?: string;
