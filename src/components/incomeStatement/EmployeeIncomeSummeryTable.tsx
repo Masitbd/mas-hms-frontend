@@ -122,10 +122,10 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
               },
               body: [
                 ...group.records.map((record) => [
-                  record?.name,
-                  record?.uuid,
+                  record?.name ?? " ",
+                  record?.uuid ?? " ",
 
-                  record?.totalPaid,
+                  record?.totalPaid ?? "0",
                 ]),
               ],
             },
@@ -133,7 +133,7 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
           },
 
           {
-            text: `Grand Total: ${group?.grandTotal}`,
+            text: `Grand Total: ${group?.grandTotal ?? "0"}`,
             style: "grandTotal",
             margin: [0, 10, 0, 10],
           },
