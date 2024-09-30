@@ -43,11 +43,10 @@ const PayModel = ({
           setPayModel(false);
         }
         if ("error" in result) {
-          const errorMessage = (
-            result as { error: { data: { message: string } } }
-          )?.error.data.message;
-          swal(errorMessage, {
-            icon: "warning",
+          console.log(result);
+          const errorMessage = (result as { error: string })?.error;
+          swal("Error", errorMessage, {
+            icon: "error",
           });
         }
       }

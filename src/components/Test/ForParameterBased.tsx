@@ -108,17 +108,9 @@ const ForParameterBased = ({
         <Button
           appearance="primary"
           color="blue"
-          onClick={() => newOpenHandler()}
-          className="mr-2"
-        >
-          Add New
-        </Button>
-        <Button
-          appearance="primary"
-          color="blue"
           onClick={() => setExistingModal(true)}
         >
-          Add existing
+          Add Tests
         </Button>
       </div>
       <div>

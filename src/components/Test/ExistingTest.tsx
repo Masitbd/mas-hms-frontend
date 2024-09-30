@@ -91,7 +91,7 @@ const ExistingTest = ({
         title="Add Test"
         size="lg"
       >
-        <div>
+        <div className="min-h-96">
           <div className="flex gap-5">
             <div>
               <Dropdown
@@ -215,7 +215,7 @@ const ExistingTest = ({
                 </Column>
               </Table>
             ) : (
-              <div className="flex text-center font-bold py-10 items-center justify-center">
+              <div className="flex text-center font-bold py-10 items-center justify-center w-full h-full">
                 Please Select a Report group and Group
               </div>
             )}

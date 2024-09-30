@@ -1,7 +1,6 @@
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import { ENUM_MODE } from "@/enum/Mode";
 import { useGetPdrvQuery } from "@/redux/api/pdrv/pdrvSlice";
-import "rsuite/dist/rsuite.min.css";
 import "./TabsResponsive.css";
 import {
   useGetReportGroupQuery,
