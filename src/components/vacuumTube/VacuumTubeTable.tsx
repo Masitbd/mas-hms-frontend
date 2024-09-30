@@ -26,7 +26,6 @@ const VacuumTubeTable = ({
   setPostModelOpen,
 }: TableType<IVacuumTube>) => {
   const { data: defaultData, isLoading } = useGetVacuumTubeQuery(undefined);
-  console.log(defaultData);
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -41,7 +40,7 @@ const VacuumTubeTable = ({
     const end = start + limit;
     return i >= start && i < end;
   });
-  console.log(data);
+
   //   For delete
   const [deleteItem] = useDeleteVacuumTubeMutation();
 
@@ -80,7 +79,7 @@ const VacuumTubeTable = ({
   return (
     <div>
       <Table
-        height={600}
+        autoHeight
         data={data}
         loading={isLoading}
         bordered
@@ -88,7 +87,7 @@ const VacuumTubeTable = ({
         rowHeight={65}
         className="text-md"
       >
-        <Column flexGrow={1}>
+        <Column flexGrow={3}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
@@ -97,7 +96,7 @@ const VacuumTubeTable = ({
           <Cell dataKey="price" />
         </Column>
 
-        <Column flexGrow={4}>
+        <Column flexGrow={1}>
           <HeaderCell>Description</HeaderCell>
           <Cell dataKey="description" />
         </Column>

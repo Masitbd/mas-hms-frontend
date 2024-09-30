@@ -17,7 +17,7 @@ const Page = ({ params }: { params: { oid: string } }) => {
     isError: orderDataError,
     isFetching,
     refetch,
-  } = useGetSingleOrderQuery(params.oid);
+  } = useGetSingleOrderQuery(params.oid, { refetchOnMountOrArgChange: true });
 
   if (orderDataLoading || isFetching) return <Loading />;
 

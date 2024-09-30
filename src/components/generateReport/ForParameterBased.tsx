@@ -29,6 +29,7 @@ import { useGetSingleDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import ForDescriptionBased from "./ForDescriptionBased";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import { setTimeout } from "timers";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -138,9 +139,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
     if (mode == ENUM_MODE.NEW) {
       const data = await post(result);
       if ("data" in data) {
-        swalButtonHandler(" Report posted Successfully");
-        router.push(`/testReport/${order.oid}`);
-        refeatch && refeatch();
+        setTimeout(() => {
+          swalButtonHandler(" Report posted Successfully");
+          router.push(`/testReport/${order.oid}`);
+          refeatch && refeatch();
+        }, 5000);
       }
     }
 

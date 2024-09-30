@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Loader, Modal } from "rsuite";
 import CloseIcon from "@rsuite/icons/Close";
+import GlassMorphismLoader from "./GlassMorphismLoader";
 
 const RModal = ({
   size,
@@ -20,8 +21,14 @@ const RModal = ({
   loading?: boolean;
 }) => {
   return (
-    <div>
-      <Modal size={size} open={open} backdrop="static" onClose={cancelHandler}>
+    <div className="">
+      <Modal
+        size={size}
+        open={open}
+        backdrop="static"
+        onClose={cancelHandler}
+        className=""
+      >
         <div className="bg-[#3498ff] text-white px-2 py-3 text-center font-sans font-semibold shadow-lg  text-xl -mt-5 -mb-5 -mx-5 z-20 grid grid-cols-12 ">
           <h3 className="col-start-2 col-span-10">{title}</h3>
           <div className="col-start-12 flex justify-end mx-2">
@@ -40,7 +47,13 @@ const RModal = ({
           </div>
         </div>
 
-        <Modal.Body className="p-5 shadow-md my-5 ">{children}</Modal.Body>
+        <Modal.Body className="p-5 shadow-md my-5">
+          <div className="relative">
+            {loading && <GlassMorphismLoader />}
+
+            {children}
+          </div>
+        </Modal.Body>
         {okHandler && cancelHandler && (
           <Modal.Footer>
             <Button

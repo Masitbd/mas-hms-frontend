@@ -82,8 +82,6 @@ const Patient = () => {
     setFormData(initialPatientData);
     setMode("new");
   };
-  console.log("data", formData);
-  console.log("file", fileRef.current?.files?.[0]);
   const modalOKHandler = async () => {
     if (ref.current.check()) {
       if (mode == "new") {
@@ -138,42 +136,51 @@ const Patient = () => {
     }
   }, [postPatientSuccess]);
   return (
-    <div>
-      <AuthCheckerForComponent
-        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PATIENT]}
-      >
-        <div className="my-5">
-          <Button
-            appearance="primary"
-            color="blue"
-            onClick={() => setModalOpen(!modalOpen)}
-          >
-            Register New Patient
-          </Button>
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">
+            Registered Patients
+          </h2>
         </div>
-      </AuthCheckerForComponent>
-      <div>
-        <RModal
-          open={modalOpen}
-          size="xl"
-          title="Register New Patient"
-          key={"55"}
-          cancelHandler={modalCancelHandler}
-          okHandler={modalOKHandler}
-        >
-          <PatientForm
-            formData={formData}
-            setfromData={setFormData}
-            mode={mode}
-            forwardedRef={ref}
-            fileRef={fileRef}
-            model={model}
-            defaultValue={formData}
-          />
-        </RModal>
-      </div>
-      <div>
-        <PatientTable patchHandler={patchHandler} />
+        <div className="p-2">
+          <AuthCheckerForComponent
+            requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PATIENT]}
+          >
+            <div className="my-5">
+              <Button
+                appearance="primary"
+                color="blue"
+                onClick={() => setModalOpen(!modalOpen)}
+              >
+                Register New Patient
+              </Button>
+            </div>
+          </AuthCheckerForComponent>
+          <div>
+            <RModal
+              open={modalOpen}
+              size="xl"
+              title="Register New Patient"
+              key={"55"}
+              cancelHandler={modalCancelHandler}
+              okHandler={modalOKHandler}
+            >
+              <PatientForm
+                formData={formData}
+                setfromData={setFormData}
+                mode={mode}
+                forwardedRef={ref}
+                fileRef={fileRef}
+                model={model}
+                defaultValue={formData}
+              />
+            </RModal>
+          </div>
+          <div>
+            <PatientTable patchHandler={patchHandler} />
+          </div>
+        </div>
       </div>
     </div>
   );

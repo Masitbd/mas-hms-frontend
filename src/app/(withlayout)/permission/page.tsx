@@ -18,36 +18,43 @@ const Permissions: React.FC = () => {
   };
 
   return (
-    <div className="my-5 px-5">
-      <div className="my-4">
-        <AuthCkeckerForComponent
-          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PERMISSIONS]}
-        >
-          <Button
-            appearance="primary"
-            onClick={() => setPostModalOpen(!postModalOpen)}
-          >
-            Add New Permission
-          </Button>
-        </AuthCkeckerForComponent>
-      </div>
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Permissions</h2>
+        </div>
+        <div className="p-2">
+          <div className="my-4">
+            <AuthCkeckerForComponent
+              requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PERMISSIONS]}
+            >
+              <Button
+                appearance="primary"
+                onClick={() => setPostModalOpen(!postModalOpen)}
+              >
+                Add New Permission
+              </Button>
+            </AuthCkeckerForComponent>
+          </div>
 
-      <div>
-        <NewPermission
-          modalStatusHandler={setPostModalOpen}
-          open={postModalOpen}
-          cancelHandler={cancelHandlerforPost}
-        />
-      </div>
-      <div>
-        <AuthCkeckerForComponent
-          requiredPermission={[
-            ENUM_USER_PEMISSION.GET_PERMISSIONS,
-            ENUM_USER_PEMISSION.MANAGE_PERMISSIONS,
-          ]}
-        >
-          <PermissionTable />
-        </AuthCkeckerForComponent>
+          <div>
+            <NewPermission
+              modalStatusHandler={setPostModalOpen}
+              open={postModalOpen}
+              cancelHandler={cancelHandlerforPost}
+            />
+          </div>
+          <div>
+            <AuthCkeckerForComponent
+              requiredPermission={[
+                ENUM_USER_PEMISSION.GET_PERMISSIONS,
+                ENUM_USER_PEMISSION.MANAGE_PERMISSIONS,
+              ]}
+            >
+              <PermissionTable />
+            </AuthCkeckerForComponent>
+          </div>
+        </div>
       </div>
     </div>
   );

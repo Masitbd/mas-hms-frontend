@@ -8,7 +8,15 @@ import ForRegistered from "./ForRegistered";
 import ForNotRegistered from "./ForNotRegistered";
 import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { useLazyGetSinglePatientQuery } from "@/redux/api/patient/patientSlice";
-import { Form, Input, InputGroup, InputPicker, Message, toaster } from "rsuite";
+import {
+  Form,
+  Input,
+  InputGroup,
+  InputPicker,
+  Loader,
+  Message,
+  toaster,
+} from "rsuite";
 import { ENUM_MODE } from "@/enum/Mode";
 import { IPatient } from "@/types/allDepartmentInterfaces";
 
@@ -23,7 +31,12 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
   const { data: doctorData } = useGetDoctorQuery(undefined);
   const [
     patientSearch,
-    { data: patientSearchData, isError: patientSearchError },
+    {
+      data: patientSearchData,
+      isError: patientSearchError,
+      isLoading: patientDataLoading,
+      isFetching: patientDataFeatching,
+    },
   ] = useLazyGetSinglePatientQuery();
 
   const searchHandler = async (value: string) => {
@@ -60,7 +73,7 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
 
           <hr />
           <div className="grid grid-cols-3 gap-5 py-2 px-2">
-            {unreagisteredPatientProfileDataPropertyNames.map(
+            {unreagisteredPatientProfileDataPropertyNames?.map(
               (value, index) => {
                 return (
                   <>
@@ -79,6 +92,7 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
       </>
     );
   }
+
   return (
     <div className="mb-5 border  shadow-lg">
       <div className="bg-[#3498ff] text-white px-2 py-2">
@@ -123,6 +137,14 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
           </>
         )}
 
+        {patientDataFeatching || patientDataLoading ? (
+          <div className="h-24 flex justify-center items-center">
+            <Loader size="lg" />
+          </div>
+        ) : (
+          ""
+        )}
+
         <div className="mt-5">
           {data.patientType === "registered" &&
             (data?.patient?._id ? (
@@ -135,11 +157,14 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
                 setFormData={setFormData}
               />
             ) : (
-              <>
-                <div className="h-24 flex justify-center items-center">
-                  No data founds
-                </div>
-              </>
+              !patientDataFeatching &&
+              !patientDataLoading && (
+                <>
+                  <div className="h-24 flex justify-center items-center">
+                    No data founds
+                  </div>
+                </>
+              )
             ))}
           {data.patientType === "notRegistered" && (
             <ForNotRegistered

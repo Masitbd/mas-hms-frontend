@@ -110,7 +110,7 @@ const UserTable = ({
           bordered
           cellBordered
           rowHeight={60}
-          height={800}
+          autoHeight
           loading={usersLoading}
         >
           <Column align="center" flexGrow={2}>

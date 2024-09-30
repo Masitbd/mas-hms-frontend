@@ -128,11 +128,9 @@ const OrderTable = ({
     data: testData,
     isLoading: testLoading,
     isError: TesError,
+    isFetching: testFeatching,
   } = useGetOrderQuery(searchData);
 
-  console.log("test", testData);
-
-  const dispatch = useAppDispatch();
   return (
     <div>
       <div className="my-5">
@@ -191,13 +189,15 @@ const OrderTable = ({
         </Form>
       </div>
       <Table
-        height={500}
         data={testData?.data}
-        loading={testLoading || singleFeatchLoaing || singleFeatching}
+        loading={
+          testLoading || singleFeatchLoaing || singleFeatching || testFeatching
+        }
         className="w-full"
         bordered
         cellBordered
         rowHeight={60}
+        autoHeight
       >
         <Column align="center" resizable flexGrow={2}>
           <HeaderCell>Order Id</HeaderCell>

@@ -53,7 +53,7 @@ const PatientTable = ({
     isLoading: testLoading,
     isError: TesError,
   } = useGetPatientQuery(searchData);
-  console.log(testData);
+
   return (
     <div>
       <div className="my-5">
@@ -71,7 +71,7 @@ const PatientTable = ({
         </Form>
       </div>
       <Table
-        height={650}
+        autoHeight
         data={testData?.data}
         loading={testLoading}
         className="w-full"

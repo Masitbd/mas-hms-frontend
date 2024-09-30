@@ -29,27 +29,34 @@ const ReportGroup = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conditionLoading, isError, isSuccess]);
   return (
-    <div className="my-5 px-5">
-      <AuthCheckerForComponent
-        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
-      >
-        <div className="my-4">
-          <Button
-            appearance="primary"
-            onClick={() => setPostModalOpen(!postModalOpen)}
-          >
-            Add New Report Group
-          </Button>
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Report Group</h2>
         </div>
-      </AuthCheckerForComponent>
+        <div className="p-2">
+          <AuthCheckerForComponent
+            requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+          >
+            <div className="my-4">
+              <Button
+                appearance="primary"
+                onClick={() => setPostModalOpen(!postModalOpen)}
+              >
+                Add New Report Group
+              </Button>
+            </div>
+          </AuthCheckerForComponent>
 
-      <div>
-        <NewReportGroupModal
-          postReportGroup={postReportGroup}
-          open={postModalOpen}
-          cancelHandler={cancelHandlerforPost}
-        ></NewReportGroupModal>
-        <ReportGroupTable />
+          <div>
+            <NewReportGroupModal
+              postReportGroup={postReportGroup}
+              open={postModalOpen}
+              cancelHandler={cancelHandlerforPost}
+            ></NewReportGroupModal>
+            <ReportGroupTable />
+          </div>
+        </div>
       </div>
     </div>
   );
