@@ -133,7 +133,7 @@ const EmployeePerformance = () => {
           text: `Marketing Executive Performance: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
           style: "groupHeader",
           alignment: "center",
-          margin: [0, 0, 0, 20],
+          margin: [0, 0, 0, 0],
         },
         ...dataForPrint?.flatMap((d) => {
           return [

@@ -35,19 +35,25 @@ const AllTests = () => {
   }, [comapnyInfo, data]);
   // margin
   const { data: marginInfo } = useGetMarginDataQuery(undefined);
+
+  const pageMargin = marginInfo?.data?.value
+    .split(",")
+    .map((val: any) => Number(val.trim()));
+
   const generatePDF = () => {
     const documentDefinition: any = {
       pageOrientation: "landscape",
       defaultStyle: {
         fontSize: 12,
       },
-      pageMargins: [20, 20, 20, 20],
+      pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
+        ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
           text: `ALl Tests`,
           style: "subheader",
           alignment: "center",
-          margin: [0, 0, 0, 20],
+          margin: [0, 0, 0, 0],
         },
 
         ...data?.data?.map((td: { _id: string; tests: ITest[] }) => {
