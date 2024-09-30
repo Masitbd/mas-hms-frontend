@@ -203,6 +203,15 @@ const testMenuItem = [
     ],
   },
   {
+    key: "17",
+    title: "Invoice Margin",
+    href: "/margin",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_COMPANY_INFO,
+      ENUM_USER_PEMISSION.MANAGE_COMPANY_INFO,
+    ],
+  },
+  {
     key: "18",
     title: "Employee",
     href: "/employee",
@@ -386,12 +395,12 @@ const Sidebar = () => {
   const [expand, setExpand] = useState(true);
   const [selectedItem, setSelectedItem] = useState("");
   return (
-    <div>
+    <div className="shadow-lg">
       <ResuiteSidebar
         style={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "88vh",
+          minHeight: "93vh",
           justifyContent: "space-between",
           overflowY: "hidden",
         }}

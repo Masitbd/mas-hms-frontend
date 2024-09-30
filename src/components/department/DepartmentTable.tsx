@@ -72,7 +72,7 @@ const DepartmentTable = ({
   return (
     <div>
       <Table
-        height={600}
+        autoHeight
         data={data}
         loading={isLoading}
         bordered

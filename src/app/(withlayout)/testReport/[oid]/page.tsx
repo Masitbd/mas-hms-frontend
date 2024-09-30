@@ -17,17 +17,33 @@ const Page = ({ params }: { params: { oid: string } }) => {
     isError: orderDataError,
     isFetching,
     refetch,
-  } = useGetSingleOrderQuery(params.oid);
+  } = useGetSingleOrderQuery(params.oid, { refetchOnMountOrArgChange: true });
 
   if (orderDataLoading || isFetching) return <Loading />;
 
   return (
-    <div>
-      <div>
-        <OrderAndPatientInfo data={orderData.data} />
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">
+            Order and Patient Info
+          </h2>
+        </div>
+        <div className="p-2">
+          <div>
+            <OrderAndPatientInfo data={orderData.data} />
+          </div>
+        </div>
       </div>
-      <div>
-        <TestTableForReport data={orderData?.data[0]} />
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Reports&apos;s</h2>
+        </div>
+        <div className="p-2">
+          <div>
+            <TestTableForReport data={orderData?.data[0]} />
+          </div>
+        </div>
       </div>
     </div>
   );

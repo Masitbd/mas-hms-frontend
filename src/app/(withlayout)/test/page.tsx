@@ -147,41 +147,48 @@ const Test = () => {
   }, [testSuccess, patchSuccess, testErrors]);
 
   return (
-    <div>
-      <div>
-        <RModal
-          cancelHandler={cancelHandler}
-          okHandler={okHandler}
-          open={modalOpen}
-          size="lg"
-          title={mode === "new" ? "Add New Test" : "Edit Test Fields"}
-          loading={testLoading}
-        >
-          <TestForm
-            model={modelForTestForm}
-            defaultValue={defaultValue as ITest}
-            formData={formData}
-            setfromData={setfromData}
-            forwardedRef={ref}
-            mode={mode}
-          />
-        </RModal>
-      </div>
-      <div className="my-5">
-        <AuthCheckerForComponent
-          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
-        >
-          <Button
-            onClick={() => modalHandler()}
-            appearance="primary"
-            color="blue"
-          >
-            Add New Test
-          </Button>
-        </AuthCheckerForComponent>
-      </div>
-      <div className="mx-5">
-        <TestTable patchHandler={patchHandler} />
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Test</h2>
+        </div>
+        <div className="p-2">
+          <div>
+            <RModal
+              cancelHandler={cancelHandler}
+              okHandler={okHandler}
+              open={modalOpen}
+              size="lg"
+              title={mode === "new" ? "Add New Test" : "Edit Test Fields"}
+              loading={testLoading}
+            >
+              <TestForm
+                model={modelForTestForm}
+                defaultValue={defaultValue as ITest}
+                formData={formData}
+                setfromData={setfromData}
+                forwardedRef={ref}
+                mode={mode}
+              />
+            </RModal>
+          </div>
+          <div className="my-5">
+            <AuthCheckerForComponent
+              requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
+            >
+              <Button
+                onClick={() => modalHandler()}
+                appearance="primary"
+                color="blue"
+              >
+                Add New Test
+              </Button>
+            </AuthCheckerForComponent>
+          </div>
+          <div className="mx-5">
+            <TestTable patchHandler={patchHandler} />
+          </div>
+        </div>
       </div>
     </div>
   );

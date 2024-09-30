@@ -16,8 +16,12 @@ import React, { SyntheticEvent, useEffect, useState } from "react";
 import { Button, DatePicker, SelectPicker, Table } from "rsuite";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
-import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import {
+  useGetCompnayInofQuery,
+  useGetDefaultQuery,
+} from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
+import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const TestWiseDoctorsPerformance = () => {
@@ -53,32 +57,41 @@ const TestWiseDoctorsPerformance = () => {
     }
   }, [refby, date]);
 
-  const {
-    data: companyInfoData,
-    isLoading: companyInfoLoading,
-    isFetching: companyInfoFeatching,
-  } = useGetDefaultQuery(undefined);
+  const { data: comapnyInfo } = useGetDefaultQuery(undefined);
 
-  const [headers, setHeaders] = useState([]);
+  const [infoHeader, setInfoHeader] = useState<
+    null | { text?: string; image?: string }[]
+  >(null);
+
+  // console.log("heaer", infoHeader);
+
   useEffect(() => {
-    (async function () {
-      if (!companyInfoFeatching && !companyInfoFeatching) {
-        await FinancialReportHeaderGenerator(companyInfoData?.data).then(
-          (data) => setHeaders(data as never[])
-        );
-      }
-    })();
-  }, [companyInfoData, companyInfoFeatching, companyInfoFeatching]);
+    const generateHeader = async () => {
+      const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
+      setInfoHeader(header); // Set the state with the generated header
+    };
 
+    if (comapnyInfo?.data) {
+      generateHeader();
+    }
+  }, [comapnyInfo, performanceData]);
+  // margin
+  const { data: marginInfo } = useGetMarginDataQuery(undefined);
+
+  const pageMargin = marginInfo?.data?.value
+    .split(",")
+    .map((val: any) => Number(val.trim()));
+
+  // pdf
   const generatePDF = () => {
     const documentDefinition: any = {
       pageOrientation: "landscape",
       defaultStyle: {
         fontSize: 12,
       },
-      pageMargins: [20, 20, 20, 20],
+      pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
-        ...headers,
+        ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
           text: `RefBy And Department Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
           style: "subheader",

@@ -3,9 +3,9 @@ import DueStatemnetTable from "@/components/incomeStatement/DueStatementTable";
 import { useGetDueDetailsQuery } from "@/redux/api/income-statement/Income.api";
 import { useState } from "react";
 import { Button, DatePicker, Form, Input, InputPicker, Message } from "rsuite";
-import { formatDate } from "../income-statement/page";
 import { useGetDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { IDoctor } from "@/types/allDepartmentInterfaces";
+import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 
 interface IFormValues {
   startDate: Date | null;
@@ -42,7 +42,7 @@ const DueBillspage = () => {
     skip: !isSearchEnable,
   });
 
-  console.log("due data", dueData);
+  // console.log("due data", dueData);
   // Handle form field changes
   const handleFormChange = (updatedValue: Record<string, any>) => {
     setIsSearchEnable(false); // Disable search while changing form

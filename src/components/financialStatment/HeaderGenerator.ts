@@ -16,7 +16,6 @@ async function imageToBase64(url: string) {
 }
 
 export const FinancialReportHeaderGenerator = async (params: ICompanyInfo) => {
-  console.log(params);
   const header = [];
 
   if (params) {

@@ -1,10 +1,17 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { formatDateString } from "@/utils/FormateDate";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import test from "node:test";
 import { color } from "html2canvas/dist/types/css/types/color";
+import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
+import {
+  useGetCompnayInofQuery,
+  useGetDefaultQuery,
+} from "@/redux/api/companyInfo/companyInfoSlice";
+import Image from "next/image";
+import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -41,6 +48,25 @@ type TGroup = {
 };
 
 const DueStatemnetTable: React.FC<TGroup> = ({ data }) => {
+  const { data: comapnyInfo } = useGetDefaultQuery(undefined);
+
+  const [infoHeader, setInfoHeader] = useState<
+    null | { text?: string; image?: string }[]
+  >(null);
+
+  // console.log("heaer", infoHeader);
+
+  useEffect(() => {
+    const generateHeader = async () => {
+      const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
+      setInfoHeader(header); // Set the state with the generated header
+    };
+
+    if (comapnyInfo?.data) {
+      generateHeader();
+    }
+  }, [comapnyInfo, data]);
+
   const allRecords = data.flatMap((group) => group.records);
 
   // Get the earliest (startDate) and latest (endDate) dates
@@ -52,28 +78,22 @@ const DueStatemnetTable: React.FC<TGroup> = ({ data }) => {
   const formattedStartDate = startDate.toISOString().slice(0, 10);
   const formattedEndDate = endDate.toISOString().slice(0, 10);
 
+  const { data: marginInfo } = useGetMarginDataQuery(undefined);
+
+  const pageMargin = marginInfo?.data?.value
+    .split(",")
+    .map((val: any) => Number(val.trim()));
+
   const generatePDF = () => {
     const documentDefinition: any = {
       pageOrientation: "landscape",
       defaultStyle: {
         fontSize: 12,
       },
-      pageMargins: [20, 20, 20, 20],
+      pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
         // Header Section
-        {
-          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
-          style: "header",
-          alignment: "center",
-        },
-        {
-          text: "Kachari Paira Danga, Nageswori, Kurigram",
-          alignment: "center",
-        },
-        {
-          text: "HelpLine: 01755546392 (24 Hours Open)",
-          alignment: "center",
-        },
+        ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
           text: `Statement Of Investigate of Due Bill: ${
             formattedStartDate === formattedEndDate
@@ -320,17 +340,22 @@ const DueStatemnetTable: React.FC<TGroup> = ({ data }) => {
 
   return (
     <div className="p-5">
-      <div className="text-center mb-10">
-        <h1 className="text-xl font-bold">
-          TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER
-        </h1>
-        <p>Kachari Paira Danga, Nageswori, Kurigram</p>
-        <p>HelpLine: 01755546392 (24 Hours Open)</p>
-        <p className="text-red-600 italic">
-          Statement Of Investigate of Due Bill:{" "}
-          {formattedStartDate === formattedEndDate
-            ? formattedStartDate
-            : `from ${formattedStartDate} to ${formattedEndDate}`}
+      <div className="text-center mb-10 flex flex-col items-center justify-center">
+        <div className="text-xl font-bold flex items-center justify-center gap-5 mb-4">
+          <Image
+            src={comapnyInfo?.data?.photoUrl}
+            alt="Header"
+            width={50}
+            height={50}
+          />{" "}
+          <p>{comapnyInfo?.data?.name}</p>
+        </div>
+        <p>{comapnyInfo?.data?.address}</p>
+        <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
+        <p className="italic text-red-600 text-center mb-5 font-semibold">
+          Investigation Due Statement : Between{" "}
+          {startDate ? formatDateString(startDate) : "N/A"} to{" "}
+          {endDate ? formatDateString(endDate) : "N/A"}
         </p>
       </div>
 

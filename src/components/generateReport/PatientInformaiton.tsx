@@ -36,7 +36,12 @@ const PatientInformaiton = ({
         </div>
         <div>
           <span className="font-bold">Consultant: </span>
-          {consultant?.data?.data?.title} {consultant?.data?.data?.name}
+          {order?.consultant &&
+          typeof order?.consultant === "object" &&
+          order?.consultant?.title &&
+          order?.consultant?.name
+            ? order?.consultant?.title + " " + order?.consultant?.name
+            : " "}
         </div>
         <div>
           <span className="font-bold">Receiving Date: </span>

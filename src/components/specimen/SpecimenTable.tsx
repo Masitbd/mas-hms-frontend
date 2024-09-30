@@ -72,6 +72,7 @@ const SpecimenTable = ({
   return (
     <div>
       <Table
+        autoHeight
         height={600}
         data={data}
         loading={isLoading}

@@ -100,7 +100,7 @@ const TestTable = ({
         </Form>
       </div>
       <Table
-        height={550}
+        autoHeight
         data={testData?.data.data as ITest[]}
         loading={testLoading || isFetching}
         className="w-full"
