@@ -3,6 +3,9 @@ import { NavLink } from "@/utils/Navlink";
 import VisibleIcon from "@rsuite/icons/Visible";
 import React, { useState } from "react";
 import { Button, Input, Pagination, Table } from "rsuite";
+import { ItestInformaiton } from "../order/initialDataAndTypes";
+import { TagProvider } from "rsuite/esm/InputPicker/InputPickerContext";
+import StatusTagProvider from "../ui/StatusTagProvider";
 
 const OrderTable = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -15,8 +18,7 @@ const OrderTable = () => {
     setOrderFilter({ ...orderFilter, searchTerm: event });
   };
 
-  
-  //pagination 
+  //pagination
   const [limit, setLimit] = React.useState(20);
   const [page, setPage] = React.useState(1);
 
@@ -39,12 +41,7 @@ const OrderTable = () => {
         />
       </div>
       <div className="w-full">
-        <Table
-          data={data}
-          loading={orderDataLoading}
-          height={700}
-          bordered
-        >
+        <Table data={data} loading={orderDataLoading} autoHeight bordered>
           <Column flexGrow={2}>
             <HeaderCell>OID</HeaderCell>
             <Cell dataKey="oid" />
@@ -55,7 +52,11 @@ const OrderTable = () => {
           </Column>
           <Column flexGrow={2}>
             <HeaderCell>Status</HeaderCell>
-            <Cell dataKey="status" />
+            <Cell>
+              {(rowData: ItestInformaiton) => {
+                return StatusTagProvider(rowData?.status as string);
+              }}
+            </Cell>
           </Column>
           <Column flexGrow={1}>
             <HeaderCell>Action</HeaderCell>
@@ -73,24 +74,24 @@ const OrderTable = () => {
           </Column>
         </Table>
         <div style={{ padding: 20 }}>
-        <Pagination
-          prev
-          next
-          first
-          last
-          ellipsis
-          boundaryLinks 
-          maxButtons={5}
-          size="xs"
-          layout={["total", "-", "limit", "|", "pager", "skip"]}
-          total={orderData?.data.length}
-          limitOptions={[20, 40, 60]}
-          limit={limit}
-          activePage={page}
-          onChangePage={setPage}
-          onChangeLimit={handleChangeLimit}
-        />
-      </div>
+          <Pagination
+            prev
+            next
+            first
+            last
+            ellipsis
+            boundaryLinks
+            maxButtons={5}
+            size="xs"
+            layout={["total", "-", "limit", "|", "pager", "skip"]}
+            total={orderData?.data.length}
+            limitOptions={[10, 20, 40, 60]}
+            limit={limit}
+            activePage={page}
+            onChangePage={setPage}
+            onChangeLimit={handleChangeLimit}
+          />
+        </div>
       </div>
     </div>
   );

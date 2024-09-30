@@ -11,6 +11,9 @@ import React, { SyntheticEvent, useEffect, useState } from "react";
 import { Button, DatePicker, SelectPicker, Table } from "rsuite";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
+import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
+import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const EmployeePerformance = () => {
@@ -92,6 +95,30 @@ const EmployeePerformance = () => {
     employeePerformanceData,
   ]);
 
+  const { data: comapnyInfo } = useGetDefaultQuery(undefined);
+
+  const [infoHeader, setInfoHeader] = useState<
+    null | { text?: string; image?: string }[]
+  >(null);
+
+  // console.log("heaer", infoHeader);
+
+  useEffect(() => {
+    const generateHeader = async () => {
+      const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
+      setInfoHeader(header); // Set the state with the generated header
+    };
+
+    if (comapnyInfo?.data) {
+      generateHeader();
+    }
+  }, [comapnyInfo, employeePerformanceData]);
+  // margin
+  const { data: marginInfo } = useGetMarginDataQuery(undefined);
+
+  const pageMargin = marginInfo?.data?.value
+    .split(",")
+    .map((val: any) => Number(val.trim()));
   // Pdf Generation
   const generatePDF = () => {
     const documentDefinition: any = {
@@ -99,8 +126,9 @@ const EmployeePerformance = () => {
       defaultStyle: {
         fontSize: 10,
       },
-      pageMargins: [20, 20, 20, 20],
+      pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
+        ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
           text: `Marketing Executive Performance: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
           style: "groupHeader",

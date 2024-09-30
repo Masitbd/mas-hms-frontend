@@ -7,7 +7,7 @@ import {
 } from "@/redux/api/reportTest/reportTestSlice";
 import { IResultField } from "@/types/allDepartmentInterfaces";
 import { ReactInstance, Ref, useEffect, useRef, useState } from "react";
-import { Button, Input, InputGroup, InputPicker, Table } from "rsuite";
+import { Button, Input, InputGroup, InputPicker, Loader, Table } from "rsuite";
 import swal from "sweetalert";
 import Comment from "./Comment";
 import {
@@ -139,20 +139,30 @@ const ForParameterBased = (props: IPropsForParameter) => {
     if (mode == ENUM_MODE.NEW) {
       const data = await post(result);
       if ("data" in data) {
+        swal(
+          "Success",
+          "Data Posted Redirection is in process. You will be redirected to previous Page Please Wait",
+          { icon: "success" }
+        );
         setTimeout(() => {
-          swalButtonHandler(" Report posted Successfully");
+          swalButtonHandler(" Report posted Successfully.");
           router.push(`/testReport/${order.oid}`);
-          refeatch && refeatch();
-        }, 5000);
+        }, 1000);
       }
     }
 
     if (mode == ENUM_MODE.EDIT) {
       const data = await patchReport(result);
       if ("data" in data) {
-        swal("success", "", "success");
-        swalButtonHandler("Report updated Successfully");
-        refeatch && refeatch();
+        swal(
+          "Success",
+          "Data Posted Redirection is in process. You will be redirected to previous Page Please Wait",
+          { icon: "success" }
+        );
+        setTimeout(() => {
+          swalButtonHandler(" Report Updated Successfully.");
+          router.push(`/testReport/${order.oid}`);
+        }, 1000);
       }
     }
   };
@@ -228,140 +238,169 @@ const ForParameterBased = (props: IPropsForParameter) => {
   if (props.mode == ENUM_MODE.VIEW) {
     return (
       <>
-        <div className="shadow-lg rounded-md py-5 my-5 mx-2">
-          <div>
-            <Margin
-              margin={margin}
-              marginTitle="p"
-              setMargins={setMargins}
-              key={"p"}
-            />
-          </div>
-          <div className="flex justify-end mr-9">
-            <Button
-              onClick={handlePrint}
-              className="mb-5 col-span-4"
-              appearance="primary"
-              color="blue"
-              size="lg"
-            >
-              Print
-            </Button>
+        <div className="">
+          <div className="my-5 border  shadow-lg mx-5">
+            <div className="bg-[#3498ff] text-white px-2 py-2">
+              <h2 className="text-center text-xl font-semibold">
+                Margin for Report Print
+              </h2>
+            </div>
+            <div className="p-2">
+              <div className="shadow-lg rounded-md py-5 my-5 mx-2">
+                <div>
+                  <Margin
+                    margin={margin}
+                    marginTitle="p"
+                    setMargins={setMargins}
+                    key={"p"}
+                  />
+                </div>
+                <div className="flex justify-end mr-9">
+                  <Button
+                    onClick={handlePrint}
+                    className="mb-5 col-span-4"
+                    appearance="primary"
+                    color="blue"
+                    size="lg"
+                  >
+                    Print
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <ReportViewerParameter
-          order={props.order}
-          reportGroup={props.reportGroup}
-          testResult={result}
-          fieldNames={fieldNames}
-          resultFields={resultFields}
-          headings={headings}
-          ref={componentRef as Ref<HTMLDivElement>}
-          consultant={doctorInfo}
-        />
+        <div className="">
+          <div className="my-5 border  shadow-lg mx-5">
+            <div className="bg-[#3498ff] text-white px-2 py-2">
+              <h2 className="text-center text-xl font-semibold">Reports</h2>
+            </div>
+            <div className="p-2">
+              <ReportViewerParameter
+                order={props.order}
+                reportGroup={props.reportGroup}
+                testResult={result}
+                fieldNames={fieldNames}
+                resultFields={resultFields}
+                headings={headings}
+                ref={componentRef as Ref<HTMLDivElement>}
+                consultant={doctorInfo}
+              />
+            </div>
+          </div>
+        </div>
       </>
     );
   } else {
     return (
-      <div>
-        <div>
-          <div className="mt-5">
-            Analyzer Machine Name
-            <Input
-              onChange={(value) => {
-                const data = { ...result };
-                (data.analyzerMachine = value), setResult(data);
-              }}
-              defaultValue={result?.analyzerMachine}
-            />
+      <div className="">
+        <div className="my-5 border  shadow-lg mx-5">
+          <div className="bg-[#3498ff] text-white px-2 py-2">
+            <h2 className="text-center text-xl font-semibold">Vaccume Tube</h2>
           </div>
-          <div>
-            {headings.map((heading, index) => {
-              return (
-                <>
-                  <div className="my-10">
-                    <div className="text-lg font-bold font-serif" key={heading}>
-                      {heading}
-                    </div>
-                    <div>
-                      <Table
-                        data={filterResultFieldsByInvestigation(
-                          resultFields,
-                          heading
-                        )}
-                        key={index}
-                        wordWrap="break-word"
-                        autoHeight
-                      >
-                        {fieldNames.map((fieldName: string) => (
-                          <>
-                            {fieldName == "defaultValue" ? (
-                              <></>
-                            ) : fieldName == "result" ? (
-                              <Column key={fieldName} flexGrow={2}>
-                                <HeaderCell>
-                                  {fieldName.toUpperCase()}
-                                </HeaderCell>
-                                <Cell>
-                                  {(rowData) =>
-                                    // eslint-disable-next-line react-hooks/rules-of-hooks
-                                    useResultField(
-                                      fieldNames,
-                                      rowData.defaultValue,
-                                      rowData as IResultField,
-                                      result,
-                                      setResult
-                                    )
-                                  }
-                                </Cell>
-                              </Column>
-                            ) : (
-                              <Column key={fieldName} flexGrow={2}>
-                                <HeaderCell>
-                                  {fieldName.toUpperCase()}
-                                </HeaderCell>
-                                <Cell dataKey={fieldName} />
-                              </Column>
+          <div className="p-2">
+            <div>
+              <div className="mt-5">
+                Analyzer Machine Name
+                <Input
+                  onChange={(value) => {
+                    const data = { ...result };
+                    (data.analyzerMachine = value), setResult(data);
+                  }}
+                  defaultValue={result?.analyzerMachine}
+                />
+              </div>
+              <div>
+                {headings.map((heading, index) => {
+                  return (
+                    <>
+                      <div className="my-10">
+                        <div
+                          className="text-lg font-bold font-serif"
+                          key={heading}
+                        >
+                          {heading}
+                        </div>
+                        <div>
+                          <Table
+                            data={filterResultFieldsByInvestigation(
+                              resultFields,
+                              heading
                             )}
-                          </>
-                        ))}
-                      </Table>
-                    </div>
-                  </div>
-                </>
-              );
-            })}
-          </div>
-        </div>
-        <div>
-          <Comment result={result} setResult={setResult} />
-        </div>
+                            key={index}
+                            wordWrap="break-word"
+                            autoHeight
+                          >
+                            {fieldNames.map((fieldName: string) => (
+                              <>
+                                {fieldName == "defaultValue" ? (
+                                  <></>
+                                ) : fieldName == "result" ? (
+                                  <Column key={fieldName} flexGrow={2}>
+                                    <HeaderCell>
+                                      {fieldName.toUpperCase()}
+                                    </HeaderCell>
+                                    <Cell>
+                                      {(rowData) =>
+                                        // eslint-disable-next-line react-hooks/rules-of-hooks
+                                        useResultField(
+                                          fieldNames,
+                                          rowData.defaultValue,
+                                          rowData as IResultField,
+                                          result,
+                                          setResult
+                                        )
+                                      }
+                                    </Cell>
+                                  </Column>
+                                ) : (
+                                  <Column key={fieldName} flexGrow={2}>
+                                    <HeaderCell>
+                                      {fieldName.toUpperCase()}
+                                    </HeaderCell>
+                                    <Cell dataKey={fieldName} />
+                                  </Column>
+                                )}
+                              </>
+                            ))}
+                          </Table>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+              </div>
+            </div>
+            <div>
+              <Comment result={result} setResult={setResult} />
+            </div>
 
-        <AuthCheckerForComponent
-          requiredPermission={[ENUM_USER_PEMISSION.MANAGE_LAB_REPORTS]}
-        >
-          <div className="flex flex-row justify-end  my-5 w-3/4">
-            <Button
-              appearance="primary"
-              color="red"
-              size="lg"
-              onClick={() => router.push(`/testReport/${order.oid}`)}
+            <AuthCheckerForComponent
+              requiredPermission={[ENUM_USER_PEMISSION.MANAGE_LAB_REPORTS]}
             >
-              Cancel
-            </Button>
-            <Button
-              appearance="primary"
-              color="blue"
-              className="ml-5"
-              size="lg"
-              onClick={handleSubmit}
-              loading={patchLoading || postLoading}
-            >
-              Post
-            </Button>
+              <div className="flex flex-row justify-end  my-5 w-3/4">
+                <Button
+                  appearance="primary"
+                  color="red"
+                  size="lg"
+                  onClick={() => router.push(`/testReport/${order.oid}`)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  appearance="primary"
+                  color="blue"
+                  className="ml-5"
+                  size="lg"
+                  onClick={handleSubmit}
+                  loading={patchLoading || postLoading}
+                >
+                  Post
+                </Button>
+              </div>
+            </AuthCheckerForComponent>
           </div>
-        </AuthCheckerForComponent>
+        </div>
       </div>
     );
   }

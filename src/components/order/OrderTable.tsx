@@ -31,6 +31,8 @@ import { setId } from "@/redux/features/IdStore/idSlice";
 import { ENUM_MODE } from "@/enum/Mode";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 import { useLazyGetSingleVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
+import StatusTagProvider from "../ui/StatusTagProvider";
+import { camelToFlat } from "@/utils/CamelToFlat";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
@@ -198,6 +200,7 @@ const OrderTable = ({
         cellBordered
         rowHeight={60}
         autoHeight
+        wordWrap={"break-word"}
       >
         <Column align="center" resizable flexGrow={2}>
           <HeaderCell>Order Id</HeaderCell>
@@ -213,11 +216,20 @@ const OrderTable = ({
         </Column>
         <Column resizable flexGrow={2}>
           <HeaderCell>Patient Type</HeaderCell>
-          <Cell dataKey="patientType" />
+          <Cell>
+            {(rowData) => {
+              return <>{camelToFlat(rowData?.patientType)}</>;
+            }}
+          </Cell>
         </Column>
         <Column resizable flexGrow={1}>
           <HeaderCell>Delivery Date</HeaderCell>
-          <Cell dataKey="deliveryTime" />
+          <Cell>
+            {(rowData) => {
+              const date = new Date(rowData?.deliveryTime);
+              return <>{date?.toLocaleDateString()}</>;
+            }}
+          </Cell>
         </Column>
         <Column resizable flexGrow={1}>
           <HeaderCell>Due Amount</HeaderCell>
@@ -229,39 +241,21 @@ const OrderTable = ({
         </Column>
         <Column resizable flexGrow={1}>
           <HeaderCell>Status</HeaderCell>
-          <Cell>
-            {(rowdata) => (
-              <>
-                <span
-                  color={"green"}
-                  className={
-                    rowdata.status === "pending"
-                      ? "text-red-500"
-                      : "text-green-500"
-                  }
-                >
-                  {rowdata.status}
-                </span>
-              </>
-            )}
-          </Cell>
+          <Cell>{(rowdata) => StatusTagProvider(rowdata?.status)}</Cell>
         </Column>
 
-        <Column flexGrow={2} resizable>
+        <Column flexGrow={1} resizable>
           <HeaderCell>Action</HeaderCell>
           <Cell>
             {(rowdate) => (
               <>
                 <Button
-                  // appearance="transparent"
                   className="ml-2"
+                  appearance="primary"
+                  color="green"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
                     if (patchHandler) {
-                      // patchHandler({
-                      //   data: rowdate as IOrderData,
-                      //   mode: ENUM_MODE.VIEW,
-                      // });
                       patchHanlders(rowdate?.oid);
                     }
                   }}

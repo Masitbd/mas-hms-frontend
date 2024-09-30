@@ -2,15 +2,39 @@
 import AllTestsTable from "@/components/financialStatment/AllTestsTable";
 import { useGetAllTestsQuery } from "@/redux/api/financialReport/financialReportSlice";
 import { ITest } from "@/types/allDepartmentInterfaces";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "rsuite";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
+import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
+import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const AllTests = () => {
   const { isLoading, isFetching, data } = useGetAllTestsQuery(undefined);
+
+  const { data: comapnyInfo } = useGetDefaultQuery(undefined);
+
+  const [infoHeader, setInfoHeader] = useState<
+    null | { text?: string; image?: string }[]
+  >(null);
+
+  // console.log("heaer", infoHeader);
+
+  useEffect(() => {
+    const generateHeader = async () => {
+      const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
+      setInfoHeader(header); // Set the state with the generated header
+    };
+
+    if (comapnyInfo?.data) {
+      generateHeader();
+    }
+  }, [comapnyInfo, data]);
+  // margin
+  const { data: marginInfo } = useGetMarginDataQuery(undefined);
   const generatePDF = () => {
     const documentDefinition: any = {
       pageOrientation: "landscape",
@@ -19,20 +43,6 @@ const AllTests = () => {
       },
       pageMargins: [20, 20, 20, 20],
       content: [
-        {
-          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
-          style: "header",
-          alignment: "center",
-        },
-        {
-          text: "Kachari Paira Danga, Nageswori, Kurigram",
-          alignment: "center",
-        },
-        {
-          text: "HelpLine: 01755546392 (24 Hours Open)",
-          alignment: "center",
-          margin: [0, 0, 0, 20],
-        },
         {
           text: `ALl Tests`,
           style: "subheader",

@@ -9,10 +9,16 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
 import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
+import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const AllDoctors = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
+  const { data: marginInfo } = useGetMarginDataQuery(undefined);
+
+  const pageMargin = marginInfo?.data?.value
+    .split(",")
+    .map((val: any) => Number(val.trim()));
 
   const { data, isLoading, isFetching } = useGetAllDoctorsQuery(undefined);
   const {
@@ -37,7 +43,7 @@ const AllDoctors = () => {
       defaultStyle: {
         fontSize: 12,
       },
-      pageMargins: [20, 20, 20, 20],
+      pageMargins: headers ? [20, 20, 20, 20] : pageMargin,
       content: [
         ...headers,
         {
