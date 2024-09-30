@@ -44,10 +44,6 @@ const ClientWiseIncomeStatement = () => {
     event?: React.FormEvent<HTMLFormElement>
   ) => {
     if (formValue) {
-      // Format the dates
-      const formattedStartDate = formatDate(formValue.startDate);
-      const formattedEndDate = formatDate(formValue.endDate);
-
       setIsSearchEnable(true);
     }
   };
@@ -94,7 +90,35 @@ const ClientWiseIncomeStatement = () => {
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
-           
+            <div>
+              <Form.Group controlId="startDate">
+                <Form.ControlLabel>Start Date</Form.ControlLabel>
+                <DatePicker
+                  oneTap
+                  name="startDate"
+                  format="yyyy-MM-dd"
+                  value={formValue.startDate}
+                  onChange={(date: Date | null) =>
+                    setFormValue((prev) => ({ ...prev, startDate: date }))
+                  }
+                />
+              </Form.Group>
+            </div>
+            {/* End Date */}
+            <div>
+              <Form.Group controlId="endDate">
+                <Form.ControlLabel>End Date</Form.ControlLabel>
+                <DatePicker
+                  oneTap
+                  name="endDate"
+                  format="yyyy-MM-dd"
+                  value={formValue.endDate}
+                  onChange={(date: Date | null) =>
+                    setFormValue((prev) => ({ ...prev, endDate: date }))
+                  }
+                />
+              </Form.Group>
+            </div>
 
             <Button
               className="max-h-11 mt-5"

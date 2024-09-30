@@ -48,6 +48,14 @@ const miscellaneous = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    // margin
+    getMarginData: build.query({
+      query: () => ({
+        url: "/miscellaneous/page/margin-data",
+        method: "GET",
+        contentType: "application/json",
+      }),
+    }),
   }),
 });
 
@@ -57,4 +65,5 @@ export const {
   useDeleteMiscMutation,
   useGetMiscQuery,
   useGetSIngleMiscMutation,
+  useGetMarginDataQuery,
 } = miscellaneous;
