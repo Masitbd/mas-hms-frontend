@@ -1,8 +1,12 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { formatDateString } from "@/utils/FormateDate";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
+import { useGetCompnayInofQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import Image from "next/image";
+import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -29,6 +33,34 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
   startDate,
   endDate,
 }) => {
+  //
+
+  const { data: comapnyInfo } = useGetCompnayInofQuery(undefined);
+
+  const [infoHeader, setInfoHeader] = useState<
+    null | { text?: string; image?: string }[]
+  >(null);
+
+  // console.log("heaer", infoHeader);
+
+  useEffect(() => {
+    const generateHeader = async () => {
+      const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
+      setInfoHeader(header); // Set the state with the generated header
+    };
+
+    if (comapnyInfo?.data) {
+      generateHeader();
+    }
+  }, [comapnyInfo, data]);
+
+  const { data: marginInfo } = useGetMarginDataQuery(undefined);
+
+  const pageMargin = marginInfo?.data?.value
+    .split(",")
+    .map((val: any) => Number(val.trim()));
+
+  //
   const generatePDF = () => {
     const investigationStatement =
       startDate && endDate
@@ -47,22 +79,9 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
       defaultStyle: {
         fontSize: 12,
       },
-      pageMargins: [20, 20, 20, 20],
+      pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
-        {
-          text: "TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER",
-          style: "header",
-          alignment: "center",
-        },
-        {
-          text: "Kachari Paira Danga, Nageswori, Kurigram",
-          alignment: "center",
-        },
-        {
-          text: "HelpLine: 01755546392 (24 Hours Open)",
-          alignment: "center",
-          margin: [0, 0, 0, 20],
-        },
+        ...(infoHeader ? infoHeader?.map((item) => item) : []),
         investigationStatement,
 
         // Static Table Header
@@ -152,19 +171,23 @@ const EmployeeIncomeSummeryTable: React.FC<IncomeShowTableProps> = ({
 
   return (
     <div className="p-5">
-      <div className="text-center mb-10">
-        <h1 className="text-xl font-bold">
-          TMSS SAHERA WASEQUE HOSPITAL & RESEARCH CENTER
-        </h1>
-        <p>Kachari Paira Danga, Nageswori, Kurigram</p>
-        <p>HelpLine: 01755546392 (24 Hours Open)</p>
-        {startDate && endDate && (
-          <p className="italic text-red-600 text-center mb-5 font-semibold">
-            Investigation Income Statement: Between{" "}
-            {startDate ? formatDateString(startDate) : "N/A"} to{" "}
-            {endDate ? formatDateString(endDate) : "N/A"}
-          </p>
-        )}
+      <div className="text-center mb-10 flex flex-col items-center justify-center">
+        <div className="text-xl font-bold flex items-center justify-center gap-5 mb-4">
+          <Image
+            src={comapnyInfo?.data?.photoUrl}
+            alt="Header"
+            width={50}
+            height={50}
+          />{" "}
+          <p>{comapnyInfo?.data?.name}</p>
+        </div>
+        <p>{comapnyInfo?.data?.address}</p>
+        <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
+        <p className="italic text-red-600 text-center mb-5 font-semibold">
+          Investigation Income Statement : Between{" "}
+          {startDate ? formatDateString(startDate) : "N/A"} to{" "}
+          {endDate ? formatDateString(endDate) : "N/A"}
+        </p>
       </div>
 
       <div className="w-full">

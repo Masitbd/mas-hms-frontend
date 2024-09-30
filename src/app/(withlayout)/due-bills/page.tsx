@@ -42,7 +42,7 @@ const DueBillspage = () => {
     skip: !isSearchEnable,
   });
 
-  console.log("due data", dueData);
+  // console.log("due data", dueData);
   // Handle form field changes
   const handleFormChange = (updatedValue: Record<string, any>) => {
     setIsSearchEnable(false); // Disable search while changing form

@@ -203,6 +203,15 @@ const testMenuItem = [
     ],
   },
   {
+    key: "17",
+    title: "Invoice Margin",
+    href: "/margin",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_COMPANY_INFO,
+      ENUM_USER_PEMISSION.MANAGE_COMPANY_INFO,
+    ],
+  },
+  {
     key: "18",
     title: "Employee",
     href: "/employee",

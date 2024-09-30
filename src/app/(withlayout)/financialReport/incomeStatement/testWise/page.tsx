@@ -14,8 +14,12 @@ import {
   TestWiseIncomeStatementReportGroupWiseData,
   TestWiseIncomeStatementTestWiseDoc,
 } from "@/components/FInancialStatement/types";
-import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import {
+  useGetCompnayInofQuery,
+  useGetDefaultQuery,
+} from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
+import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -70,24 +74,35 @@ const TestWIseIncomeStatement = () => {
     }
   }, [financialReportData, financialReportLoading, financialReportReacthing]);
 
-  // For pdf
+  // company info
 
-  const {
-    data: companyInfoData,
-    isLoading: companyInfoLoading,
-    isFetching: companyInfoFeatching,
-  } = useGetDefaultQuery(undefined);
+  const { data: comapnyInfo } = useGetCompnayInofQuery(undefined);
 
-  const [headers, setHeaders] = useState([]);
+  const [infoHeader, setInfoHeader] = useState<
+    null | { text?: string; image?: string }[]
+  >(null);
+
+  // console.log("heaer", infoHeader);
+
   useEffect(() => {
-    (async function () {
-      if (!companyInfoFeatching && !companyInfoFeatching) {
-        await FinancialReportHeaderGenerator(companyInfoData?.data).then(
-          (data) => setHeaders(data as never[])
-        );
-      }
-    })();
-  }, [companyInfoData, companyInfoFeatching, companyInfoFeatching]);
+    const generateHeader = async () => {
+      const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
+      setInfoHeader(header); // Set the state with the generated header
+    };
+
+    if (comapnyInfo?.data) {
+      generateHeader();
+    }
+  }, [comapnyInfo, data]);
+  // margin
+
+  const { data: marginInfo } = useGetMarginDataQuery(undefined);
+
+  const pageMargin = marginInfo?.data?.value
+    .split(",")
+    .map((val: any) => Number(val.trim()));
+
+  //  pdf
   const generatePDF = () => {
     const total = JSON.parse(
       JSON.stringify(financialReportData?.data[0]?.total[0])
@@ -150,9 +165,9 @@ const TestWIseIncomeStatement = () => {
       defaultStyle: {
         fontSize: 12,
       },
-      pageMargins: [20, 20, 20, 20],
+      pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
-        ...headers,
+        ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
           text: `Test Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
           style: "subheader",
