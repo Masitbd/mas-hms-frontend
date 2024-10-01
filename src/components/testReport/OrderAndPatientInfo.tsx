@@ -22,8 +22,9 @@ const OrderAndPatientInfo = (orderData: { data: IOrderData[] }) => {
     const consultant: IDoctor = orderData?.data[0]
       .consultant as unknown as IDoctor;
 
-    if ("title" in consultant || "name" in consultant) {
-      return <>{consultant?.title + " " + consultant?.name}</>;
+    if (typeof consultant === "object" && consultant !== null) {
+      if ("title" in consultant || "name" in consultant)
+        return <>{consultant?.title + " " + consultant?.name}</>;
     } else {
       return "";
     }

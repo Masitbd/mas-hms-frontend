@@ -50,11 +50,20 @@ const OrderTable = () => {
             <HeaderCell>Name</HeaderCell>
             <Cell dataKey="patient.name" />
           </Column>
-          <Column flexGrow={2}>
+          {/* <Column flexGrow={2}>
             <HeaderCell>Status</HeaderCell>
             <Cell>
               {(rowData: ItestInformaiton) => {
                 return StatusTagProvider(rowData?.status as string);
+              }}
+            </Cell>
+          </Column> */}
+          <Column resizable flexGrow={2}>
+            <HeaderCell>Delivery Date</HeaderCell>
+            <Cell>
+              {(rowData) => {
+                const date = new Date(rowData?.deliveryTime);
+                return <>{date?.toLocaleDateString()}</>;
               }}
             </Cell>
           </Column>

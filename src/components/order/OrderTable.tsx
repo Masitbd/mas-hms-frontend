@@ -239,10 +239,10 @@ const OrderTable = ({
           <HeaderCell>Total Price</HeaderCell>
           <Cell dataKey="totalPrice" className="text-red-600" />
         </Column>
-        <Column resizable flexGrow={1}>
+        {/* <Column resizable flexGrow={1}>
           <HeaderCell>Status</HeaderCell>
           <Cell>{(rowdata) => StatusTagProvider(rowdata?.status)}</Cell>
-        </Column>
+        </Column> */}
 
         <Column flexGrow={1} resizable>
           <HeaderCell>Action</HeaderCell>
