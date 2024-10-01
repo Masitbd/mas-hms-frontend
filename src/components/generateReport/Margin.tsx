@@ -35,7 +35,7 @@ const Margin = (props: IPropsForMargin) => {
         Margin Top
         <Input
           onChange={(value) => handleMargin(0, Number(value))}
-          defaultValue={margin[0]}
+          defaultValue={(margin[0] / 72 ?? 0).toFixed(2)}
           type="number"
         />
       </div>
@@ -43,7 +43,7 @@ const Margin = (props: IPropsForMargin) => {
         Margin Left
         <Input
           onChange={(value) => handleMargin(1, Number(value))}
-          defaultValue={margin[1]}
+          defaultValue={(margin[1] / 72 ?? 0).toFixed(2)}
           type="number"
         />
       </div>
@@ -51,7 +51,7 @@ const Margin = (props: IPropsForMargin) => {
         Margin Bottom
         <Input
           onChange={(value) => handleMargin(2, Number(value))}
-          defaultValue={margin[2]}
+          defaultValue={(margin[2] / 72 ?? 0).toFixed(2)}
           type="number"
         />
       </div>
@@ -59,7 +59,7 @@ const Margin = (props: IPropsForMargin) => {
         Margin Right
         <Input
           onChange={(value) => handleMargin(3, Number(value))}
-          defaultValue={margin[3]}
+          defaultValue={(margin[3] / 72 ?? 0).toFixed(2)}
           type="number"
         />
       </div>
