@@ -41,7 +41,10 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
   startDate,
   endDate,
 }) => {
-  const { data: comapnyInfo } = useGetDefaultQuery(undefined);
+  const { data: comapnyInfo } = useGetDefaultQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+  });
 
   const [infoHeader, setInfoHeader] = useState<
     null | { text?: string; image?: string }[]
@@ -120,7 +123,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
             table: {
               widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
               body: group.records.map((record) => [
-                record.oid,
+                record.oid ?? " ",
                 record.totalPrice,
                 record.parcentDiscountAmount,
                 record.cashDiscount,
@@ -129,7 +132,9 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                 record.vat,
                 record.totalAmount,
                 record.paid,
-                record.totalAmount - record.paid,
+                record.totalAmount - record.paid > 0
+                  ? record.totalAmount - record.paid
+                  : 0,
               ]),
             },
           },

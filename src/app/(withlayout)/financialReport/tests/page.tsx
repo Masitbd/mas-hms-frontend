@@ -3,7 +3,7 @@ import AllTestsTable from "@/components/financialStatment/AllTestsTable";
 import { useGetAllTestsQuery } from "@/redux/api/financialReport/financialReportSlice";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import React, { useEffect, useState } from "react";
-import { Button } from "rsuite";
+import { Button, Loader } from "rsuite";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
 import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
@@ -13,7 +13,10 @@ import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSl
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const AllTests = () => {
-  const { isLoading, isFetching, data } = useGetAllTestsQuery(undefined);
+  const { isLoading, isFetching, data } = useGetAllTestsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+    refetchOnFocus: true,
+  });
 
   const { data: comapnyInfo } = useGetDefaultQuery(undefined);
 
@@ -50,33 +53,47 @@ const AllTests = () => {
       content: [
         ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
-          text: `ALl Tests`,
+          text: `All Tests`,
           style: "subheader",
           alignment: "center",
           margin: [0, 0, 0, 0],
         },
 
-        ...data?.data?.map((td: { _id: string; tests: ITest[] }) => {
-          const dd = {
-            text: `${td._id}`,
-            style: "groupHeader",
-            alignment: "center",
-            margin: [0, 20, 0, 0],
-          };
-          const testTAble = {
-            table: {
-              widths: [80, "*", "*"], // Fixed column widths
-              headerRows: 1,
-              body: [
-                ["Code", "Name", "Price"],
-                ...td?.tests?.map((td) => [td?.testCode, td?.label, td?.price]),
-              ],
-            },
-            margin: [0, 0, 0, 0],
-          };
+        ...data?.data?.map(
+          (td: {
+            _id: {
+              department: string;
+              departmentId: string;
+              reportGroup: string;
+              reportGroupId: string;
+            };
+            tests: ITest[];
+          }) => {
+            const dd = {
+              text: `${td._id.department} (${td?._id.reportGroup})`,
+              style: "groupHeader",
+              alignment: "center",
+              margin: [0, 20, 0, 0],
+            };
+            const testTAble = {
+              table: {
+                widths: [80, "*", "*"], // Fixed column widths
+                headerRows: 1,
+                body: [
+                  ["Code", "Name", "Price"],
+                  ...td?.tests?.map((td) => [
+                    td?.testCode,
+                    td?.label,
+                    td?.price,
+                  ]),
+                ],
+              },
+              margin: [0, 0, 0, 0],
+            };
 
-          return [dd, testTAble];
-        }),
+            return [dd, testTAble];
+          }
+        ),
         // For detailed comission table
       ],
       styles: {
@@ -125,13 +142,34 @@ const AllTests = () => {
             " "
           )}
         </div>
-        <div className="py-2">
-          <AllTestsTable
-            data={data?.data}
-            loading={isLoading}
-            featching={isFetching}
-          />
-        </div>
+        {!data?.data?.length || isLoading || isFetching ? (
+          <div className="w-full h-56 flex items-center justify-center">
+            {isLoading || isFetching ? (
+              <>
+                <div className="flex items-center justify-center">
+                  <div>
+                    <Loader />
+                  </div>
+                </div>
+              </>
+            ) : !data?.data?.length ? (
+              <div className="text-center text-2xl font-semibold">
+                No data found
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+      <div className="py-2">
+        <AllTestsTable
+          data={data?.data}
+          loading={isLoading}
+          featching={isFetching}
+        />
       </div>
     </div>
   );

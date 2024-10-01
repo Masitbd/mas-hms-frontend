@@ -159,7 +159,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
             {
               text: `Total : ${Number(user?.totalPaid ?? 0).toFixed(2) ?? "0"}`,
               style: "totalpaidHeader",
-              margin: [10],
+              margin: [10, 0, 0, 0],
             },
           ]),
         ]),

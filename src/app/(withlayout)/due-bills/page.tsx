@@ -128,11 +128,7 @@ const DueBillspage = () => {
                 {/* Patient OID */}
                 <Form.Group controlId="oid">
                   <Form.ControlLabel>Patient OID</Form.ControlLabel>
-                  <Form.Control
-                    autoCapitalize="true"
-                    defaultValue="HMS-"
-                    name="oid"
-                  />
+                  <Form.Control autoCapitalize="true" name="oid" />
                 </Form.Group>
               </div>
 

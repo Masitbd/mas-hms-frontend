@@ -12,7 +12,7 @@ const miscellaneous = baseApi.injectEndpoints({
         body: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["miscellaneous"],
+      invalidatesTags: ["miscellaneous", "report-margin"],
     }),
     patchMisc: build.mutation({
       query: ({ data, id }) => ({
@@ -22,7 +22,7 @@ const miscellaneous = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["miscellaneous"],
+      invalidatesTags: ["miscellaneous", "report-margin"],
     }),
     deleteMisc: build.mutation({
       query: (id: string) => ({
@@ -55,6 +55,7 @@ const miscellaneous = baseApi.injectEndpoints({
         method: "GET",
         contentType: "application/json",
       }),
+      providesTags: ["report-margin"],
     }),
   }),
 });

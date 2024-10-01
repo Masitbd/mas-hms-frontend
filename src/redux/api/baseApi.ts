@@ -48,6 +48,7 @@ export const baseApi = createApi({
     "default-company-info",
     "employee",
     "singleEmployee",
+    "report-margin",
   ],
 
   // tagTypes: tagTypes,
