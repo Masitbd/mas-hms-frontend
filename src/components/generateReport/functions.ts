@@ -40,6 +40,11 @@ export const useCleanedTests = (params: {
     "defaultValue",
     "unit",
     "description",
+    "reportTypeGroup",
+    "__t",
+    "createdAt",
+    "updatedAt",
+    "__v",
   ];
   let modifiedTest;
   let specimen: string[] = [];

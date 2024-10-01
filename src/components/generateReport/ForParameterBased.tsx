@@ -141,13 +141,13 @@ const ForParameterBased = (props: IPropsForParameter) => {
       if ("data" in data) {
         swal(
           "Success",
-          "Data Posted Redirection is in process. You will be redirected to previous Page Please Wait",
+          "Data Posted. Redirection is in process. You will be redirected to previous  within 5 second  Please Wait",
           { icon: "success" }
         );
         setTimeout(() => {
           swalButtonHandler(" Report posted Successfully.");
           router.push(`/testReport/${order.oid}`);
-        }, 1000);
+        }, 5000);
       }
     }
 
@@ -156,13 +156,13 @@ const ForParameterBased = (props: IPropsForParameter) => {
       if ("data" in data) {
         swal(
           "Success",
-          "Data Posted Redirection is in process. You will be redirected to previous Page Please Wait",
+          "Data Posted. Redirection is in process. You will be redirected to previous  within 5 second  Please Wait",
           { icon: "success" }
         );
         setTimeout(() => {
           swalButtonHandler(" Report Updated Successfully.");
           router.push(`/testReport/${order.oid}`);
-        }, 1000);
+        }, 5000);
       }
     }
   };

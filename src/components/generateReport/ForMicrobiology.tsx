@@ -64,9 +64,12 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
       if ("data" in postResult) {
         swal(
           "Success",
-          "Data Posted. Redirection is in process. You will be redirected to previous Page Please Wait",
+          "Data Posted. Redirection is in process. You will be redirected to previous Page within 5 second Please Wait",
           { icon: "success" }
         );
+        setTimeout(() => {
+          router.push(`/testReport/${order.oid}`);
+        }, 5000);
       }
     }
     if (mode == ENUM_MODE.EDIT) {
@@ -74,12 +77,12 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
       if ("data" in data) {
         swal(
           "Success",
-          "Data Posted. Redirection is in process. You will be redirected to previous Page Please Wait",
+          "Data Posted. Redirection is in process. You will be redirected to previous  within 5 second  Please Wait",
           { icon: "success" }
         );
         setTimeout(() => {
           router.push(`/testReport/${order.oid}`);
-        }, 1000);
+        }, 5000);
       }
     }
   };
