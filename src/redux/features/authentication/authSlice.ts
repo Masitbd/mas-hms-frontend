@@ -13,6 +13,7 @@ const initialState = {
       email: "",
       address: "",
       uuid: "",
+      image: " ",
     },
     needsPasswordChange: false,
     _id: "",
