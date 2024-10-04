@@ -9,6 +9,9 @@ import swal from "sweetalert";
 import { IDoctorSeal, IPropsForTable } from "../comment/typesAdInitialData";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import VisibleIcon from "@rsuite/icons/Visible";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
   const { data: sealData, isLoading: sealDataLoading } =
@@ -99,9 +102,9 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                   onClick={() =>
                     viewAndEditButtonHandler(rowdata, ENUM_MODE.VIEW)
                   }
-                >
-                  View
-                </Button>
+                  startIcon={<VisibleIcon />}
+                />
+
                 <AuthCheckerForComponent
                   requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
                 >
@@ -113,17 +116,16 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                       onClick={() =>
                         viewAndEditButtonHandler(rowdata, ENUM_MODE.EDIT)
                       }
-                    >
-                      Edit
-                    </Button>
+                      startIcon={<EditIcon />}
+                    />
+
                     <Button
                       className="ml-5"
                       appearance="primary"
                       color="red"
                       onClick={() => DeleteButtonHandler(rowdata)}
-                    >
-                      Delete
-                    </Button>
+                      startIcon={<TrashIcon />}
+                    />
                   </>
                 </AuthCheckerForComponent>
               </>

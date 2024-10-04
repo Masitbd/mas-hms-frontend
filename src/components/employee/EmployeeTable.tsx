@@ -12,6 +12,9 @@ import {
   useGetEmployeeQuery,
 } from "@/redux/api/employee/employeeSlice";
 import SearchPeopleIcon from "@rsuite/icons/SearchPeople";
+import VisibleIcon from "@rsuite/icons/Visible";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 const EmployeeTable = (props: Partial<IPropsForEmployeeRegistration>) => {
   const { data, modalOpen, mode, setData, setModalOpen, setMode } = props;
@@ -125,25 +128,24 @@ const EmployeeTable = (props: Partial<IPropsForEmployeeRegistration>) => {
                   <div className="grid grid-cols-6 gap-5">
                     <Button
                       appearance="primary"
-                      color="blue"
+                      color="green"
                       onClick={() => editHandler(rowData)}
-                    >
-                      Edit
-                    </Button>
+                      startIcon={<EditIcon />}
+                    />
+
                     <Button
                       appearance="primary"
-                      color="green"
+                      color="blue"
                       onClick={() => viewHandler(rowData)}
-                    >
-                      View
-                    </Button>
+                      startIcon={<VisibleIcon />}
+                    />
+
                     <Button
                       appearance="primary"
                       color="red"
                       onClick={() => deleteHandler(rowData)}
-                    >
-                      Delete
-                    </Button>
+                      startIcon={<TrashIcon />}
+                    />
                   </div>
                 </>
               );

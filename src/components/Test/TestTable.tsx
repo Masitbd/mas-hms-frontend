@@ -6,10 +6,22 @@ import {
 import { ITest } from "@/types/allDepartmentInterfaces";
 import VisibleIcon from "@rsuite/icons/Visible";
 import React, { useEffect, useState } from "react";
-import { Button, Form, Message, Pagination, Table, toaster } from "rsuite";
+import {
+  Button,
+  Form,
+  Input,
+  InputGroup,
+  Message,
+  Pagination,
+  Table,
+  toaster,
+} from "rsuite";
 import AlartDialog from "../ui/AlertModal";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import SearchIcon from "@rsuite/icons/Search";
+import TrashIcon from "@rsuite/icons/Trash";
+import EditIcon from "@rsuite/icons/Edit";
 
 const { Column, HeaderCell, Cell } = Table;
 const TestTable = ({
@@ -93,9 +105,27 @@ const TestTable = ({
           className="grid grid-cols-1 gap-5 justify-center w-full"
           fluid
         >
-          <Form.Group controlId="searchTerm">
+          {/* <Form.Group controlId="searchTerm">
             <Form.ControlLabel>Search</Form.ControlLabel>
             <Form.Control name="searchTerm" htmlSize={100} />
+          </Form.Group> */}
+          <Form.Group controlId="searchTerm">
+            <Form.ControlLabel>Search</Form.ControlLabel>
+            <div style={{ position: "relative", width: "100%" }}>
+              <Form.Control
+                name="searchTerm"
+                style={{ paddingRight: "30px" }} // Add space for the icon
+              />
+              <SearchIcon
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  pointerEvents: "none", // Make it non-clickable
+                }}
+              />
+            </div>
           </Form.Group>
         </Form>
       </div>
@@ -140,26 +170,28 @@ const TestTable = ({
               >
                 <>
                   <Button
-                    appearance="ghost"
+                    appearance="primary"
                     color="red"
                     onClick={() => handleDeletOpen(rowdate._id)}
                     loading={deleteLoading}
-                  >
-                    Delete
-                  </Button>
+                    startIcon={<TrashIcon />}
+                  />
+
                   <Button
-                    appearance="ghost"
-                    color="blue"
+                    appearance="primary"
+                    color="green"
                     className="ml-2"
                     onClick={() =>
                       patchHandler({ data: rowdate as ITest, mode: "patch" })
                     }
-                  >
-                    Edit
-                  </Button>
+                    startIcon={<EditIcon />}
+                  />
+
                   <Button
                     // appearance="transparent"
                     className="ml-2"
+                    color="blue"
+                    appearance="primary"
                     startIcon={<VisibleIcon />}
                     onClick={() => {
                       patchHandler({

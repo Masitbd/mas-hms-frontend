@@ -15,6 +15,8 @@ import {
 import swal from "sweetalert";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 const TableForCDTS = (props: { title: string }) => {
   const { title } = props;
@@ -100,19 +102,18 @@ const TableForCDTS = (props: { title: string }) => {
                         }}
                         className="mr-2"
                         appearance="primary"
-                        color="blue"
-                      >
-                        Edit
-                      </Button>
+                        color="green"
+                        startIcon={<EditIcon />}
+                      />
+
                       <Button
                         appearance="primary"
                         color="red"
                         onClick={() => {
                           deleteHandler(rowData);
                         }}
-                      >
-                        Delete
-                      </Button>
+                        startIcon={<TrashIcon />}
+                      />
                     </>
                   </AuthCheckerForComponent>
                 </>

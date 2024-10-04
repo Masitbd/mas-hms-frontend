@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { ENUM_MODE } from "@/enum/Mode";
 import PatchProfile from "@/components/profile/PatchProfile";
 import ChangePassword from "@/components/profile/ChangePassword";
+import EditIcon from "@rsuite/icons/Edit";
 
 const Profile = () => {
   const { data: ProfileData, isLoading } = useGetProfileQuery(undefined);
@@ -56,9 +57,11 @@ const Profile = () => {
                   appearance="ghost"
                   color="green"
                   className="mr-5"
-                >
-                  Edit
-                </Button>
+                  startIcon={<EditIcon style={{ fontSize: "20px" }} />}
+                />
+
+                {/* </Button> */}
+
                 <Button
                   onClick={() => setMode(ENUM_MODE.CHANGE_PASSWROD)}
                   appearance="ghost"

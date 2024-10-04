@@ -2,8 +2,9 @@
 import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
 import { NavLink } from "@/utils/Navlink";
 import React, { useState } from "react";
-import { Button, Input, Pagination, Table } from "rsuite";
+import { Button, Input, InputGroup, Pagination, Table } from "rsuite";
 import VisibleIcon from "@rsuite/icons/Visible";
+import SearchIcon from "@rsuite/icons/Search";
 
 const LabelPrint = () => {
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
@@ -39,12 +40,18 @@ const LabelPrint = () => {
           </h2>
         </div>
         <div className="p-2">
-          <div className="my-5">
-            <Input
-              placeholder="Search..."
-              onChange={(value) => handleSearchInput(value)}
-            />
+          <div className="my-5 relative">
+            <InputGroup inside className="my-5">
+              <Input
+                placeholder="Search..."
+                onChange={(value) => handleSearchInput(value)}
+              />
+              <InputGroup.Addon>
+                <SearchIcon />
+              </InputGroup.Addon>
+            </InputGroup>
           </div>
+
           <div>
             <Table data={data} loading={orderDataLoading} autoHeight bordered>
               <Column flexGrow={2}>

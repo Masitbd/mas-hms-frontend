@@ -17,6 +17,8 @@ import {
 import NewAndPatchSensitivity from "./NewANdPatchSensitivity";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import TrashIcon from "@rsuite/icons/Trash";
+import EditIcon from "@rsuite/icons/Edit";
 
 const SensitivityTable = () => {
   const { data: miscData, isLoading: miscLoading } =
@@ -103,19 +105,18 @@ const SensitivityTable = () => {
                       }}
                       className="mr-2"
                       appearance="primary"
-                      color="blue"
-                    >
-                      Edit
-                    </Button>
+                      color="green"
+                      startIcon={<EditIcon />}
+                    />
+
                     <Button
                       appearance="primary"
                       color="red"
                       onClick={() => {
                         deleteHandler(rowData);
                       }}
-                    >
-                      Delete
-                    </Button>
+                      startIcon={<TrashIcon />}
+                    />
                   </>
                 </AuthCheckerForComponent>
               )}

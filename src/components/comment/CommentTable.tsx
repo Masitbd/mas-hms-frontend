@@ -8,6 +8,9 @@ import swal from "sweetalert";
 import { IComment, IPropsForTable } from "./typesAdInitialData";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
+import VisibleIcon from "@rsuite/icons/Visible";
 
 const CommentTable = (props: IPropsForTable<IComment>) => {
   const { data: commentData, isLoading: commentDataLoading } =
@@ -99,9 +102,9 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
                   onClick={() =>
                     viewAndEditButtonHandler(rowdata, ENUM_MODE.VIEW)
                   }
-                >
-                  View
-                </Button>
+                  startIcon={<VisibleIcon />}
+                />
+
                 <AuthCheckerForComponent
                   requiredPermission={[ENUM_USER_PEMISSION.MANAGE_TESTS]}
                 >
@@ -113,17 +116,16 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
                       onClick={() =>
                         viewAndEditButtonHandler(rowdata, ENUM_MODE.EDIT)
                       }
-                    >
-                      Edit
-                    </Button>
+                      startIcon={<EditIcon />}
+                    />
+
                     <Button
                       className="ml-5"
                       appearance="primary"
                       color="red"
                       onClick={() => DeleteButtonHandler(rowdata)}
-                    >
-                      Delete
-                    </Button>
+                      startIcon={<TrashIcon />}
+                    />
                   </>
                 </AuthCheckerForComponent>
               </>

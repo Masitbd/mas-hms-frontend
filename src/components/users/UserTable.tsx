@@ -10,6 +10,7 @@ import {
 } from "rsuite";
 import RModal from "../ui/Modal";
 import UserForm from "./NewUserForm";
+import VisibleIcon from "@rsuite/icons/Visible";
 import {
   useGetAllUsersQuery,
   useLazyGetSingleUserQuery,
@@ -136,9 +137,12 @@ const UserTable = ({
               {(rowData) => {
                 return (
                   <>
-                    <Button onClick={() => handleSingleUserView(rowData)}>
-                      View
-                    </Button>
+                    <Button
+                      color="green"
+                      appearance="primary"
+                      startIcon={<VisibleIcon style={{ fontSize: "15px" }} />}
+                      onClick={() => handleSingleUserView(rowData)}
+                    />
                   </>
                 );
               }}

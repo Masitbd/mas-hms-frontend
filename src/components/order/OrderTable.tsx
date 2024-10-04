@@ -255,6 +255,8 @@ const OrderTable = ({
                 <Button
                   // appearance="transparent"
                   className="ml-2"
+                  color="blue"
+                  appearance="primary"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
                     if (patchHandler) {

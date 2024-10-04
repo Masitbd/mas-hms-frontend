@@ -3,6 +3,8 @@ import { IHospitalGroup } from "@/types/allDepartmentInterfaces";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
+import TrashIcon from "@rsuite/icons/Trash";
+import EditIcon from "@rsuite/icons/Edit";
 
 import {
   useDeleteHospitalGroupMutation,
@@ -98,24 +100,23 @@ const HospitalGroupTable = ({
               >
                 <>
                   <Button
-                    appearance="ghost"
+                    appearance="primary"
                     color="red"
                     onClick={() => deleteHandler(rowdate._id)}
-                  >
-                    Delete
-                  </Button>
+                    startIcon={<TrashIcon />}
+                  />
+
                   <Button
-                    appearance="ghost"
-                    color="blue"
+                    appearance="primary"
+                    color="green"
                     className="ml-2"
+                    startIcon={<EditIcon />}
                     onClick={() => {
                       setPatchData(rowdate as IHospitalGroup);
                       setPostModelOpen(!open);
                       setMode("patch");
                     }}
-                  >
-                    Edit
-                  </Button>
+                  />
                 </>
               </AuthCheckerForComponent>
             )}

@@ -13,6 +13,9 @@ import {
   useDeleteCompanyInfoMutation,
   useGetCompnayInofQuery,
 } from "@/redux/api/companyInfo/companyInfoSlice";
+import VisibleIcon from "@rsuite/icons/Visible";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 const CompnayInfoTable = () => {
   const {
@@ -119,15 +122,15 @@ const CompnayInfoTable = () => {
                   <div className="grid grid-cols-4 gap-5">
                     <Button
                       appearance="primary"
-                      color="blue"
+                      color="green"
                       onClick={() => {
                         setMode(ENUM_MODE.EDIT);
                         setFormData(rowData);
                         setOpen(true);
                       }}
-                    >
-                      Edit
-                    </Button>
+                      startIcon={<EditIcon />}
+                    />
+
                     <Button
                       appearance="primary"
                       color="blue"
@@ -136,9 +139,9 @@ const CompnayInfoTable = () => {
                         setFormData(rowData);
                         setOpen(true);
                       }}
-                    >
-                      View
-                    </Button>
+                      startIcon={<VisibleIcon />}
+                    />
+
                     <Button
                       appearance="primary"
                       color="red"
@@ -149,9 +152,8 @@ const CompnayInfoTable = () => {
                           : ""
                       }
                       onClick={() => hanldeDelete(rowData)}
-                    >
-                      Delete
-                    </Button>
+                      startIcon={<TrashIcon />}
+                    />
                   </div>
                 </>
               );
