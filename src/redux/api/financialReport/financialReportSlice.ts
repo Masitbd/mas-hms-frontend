@@ -94,9 +94,10 @@ const financialReport = baseApi.injectEndpoints({
       }),
     }),
     getAllDoctors: build.query({
-      query: () => ({
+      query: (data: { id: string }) => ({
         url: `/financialReport/doctors`,
         method: "get",
+        params: data,
 
         contentType: "application/json",
       }),

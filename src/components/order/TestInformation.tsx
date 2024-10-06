@@ -268,9 +268,9 @@ const TestInformation = (params: IParamsForTestInformation) => {
             className="w-full"
             bordered
             cellBordered
-            rowHeight={100}
             wordWrap={"break-word"}
             height={500}
+            rowHeight={70}
           >
             <Column align="center" resizable flexGrow={0.5}>
               <HeaderCell>SL.</HeaderCell>

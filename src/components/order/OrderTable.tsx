@@ -22,6 +22,7 @@ import VisibleIcon from "@rsuite/icons/Visible";
 import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import {
+  useGetOrderPostedByQuery,
   useGetOrderQuery,
   useLazyGetSingleOrderQuery,
 } from "@/redux/api/order/orderSlice";
@@ -120,7 +121,13 @@ const OrderTable = ({
     singleFeatchLoaing,
   ]);
   // For search
-  const [searchData, setSearchData] = useState({
+  const [searchData, setSearchData] = useState<{
+    sortBy: string;
+    sortOrder: number;
+    patientType: string;
+    limit: number;
+    postedBy?: string;
+  }>({
     sortBy: "createdAt",
     sortOrder: -1,
     patientType: "all",
@@ -133,6 +140,9 @@ const OrderTable = ({
     isFetching: testFeatching,
   } = useGetOrderQuery(searchData);
 
+  const { isLoading: postedByLoading, data: postedByData } =
+    useGetOrderPostedByQuery(undefined);
+
   return (
     <div>
       <div className="my-5">
@@ -140,7 +150,7 @@ const OrderTable = ({
           onChange={(formValue, event) =>
             setSearchData((preValue) => ({ ...preValue, ...formValue }))
           }
-          className="grid grid-cols-4 gap-5 justify-center w-full"
+          className="grid grid-cols-5 gap-5 justify-center w-full"
           fluid
         >
           <Form.Group controlId="searchTerm">
@@ -186,6 +196,25 @@ const OrderTable = ({
                 { label: "Descending", value: -1 },
               ]}
               defaultValue={-1}
+            />
+          </Form.Group>
+          <Form.Group controlId="postedBy">
+            <Form.ControlLabel>Order Posted BY</Form.ControlLabel>
+            <Form.Control
+              name="postedBy"
+              accepter={InputPicker}
+              loading={postedByLoading}
+              data={postedByData?.data?.map(
+                (data: { name: string; _id: string }) => ({
+                  label: data.name,
+                  value: data._id,
+                })
+              )}
+              cleanable
+              onClean={() => {
+                const { postedBy, ...otherData } = searchData;
+                setSearchData(otherData);
+              }}
             />
           </Form.Group>
         </Form>
@@ -239,10 +268,10 @@ const OrderTable = ({
           <HeaderCell>Total Price</HeaderCell>
           <Cell dataKey="totalPrice" className="text-red-600" />
         </Column>
-        <Column resizable flexGrow={1}>
+        {/* <Column resizable flexGrow={1}>
           <HeaderCell>Status</HeaderCell>
           <Cell>{(rowdata) => StatusTagProvider(rowdata?.status)}</Cell>
-        </Column>
+        </Column> */}
 
         <Column flexGrow={1} resizable>
           <HeaderCell>Action</HeaderCell>

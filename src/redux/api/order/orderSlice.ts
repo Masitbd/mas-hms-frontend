@@ -11,7 +11,7 @@ const order = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order", "singleOrder"],
+      invalidatesTags: ["order", "singleOrder", "order-posted-by"],
     }),
 
     getOrder: build.query({
@@ -41,7 +41,7 @@ const order = baseApi.injectEndpoints({
         data: data.data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order", "singleOrder"],
+      invalidatesTags: ["order", "singleOrder", "order-posted-by"],
     }),
     getInvoice: build.query({
       query: (data) => ({
@@ -73,6 +73,13 @@ const order = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["order", "singleOrder"],
     }),
+    getOrderPostedBy: build.query({
+      query: () => ({
+        url: `/order/order-posted-by`,
+        method: "GET",
+      }),
+      providesTags: ["order-posted-by"],
+    }),
   }),
 });
 
@@ -86,4 +93,5 @@ export const {
   useLazyGetOrderQuery,
   useDewColletcionMutation,
   useSingleStatusChangerMutation,
+  useGetOrderPostedByQuery,
 } = order;

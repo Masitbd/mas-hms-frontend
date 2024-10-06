@@ -129,15 +129,15 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         },
 
         // Dynamic content for each group
-        ...preparedData?.map((group) => [
+        ...preparedData?.flatMap((group) => [
           {
-            text: ` ${group?.groupDate || ""}`,
+            text: ` ${group?.groupDate ?? " "}`,
             style: "groupHeader",
             margin: [0, 10, 0, 10],
           },
           ...group?.users?.map((user) => [
             {
-              text: ` ${user?.postedBy || ""}`,
+              text: ` ${user?.postedBy ?? " "}`,
               style: "nameHeader",
               margin: [0, 10, 0, 10],
             },
@@ -147,9 +147,9 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
                 widths: [150, 150, 150], // Fixed column widths
                 body: [
                   ...user?.records?.map((record) => [
-                    record?.date || "", // Safeguard for date
-                    record?.oid || "", // Safeguard for oid
-                    Number(record?.amount).toFixed(2), // Ensure amount is formatted correctly
+                    record?.date ?? " ", // Safeguard for date
+                    record?.oid ?? " ", // Safeguard for oid
+                    Number(record?.amount ?? 0).toFixed(2) ?? "0", // Ensure amount is formatted correctly
                   ]),
                 ],
               },
@@ -157,9 +157,9 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
             },
 
             {
-              text: `Total : ${Number(user?.totalPaid).toFixed(2)}`,
+              text: `Total : ${Number(user?.totalPaid ?? 0).toFixed(2) ?? "0"}`,
               style: "totalpaidHeader",
-              margin: [10],
+              margin: [10, 0, 0, 0],
             },
           ]),
         ]),

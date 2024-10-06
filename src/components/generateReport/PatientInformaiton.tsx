@@ -3,8 +3,9 @@ import { IOrderData } from "../order/initialDataAndTypes";
 import {
   ITEstREsultForMicroBio,
   ITestResultForParameter,
+  ITestsFromOrder,
 } from "./initialDataAndTypes";
-import { IDoctor } from "@/types/allDepartmentInterfaces";
+import { IDoctor, ISpecimen, ITest } from "@/types/allDepartmentInterfaces";
 
 const PatientInformaiton = ({
   order,
@@ -52,7 +53,19 @@ const PatientInformaiton = ({
           {new Date(testResult?.createdAt as unknown as Date).toDateString()}
         </div>
         <div>
-          <span className="font-bold">Specimen: </span>
+          <span className="font-bold">
+            Specimen:{" "}
+            <span className="font-normal">
+              {" "}
+              {order?.tests
+                ?.map((t: any) => {
+                  if (t?.test?.specimen && Array.isArray(t?.test?.specimen)) {
+                    return t?.test?.specimen?.map((s: ISpecimen) => s.label);
+                  } else " ";
+                })
+                ?.join(", ")}
+            </span>
+          </span>
         </div>
       </div>
     </>

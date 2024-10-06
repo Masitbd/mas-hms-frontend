@@ -109,7 +109,7 @@ const TestTableForReport = (props: { data: IOrderData }) => {
       if ("data" in result) {
         swal("Success", "Status updated successfully", "success");
       } else {
-        swal("Error", "Status update faild. Try again", "error");
+        swal("Error", `${result?.error}`, "error");
       }
     }
   };
