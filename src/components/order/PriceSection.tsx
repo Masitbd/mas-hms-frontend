@@ -39,12 +39,12 @@ const PriceSection = (props: IPriceSectionProps) => {
           <div className="font-bold">Cash Discount</div>
           <div className="text-red-600">
             {" "}
-            {data.cashDiscount ? data.cashDiscount : 0}{" "}
+            {data?.cashDiscount ? data?.cashDiscount : 0}{" "}
           </div>
         </div>
         <div className=" flex justify-between">
           <div className="font-bold">
-            Discount parcent <b>({props.order?.parcentDiscount} % ) </b>{" "}
+            Discount parcent <b>({props?.order?.parcentDiscount} % ) </b>{" "}
           </div>
           <div className="text-red-600">
             {" "}
@@ -57,7 +57,7 @@ const PriceSection = (props: IPriceSectionProps) => {
             Vat <b>({props.order?.vat} % ) </b>
           </div>
           <div className="text-green-600">
-            {data.vat ? Math.ceil(vatAmount) : Math.ceil(vatAmount)}{" "}
+            {data?.vat ? Math.ceil(vatAmount) : 0}{" "}
           </div>
         </div>
 
@@ -69,7 +69,7 @@ const PriceSection = (props: IPriceSectionProps) => {
               totalPrice -
                 discountAmount +
                 (data.vat ? vatAmount : vatAmount) -
-                (data.cashDiscount ? data.cashDiscount : 0)
+                (data?.cashDiscount ? data?.cashDiscount : 0) ?? 0
             )}
           </div>
         </div>
@@ -87,7 +87,7 @@ const PriceSection = (props: IPriceSectionProps) => {
           <div className=" flex justify-between">
             <div className="font-bold">Cash Refunded </div>
             <div className="text-red-600">
-              {Math.ceil(data?.refundData?.remainingRefund) || 0}
+              {Math.ceil(data?.refundData?.remainingRefund ?? 0) || 0}
             </div>
           </div>
         ) : (
@@ -97,7 +97,9 @@ const PriceSection = (props: IPriceSectionProps) => {
         <div className=" flex justify-between">
           <div className="font-bold">Due Amount</div>
           <div className="font-bold  text-red-600">
-            {(data?.dueAmount >= 0 ? data?.dueAmount : dueAmount).toFixed(2)}
+            {(
+              (data?.dueAmount >= 0 ? data?.dueAmount : dueAmount) ?? 0
+            ).toFixed(2)}
           </div>
         </div>
       </div>

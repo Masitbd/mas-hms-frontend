@@ -48,13 +48,13 @@ const ForNotRegistered = (param: param) => {
                 consultant: value.consultant,
               },
               consultant: value.consultant,
-              refBy: value.refBy ? value.refBy : param.data.refBy,
+              refBy: value?.refBy ? value?.refBy : param?.data?.refBy,
               deliveryTime: value.deliveryTime
                 ? value.deliveryTime
                 : param.data.deliveryTime,
             }));
           }}
-          formValue={param.data.patient}
+          formValue={param?.data?.patient}
           model={model}
           ref={param.forwardedRef}
         >
@@ -92,8 +92,8 @@ const ForNotRegistered = (param: param) => {
             <Form.Control
               name="refBy"
               accepter={InputPicker}
-              data={param.doctorData?.map((data: IDoctor) => {
-                return { label: data.name, value: data._id };
+              data={param?.doctorData?.map((data: IDoctor) => {
+                return { label: data?.name, value: data?._id };
               })}
               className="w-full"
             />
@@ -103,8 +103,8 @@ const ForNotRegistered = (param: param) => {
             <Form.Control
               name="consultant"
               accepter={InputPicker}
-              data={param.doctorData?.map((data: IDoctor) => {
-                return { label: data.name, value: data._id };
+              data={param?.doctorData?.map((data: IDoctor) => {
+                return { label: data?.name, value: data?._id };
               })}
               className="w-full"
             />
@@ -116,7 +116,7 @@ const ForNotRegistered = (param: param) => {
               accepter={DatePicker}
               placement="top"
               format="dd MMM yyyy hh:mm aa"
-              value={new Date(param.data.deliveryTime)}
+              value={new Date(param?.data?.deliveryTime)}
               showMeridian
               cleanable
             />

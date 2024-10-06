@@ -1,4 +1,7 @@
-import { useGetOrderQuery } from "@/redux/api/order/orderSlice";
+import {
+  useGetOrderPostedByQuery,
+  useGetOrderQuery,
+} from "@/redux/api/order/orderSlice";
 import { NavLink } from "@/utils/Navlink";
 import VisibleIcon from "@rsuite/icons/Visible";
 import React, { useState } from "react";

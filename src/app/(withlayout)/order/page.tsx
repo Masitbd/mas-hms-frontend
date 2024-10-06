@@ -201,7 +201,9 @@ const Order = () => {
   useEffect(() => {
     if (isSuccess) {
       swal("Success", "Order Posted Successfully", "success");
-      setMode(ENUM_MODE.VIEW);
+      setModalOpen(!modalOpen);
+      setData(initialData);
+      setMode(ENUM_MODE.NEW);
     }
     if (isError) {
       toaster.push(<Message type="error">! Error</Message>);

@@ -68,10 +68,12 @@ const ForRegistered = (param: IRegisteredPatient) => {
               <Form.Control
                 name="refBy"
                 accepter={InputPicker}
-                data={param.doctors.map((data: IDoctor) => {
-                  return { label: data.name, value: data._id };
+                data={param?.doctors?.map((data: IDoctor) => {
+                  return { label: data?.name, value: data?._id };
                 })}
-                value={param.formData.refBy ? param.formData.refBy._id : ""}
+                value={
+                  param?.formData?.refBy ? param?.formData?.refBy?._id : ""
+                }
               />
             </Form.Group>
             <Form.Group controlId="consultant">
@@ -81,10 +83,10 @@ const ForRegistered = (param: IRegisteredPatient) => {
               <Form.Control
                 name="consultant"
                 accepter={InputPicker}
-                data={param.doctors.map((data: IDoctor) => {
-                  return { label: data.name, value: data._id };
+                data={param?.doctors?.map((data: IDoctor) => {
+                  return { label: data?.name, value: data?._id };
                 })}
-                value={param.formData?.consultant}
+                value={param?.formData?.consultant}
               />
             </Form.Group>
             <Form.Group controlId="deliveryTime">
@@ -94,7 +96,7 @@ const ForRegistered = (param: IRegisteredPatient) => {
                 accepter={DatePicker}
                 placement="top"
                 format="dd MMM yyyy hh:mm aa"
-                value={new Date(param.formData.deliveryTime)}
+                value={new Date(param?.formData?.deliveryTime)}
                 showMeridian
                 cleanable
               />

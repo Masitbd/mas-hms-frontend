@@ -9,6 +9,7 @@ interface Profile {
   uuid: string;
   createdAt: string;
   updatedAt: string;
+  image?: string;
   __v: number;
 }
 

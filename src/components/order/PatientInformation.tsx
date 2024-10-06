@@ -149,10 +149,10 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
           {data.patientType === "registered" &&
             (data?.patient?._id ? (
               <ForRegistered
-                doctors={doctorData.data}
+                doctors={doctorData?.data}
                 formData={data}
                 patient={
-                  patientSearchData?.data ? patientSearchData.data : data
+                  patientSearchData?.data ? patientSearchData?.data : data
                 }
                 setFormData={setFormData}
               />
