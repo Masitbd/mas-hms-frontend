@@ -7,6 +7,7 @@ import {
 } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import { useEffect, useState } from "react";
 import { Button, InputNumber, Message, toaster } from "rsuite";
+import EditIcon from "@rsuite/icons/Edit";
 
 const MarginPage = () => {
   const [postMargin, { isLoading, isSuccess }] = usePostMiscMutation();
@@ -97,6 +98,7 @@ const MarginPage = () => {
   }, [patchSuccess]);
 
   return (
+
     <div className="">
       <div className="my-5 border  shadow-lg mx-5">
         <div className="bg-[#3498ff] text-white px-2 py-2">

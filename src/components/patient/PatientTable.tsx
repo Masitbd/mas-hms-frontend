@@ -7,6 +7,8 @@ import { Button, Form, Message, Table, toaster } from "rsuite";
 import AlartDialog from "../ui/AlertModal";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 const { Column, HeaderCell, Cell } = Table;
 const PatientTable = ({
@@ -103,19 +105,19 @@ const PatientTable = ({
             {(rowdate) => (
               <>
                 <Button
-                  appearance="ghost"
+                  appearance="primary"
                   color="red"
                   onClick={() => handleDeletOpen(rowdate._id)}
-                >
-                  Delete
-                </Button>
+                  startIcon={<TrashIcon />}
+                />
+
                 <AuthCheckerForComponent
                   requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PATIENT]}
                 >
                   <>
                     <Button
-                      appearance="ghost"
-                      color="blue"
+                      appearance="primary"
+                      color="green"
                       className="ml-2"
                       onClick={() =>
                         patchHandler({
@@ -123,11 +125,12 @@ const PatientTable = ({
                           mode: "patch",
                         })
                       }
-                    >
-                      Edit
-                    </Button>
+                      startIcon={<EditIcon />}
+                    />
+
                     <Button
-                      // appearance="transparent"
+                      color="blue"
+                      appearance="primary"
                       className="ml-2"
                       startIcon={<VisibleIcon />}
                       onClick={() => {

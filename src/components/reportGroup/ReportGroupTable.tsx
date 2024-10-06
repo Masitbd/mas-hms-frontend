@@ -18,6 +18,8 @@ import {
 import ReportGroupPatchModal from "./PatchReportGroupModal";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import TrashIcon from "@rsuite/icons/Trash";
+import EditIcon from "@rsuite/icons/Edit";
 
 const { Column, HeaderCell, Cell } = Table;
 const ReportGroupTable = () => {
@@ -118,20 +120,19 @@ const ReportGroupTable = () => {
                 >
                   <>
                     <Button
-                      appearance="ghost"
+                      appearance="primary"
                       color="red"
                       onClick={() => deleteHandler(rowdate._id)}
-                    >
-                      Delete
-                    </Button>
+                      startIcon={<TrashIcon />}
+                    />
+
                     <Button
-                      appearance="ghost"
-                      color="blue"
+                      appearance="primary"
+                      color="green"
                       className="ml-2"
                       onClick={() => patchHandler(rowdate as ICondition)}
-                    >
-                      Edit
-                    </Button>
+                      startIcon={<EditIcon />}
+                    />
                   </>
                 </AuthCheckerForComponent>
               </>

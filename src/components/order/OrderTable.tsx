@@ -280,8 +280,9 @@ const OrderTable = ({
               <>
                 <Button
                   className="ml-2"
+                  color="blue"
                   appearance="primary"
-                  color="green"
+
                   startIcon={<VisibleIcon />}
                   onClick={() => {
                     if (patchHandler) {

@@ -11,6 +11,8 @@ import { Table, Pagination, Button, toaster, Message } from "rsuite";
 import PatchConditonModal from "./PatchConditionModal";
 import { ICondition } from "@/types/allDepartmentInterfaces";
 import swal from "sweetalert";
+import TrashIcon from "@rsuite/icons/Trash";
+import EditIcon from "@rsuite/icons/Edit";
 
 const { Column, HeaderCell, Cell } = Table;
 const CondtionTable = () => {
@@ -115,20 +117,19 @@ const CondtionTable = () => {
             {(rowdate) => (
               <>
                 <Button
-                  appearance="ghost"
+                  appearance="primary"
                   color="red"
                   onClick={() => deleteHandler(rowdate._id)}
-                >
-                  Delete
-                </Button>
+                  startIcon={<TrashIcon />}
+                />
+
                 <Button
-                  appearance="ghost"
-                  color="blue"
+                  appearance="primary"
+                  color="green"
                   className="ml-2"
                   onClick={() => patchHandler(rowdate as ICondition)}
-                >
-                  Edit
-                </Button>
+                  startIcon={<EditIcon />}
+                />
               </>
             )}
           </Cell>

@@ -17,6 +17,8 @@ import PatchBacteriaModel from "./PatchBacteria";
 import PatchBacteria from "./PatchBacteria";
 import { IBacteria } from "@/app/(withlayout)/bacteria/page";
 import { ICondition } from "@/types/allDepartmentInterfaces";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 const { Column, HeaderCell, Cell } = Table;
 const BacteriaTable = () => {
@@ -152,20 +154,19 @@ const BacteriaTable = () => {
             {(rowdate) => (
               <>
                 <Button
-                  appearance="ghost"
+                  appearance="primary"
                   color="red"
                   onClick={() => deleteHandler(rowdate._id)}
-                >
-                  Delete
-                </Button>
+                  startIcon={<TrashIcon />}
+                />
+
                 <Button
-                  appearance="ghost"
-                  color="blue"
+                  appearance="primary"
+                  color="green"
                   className="ml-2"
                   onClick={() => patchHandler(rowdate as ICondition)}
-                >
-                  Edit
-                </Button>
+                  startIcon={<EditIcon />}
+                />
               </>
             )}
           </Cell>
