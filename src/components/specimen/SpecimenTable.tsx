@@ -10,6 +10,8 @@ import { TableType } from "@/types/componentsType";
 import { useState } from "react";
 import { Button, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 const { Column, HeaderCell, Cell } = Table;
 
@@ -99,24 +101,23 @@ const SpecimenTable = ({
               >
                 <>
                   <Button
-                    appearance="ghost"
+                    appearance="primary"
                     color="red"
                     onClick={() => deleteHandler(rowdate._id)}
-                  >
-                    Delete
-                  </Button>
+                    startIcon={<TrashIcon />}
+                  />
+
                   <Button
-                    appearance="ghost"
-                    color="blue"
+                    appearance="primary"
+                    color="green"
                     className="ml-2"
+                    startIcon={<EditIcon />}
                     onClick={() => {
                       setPatchData(rowdate as ISpecimen);
                       setPostModelOpen(!open);
                       setMode("patch");
                     }}
-                  >
-                    Edit
-                  </Button>
+                  />
                 </>
               </AuthCheckerForComponent>
             )}

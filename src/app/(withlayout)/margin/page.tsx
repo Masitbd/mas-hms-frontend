@@ -7,6 +7,7 @@ import {
 } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import { useEffect, useState } from "react";
 import { Button, InputNumber, Message, toaster } from "rsuite";
+import EditIcon from "@rsuite/icons/Edit";
 
 const MarginPage = () => {
   const [postMargin, { isLoading, isSuccess }] = usePostMiscMutation();
@@ -130,11 +131,11 @@ const MarginPage = () => {
         <Button
           disabled={isLoading}
           appearance="primary"
+          color="green"
           onClick={handleUpdateSubmit}
           className="w-52"
-        >
-          Update
-        </Button>
+          startIcon={<EditIcon />}
+        />
       </div>
 
       <div className="w-full max-w-md flex flex-col gap-5 justify-center mx-auto items-center mt-20">

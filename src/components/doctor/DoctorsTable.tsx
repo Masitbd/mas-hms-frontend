@@ -12,6 +12,9 @@ import { Button, Form, Pagination, Table } from "rsuite";
 import swal from "sweetalert";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import SearchIcon from "@rsuite/icons/Search";
+import EditIcon from "@rsuite/icons/Edit";
+import TrashIcon from "@rsuite/icons/Trash";
 
 export type ISearchTermType = {
   searchTerm: string;
@@ -87,9 +90,28 @@ const DoctorsTable = ({
           className="grid grid-cols-1 gap-5 justify-center w-full"
           fluid
         >
-          <Form.Group controlId="searchTerm">
+          {/* <Form.Group controlId="searchTerm">
             <Form.ControlLabel>Search</Form.ControlLabel>
             <Form.Control name="searchTerm" htmlSize={100} />
+          </Form.Group> */}
+
+          <Form.Group controlId="searchTerm">
+            <Form.ControlLabel>Search</Form.ControlLabel>
+            <div style={{ position: "relative", width: "100%" }}>
+              <Form.Control
+                name="searchTerm"
+                style={{ paddingRight: "30px" }} // Add space for the icon
+              />
+              <SearchIcon
+                style={{
+                  position: "absolute",
+                  right: "10px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  pointerEvents: "none", // Make it non-clickable
+                }}
+              />
+            </div>
           </Form.Group>
         </Form>
       </div>
@@ -122,11 +144,11 @@ const DoctorsTable = ({
           <HeaderCell>{"Doctor's Email"}</HeaderCell>
           <Cell dataKey="email" />
         </Column>
-        <Column flexGrow={3}>
+        <Column flexGrow={2}>
           <HeaderCell>{"Doctor's phone number"}</HeaderCell>
           <Cell dataKey="phone" />
         </Column>
-        <Column flexGrow={2}>
+        <Column flexGrow={3}>
           <HeaderCell>Action</HeaderCell>
           <Cell align="center">
             {(rowdate) => (
@@ -136,29 +158,30 @@ const DoctorsTable = ({
                 >
                   <>
                     <Button
-                      appearance="ghost"
+                      appearance="primary"
                       color="red"
                       onClick={() => deleteHandler(rowdate._id)}
-                    >
-                      Delete
-                    </Button>
+                      startIcon={<TrashIcon />}
+                    />
+
                     <Button
-                      appearance="ghost"
-                      color="blue"
+                      appearance="primary"
+                      color="green"
                       className="ml-2"
                       onClick={() => {
                         setPatchData(rowdate as IDoctor);
                         setPostModelOpen(!open);
                         setMode("patch");
                       }}
-                    >
-                      Edit
-                    </Button>
+                      startIcon={<EditIcon />}
+                    />
                   </>
                 </AuthCheckerForComponent>
                 <Button
                   // appearance="transparent"
                   className="ml-2"
+                  color="blue"
+                  appearance="primary"
                   startIcon={<VisibleIcon />}
                   onClick={() => {
                     setPatchData(rowdate as IDoctor);
