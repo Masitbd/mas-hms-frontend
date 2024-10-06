@@ -18,10 +18,21 @@ const OrderAndPatientInfo = (orderData: { data: IOrderData[] }) => {
     }
   };
 
+  const consultantInformation = () => {
+    const consultant: IDoctor = orderData?.data[0]
+      .consultant as unknown as IDoctor;
+
+    if ("title" in consultant || "name" in consultant) {
+      return <>{consultant?.title + " " + consultant?.name}</>;
+    } else {
+      return "";
+    }
+  };
+
   const patientInformation = () => {
     if (orderData?.data[0]?.patient) {
       return (
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-4 gap-5">
           <div className="flex flex-col">
             <h2 className="font-bold">Name</h2>
             {orderData?.data[0]?.patient.name}
@@ -44,7 +55,7 @@ const OrderAndPatientInfo = (orderData: { data: IOrderData[] }) => {
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Consultent</h2>
-            {orderData?.data[0]?.patient.consultant}
+            {consultantInformation()}
           </div>
           <div className="flex flex-col">
             <h2 className="font-bold">Phone</h2>

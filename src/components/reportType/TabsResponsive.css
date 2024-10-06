@@ -1,0 +1,21 @@
+/* .multi-line-tabs .rs-tabs {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.multi-line-tabs .rs-tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.multi-line-tabs .rs-tabs-tab {
+    flex: 0 1 auto;
+    margin-right: 10px;
+    margin-bottom: 10px;
+} */
+
+.multi-line-tabs .rs-nav-horizontal{
+    white-space: pre-wrap
+
+}

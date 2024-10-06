@@ -13,7 +13,7 @@ import {
   usePatchCompanyInfoMutation,
   usePostCompanyInfoMutation,
 } from "@/redux/api/companyInfo/companyInfoSlice";
-
+import swal from "sweetalert";
 interface IProps {
   mode: string;
   open: boolean;

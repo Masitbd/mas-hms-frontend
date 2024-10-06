@@ -395,12 +395,12 @@ const Sidebar = () => {
   const [expand, setExpand] = useState(true);
   const [selectedItem, setSelectedItem] = useState("");
   return (
-    <div>
+    <div className="shadow-lg">
       <ResuiteSidebar
         style={{
           display: "flex",
           flexDirection: "column",
-          minHeight: "88vh",
+          minHeight: "93vh",
           justifyContent: "space-between",
           overflowY: "hidden",
         }}

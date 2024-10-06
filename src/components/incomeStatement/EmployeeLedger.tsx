@@ -5,7 +5,10 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import moment from "moment";
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
-import { useGetCompnayInofQuery } from "@/redux/api/companyInfo/companyInfoSlice";
+import {
+  useGetCompnayInofQuery,
+  useGetDefaultQuery,
+} from "@/redux/api/companyInfo/companyInfoSlice";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
@@ -39,7 +42,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
 }) => {
   //
 
-  const { data: comapnyInfo } = useGetCompnayInofQuery(undefined);
+  const { data: comapnyInfo } = useGetDefaultQuery(undefined);
 
   const [infoHeader, setInfoHeader] = useState<
     null | { text?: string; image?: string }[]
@@ -81,7 +84,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
           } to ${endDate ? moment(endDate).format("YYYY-MM-DD") : "N/A"}`,
           style: "subheader",
           alignment: "center",
-          margin: [0, 0, 0, 20],
+          margin: [0, 0, 0, 5],
         },
 
         // Static Table Header

@@ -76,7 +76,7 @@ const TestWIseIncomeStatement = () => {
 
   // company info
 
-  const { data: comapnyInfo } = useGetCompnayInofQuery(undefined);
+  const { data: comapnyInfo } = useGetDefaultQuery(undefined);
 
   const [infoHeader, setInfoHeader] = useState<
     null | { text?: string; image?: string }[]

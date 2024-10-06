@@ -152,33 +152,51 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
   if (mode == ENUM_MODE.VIEW) {
     return (
       <>
-        <div className="shadow-lg rounded-md py-5 my-5 mx-2">
-          <div>
-            <Margin
-              margin={margin}
-              marginTitle="p"
-              setMargins={setMargins}
-              key={"p"}
-            />
-          </div>
-          <div className="flex justify-end mr-9">
-            <Button
-              onClick={handlePrint}
-              className="mb-5 col-span-4"
-              appearance="primary"
-              color="blue"
-              size="lg"
-            >
-              Print
-            </Button>
+        <div className="">
+          <div className="my-5 border  shadow-lg mx-5">
+            <div className="bg-[#3498ff] text-white px-2 py-2">
+              <h2 className="text-center text-xl font-semibold">Margin</h2>
+            </div>
+            <div className="p-2">
+              <div className="shadow-lg rounded-md py-5 my-5 mx-2">
+                <div>
+                  <Margin
+                    margin={margin}
+                    marginTitle="p"
+                    setMargins={setMargins}
+                    key={"p"}
+                  />
+                </div>
+                <div className="flex justify-end mr-9">
+                  <Button
+                    onClick={handlePrint}
+                    className="mb-5 col-span-4"
+                    appearance="primary"
+                    color="blue"
+                    size="lg"
+                  >
+                    Print
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <ReportViewerMicro
-          order={props.order}
-          reportGroup={reportGroup}
-          ref={componentRef as Ref<HTMLDivElement>}
-          result={result}
-        />
+
+        <div className="">
+          <div className="my-5 border  shadow-lg mx-5">
+            <div className="bg-[#3498ff] text-white px-2 py-2">
+              <h2 className="text-center text-xl font-semibold">Report</h2>
+            </div>
+            <div className="p-2"></div>
+            <ReportViewerMicro
+              order={props.order}
+              reportGroup={reportGroup}
+              ref={componentRef as Ref<HTMLDivElement>}
+              result={result}
+            />
+          </div>
+        </div>
       </>
     );
   } else {

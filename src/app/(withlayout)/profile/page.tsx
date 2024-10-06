@@ -20,20 +20,28 @@ const Profile = () => {
   }
   const { profile, role } = ProfileData?.data[0];
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center flex-col">
-      {mode == ENUM_MODE.VIEW && (
-        <>
-          <div className="w-full h-full flex items-center justify-center flex-col">
-            <Panel bordered className="w-full max-w-3xl p-8">
-              <div className="flex flex-col items-center mb-8">
-                <Avatar circle size="lg" />
-                <h2 className="text-lg font-semibold mt-4">{profile.name}</h2>
-              </div>
-              <div className="flex flex-col space-y-4">
-                <p>
-                  <strong>Role:</strong>{" "}
-                  <span className="capitalize">{role}</span>
-                </p>
+    <div className="">
+      <div className="my-5 border  shadow-lg mx-5">
+        <div className="bg-[#3498ff] text-white px-2 py-2">
+          <h2 className="text-center text-xl font-semibold">Profile</h2>
+        </div>
+        <div className=""></div>
+        <div className="min-h-screen bg-gray-100 flex items-center justify-center flex-col">
+          {mode == ENUM_MODE.VIEW && (
+            <>
+              <div className="w-full h-full flex items-center justify-center flex-col">
+                <Panel bordered className="w-full max-w-3xl p-8">
+                  <div className="flex flex-col items-center mb-8">
+                    <Avatar circle size="lg" />
+                    <h2 className="text-lg font-semibold mt-4">
+                      {profile.name}
+                    </h2>
+                  </div>
+                  <div className="flex flex-col space-y-4">
+                    <p>
+                      <strong>Role:</strong>{" "}
+                      <span className="capitalize">{role}</span>
+                    </p>
 
                 <p>
                   <strong>Father Name:</strong> {profile.fatherName}
@@ -69,16 +77,20 @@ const Profile = () => {
                 >
                   Change Password
                 </Button>
+
+                 
+                </Panel>
+
               </div>
-            </Panel>
+            </>
+          )}
+          <div>
+            <PatchProfile mode={mode} setMode={setMode} userData={profile} />
           </div>
-        </>
-      )}
-      <div>
-        <PatchProfile mode={mode} setMode={setMode} userData={profile} />
-      </div>
-      <div>
-        <ChangePassword mode={mode} setMode={setMode} userData={profile} />
+          <div>
+            <ChangePassword mode={mode} setMode={setMode} userData={profile} />
+          </div>
+        </div>
       </div>
     </div>
   );

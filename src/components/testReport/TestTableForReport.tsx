@@ -122,17 +122,14 @@ const TestTableForReport = (props: { data: IOrderData }) => {
 
   return (
     <div>
-      <div className="my-10">
-        <div className="text-xl font-bold font-serif">Reports To generate</div>
-        <hr />
-        <div className="my-2 p-2">
+      <div className="">
+        <div className="">
           <Table
             loading={reportGroupDataLoading || statusLoading}
             data={reportGroupData}
             bordered
             cellBordered
-            fillHeight
-            height={450}
+            autoHeight
           >
             <Column flexGrow={4}>
               <HeaderCell>Report Group</HeaderCell>

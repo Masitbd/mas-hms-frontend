@@ -83,7 +83,7 @@ export type IOrderData = {
   patientType: string;
   paid: number;
   vat: number;
-  consultant?: string;
+  consultant?: string | IDoctor;
   discountedBy: string;
   postedBy?: string;
   refundData?: Partial<IRefund>;
