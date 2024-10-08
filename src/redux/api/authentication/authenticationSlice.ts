@@ -20,7 +20,20 @@ const authenticaiton = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    changeUserPasswordByAdmin: build.mutation({
+      query: (data: { id: string; password: string }) => ({
+        url: "/auth/change-password-by-admin",
+        method: "POST",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useChangePasswordMutation } = authenticaiton;
+export const {
+  useLoginMutation,
+  useChangePasswordMutation,
+  useChangeUserPasswordByAdminMutation,
+} = authenticaiton;

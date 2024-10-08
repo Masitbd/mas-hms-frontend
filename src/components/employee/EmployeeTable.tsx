@@ -78,10 +78,9 @@ const EmployeeTable = (props: Partial<IPropsForEmployeeRegistration>) => {
     }
   };
 
-  console.log(searchParam);
   return (
-    <div className="mx-2">
-      <div className="grid grid-cols-2">
+    <div className="mx-2 my-5">
+      <div className="grid grid-cols-2 my-2">
         <InputGroup
           onChange={(event: React.FormEvent<HTMLInputElement>) => {
             if (
@@ -104,7 +103,6 @@ const EmployeeTable = (props: Partial<IPropsForEmployeeRegistration>) => {
       <Table
         loading={dataLoading || dataFeatching || deleteLoading}
         data={employeeData?.data?.data}
-        rowHeight={65}
         autoHeight
       >
         <Column flexGrow={2}>
@@ -131,6 +129,7 @@ const EmployeeTable = (props: Partial<IPropsForEmployeeRegistration>) => {
                       color="green"
                       onClick={() => editHandler(rowData)}
                       startIcon={<EditIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -138,6 +137,7 @@ const EmployeeTable = (props: Partial<IPropsForEmployeeRegistration>) => {
                       color="blue"
                       onClick={() => viewHandler(rowData)}
                       startIcon={<VisibleIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -145,6 +145,7 @@ const EmployeeTable = (props: Partial<IPropsForEmployeeRegistration>) => {
                       color="red"
                       onClick={() => deleteHandler(rowData)}
                       startIcon={<TrashIcon />}
+                      size="sm"
                     />
                   </div>
                 </>

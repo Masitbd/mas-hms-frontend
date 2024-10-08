@@ -75,12 +75,11 @@ const HospitalGroupTable = ({
   return (
     <div>
       <Table
-        height={600}
+        autoHeight
         data={data}
         loading={isLoading}
         bordered
         cellBordered
-        rowHeight={65}
         className="text-md"
       >
         <Column flexGrow={1}>
@@ -104,6 +103,7 @@ const HospitalGroupTable = ({
                     color="red"
                     onClick={() => deleteHandler(rowdate._id)}
                     startIcon={<TrashIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -116,6 +116,7 @@ const HospitalGroupTable = ({
                       setPostModelOpen(!open);
                       setMode("patch");
                     }}
+                    size="sm"
                   />
                 </>
               </AuthCheckerForComponent>

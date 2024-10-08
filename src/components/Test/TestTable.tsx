@@ -136,7 +136,6 @@ const TestTable = ({
         className="w-full"
         bordered
         cellBordered
-        rowHeight={60}
         loadAnimation={true}
       >
         <Column align="center" resizable flexGrow={1}>
@@ -175,6 +174,7 @@ const TestTable = ({
                     onClick={() => handleDeletOpen(rowdate._id)}
                     loading={deleteLoading}
                     startIcon={<TrashIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -185,6 +185,7 @@ const TestTable = ({
                       patchHandler({ data: rowdate as ITest, mode: "patch" })
                     }
                     startIcon={<EditIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -199,6 +200,7 @@ const TestTable = ({
                         mode: ENUM_MODE.VIEW,
                       });
                     }}
+                    size="sm"
                   />
                 </>
               </AuthCheckerForComponent>
