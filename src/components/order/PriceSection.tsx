@@ -21,12 +21,12 @@ const PriceSection = (props: IPriceSectionProps) => {
   }
 
   return (
-    <div className="mb-5 border  shadow-lg">
+    <div className=" border  shadow-lg">
       <div className="bg-[#3498ff] text-white px-2 py-2">
         <h2 className="text-center text-xl font-semibold">Price Information</h2>
       </div>
-      <div className="mt-10 px-2 py-2">
-        <div className="mt-5">
+      <div className=" px-2">
+        <div className="mt-2">
           <h2 className="text-xl font-bold">Price Info</h2>
           <hr />
         </div>

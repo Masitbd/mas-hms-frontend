@@ -76,7 +76,7 @@ const SensitivityTable = () => {
         />
       </div>
       <div>
-        <Table data={miscData?.data} rowHeight={70} autoHeight>
+        <Table data={miscData?.data} autoHeight className="my-5">
           <Column flexGrow={2}>
             <HeaderCell children="Antibiotic" />
             <Cell dataKey="value" />
@@ -107,6 +107,7 @@ const SensitivityTable = () => {
                       appearance="primary"
                       color="green"
                       startIcon={<EditIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -116,6 +117,7 @@ const SensitivityTable = () => {
                         deleteHandler(rowData);
                       }}
                       startIcon={<TrashIcon />}
+                      size="sm"
                     />
                   </>
                 </AuthCheckerForComponent>
