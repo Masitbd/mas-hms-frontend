@@ -38,7 +38,7 @@ const PasswordChangeByAdmin = (params: {
     <div>
       <RModal
         open={open}
-        size="sm"
+        size="md"
         okHandler={submitHandler}
         cancelHandler={cancelHandler}
         title="Change User Password"

@@ -29,6 +29,24 @@ const authenticaiton = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    resetPassword: build.mutation({
+      query: (data: { newPassword: string; token: string }) => ({
+        url: "/auth/reset-password",
+        method: "POST",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+    }),
+    forgetPassword: build.mutation({
+      query: (data: { uuid: string }) => ({
+        url: "/auth/forgot-password",
+        method: "POST",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+    }),
   }),
 });
 
@@ -36,4 +54,6 @@ export const {
   useLoginMutation,
   useChangePasswordMutation,
   useChangeUserPasswordByAdminMutation,
+  useResetPasswordMutation,
+  useForgetPasswordMutation,
 } = authenticaiton;
