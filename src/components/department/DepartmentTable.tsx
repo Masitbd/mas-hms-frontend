@@ -78,22 +78,22 @@ const DepartmentTable = ({
         loading={isLoading}
         bordered
         cellBordered
-        rowHeight={65}
         className="text-md"
+        wordWrap={"break-word"}
       >
-        <Column flexGrow={2}>
+        <Column flexGrow={4}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
         <Column flexGrow={1}>
-          <HeaderCell>Commission Percentage</HeaderCell>
+          <HeaderCell> Commission %</HeaderCell>
           <Cell dataKey="commissionParcentage" />
         </Column>
         <Column flexGrow={1}>
-          <HeaderCell>fixed Commission</HeaderCell>
+          <HeaderCell>Commission TK</HeaderCell>
           <Cell dataKey="fixedCommission" />
         </Column>
-        <Column flexGrow={4}>
+        <Column flexGrow={2}>
           <HeaderCell>Description</HeaderCell>
           <Cell dataKey="description" />
         </Column>
@@ -110,6 +110,7 @@ const DepartmentTable = ({
                     color="red"
                     onClick={() => deleteHandler(rowdate._id)}
                     startIcon={<TrashIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -122,6 +123,7 @@ const DepartmentTable = ({
                       setPostModelOpen(!open);
                       setMode("patch");
                     }}
+                    size="sm"
                   />
                 </>
               </AuthCheckerForComponent>

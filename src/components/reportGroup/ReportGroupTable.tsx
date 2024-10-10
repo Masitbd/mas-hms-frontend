@@ -93,20 +93,19 @@ const ReportGroupTable = () => {
   return (
     <div>
       <Table
-        height={600}
+        autoHeight
         data={data}
         loading={isLoading}
         bordered
         cellBordered
-        rowHeight={65}
         className="text-md"
       >
-        <Column flexGrow={1}>
+        <Column flexGrow={3}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
 
-        <Column flexGrow={4}>
+        <Column flexGrow={2}>
           <HeaderCell>Description</HeaderCell>
           <Cell dataKey="description" />
         </Column>
@@ -124,6 +123,7 @@ const ReportGroupTable = () => {
                       color="red"
                       onClick={() => deleteHandler(rowdate._id)}
                       startIcon={<TrashIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -132,6 +132,7 @@ const ReportGroupTable = () => {
                       className="ml-2"
                       onClick={() => patchHandler(rowdate as ICondition)}
                       startIcon={<EditIcon />}
+                      size="sm"
                     />
                   </>
                 </AuthCheckerForComponent>

@@ -34,7 +34,7 @@ const ForNotRegistered = (param: param) => {
       <h2 className="text-xl font-bold">Patient Information</h2>
       <div>
         <Form
-          className="grid grid-cols-3 gap-5 justify-center w-full"
+          className="grid grid-cols-4 gap-3 justify-center w-full"
           onChange={(value, event) => {
             param.setFromData((prevState: any) => ({
               ...prevState,
@@ -57,6 +57,7 @@ const ForNotRegistered = (param: param) => {
           formValue={param?.data?.patient}
           model={model}
           ref={param.forwardedRef}
+          fluid
         >
           <Form.Group controlId="name">
             <Form.ControlLabel>Name</Form.ControlLabel>

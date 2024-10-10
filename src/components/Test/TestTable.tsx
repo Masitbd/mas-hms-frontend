@@ -136,7 +136,6 @@ const TestTable = ({
         className="w-full"
         bordered
         cellBordered
-        rowHeight={60}
         loadAnimation={true}
       >
         <Column align="center" resizable flexGrow={1}>
@@ -175,6 +174,7 @@ const TestTable = ({
                     onClick={() => handleDeletOpen(rowdate._id)}
                     loading={deleteLoading}
                     startIcon={<TrashIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -185,6 +185,7 @@ const TestTable = ({
                       patchHandler({ data: rowdate as ITest, mode: "patch" })
                     }
                     startIcon={<EditIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -199,6 +200,7 @@ const TestTable = ({
                         mode: ENUM_MODE.VIEW,
                       });
                     }}
+                    size="sm"
                   />
                 </>
               </AuthCheckerForComponent>
@@ -214,30 +216,11 @@ const TestTable = ({
           last
           ellipsis
           boundaryLinks
-          maxButtons={5}
-          size="xs"
-          layout={["total", "-", "limit", "|", "pager", "skip"]}
-          total={testData?.data.data.length}
-          limitOptions={[10, 30, 50]}
-          limit={limit}
-          activePage={page}
-          onChangePage={setPage}
-          onChangeLimit={handleChangeLimit}
-        />
-      </div>
-      <div>
-        <Pagination
-          prev
-          next
-          first
-          last
-          ellipsis
-          boundaryLinks
           maxButtons={10}
           size="xs"
           layout={["total", "-", "limit", "|", "pager", "skip"]}
           total={testData?.data?.meta?.total}
-          limitOptions={[10, 30, 50]}
+          limitOptions={[10, 20, 30, 50]}
           limit={testData?.data?.meta?.limit}
           activePage={testData?.data?.meta?.page}
           onChangePage={(page: number) =>
@@ -248,6 +231,7 @@ const TestTable = ({
           }
         />
       </div>
+
       <div>
         <AlartDialog
           description="Are you sure you want to delete this code "

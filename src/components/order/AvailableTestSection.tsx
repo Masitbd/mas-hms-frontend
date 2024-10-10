@@ -19,12 +19,14 @@ import {
 } from "./initialDataAndTypes";
 import SearchIcon from "@rsuite/icons/Search";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
+import SelectPickerForOrder from "./SelectPickerForOrder";
 
 const AvailableTestSection = (params: IParamsForTestInformation) => {
   const { Cell, Column, HeaderCell } = Table;
   const ref = useRef();
-  const { data: testSetData, isLoading: tableDataLoading } =
-    useGetTestsQuery(undefined);
+  const { data: testSetData, isLoading: tableDataLoading } = useGetTestsQuery({
+    flag: "o",
+  });
   // Handling add test
 
   const handleAddTest = (rowData: ITest) => {
@@ -77,7 +79,7 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
     },
   ] = useLazyGetTestsQuery();
   const handleTestSearch = async (value: string) => {
-    const data = await search({ searchTerm: value });
+    const data = await search({ searchTerm: value, flag: "o" });
     if ("data" in data) {
     }
   };
@@ -102,7 +104,7 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
       <div className=" p-2 bg-stone-100 rounded-lg">
         <h3 className="text-center font-bold text-2xl">Available Tests</h3>
         <div className="mt-5" key={25}>
-          <SelectPicker
+          {/* <SelectPicker
             className="z-50"
             key={1500}
             onSearch={(value, event) => {
@@ -118,9 +120,7 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
                 index: index,
               })
             )}
-            onSelect={(value, event) => {
-              handleAddTest(value);
-            }}
+            open
             placeholder={"Search"}
             caretAs={SearchIcon}
             loading={testSearchLoading}
@@ -151,16 +151,24 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
                   )
                 : []
             }
+          /> */}
+          <SelectPickerForOrder
+            formData={params.formData}
+            mode={params.mode}
+            setFormData={params.setFormData}
+            setRModalOpen={params.setRModalOpen}
+            setRTest={params.setRTest}
+            addTestHanlder={handleAddTest}
           />
         </div>
         <Table
-          height={500}
-          rowHeight={60}
+          height={400}
           bordered
           cellBordered
           data={testSetData?.data?.data}
           wordWrap={"break-all"}
           loading={tableDataLoading}
+          autoFocus
         >
           <Column align="center" resizable flexGrow={2}>
             <HeaderCell>Test ID</HeaderCell>
@@ -191,6 +199,7 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
                             .includes(rowdata?._id)
                         : false
                     }
+                    size="sm"
                   >
                     Add
                   </Button>

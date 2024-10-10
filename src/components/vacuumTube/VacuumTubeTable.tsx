@@ -86,7 +86,6 @@ const VacuumTubeTable = ({
         loading={isLoading}
         bordered
         cellBordered
-        rowHeight={65}
         className="text-md"
       >
         <Column flexGrow={3}>
@@ -115,6 +114,7 @@ const VacuumTubeTable = ({
                     color="red"
                     onClick={() => deleteHandler(rowdate._id)}
                     startIcon={<TrashIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -127,6 +127,7 @@ const VacuumTubeTable = ({
                       setPostModelOpen(!open);
                       setMode("patch");
                     }}
+                    size="sm"
                   />
                 </>
               </AuthCheckerForComponent>

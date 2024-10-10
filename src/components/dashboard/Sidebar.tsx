@@ -84,7 +84,7 @@ const Sidebar = () => {
                 <Nav.Menu
                   eventKey="1"
                   trigger="hover"
-                  title="General"
+                  title={<div className="font-bold text-black">General</div>}
                   icon={<GearCircleIcon />}
                   placement="rightStart"
                 >
@@ -127,9 +127,11 @@ const Sidebar = () => {
                 ]}
               >
                 <Nav.Menu
-                  eventKey="1"
+                  eventKey="2"
                   trigger="hover"
-                  title="Manage Users"
+                  title={
+                    <div className="font-bold text-black">Manage Users</div>
+                  }
                   icon={<UserInfoIcon />}
                   placement="rightStart"
                 >
@@ -179,7 +181,9 @@ const Sidebar = () => {
                 <Nav.Menu
                   eventKey="3"
                   trigger="hover"
-                  title="Investigation"
+                  title={
+                    <div className="font-bold text-black">Investigation</div>
+                  }
                   icon={<TreemapIcon />}
                   placement="rightStart"
                 >
@@ -233,7 +237,9 @@ const Sidebar = () => {
                 <Nav.Menu
                   eventKey="4"
                   trigger="hover"
-                  title="Lab Reports"
+                  title={
+                    <div className="font-bold text-black">Lab Reports</div>
+                  }
                   icon={<DocPassIcon />}
                   placement="rightStart"
                 >
@@ -272,7 +278,11 @@ const Sidebar = () => {
                 <Nav.Menu
                   eventKey="5"
                   trigger="hover"
-                  title="Financial Reports"
+                  title={
+                    <div className="font-bold text-black">
+                      Financial Reports
+                    </div>
+                  }
                   icon={<BarLineChartIcon />}
                   placement="rightStart"
                 >

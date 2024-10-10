@@ -133,20 +133,19 @@ const PermissionTable = () => {
         loading={isLoading}
         bordered
         cellBordered
-        rowHeight={65}
         className="text-md"
       >
-        <Column flexGrow={1}>
+        <Column flexGrow={4}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
 
-        <Column flexGrow={4}>
+        <Column flexGrow={1}>
           <HeaderCell>Code</HeaderCell>
           <Cell dataKey="code" />
         </Column>
 
-        <Column flexGrow={2}>
+        {/* <Column flexGrow={2}>
           <HeaderCell>Action</HeaderCell>
           <Cell align="center">
             {(rowdate) => (
@@ -173,7 +172,7 @@ const PermissionTable = () => {
               </AuthCkeckerForComponent>
             )}
           </Cell>
-        </Column>
+        </Column> */}
       </Table>
       <div style={{ padding: 20 }}>
         <Pagination

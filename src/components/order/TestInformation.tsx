@@ -130,27 +130,27 @@ const TestInformation = (params: IParamsForTestInformation) => {
             wordWrap={"break-word"}
             autoHeight
           >
-            <Column align="center" resizable flexGrow={0.5}>
+            <Column align="center" flexGrow={0.5}>
               <HeaderCell>SL.</HeaderCell>
               <Cell dataKey="SL" />
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Test ID</HeaderCell>
               <Cell dataKey="test.testCode" />
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Title</HeaderCell>
               <Cell dataKey="test.label" />
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Original Price</HeaderCell>
               <Cell dataKey="test.price" />
             </Column>
-            <Column align="center" resizable flexGrow={0.5}>
+            <Column align="center" flexGrow={0.5}>
               <HeaderCell>Discount %</HeaderCell>
               <Cell dataKey="discount" />
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Discounted Price</HeaderCell>
               <Cell>
                 {(rowData) => {
@@ -165,7 +165,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 }}
               </Cell>
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Status</HeaderCell>
               <Cell>
                 {(rowData) => {
@@ -173,7 +173,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 }}
               </Cell>
             </Column>
-            <Column align="center" resizable flexGrow={1.5}>
+            <Column align="center" flexGrow={1.5}>
               <HeaderCell>Delivery Date</HeaderCell>
               <Cell>
                 {(rowData) => {
@@ -187,7 +187,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 }}
               </Cell>
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Action</HeaderCell>
               <Cell>
                 {(rowData) => (
@@ -270,26 +270,25 @@ const TestInformation = (params: IParamsForTestInformation) => {
             cellBordered
             wordWrap={"break-word"}
             height={500}
-            rowHeight={70}
           >
-            <Column align="center" resizable flexGrow={0.5}>
+            <Column align="center" flexGrow={0.5}>
               <HeaderCell>SL.</HeaderCell>
               <Cell dataKey="SL" />
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Test ID</HeaderCell>
               <Cell dataKey="test.testCode" />
             </Column>
-            <Column align="center" resizable flexGrow={2}>
+            <Column align="center" flexGrow={2}>
               <HeaderCell>Title</HeaderCell>
               <Cell dataKey="test.label" />
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Original Price</HeaderCell>
               <Cell dataKey="test.price" />
             </Column>
 
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Discount %</HeaderCell>
               <Cell>
                 {(rowData) => {
@@ -321,7 +320,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
               </Cell>
             </Column>
 
-            <Column align="center" resizable flexGrow={1.5}>
+            <Column align="center" flexGrow={1.5}>
               <HeaderCell>Delivery Date</HeaderCell>
               <Cell>
                 {(rowData) => {
@@ -339,7 +338,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
               </Cell>
             </Column>
 
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Remark</HeaderCell>
               <Cell>
                 {(rowData) => {
@@ -347,7 +346,8 @@ const TestInformation = (params: IParamsForTestInformation) => {
                     <>
                       <Input
                         as="textarea"
-                        style={{ scrollbarWidth: "none" }}
+                        style={{ scrollbarWidth: "none", height: "2rem" }}
+                        size="xs"
                         onChange={(value) =>
                           handleCellEdit(rowData, "remark", value)
                         }
@@ -357,7 +357,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 }}
               </Cell>
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Discounted Price</HeaderCell>
               <Cell>
                 {(rowData) => {
@@ -375,7 +375,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                 }}
               </Cell>
             </Column>
-            <Column align="center" resizable flexGrow={1}>
+            <Column align="center" flexGrow={1}>
               <HeaderCell>Action</HeaderCell>
               <Cell>
                 {(rowData) => (
@@ -384,6 +384,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                       onClick={() => testRemoveFromListHandler(rowData)}
                       appearance="primary"
                       color="red"
+                      size="sm"
                     >
                       Delete
                     </Button>

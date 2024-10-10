@@ -116,34 +116,28 @@ const DoctorsTable = ({
         </Form>
       </div>
       <Table
-        height={600}
         data={data}
+        autoHeight
         loading={isLoading}
         bordered
         cellBordered
-        rowHeight={65}
         className="text-md"
+        wordWrap={"break-word"}
       >
-        <Column flexGrow={2}>
+        <Column flexGrow={3}>
           <HeaderCell>{"Doctor's name"}</HeaderCell>
           <Cell dataKey="name" />
         </Column>
-        <Column flexGrow={2}>
+        <Column flexGrow={1}>
           <HeaderCell>{"Code"}</HeaderCell>
           <Cell dataKey="code" />
         </Column>
+
         <Column flexGrow={2}>
-          <HeaderCell>{"Doctor's father name"}</HeaderCell>
-          <Cell dataKey="fatherName" />
-        </Column>
-        <Column flexGrow={1}>
           <HeaderCell>{"Doctor's Designation"}</HeaderCell>
           <Cell dataKey="designation" />
         </Column>
-        <Column flexGrow={2}>
-          <HeaderCell>{"Doctor's Email"}</HeaderCell>
-          <Cell dataKey="email" />
-        </Column>
+
         <Column flexGrow={2}>
           <HeaderCell>{"Doctor's phone number"}</HeaderCell>
           <Cell dataKey="phone" />
@@ -162,6 +156,7 @@ const DoctorsTable = ({
                       color="red"
                       onClick={() => deleteHandler(rowdate._id)}
                       startIcon={<TrashIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -174,12 +169,14 @@ const DoctorsTable = ({
                         setMode("patch");
                       }}
                       startIcon={<EditIcon />}
+                      size="sm"
                     />
                   </>
                 </AuthCheckerForComponent>
                 <Button
                   // appearance="transparent"
                   className="ml-2"
+                  size="sm"
                   color="blue"
                   appearance="primary"
                   startIcon={<VisibleIcon />}
