@@ -296,7 +296,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
       <div className="">
         <div className="my-5 border  shadow-lg mx-5">
           <div className="bg-[#3498ff] text-white px-2 py-2">
-            <h2 className="text-center text-xl font-semibold">Vaccume Tube</h2>
+            <h2 className="text-center text-xl font-semibold">Test Report</h2>
           </div>
           <div className="p-2">
             <div>

@@ -18,21 +18,26 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate<IComment>) => {
   const { data, open, setData, setOpen, mode, setMode } = props;
   const [post] = usePostMutation();
   const [patch] = usePatchMutation();
+  const [comment, setComment] = useState("");
   const modalCancelHandler = () => {
     setOpen(false);
     setData(InitalCommentData as IComment);
     setMode(ENUM_MODE.NEW);
+    setComment("");
   };
   const modalOkHandler = async () => {
     if (mode == ENUM_MODE.NEW) {
-      const result = await post(data);
+      const result = await post({ title: data?.title, comment: comment });
       if ("data" in result) {
         swal("Success", "Comment Created Successfully", "success");
         modalCancelHandler();
       }
     }
     if (mode == ENUM_MODE.EDIT) {
-      const result = await patch({ data: data, id: data._id });
+      const result = await patch({
+        data: { title: data?.title, comment: comment },
+        id: data._id,
+      });
       if ("data" in result) {
         swal("Success", "Comment Updated Successfully", "success");
         modalCancelHandler();
@@ -41,13 +46,6 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate<IComment>) => {
       modalCancelHandler();
     }
   };
-  const [comment, setComment] = useState("");
-  useEffect(() => {
-    setData({
-      ...data,
-      comment: comment,
-    });
-  }, [comment]);
 
   return (
     <div>

@@ -1,4 +1,3 @@
-import { IPatient1 } from "@/app/(withlayout)/patient/page";
 import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
 import { useDeleteTestMutation } from "@/redux/api/test/testSlice";
 import VisibleIcon from "@rsuite/icons/Visible";
@@ -9,6 +8,7 @@ import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import EditIcon from "@rsuite/icons/Edit";
 import TrashIcon from "@rsuite/icons/Trash";
+import { IPatient1 } from "./patientConstant";
 
 const { Column, HeaderCell, Cell } = Table;
 const PatientTable = ({
@@ -103,14 +103,6 @@ const PatientTable = ({
           <Cell>
             {(rowdate) => (
               <>
-                <Button
-                  appearance="primary"
-                  color="red"
-                  onClick={() => handleDeletOpen(rowdate._id)}
-                  startIcon={<TrashIcon />}
-                  size="sm"
-                />
-
                 <AuthCheckerForComponent
                   requiredPermission={[ENUM_USER_PEMISSION.MANAGE_PATIENT]}
                 >
@@ -119,12 +111,19 @@ const PatientTable = ({
                       appearance="primary"
                       color="green"
                       className="ml-2"
-                      onClick={() =>
+                      onClick={() => {
+                        const modifiedData = Object.assign({}, rowdate);
+                        if (modifiedData?.dateOfBirth) {
+                          modifiedData.dateOfBirth = new Date(
+                            modifiedData.dateOfBirth
+                          );
+                        }
+
                         patchHandler({
-                          data: rowdate as IPatient1,
+                          data: modifiedData as IPatient1,
                           mode: "patch",
-                        })
-                      }
+                        });
+                      }}
                       startIcon={<EditIcon />}
                       size="sm"
                     />
@@ -135,8 +134,14 @@ const PatientTable = ({
                       className="ml-2"
                       startIcon={<VisibleIcon />}
                       onClick={() => {
+                        const modifiedData = Object.assign({}, rowdate);
+                        if (modifiedData?.dateOfBirth) {
+                          modifiedData.dateOfBirth = new Date(
+                            modifiedData.dateOfBirth
+                          );
+                        }
                         patchHandler({
-                          data: rowdate as IPatient1,
+                          data: modifiedData as IPatient1,
                           mode: "watch",
                         });
                       }}
