@@ -1,7 +1,10 @@
-import { useLazyGetTestsQuery } from "@/redux/api/test/testSlice";
+import {
+  useGetTestsQuery,
+  useLazyGetTestsQuery,
+} from "@/redux/api/test/testSlice";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Placeholder, SelectPicker } from "rsuite";
+import { Loader, Placeholder, SelectPicker } from "rsuite";
 import SearchIcon from "@rsuite/icons/Search";
 import { IParamsForTestInformation } from "./initialDataAndTypes";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
@@ -9,30 +12,63 @@ import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 const SelectPickerForOrder = (
   params: IParamsForTestInformation & { addTestHanlder: (test: ITest) => void }
 ) => {
+  const FixedLoader = () => (
+    <Loader
+      content="Loading..."
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        position: "absolute",
+        bottom: "0",
+        background: "#fff",
+        width: "100%",
+        padding: "4px 0",
+      }}
+    />
+  );
   // For handeling searching the single tests
+  const [searchParam, setSearchParam] = useState({
+    searchTerm: "",
+    limit: 10,
+    flag: "o",
+  });
   const [tests, setTests] = useState([]);
-  const [
-    search,
-    {
-      isLoading: testSearchLoading,
-      isError: testSearchError,
-      data: testSearchData,
-      isFetching,
-    },
-  ] = useLazyGetTestsQuery();
+  const {
+    isLoading: testSearchLoading,
+    isError: testSearchError,
+    data: testSearchData,
+    isFetching,
+  } = useGetTestsQuery(searchParam);
   const handleTestSearch = async (value: string) => {
     if (value?.length == 0) {
       return;
     }
-    const data = await search({ searchTerm: value, flag: "o" });
-    if ("data" in data) {
-    }
+    await setSearchParam({
+      searchTerm: value,
+      flag: "o",
+      limit: 100,
+    });
   };
 
   const Menu = (menu: ReactNode) => {
-    if (testSearchLoading || isFetching) {
-      return <Placeholder.Grid rows={10} columns={1} active />;
-    } else return menu;
+    return (
+      <>
+        {menu}
+        {isFetching || (testSearchLoading && <FixedLoader />)}
+      </>
+    );
+  };
+
+  const loadMore = () => {
+    const newLimit = searchParam.limit + 10;
+    setSearchParam((preValue) => ({ ...preValue, limit: newLimit }));
+  };
+
+  const onItemsRendered = (props: any) => {
+    console.log(props.visibleStopIndex);
+    if (props.visibleStopIndex >= tests.length - 1) {
+      loadMore();
+    }
   };
 
   useEffect(() => {
@@ -67,6 +103,9 @@ const SelectPickerForOrder = (
         loading={testSearchLoading}
         block
         renderMenu={(menu) => Menu(menu)}
+        listProps={{
+          onItemsRendered,
+        }}
         onSelect={(v, item) =>
           params?.addTestHanlder(item?.children as unknown as ITest)
         }
@@ -94,7 +133,6 @@ const SelectPickerForOrder = (
               )
             : []
         }
-        menuAutoWidth
       />
     </div>
   );

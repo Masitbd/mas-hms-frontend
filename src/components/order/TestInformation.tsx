@@ -25,6 +25,8 @@ export type ITestGenerateType = {
   status: string;
 };
 
+import TrashIcon from "@rsuite/icons/Trash";
+
 const TestInformation = (params: IParamsForTestInformation) => {
   const { setRModalOpen, setRTest } = params;
 
@@ -116,9 +118,9 @@ const TestInformation = (params: IParamsForTestInformation) => {
   if (params.mode == ENUM_MODE.VIEW) {
     return (
       <>
-        <div className="mb-5 border rounded-md shadow-lg">
-          <div className="bg-[#3498ff] text-white px-2 py-2">
-            <h2 className="text-center text-xl font-semibold">
+        <div className=" border rounded-md shadow-lg">
+          <div className="bg-[#3498ff] text-white">
+            <h2 className="text-center text-lg  font-semibold">
               Test Information
             </h2>
           </div>
@@ -258,149 +260,146 @@ const TestInformation = (params: IParamsForTestInformation) => {
 
   return (
     <div className="mb-5 border rounded-md shadow-lg">
-      <div className="bg-[#3498ff] text-white px-2 py-2">
-        <h2 className="text-center text-xl font-semibold">Test Information</h2>
+      <div className="bg-[#3498ff] text-white">
+        <h2 className="text-center text-lg font-semibold">Test Information</h2>
       </div>
-      <div className="grid grid-cols-4 gap-2">
-        <div className="col-span-3">
-          <Table
-            data={params?.formData?.tests}
-            className="w-full"
-            bordered
-            cellBordered
-            wordWrap={"break-word"}
-            height={500}
-          >
-            <Column align="center" flexGrow={0.5}>
-              <HeaderCell>SL.</HeaderCell>
-              <Cell dataKey="SL" />
-            </Column>
-            <Column align="center" flexGrow={1}>
-              <HeaderCell>Test ID</HeaderCell>
-              <Cell dataKey="test.testCode" />
-            </Column>
-            <Column align="center" flexGrow={2}>
-              <HeaderCell>Title</HeaderCell>
-              <Cell dataKey="test.label" />
-            </Column>
-            <Column align="center" flexGrow={1}>
-              <HeaderCell>Original Price</HeaderCell>
-              <Cell dataKey="test.price" />
-            </Column>
 
-            <Column align="center" flexGrow={1}>
-              <HeaderCell>Discount %</HeaderCell>
-              <Cell>
-                {(rowData) => {
-                  return (
-                    <>
-                      <Input
-                        type="number"
-                        value={rowData.discount}
-                        onChange={(value) => {
-                          if (
-                            Number(
-                              rowData.test.department.commissionParcentage
-                            ) < Number(value)
-                          ) {
-                            toaster.push(
-                              <Message type="error">
-                                You cannot give discount more Then{" "}
-                                {rowData.test.department.commissionParcentage}
-                              </Message>
-                            );
-                          } else {
-                            handleCellEdit(rowData, "discount", Number(value));
-                          }
-                        }}
-                      />
-                    </>
-                  );
-                }}
-              </Cell>
-            </Column>
-
-            <Column align="center" flexGrow={1.5}>
-              <HeaderCell>Delivery Date</HeaderCell>
-              <Cell>
-                {(rowData) => {
-                  return (
-                    <>
-                      <DatePicker
-                        value={new Date(rowData.deliveryTime)}
-                        onChange={(event, value) =>
-                          handleCellEdit(rowData, "deliveryTime", event)
-                        }
-                      />
-                    </>
-                  );
-                }}
-              </Cell>
-            </Column>
-
-            <Column align="center" flexGrow={1}>
-              <HeaderCell>Remark</HeaderCell>
-              <Cell>
-                {(rowData) => {
-                  return (
-                    <>
-                      <Input
-                        as="textarea"
-                        style={{ scrollbarWidth: "none", height: "2rem" }}
-                        size="xs"
-                        onChange={(value) =>
-                          handleCellEdit(rowData, "remark", value)
-                        }
-                      />
-                    </>
-                  );
-                }}
-              </Cell>
-            </Column>
-            <Column align="center" flexGrow={1}>
-              <HeaderCell>Discounted Price</HeaderCell>
-              <Cell>
-                {(rowData) => {
-                  const priceAfterDiscount =
-                    rowData.discount > 0 && rowData.test.price > 0
-                      ? (
-                          rowData.test.price -
-                          (rowData.test.price * rowData.discount) / 100
-                        ).toFixed(2)
-                      : rowData?.test?.price > 0
-                      ? rowData.test.price.toFixed(2)
-                      : 0;
-
-                  return `${priceAfterDiscount}`;
-                }}
-              </Cell>
-            </Column>
-            <Column align="center" flexGrow={1}>
-              <HeaderCell>Action</HeaderCell>
-              <Cell>
-                {(rowData) => (
-                  <>
-                    <Button
-                      onClick={() => testRemoveFromListHandler(rowData)}
-                      appearance="primary"
-                      color="red"
-                      size="sm"
-                    >
-                      Delete
-                    </Button>
-                  </>
-                )}
-              </Cell>
-            </Column>
-          </Table>
-        </div>
-
+      <div className="col-span-3  border  shadow-lg px-2">
         {/* Available test section */}
         <AvailableTestSection
           formData={params.formData}
           setFormData={params.setFormData}
           mode={params.mode}
         />
+        <Table
+          data={params?.formData?.tests}
+          className="w-full"
+          bordered
+          cellBordered
+          wordWrap={"break-word"}
+          height={430}
+        >
+          <Column align="center" flexGrow={0.5}>
+            <HeaderCell>SL.</HeaderCell>
+            <Cell dataKey="SL" />
+          </Column>
+          <Column align="center" flexGrow={1}>
+            <HeaderCell>Test ID</HeaderCell>
+            <Cell dataKey="test.testCode" />
+          </Column>
+          <Column align="center" flexGrow={2}>
+            <HeaderCell>Title</HeaderCell>
+            <Cell dataKey="test.label" />
+          </Column>
+          <Column align="center" flexGrow={1}>
+            <HeaderCell>Original Price</HeaderCell>
+            <Cell dataKey="test.price" />
+          </Column>
+
+          <Column align="center" flexGrow={1}>
+            <HeaderCell>Discount %</HeaderCell>
+            <Cell>
+              {(rowData) => {
+                return (
+                  <>
+                    <Input
+                      type="number"
+                      value={rowData.discount}
+                      onChange={(value) => {
+                        if (
+                          Number(rowData.test.department.commissionParcentage) <
+                          Number(value)
+                        ) {
+                          toaster.push(
+                            <Message type="error">
+                              You cannot give discount more Then{" "}
+                              {rowData.test.department.commissionParcentage}
+                            </Message>
+                          );
+                        } else {
+                          handleCellEdit(rowData, "discount", Number(value));
+                        }
+                      }}
+                    />
+                  </>
+                );
+              }}
+            </Cell>
+          </Column>
+
+          <Column align="center" flexGrow={1.2}>
+            <HeaderCell>Delivery Date</HeaderCell>
+            <Cell>
+              {(rowData) => {
+                return (
+                  <>
+                    <DatePicker
+                      value={new Date(rowData.deliveryTime)}
+                      onChange={(event, value) =>
+                        handleCellEdit(rowData, "deliveryTime", event)
+                      }
+                    />
+                  </>
+                );
+              }}
+            </Cell>
+          </Column>
+
+          <Column align="center" flexGrow={1}>
+            <HeaderCell>Remark</HeaderCell>
+            <Cell>
+              {(rowData) => {
+                return (
+                  <>
+                    <Input
+                      as="textarea"
+                      style={{ scrollbarWidth: "none", height: "2rem" }}
+                      size="xs"
+                      onChange={(value) =>
+                        handleCellEdit(rowData, "remark", value)
+                      }
+                    />
+                  </>
+                );
+              }}
+            </Cell>
+          </Column>
+          <Column align="center" flexGrow={1}>
+            <HeaderCell>Discounted Price</HeaderCell>
+            <Cell>
+              {(rowData) => {
+                const priceAfterDiscount =
+                  rowData.discount > 0 && rowData.test.price > 0
+                    ? (
+                        rowData.test.price -
+                        (rowData.test.price * rowData.discount) / 100
+                      ).toFixed(2)
+                    : rowData?.test?.price > 0
+                    ? rowData.test.price.toFixed(2)
+                    : 0;
+
+                return `${priceAfterDiscount}`;
+              }}
+            </Cell>
+          </Column>
+          <Column align="center" flexGrow={0.6}>
+            <HeaderCell>...</HeaderCell>
+            <Cell>
+              {(rowData) => (
+                <>
+                  <Button
+                    onClick={() => testRemoveFromListHandler(rowData)}
+                    appearance="primary"
+                    color="red"
+                    size="sm"
+                  >
+                    <TrashIcon />
+                  </Button>
+                </>
+              )}
+            </Cell>
+          </Column>
+        </Table>
       </div>
     </div>
   );

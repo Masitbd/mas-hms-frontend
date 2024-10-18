@@ -16,9 +16,12 @@ import {
   Loader,
   Message,
   toaster,
+  Tooltip,
+  Whisper,
 } from "rsuite";
 import { ENUM_MODE } from "@/enum/Mode";
 import { IPatient } from "@/types/allDepartmentInterfaces";
+import SearchPeopleIcon from "@rsuite/icons/SearchPeople";
 
 const PatientInformation = (porps: IpatientInforMationProps) => {
   const {
@@ -43,13 +46,6 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
     const sdata = await patientSearch(value);
 
     setFormData({ ...data, patient: sdata?.data?.data });
-    if (sdata?.data?.data?.ref_by) {
-      setFormData({ ...data, refBy: sdata.data.data.ref_by });
-    }
-
-    if (sdata?.data?.data?.ref_by) {
-      setFormData({ ...data, refBy: sdata.data.data.ref_by });
-    }
     if (sdata?.data?.data?._id) {
       setFormData({ ...data, patient: sdata.data.data });
     }
@@ -94,78 +90,84 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
   }
 
   return (
-    <div className="mb-5 border  shadow-lg">
-      <div className="bg-[#3498ff] text-white px-2 py-2">
-        <h2 className="text-center text-xl font-semibold">
+    <div className="border  shadow-lg">
+      <div className="bg-[#3498ff] text-white ">
+        <h2 className="text-center text-lg font-semibold">
           Patient Information
         </h2>
       </div>
       <div className="px-2 py-2">
-        {/* For selecting  patient type */}
-        <Form
-          onChange={(value, event) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              patientType: value.patientType,
-            }))
-          }
-          fluid
-          className="grid grid-cols-2"
-          formValue={data}
-          ref={forwardedRefForPatientType}
-        >
-          <Form.Group controlId="patientType">
-            <Form.ControlLabel>Patient Type</Form.ControlLabel>
-            <Form.Control
-              name="patientType"
-              accepter={InputPicker}
-              data={patientType}
-            />
-          </Form.Group>
-        </Form>
-
-        {/* For registered Patient to search patient with uuid */}
-
-        {data?.patientType == "registered" && (
-          <>
-            <div className="mt-5">
-              <h1 className="font-bold">Patient UUID</h1>
-              <InputGroup>
-                <Input name="value" onChange={searchHandler} width={50} />
-              </InputGroup>
-            </div>
-          </>
-        )}
-
-        {patientDataFeatching || patientDataLoading ? (
-          <div className="h-24 flex justify-center items-center">
-            <Loader size="lg" />
-          </div>
-        ) : (
-          ""
-        )}
-
-        <div className="mt-5">
-          {data.patientType === "registered" &&
-            (data?.patient?._id ? (
-              <ForRegistered
-                doctors={doctorData?.data}
-                formData={data}
-                patient={
-                  patientSearchData?.data ? patientSearchData?.data : data
-                }
-                setFormData={setFormData}
+        <div className="grid grid-cols-6 gap-5">
+          <Form
+            onChange={(value, event) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                patientType: value.patientType,
+              }))
+            }
+            fluid
+            formValue={data}
+            ref={forwardedRefForPatientType}
+          >
+            <Form.Group controlId="patientType">
+              <Form.ControlLabel className="font-bold">
+                Patient Type
+              </Form.ControlLabel>
+              <Form.Control
+                name="patientType"
+                accepter={InputPicker}
+                data={patientType}
+                block
               />
-            ) : (
-              !patientDataFeatching &&
-              !patientDataLoading && (
-                <>
-                  <div className="h-24 flex justify-center items-center">
-                    No data founds
-                  </div>
-                </>
-              )
-            ))}
+            </Form.Group>
+          </Form>
+          {data?.patientType == "registered" && (
+            <>
+              <div className="">
+                <h1 className="font-bold mb-[.32rem]">Patient UUID</h1>
+                <Whisper
+                  speaker={
+                    <Tooltip
+                      visible={
+                        !patientDataFeatching &&
+                        !patientDataLoading &&
+                        data?.patient?._id
+                      }
+                      color="red"
+                    >
+                      No Data Found
+                    </Tooltip>
+                  }
+                >
+                  <InputGroup>
+                    <Input name="value" onChange={searchHandler} />
+                    <InputGroup.Addon>
+                      {patientDataFeatching || patientDataLoading ? (
+                        <Loader />
+                      ) : (
+                        <SearchPeopleIcon
+                          color={`${
+                            !patientDataFeatching &&
+                            !patientDataLoading &&
+                            !data?.patient?._id &&
+                            "red"
+                          }`}
+                        />
+                      )}
+                    </InputGroup.Addon>
+                  </InputGroup>
+                </Whisper>
+              </div>
+            </>
+          )}
+          {data.patientType === "registered" && data?.patient?._id && (
+            <ForRegistered
+              doctors={doctorData?.data}
+              formData={data}
+              patient={patientSearchData?.data ? patientSearchData?.data : data}
+              setFormData={setFormData}
+            />
+          )}
           {data.patientType === "notRegistered" && (
             <ForNotRegistered
               doctorData={doctorData?.data}

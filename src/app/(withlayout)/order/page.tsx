@@ -351,80 +351,78 @@ const Order = () => {
                   />
                 </div>
 
-                <div className="my-10">
-                  <TestInformation
-                    formData={data}
-                    setFormData={setData}
-                    mode={mode}
-                    setRModalOpen={setRmodalOpen}
-                    setRTest={setTest}
-                  />
-                </div>
+                <div className="my-2 grid grid-cols-12">
+                  <div className="col-span-8">
+                    <TestInformation
+                      formData={data}
+                      setFormData={setData}
+                      mode={mode}
+                      setRModalOpen={setRmodalOpen}
+                      setRTest={setTest}
+                    />
+                  </div>
+                  <div className="col-span-4 ml-2">
+                    <FInancialSection
+                      setData={setData}
+                      dueAmount={(
+                        totalPrice -
+                        discountAmount +
+                        vatAmount -
+                        (data.paid ? data.paid : 0)
+                      ).toFixed(2)}
+                      data={data}
+                      mode={mode}
+                    />
+                    <div>
+                      <PriceSection
+                        data={data}
+                        discountAmount={discountAmount}
+                        totalPrice={totalPrice}
+                        vatAmount={vatAmount}
+                        tubePrice={tubePrice}
+                        order={data as unknown as IOrderData}
+                      />
 
-                <div>
-                  <FInancialSection
-                    setData={setData}
-                    dueAmount={(
-                      totalPrice -
-                      discountAmount +
-                      vatAmount -
-                      (data.paid ? data.paid : 0)
-                    ).toFixed(2)}
-                    data={data}
-                    mode={mode}
-                  />
-                </div>
-
-                <div>
-                  <ForDewCollection
-                    data={data as unknown as IOrderData}
-                    dewModalOpen={dewModalOpen}
-                    setDewModalOpen={setDewMOdalOpen}
-                    setFormData={setFormData as any}
-                  />
-                </div>
-
-                <div>
-                  <PriceSection
-                    data={data}
-                    discountAmount={discountAmount}
-                    totalPrice={totalPrice}
-                    vatAmount={vatAmount}
-                    tubePrice={tubePrice}
-                    order={data as unknown as IOrderData}
-                  />
-
-                  <div className="flex justify-end mt-5">
-                    <div
-                      className={`${mode == ENUM_MODE.NEW && "hidden"} mr-2 `}
-                    >
-                      <AuthCheckerForComponent
-                        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}
-                      >
-                        <Button
-                          appearance="primary"
-                          color="green"
-                          size="lg"
-                          disabled={data?.dueAmount == 0}
-                          onClick={() => setDewMOdalOpen(!dewModalOpen)}
-                          className={`${mode == "new" && "invisible"}`}
-                        >
-                          {data.dueAmount == 0
-                            ? "Fully Paid"
-                            : "Collect Due Ammount"}
-                        </Button>
-                      </AuthCheckerForComponent>
+                      {mode == ENUM_MODE.VIEW && (
+                        <div className="flex justify-end mt-5">
+                          <div className={` mr-2 `}>
+                            <AuthCheckerForComponent
+                              requiredPermission={[
+                                ENUM_USER_PEMISSION.MANAGE_ORDER,
+                              ]}
+                            >
+                              <Button
+                                appearance="primary"
+                                color="green"
+                                size="lg"
+                                disabled={data?.dueAmount == 0}
+                                onClick={() => setDewMOdalOpen(!dewModalOpen)}
+                              >
+                                {data.dueAmount == 0
+                                  ? "Fully Paid"
+                                  : "Collect Due Ammount"}
+                              </Button>
+                            </AuthCheckerForComponent>
+                          </div>
+                          <Button
+                            appearance="primary"
+                            color="blue"
+                            onClick={() => handlePdf(data.oid as string)}
+                            className={`${mode == "new" && "invisible"}`}
+                          >
+                            Invoice
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                    <Button
-                      appearance="primary"
-                      color="blue"
-                      onClick={() => handlePdf(data.oid as string)}
-                      className={`${mode == "new" && "invisible"}`}
-                    >
-                      Invoice
-                    </Button>
                   </div>
                 </div>
+                <ForDewCollection
+                  data={data as unknown as IOrderData}
+                  dewModalOpen={dewModalOpen}
+                  setDewModalOpen={setDewMOdalOpen}
+                  setFormData={setFormData as any}
+                />
               </>
             </RModal>
           </div>

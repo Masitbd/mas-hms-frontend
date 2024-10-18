@@ -22,88 +22,91 @@ const FInancialSection = ({
   ];
 
   return (
-    <div
-      className={`grid grid-cols-5 mt-5 gap-16  mb-5 border  shadow-lg px-2 py-2 ${
-        mode == ENUM_MODE.VIEW && "hidden"
-      } `}
-    >
-      {/* For financial seciton */}
-      <div>
-        <h5 className="font-bold">Discount Given By</h5>
-        <SelectPicker
-          data={discountOption}
-          block
-          cleanable={false}
-          searchable={false}
-          onSelect={(value) => {
-            setData((prevData: any) => ({
-              ...prevData,
-              discountedBy: value,
-            }));
-          }}
-          defaultValue={data?.discountedBy}
-        />
+    <div className={` ${mode == ENUM_MODE.VIEW && "hidden"}`}>
+      <div className="bg-[#3498ff] text-white px-1">
+        <h2 className="text-center text-lg font-semibold">Discount And Cash</h2>
       </div>
-      <div>
-        <h5 className="font-bold">Vat</h5>
-        <InputGroup>
-          <Input
-            placeholder="Vat"
-            name="vat"
-            onChange={(value, event) => {
+      <div
+        className={`grid grid-cols-2 gap-2 border  shadow-lg px-2 py-2  mb-6 `}
+      >
+        {/* For financial seciton */}
+        <div>
+          <h5 className="font-bold">Discount Given By</h5>
+          <SelectPicker
+            data={discountOption}
+            block
+            cleanable={false}
+            searchable={false}
+            onSelect={(value) => {
               setData((prevData: any) => ({
                 ...prevData,
-                vat: Number(value),
+                discountedBy: value,
               }));
             }}
+            defaultValue={data?.discountedBy}
           />
-        </InputGroup>
-      </div>
-      <div>
-        <h5 className="font-bold">Discount Parcent</h5>
-        <InputGroup>
-          <Input
-            name="parcentDiscount"
-            onChange={(value, event) =>
-              setData((prevData: any) => ({
-                ...prevData,
-                parcentDiscount: Number(value),
-              }))
-            }
-            placeholder="Parcent Discount"
-          />
-        </InputGroup>
-      </div>
-      <div>
-        <h5 className="font-bold">Cash Discount</h5>
-        <InputGroup>
-          <Input
-            type="number"
-            placeholder="Cash Discount"
-            name="cashDiscount"
-            onChange={(value, event) => {
-              setData((prevData: any) => ({
-                ...prevData,
-                cashDiscount: Number(value),
-              }));
-            }}
-          />
-        </InputGroup>
-      </div>
-      <div>
-        <h5 className="font-bold">Cash Paid</h5>
-        <InputGroup>
-          <Input
-            placeholder="Cash Paid"
-            name="cash"
-            onChange={(value, event) => {
-              setData((prevData: any) => ({
-                ...prevData,
-                paid: Number(value),
-              }));
-            }}
-          />
-        </InputGroup>
+        </div>
+        <div>
+          <h5 className="font-bold">Vat</h5>
+          <InputGroup>
+            <Input
+              placeholder="Vat"
+              name="vat"
+              onChange={(value, event) => {
+                setData((prevData: any) => ({
+                  ...prevData,
+                  vat: Number(value),
+                }));
+              }}
+            />
+          </InputGroup>
+        </div>
+        <div>
+          <h5 className="font-bold">Discount Parcent</h5>
+          <InputGroup>
+            <Input
+              name="parcentDiscount"
+              onChange={(value, event) =>
+                setData((prevData: any) => ({
+                  ...prevData,
+                  parcentDiscount: Number(value),
+                }))
+              }
+              placeholder="Parcent Discount"
+            />
+          </InputGroup>
+        </div>
+        <div>
+          <h5 className="font-bold">Cash Discount</h5>
+          <InputGroup>
+            <Input
+              type="number"
+              placeholder="Cash Discount"
+              name="cashDiscount"
+              onChange={(value, event) => {
+                setData((prevData: any) => ({
+                  ...prevData,
+                  cashDiscount: Number(value),
+                }));
+              }}
+            />
+          </InputGroup>
+        </div>
+        <div>
+          <h5 className="font-bold">Cash Paid</h5>
+          <InputGroup>
+            <Input
+              placeholder="Cash Paid"
+              name="cash"
+              onChange={(value, event) => {
+                setData((prevData: any) => ({
+                  ...prevData,
+                  paid: Number(value),
+                }));
+              }}
+            />
+          </InputGroup>
+        </div>
       </div>
     </div>
   );
