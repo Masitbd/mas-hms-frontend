@@ -58,7 +58,9 @@ const Comment = (props: {
       <Accordion activeKey={activeKey}>
         <Accordion.Panel eventKey={1}>
           <div className="w-full border border-stone-200 rounded-md p-10">
-            <Tiptap data={comment} setData={setComment} />
+            <div style={{ width: "270mm" }}>
+              <Tiptap data={comment} setData={setComment} />
+            </div>
             <div>
               <div className="w-1/5 my-4">
                 <h3>Select Saved comment</h3>
@@ -85,7 +87,9 @@ const Comment = (props: {
         </Accordion.Panel>
         <Accordion.Panel eventKey={2}>
           <div className="w-full border border-stone-200 rounded-md p-10">
-            <Tiptap data={seal} setData={setSeal} />
+            <div style={{ width: "270mm" }}>
+              <Tiptap data={seal} setData={setSeal} />
+            </div>
             <div>
               <div className="w-1/5 my-4">
                 <h3>Select Saved Doctor Seal</h3>
@@ -97,7 +101,6 @@ const Comment = (props: {
                     value: cd?.seal,
                   }))}
                   onSelect={(p) => {
-                    console.log(p);
                     setSeal(p);
                   }}
                 />

@@ -34,6 +34,7 @@ import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 import { useLazyGetSingleVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTubeSlice";
 import StatusTagProvider from "../ui/StatusTagProvider";
 import { camelToFlat } from "@/utils/CamelToFlat";
+import EditIcon from "@rsuite/icons/Edit";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
@@ -71,12 +72,7 @@ const OrderTable = ({
     setDeleteData(undefined);
   };
 
-  // for vaccumeTubes
-  const [getTubes, { isLoading: tubeLoading }] =
-    useLazyGetSingleVacuumTubeQuery();
-  const [vaccumeTubes, setVaccumeTubes] = useState<string[]>([]);
-
-  const patchHanlders = async (id: string) => {
+  const patchHanlders = async (id: string, mode: string) => {
     const result = await getSingle(id);
 
     if ("data" in result) {
@@ -85,7 +81,7 @@ const OrderTable = ({
       patchHandler &&
         patchHandler({
           data: JSON.parse(JSON.stringify(data)) as unknown as IOrderData,
-          mode: ENUM_MODE.VIEW,
+          mode: mode,
         });
     }
   };
@@ -284,7 +280,19 @@ const OrderTable = ({
                   startIcon={<VisibleIcon />}
                   onClick={() => {
                     if (patchHandler) {
-                      patchHanlders(rowdate?.oid);
+                      patchHanlders(rowdate?.oid, ENUM_MODE.VIEW);
+                    }
+                  }}
+                  size="sm"
+                />
+                <Button
+                  className="ml-2"
+                  color="blue"
+                  appearance="primary"
+                  startIcon={<EditIcon />}
+                  onClick={() => {
+                    if (patchHandler) {
+                      patchHanlders(rowdate?.oid, ENUM_MODE.EDIT);
                     }
                   }}
                   size="sm"

@@ -14,29 +14,48 @@ const PatientInformaiton = ({
 }: {
   order: IOrderData;
   testResult?: ITestResultForParameter | ITEstREsultForMicroBio;
-  consultant: { data: { data: IDoctor } };
+  consultant?: { data: { data: IDoctor } };
 }) => {
+  const specimen = new Set();
+  order?.tests?.map((t: any) => {
+    if (t?.test?.specimen && Array.isArray(t?.test?.specimen)) {
+      return t?.test?.specimen?.map((s: ISpecimen) => specimen.add(s.label));
+    }
+  });
+
   return (
     <>
-      <div className="border border-1 border-stone-400 p-2 grid grid-cols-2 gap-1 my-5 rounded-md font-serif w-full">
+      <div
+        style={{
+          border: "1px solid #cbd5e1", // stone-400
+          padding: "8px",
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          gap: "8px",
+          margin: "20px 0",
+          borderRadius: "8px",
+          fontFamily: "serif",
+          width: "100%",
+        }}
+      >
         <div>
-          <span className="font-bold">ID: </span>
-          <span className="font-serif">{order.oid}</span>
+          <span style={{ fontWeight: "bold" }}>ID: </span>
+          <span style={{ fontFamily: "serif" }}>{order.oid}</span>
         </div>
         <div>
-          <span className="font-bold">Name: </span>
+          <span style={{ fontWeight: "bold" }}>Name: </span>
           {order.patient?.name}
         </div>
         <div>
-          <span className="font-bold">Age: </span>
+          <span style={{ fontWeight: "bold" }}>Age: </span>
           {order.patient?.age} Year(s)
         </div>
         <div>
-          <span className="font-bold">Sex: </span>
+          <span style={{ fontWeight: "bold" }}>Sex: </span>
           {order.patient?.gender}
         </div>
         <div>
-          <span className="font-bold">Consultant: </span>
+          <span style={{ fontWeight: "bold" }}>Consultant: </span>
           {order?.consultant &&
           typeof order?.consultant === "object" &&
           order?.consultant?.title &&
@@ -45,25 +64,18 @@ const PatientInformaiton = ({
             : " "}
         </div>
         <div>
-          <span className="font-bold">Receiving Date: </span>
+          <span style={{ fontWeight: "bold" }}>Receiving Date: </span>
           {new Date(order.createdAt as Date).toDateString()}
         </div>
         <div>
-          <span className="font-bold">Report Creation Date: </span>
+          <span style={{ fontWeight: "bold" }}>Report Creation Date: </span>
           {new Date(testResult?.createdAt as unknown as Date).toDateString()}
         </div>
         <div>
-          <span className="font-bold">
+          <span style={{ fontWeight: "bold" }}>
             Specimen:{" "}
-            <span className="font-normal">
-              {" "}
-              {order?.tests
-                ?.map((t: any) => {
-                  if (t?.test?.specimen && Array.isArray(t?.test?.specimen)) {
-                    return t?.test?.specimen?.map((s: ISpecimen) => s.label);
-                  } else " ";
-                })
-                ?.join(", ")}
+            <span style={{ fontWeight: "normal" }}>
+              {Array.from(specimen as unknown as string[])?.join(", ")}
             </span>
           </span>
         </div>

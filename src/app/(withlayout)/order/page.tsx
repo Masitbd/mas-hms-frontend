@@ -51,8 +51,8 @@ const Order = () => {
     setModalOpen(!modalOpen);
     setData(initialData);
   };
-  const okHandler = () => {
-    handlePostORder();
+  const okHandler = async () => {
+    await handlePostORder();
   };
   // Handling discount and vat functionality
   let vatAmount = 0;
@@ -164,7 +164,19 @@ const Order = () => {
       if (data.patientType == "registered") {
         if (data.patient?._id) {
           orderData.uuid = data.patient.uuid;
-          postOrder(orderData);
+          const result = await postOrder(orderData).unwrap();
+
+          // Handling pdf after order post
+          if (result?.success) {
+            const invoice = await getInvoice(result?.data?.oid);
+            const newWindow = window.open("", "_blank");
+
+            if (newWindow) {
+              newWindow.document.write(decodeURIComponent(invoice.data.data));
+              newWindow.document.title = "Managed By HMS system";
+            }
+          }
+          setData(initialData);
         } else {
           toaster.push(<Message type="error">Patient UUID is wrong</Message>);
         }
@@ -172,7 +184,19 @@ const Order = () => {
       if (data.patientType === "notRegistered") {
         if (refForUnregistered.current.check()) {
           orderData.patient = data.patient;
-          postOrder(orderData);
+          const result = await postOrder(orderData).unwrap();
+
+          // Handling pdf after order post
+          if (result?.success) {
+            const invoice = await getInvoice(result?.data?.oid);
+            const newWindow = window.open("", "_blank");
+
+            if (newWindow) {
+              newWindow.document.write(decodeURIComponent(invoice.data.data));
+              newWindow.document.title = "Managed By HMS system";
+            }
+          }
+          setData(initialData);
         } else {
           toaster.push(
             <Message type="error">Please Fill out all the fields</Message>
@@ -370,9 +394,9 @@ const Order = () => {
                     order={data as unknown as IOrderData}
                   />
 
-                  <div className="flex justify-end">
+                  <div className="flex justify-end mt-5">
                     <div
-                      className={`${mode == ENUM_MODE.NEW && "hidden"} mr-2`}
+                      className={`${mode == ENUM_MODE.NEW && "hidden"} mr-2 `}
                     >
                       <AuthCheckerForComponent
                         requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}

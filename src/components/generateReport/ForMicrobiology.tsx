@@ -19,7 +19,7 @@ import {
   IPropsForParameter,
   ITEstREsultForMicroBio,
 } from "./initialDataAndTypes";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAppSelector } from "@/redux/hook";
 import {
   useLazyGetSingleReportQuery,
@@ -36,7 +36,11 @@ import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import ReactDOMServer from "react-dom/server";
+import { htmlDocProviderForparameterBased } from "./functions";
+import CountdownModal from "./CountdownModal";
 const ForMicrobiology = (props: IPropsForMicroBiology) => {
+  const [time, setTime] = useState(0);
   const [updata, setUpdate] = useState(1);
   const [patchReport, { isLoading: patchLoading }] = usePatchReporMutation();
   const { mode, oid, order, reportGroup } = props;
@@ -62,26 +66,21 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     if (mode == ENUM_MODE.NEW) {
       const postResult = await post(data);
       if ("data" in postResult) {
-        swal(
-          "Success",
-          "Data Posted. Redirection is in process. You will be redirected to previous Page within 5 second Please Wait",
-          { icon: "success" }
-        );
+        setTime(5);
+
         setTimeout(() => {
           router.push(`/testReport/${order.oid}`);
+          swal("Success", "Data Posted Successfully", { icon: "success" });
         }, 5000);
       }
     }
     if (mode == ENUM_MODE.EDIT) {
       const data = await patchReport(result);
       if ("data" in data) {
-        swal(
-          "Success",
-          "Data Posted. Redirection is in process. You will be redirected to previous  within 5 second  Please Wait",
-          { icon: "success" }
-        );
+        setTime(5);
         setTimeout(() => {
           router.push(`/testReport/${order.oid}`);
+          swal("Success", "Data updated successfully", { icon: "success" });
         }, 5000);
       }
     }
@@ -117,47 +116,70 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
   // For Print
   const [margin, setMargins] = useState([0, 0, 0, 0]);
   const componentRef = useRef<ReactInstance | null>();
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current as ReactInstance,
-    print: async (element) => {
-      const pdf = new jsPDF("p", "pt", "a4");
-      const dataa = await element.contentDocument;
-
-      pdf.html(dataa?.body as HTMLElement, {
-        callback: function (doc) {
-          // Convert the PDF document to a Blob
-
-          const pdfBlob = doc.output("blob");
-
-          // Create a Blob URL
-          const pdfUrl = URL.createObjectURL(pdfBlob);
-
-          // Open the Blob URL in a new window
-          const newWindow = window.open(pdfUrl);
-
-          // Print the PDF in the new window
-          if (newWindow) {
-            newWindow.addEventListener("load", () => {
-              newWindow.document.title = `${
-                reportGroup.label + "_" + order.oid
-              }`;
-              newWindow.print();
-            });
-          } else {
-            doc.save();
-          }
-        },
-
-        autoPaging: "text",
-        margin: margin,
-        windowWidth: 800,
-        width: 555,
-        filename: `${reportGroup.label + "_" + order.oid}.pdf`,
-      });
-    },
+  const { data: discRiptionData } = useGetMiscQuery({
+    title: result.specimen,
   });
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current as ReactInstance,
+  //   print: async (element) => {
+  //     const pdf = new jsPDF("p", "pt", "a4");
+  //     const dataa = await element.contentDocument;
 
-  if (postLoading || getLoading || isFetching) {
+  //     pdf.html(dataa?.body as HTMLElement, {
+  //       callback: function (doc) {
+  //         // Convert the PDF document to a Blob
+
+  //         const pdfBlob = doc.output("blob");
+
+  //         // Create a Blob URL
+  //         const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  //         // Open the Blob URL in a new window
+  //         const newWindow = window.open(pdfUrl);
+
+  //         // Print the PDF in the new window
+  //         if (newWindow) {
+  //           newWindow.addEventListener("load", () => {
+  //             newWindow.document.title = `${
+  //               reportGroup.label + "_" + order.oid
+  //             }`;
+  //             newWindow.print();
+  //           });
+  //         } else {
+  //           doc.save();
+  //         }
+  //       },
+
+  //       autoPaging: "text",
+  //       margin: margin,
+  //       windowWidth: 800,
+  //       width: 555,
+  //       filename: `${reportGroup.label + "_" + order.oid}.pdf`,
+  //     });
+  //   },
+  // });
+
+  const handlePrint = () => {
+    const previousPath = window?.location?.origin + "/testReport/" + order?.oid;
+
+    const pdfData = (
+      <ReportViewerMicro
+        order={props.order}
+        reportGroup={reportGroup}
+        ref={componentRef as Ref<HTMLDivElement>}
+        result={result}
+        specimenWiseDescription={discRiptionData?.data[0]}
+      />
+    );
+    const data = ReactDOMServer.renderToStaticMarkup(pdfData);
+    const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
+    const win = window.open();
+    win?.document.write(dataWithHtml);
+
+    if (previousPath) router.push(previousPath);
+  };
+
+  if (postLoading || getLoading || isFetching || patchLoading) {
     return <Loading />;
   }
 
@@ -206,6 +228,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
               reportGroup={reportGroup}
               ref={componentRef as Ref<HTMLDivElement>}
               result={result}
+              specimenWiseDescription={discRiptionData?.data[0]}
             />
           </div>
         </div>
@@ -266,6 +289,10 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
             </Button>
           </div>
         </AuthCheckerForComponent>
+        <CountdownModal
+          seconds={time}
+          message="Data posted successfully. Please wait, you will be automatically redirected"
+        />
       </>
     );
   }

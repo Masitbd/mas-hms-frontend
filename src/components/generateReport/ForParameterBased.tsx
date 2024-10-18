@@ -1,3 +1,4 @@
+import ReactDOMServer from "react-dom/server";
 import Loading from "@/app/loading";
 import { ENUM_MODE } from "@/enum/Mode";
 import {
@@ -12,6 +13,7 @@ import swal from "sweetalert";
 import Comment from "./Comment";
 import {
   filterResultFieldsByInvestigation,
+  htmlDocProviderForparameterBased,
   resultSetter,
   useCleanedTests,
 } from "./functions";
@@ -30,6 +32,7 @@ import ForDescriptionBased from "./ForDescriptionBased";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { setTimeout } from "timers";
+import CountdownModal from "./CountdownModal";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -43,6 +46,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
   const { HeaderCell, Cell, Column } = Table;
   const { oid, tests, mode, order, reportGroup, refeatch } = props;
   const [resultForHook, setResultForHook] = useState();
+  const [time, setTime] = useState(0);
   const { fieldNames, headings, resultFields, returnResult } = useCleanedTests({
     mode,
     oid,
@@ -62,6 +66,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
     const [defaultValue, setDefaultValue] = useState(
       (rowData?.defaultValue as string[]) || []
     );
+
     const keys = Object.keys(rowData);
     if (keys.includes("defaultValue") && defaultValue?.length > 0) {
       return (
@@ -136,31 +141,25 @@ const ForParameterBased = (props: IPropsForParameter) => {
   };
 
   const handleSubmit = async () => {
-    if (mode == ENUM_MODE.NEW) {
-      const data = await post(result);
+    if (mode == ENUM_MODE.EDIT) {
+      const data = await patchReport(result);
+
       if ("data" in data) {
-        swal(
-          "Success",
-          "Data Posted. Redirection is in process. You will be redirected to previous  within 5 second  Please Wait",
-          { icon: "success" }
-        );
+        setTime(5);
         setTimeout(() => {
-          swalButtonHandler(" Report posted Successfully.");
+          swalButtonHandler(" Report Updated Successfully.");
+
           router.push(`/testReport/${order.oid}`);
         }, 5000);
       }
     }
-
-    if (mode == ENUM_MODE.EDIT) {
-      const data = await patchReport(result);
+    if (mode == ENUM_MODE.NEW) {
+      const data = await post(result);
       if ("data" in data) {
-        swal(
-          "Success",
-          "Data Posted. Redirection is in process. You will be redirected to previous  within 5 second  Please Wait",
-          { icon: "success" }
-        );
+        setTime(5);
         setTimeout(() => {
-          swalButtonHandler(" Report Updated Successfully.");
+          swalButtonHandler(" Report posted Successfully.");
+
           router.push(`/testReport/${order.oid}`);
         }, 5000);
       }
@@ -169,45 +168,66 @@ const ForParameterBased = (props: IPropsForParameter) => {
 
   // ------------------------------------For print ----------------
   const componentRef = useRef<ReactInstance | null>();
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current as ReactInstance,
-    print: async (element) => {
-      const pdf = new jsPDF("p", "pt", "a4");
-      const dataa = await element.contentDocument;
+  // const handlePrint = useReactToPrint({
+  //   content: () => componentRef.current as ReactInstance,
+  //   print: async (element) => {
+  //     const pdf = new jsPDF("p", "pt", "a4");
+  //     const dataa = await element.contentDocument;
 
-      pdf.html(dataa?.body as HTMLElement, {
-        callback: function (doc) {
-          // Convert the PDF document to a Blob
+  //     pdf.html(dataa?.body as HTMLElement, {
+  //       callback: function (doc) {
+  //         // Convert the PDF document to a Blob
 
-          const pdfBlob = doc.output("blob");
+  //         const pdfBlob = doc.output("blob");
 
-          // Create a Blob URL
-          const pdfUrl = URL.createObjectURL(pdfBlob);
+  //         // Create a Blob URL
+  //         const pdfUrl = URL.createObjectURL(pdfBlob);
 
-          // Open the Blob URL in a new window
-          const newWindow = window.open(pdfUrl);
+  //         // Open the Blob URL in a new window
+  //         const newWindow = window.open(pdfUrl);
 
-          // Print the PDF in the new window
-          if (newWindow) {
-            newWindow.addEventListener("load", () => {
-              newWindow.document.title = `${
-                reportGroup.label + "_" + order.oid
-              }`;
-              newWindow.print();
-            });
-          } else {
-            doc.save();
-          }
-        },
+  //         // Print the PDF in the new window
+  //         if (newWindow) {
+  //           newWindow.addEventListener("load", () => {
+  //             newWindow.document.title = `${
+  //               reportGroup.label + "_" + order.oid
+  //             }`;
+  //             newWindow.print();
+  //           });
+  //         } else {
+  //           doc.save();
+  //         }
+  //       },
 
-        autoPaging: "text",
-        margin: margin,
-        windowWidth: 800,
-        width: 555,
-        filename: `${reportGroup.label + "_" + order.oid}.pdf`,
-      });
-    },
-  });
+  //       autoPaging: "text",
+  //       margin: margin,
+  //       windowWidth: 800,
+  //       width: 555,
+  //       filename: `${reportGroup.label + "_" + order.oid}.pdf`,
+  //     });
+  //   },
+  // });
+
+  const handlePrint = () => {
+    const previousPath = window?.location?.origin + "/testReport/" + order?.oid;
+    const pdfData = (
+      <ReportViewerParameter
+        order={props.order}
+        reportGroup={props.reportGroup}
+        testResult={result}
+        fieldNames={fieldNames}
+        resultFields={resultFields}
+        headings={headings}
+        ref={componentRef as Ref<HTMLDivElement>}
+        consultant={doctorInfo}
+      />
+    );
+    const data = ReactDOMServer.renderToStaticMarkup(pdfData);
+    const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
+    const win = window.open();
+    win?.document.write(dataWithHtml);
+    if (previousPath) router.push(previousPath);
+  };
 
   useEffect(() => {
     (async function () {
@@ -227,7 +247,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
     })();
   }, []);
 
-  if (postLoading || getLoading) {
+  if (postLoading || getLoading || patchLoading) {
     return <Loading />;
   }
 
@@ -275,7 +295,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
             <div className="bg-[#3498ff] text-white px-2 py-2">
               <h2 className="text-center text-xl font-semibold">Reports</h2>
             </div>
-            <div className="p-2">
+            <div className="p-2 flex items-center justify-center flex-col">
               <ReportViewerParameter
                 order={props.order}
                 reportGroup={props.reportGroup}
@@ -314,12 +334,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
                 {headings.map((heading, index) => {
                   return (
                     <>
-                      <div className="my-10">
-                        <div
-                          className="text-lg font-bold font-serif"
-                          key={heading}
-                        >
-                          {heading}
+                      <div className="my-5 border  shadow-lg mx-5" key={index}>
+                        <div className="bg-[#3498ff] text-white px-2 py-2">
+                          <h2 className="text-center text-xl font-semibold">
+                            {heading}
+                          </h2>
                         </div>
                         <div>
                           <Table
@@ -358,7 +377,26 @@ const ForParameterBased = (props: IPropsForParameter) => {
                                     <HeaderCell>
                                       {fieldName.toUpperCase()}
                                     </HeaderCell>
-                                    <Cell dataKey={fieldName} />
+                                    <Cell>
+                                      {(rowData) => {
+                                        if (fieldName == "normalValue") {
+                                          return (
+                                            <ol className="list-disc">
+                                              {...rowData[fieldName]
+                                                .split(`"/br"`)
+                                                .map(
+                                                  (
+                                                    v: string,
+                                                    index: number
+                                                  ) => <li key={index}>{v}</li>
+                                                )}
+                                            </ol>
+                                          );
+                                        } else {
+                                          return <>{rowData[fieldName]}</>;
+                                        }
+                                      }}
+                                    </Cell>
                                   </Column>
                                 )}
                               </>
@@ -401,6 +439,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
             </AuthCheckerForComponent>
           </div>
         </div>
+
+        <CountdownModal
+          seconds={time}
+          message="Data Posted Successfully. Please wait you will be redirected"
+        />
       </div>
     );
   }

@@ -36,7 +36,6 @@ const FInancialSection = ({
           cleanable={false}
           searchable={false}
           onSelect={(value) => {
-            console.log(value);
             setData((prevData: any) => ({
               ...prevData,
               discountedBy: value,

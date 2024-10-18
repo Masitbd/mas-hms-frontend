@@ -52,7 +52,7 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate<IComment>) => {
       <div>
         <RModal
           open={open}
-          size="lg"
+          size="full"
           title="Add Comment to Database"
           cancelHandler={modalCancelHandler}
           okHandler={modalOkHandler}
@@ -67,7 +67,9 @@ const NewAndUpdate = (props: IPropsForNewAndUpdate<IComment>) => {
               </Form>
               <div className="my-5">
                 <h3>Comment</h3>
-                <Tiptap data={data.comment} setData={setComment} />
+                <div style={{ width: "270mm" }}>
+                  <Tiptap data={data.comment} setData={setComment} />
+                </div>
               </div>
             </div>
           </div>

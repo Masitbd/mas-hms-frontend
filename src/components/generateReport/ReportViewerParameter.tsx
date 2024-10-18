@@ -10,6 +10,8 @@ import { ITestResultForParameter } from "./initialDataAndTypes";
 import { camelToFlat } from "@/utils/CamelToFlat";
 import { getPageMargins } from "./functions";
 import PatientInformaiton from "./PatientInformaiton";
+import printIcon from "../../assets/images/print_img.png";
+import Image from "next/image";
 
 const ReportViewerParameter = React.forwardRef(
   (
@@ -32,27 +34,46 @@ const ReportViewerParameter = React.forwardRef(
 
     return (
       <>
-        <div className=" my-5 mx-5 printable-div" ref={ref}>
-          <div className="flex items-center justify-center">
-            <div className=" border border-3 border-stone-700 rounded-md px-5 py-2 text-xl font-serif font-bold">
+        <div
+          ref={ref}
+          style={{ margin: "20px", padding: "10px", width: "260mm" }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                border: "3px solid #4b5563", // stone-700
+                borderRadius: "8px",
+                padding: "10px 20px",
+                fontSize: "1.25rem", // text-xl
+                fontFamily: "serif",
+                fontWeight: "bold",
+              }}
+            >
               {params.reportGroup.label}
             </div>
           </div>
           {params?.testResult?.analyzerMachine ? (
-            <>
-              <div
-                className="border rounded-md px-2 p-3 text-center my-5 border-black"
-                style={{
-                  fontFamily: "monospace",
-                  padding: "1rem 2.5rem",
-                }}
-              >
-                {params.testResult.analyzerMachine}
-              </div>
-            </>
-          ) : (
-            ""
-          )}
+            <div
+              style={{
+                border: "1px solid black",
+                borderRadius: "8px",
+                padding: "20px",
+                textAlign: "center",
+                margin: "20px 0",
+                fontFamily: "monospace",
+                padding: "1rem 2.5rem",
+              }}
+            >
+              {params.testResult.analyzerMachine}
+            </div>
+          ) : null}
+
           <div>
             <PatientInformaiton
               order={order}
@@ -65,20 +86,31 @@ const ReportViewerParameter = React.forwardRef(
             />
           </div>
 
-          <div className="border rounded-md p-2">
+          <div
+            style={{
+              border: "1px solid",
+              borderRadius: "8px",
+              padding: "10px",
+            }}
+          >
             {params.reportGroup.testResultType !== "descriptive" && (
               <>
-                <div className={`grid ${"grid-cols-" + fieldsLength} `}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
+                    backgroundColor: "#e7e7e7",
+                  }}
+                >
                   {fieldNames?.map((field) => {
-                    if (field == "defaultValue") {
-                      return;
+                    if (field === "defaultValue") {
+                      return null;
                     }
                     return (
-                      <div key={field} className="pb-2">
-                        <span className="font-bold px-4">
+                      <div key={field} style={{ paddingBottom: "8px" }}>
+                        <span style={{ fontWeight: "bold" }}>
                           {camelToFlat(field)}{" "}
                         </span>
-                        {}
                       </div>
                     );
                   })}
@@ -87,54 +119,83 @@ const ReportViewerParameter = React.forwardRef(
               </>
             )}
 
-            <div className={` py-2`}>
+            <div>
               {headings.map((heading: string) => {
+                const doesHaveResult = resultFields.find(
+                  (v) => v.investigation === heading
+                );
+                if (!doesHaveResult) return null;
                 return (
                   <>
                     <div
-                      className={`uppercase font-serif font-bold col-span-4 text-lg py-1`}
+                      style={{
+                        textTransform: "uppercase",
+                        fontFamily: "serif",
+                        fontWeight: "bold",
+                        fontSize: "1.125rem",
+                        borderBottom: "1px solid black",
+                        paddingTop: "10px",
+                      }}
                     >
                       {heading}:
                     </div>
-                    <div className={`grid ${"grid-cols-" + fieldsLength}`}>
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
+                      }}
+                    >
                       {resultFields.map((resultField: IResultField) => {
                         if (resultField.investigation === heading) {
                           return fieldNames.map((fieldName: string) => {
                             return (
                               <>
-                                {params.reportGroup.testResultType ==
+                                {params.reportGroup.testResultType ===
                                 "descriptive" ? (
-                                  <>
-                                    {fieldName == "result" ? (
-                                      <div>
-                                        <div
-                                          className="col-span-2  font-serif whitespace-pre"
-                                          dangerouslySetInnerHTML={{
-                                            __html: resultField?.result,
-                                          }}
-                                        ></div>
-                                      </div>
-                                    ) : (
-                                      ""
-                                    )}
-                                  </>
+                                  fieldName === "result" ? (
+                                    <div>
+                                      <div
+                                        style={{
+                                          gridColumn: "span 2",
+                                          fontFamily: "serif",
+                                          whiteSpace: "pre-wrap",
+                                          overflowWrap: "break-word",
+                                          overflow: "auto",
+                                        }}
+                                        dangerouslySetInnerHTML={{
+                                          __html: resultField?.result,
+                                        }}
+                                      />
+                                    </div>
+                                  ) : null
                                 ) : (
-                                  <div>
-                                    <hr />
-                                    <div key={fieldName} className=" py-3 px-2">
+                                  <div
+                                    style={{
+                                      borderBottom: "1px solid black",
+                                      padding: "5px",
+                                    }}
+                                  >
+                                    <div key={fieldName}>
                                       <span
-                                        className={`${
-                                          fieldName == "result"
-                                            ? "font-extrabold"
-                                            : ""
-                                        } font-serif `}
+                                        style={{
+                                          fontFamily: "serif",
+                                          fontWeight:
+                                            fieldName === "result"
+                                              ? "900"
+                                              : "normal",
+                                        }}
                                       >
                                         {resultField[fieldName]
                                           ? resultField[fieldName] + "   "
                                           : ""}
                                       </span>
-                                      <span className="text-sm font-mono">
-                                        {fieldName == "result"
+                                      <span
+                                        style={{
+                                          fontSize: "0.875rem",
+                                          fontFamily: "monospace",
+                                        }}
+                                      >
+                                        {fieldName === "result"
                                           ? resultField?.unit
                                             ? resultField.unit
                                             : " "
@@ -155,33 +216,55 @@ const ReportViewerParameter = React.forwardRef(
               })}
             </div>
           </div>
+
           {params?.testResult?.comment ? (
-            <div className="border border-1  p-2 grid grid-cols-2 gap-1 my-5 rounded-md font-serif">
+            <div
+              style={{
+                border: "1px solid",
+                padding: "10px",
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: "4px",
+                margin: "20px 0",
+                borderRadius: "8px",
+                fontFamily: "serif",
+              }}
+            >
               <div
                 dangerouslySetInnerHTML={{
                   __html: params?.testResult?.comment,
                 }}
-                className="whitespace-pre"
+                style={{ whiteSpace: "pre", width: "270mm" }}
               />
             </div>
-          ) : (
-            ""
-          )}
-          <div>
-            {params?.testResult?.seal ? (
-              <div className="grid grid-cols-1 place-items-end font-serif mt-5 text-sm ">
-                <div
-                  className="whitespace-pre"
-                  dangerouslySetInnerHTML={{
-                    __html: params?.testResult?.seal,
-                  }}
-                />
-              </div>
-            ) : (
-              ""
-            )}
-          </div>
+          ) : null}
         </div>
+        {params?.testResult?.seal ? (
+          <div
+            style={{
+              fontFamily: "Roboto",
+              margin: "20px",
+              padding: "10px",
+
+              fontSize: "0.875rem",
+              width: "270mm",
+              pageBreakBefore: "always",
+              breakBefore: "always",
+            }}
+            id="seals"
+          >
+            <div
+              style={{
+                whiteSpace: "pre-wrap",
+                overflowWrap: "break-word",
+                overflow: "auto",
+              }}
+              dangerouslySetInnerHTML={{
+                __html: params?.testResult?.seal,
+              }}
+            />
+          </div>
+        ) : null}
       </>
     );
   }

@@ -71,8 +71,10 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
                 </Form.Group>
               </Form>
               <div className="my-5">
-                <h3>Comment</h3>
-                <Tiptap data={data.seal} setData={setSeal} />
+                <h3>Seal Information</h3>
+                <div style={{ width: "270mm" }}>
+                  <Tiptap data={data.seal} setData={setSeal} />
+                </div>
               </div>
             </div>
           </div>
