@@ -50,6 +50,7 @@ export const baseApi = createApi({
     "singleEmployee",
     "report-margin",
     "order-posted-by",
+    "doctor-seal",
   ],
 
   // tagTypes: tagTypes,

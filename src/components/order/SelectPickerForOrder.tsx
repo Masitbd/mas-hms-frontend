@@ -54,7 +54,7 @@ const SelectPickerForOrder = (
     return (
       <>
         {menu}
-        {isFetching || (testSearchLoading && <FixedLoader />)}
+        {(isFetching || testSearchLoading) && <FixedLoader />}
       </>
     );
   };

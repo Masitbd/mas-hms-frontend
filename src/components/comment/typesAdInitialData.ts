@@ -7,6 +7,7 @@ export type IComment = {
   comment: string;
 };
 export type IDoctorSeal = {
+  default: boolean | undefined;
   _id?: string;
   title: string;
   seal: string;
@@ -25,11 +26,11 @@ export type IPropsForNewAndUpdate<T> = {
 
 export const InitalCommentData: IComment = {
   title: "",
-  comment: ""
+  comment: "",
 };
 export const InitialDoctorSealData: IDoctorSeal = {
   title: "",
-  seal: ""
+  seal: "",
 };
 
 export type IPropsForTable<T> = {

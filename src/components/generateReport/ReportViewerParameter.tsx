@@ -63,7 +63,6 @@ const ReportViewerParameter = React.forwardRef(
               style={{
                 border: "1px solid black",
                 borderRadius: "8px",
-                padding: "20px",
                 textAlign: "center",
                 margin: "20px 0",
                 fontFamily: "monospace",

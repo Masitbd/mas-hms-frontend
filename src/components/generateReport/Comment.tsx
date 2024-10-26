@@ -1,5 +1,8 @@
 import { useGetQuery } from "@/redux/api/comment/commentSlice";
-import { useGetSealQuery } from "@/redux/api/doctorSeal/doctorSealSlice";
+import {
+  useGetSealQuery,
+  useLazyGetSealQuery,
+} from "@/redux/api/doctorSeal/doctorSealSlice";
 import { useEffect, useState } from "react";
 import { Accordion, Button, SelectPicker } from "rsuite";
 import { IComment, IDoctorSeal } from "../comment/typesAdInitialData";
@@ -8,17 +11,32 @@ import {
   ITestResultForParameter,
   ITEstREsultForMicroBio,
 } from "./initialDataAndTypes";
+import { ENUM_MODE } from "@/enum/Mode";
+import { NavLink } from "@/utils/Navlink";
 
 const Comment = (props: {
   result: ITestResultForParameter | ITEstREsultForMicroBio;
   setResult: any;
+  mode: string;
 }) => {
+  //for comment
   const { data: commentData, isLoading: commentDataLoading } =
     useGetQuery(undefined);
+  const [comment, setComment] = useState(props?.result?.comment);
+
+  // For doctors seal
+  const [seal, setSeal] = useState(props?.result?.seal);
+  const [defaultSeal, setDefaultSeal] = useState();
   const { data: sealData, isLoading: sealDataLoading } =
     useGetSealQuery(undefined);
-  const [comment, setComment] = useState(props?.result?.comment);
-  const [seal, setSeal] = useState(props?.result?.seal);
+  const [
+    getDefaultSeal,
+    {
+      isLoading: defaultSealLoading,
+      isFetching: defaultsealFeatching,
+      data: defaultSealData,
+    },
+  ] = useLazyGetSealQuery(undefined);
 
   useEffect(() => {
     const newData = {
@@ -28,6 +46,19 @@ const Comment = (props: {
     newData.seal = seal;
     props.setResult && props.setResult(newData);
   }, [comment, seal]);
+  useEffect(() => {
+    (async function () {
+      if (props.mode == ENUM_MODE.NEW) {
+        const seal = await getDefaultSeal({ default: true }).unwrap();
+
+        if (seal?.success && seal?.data?.length) {
+          setSeal(seal?.data[0]?.seal);
+          setDefaultSeal(seal?.data[0]);
+        }
+      }
+    })();
+  }, []);
+
   const [activeKey, setActiveKey] = useState(0);
   return (
     <>
@@ -95,7 +126,11 @@ const Comment = (props: {
                 <h3>Select Saved Doctor Seal</h3>
                 <SelectPicker
                   block
-                  loading={sealDataLoading}
+                  loading={
+                    sealDataLoading ||
+                    defaultSealLoading ||
+                    defaultsealFeatching
+                  }
                   data={sealData?.data.map((cd: IDoctorSeal) => ({
                     label: cd?.title,
                     value: cd?.seal,
@@ -103,12 +138,15 @@ const Comment = (props: {
                   onSelect={(p) => {
                     setSeal(p);
                   }}
+                  defaultValue={defaultSeal?.seal}
                 />
               </div>
               <div>
                 Not in the Saved Doctor Seal ? Click{" "}
-                <span className="text-blue-500">Here</span> to Add New Doctor
-                Seal to the database
+                <span className="text-blue-500">
+                  <NavLink href={"/doctorSeal"}>Here</NavLink>
+                </span>{" "}
+                to Add New Doctor Seal to the database
               </div>
             </div>
           </div>

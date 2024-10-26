@@ -25,7 +25,7 @@ const NewUserModal = (props: IPropsForNewUserModel) => {
     initialFormDataForNewUser
   );
 
-  const okHandler = () => {
+  const okHandler = async () => {
     if (fromref.current.check()) {
       const profile = {
         name: formData.name,
@@ -34,15 +34,20 @@ const NewUserModal = (props: IPropsForNewUserModel) => {
         phone: formData.phone,
         email: formData.email,
         address: formData.address,
+        gender: formData.gender,
+        dateOfBirth: formData.dateOfBirth,
+        age: formData.age,
       };
       const userData = {
         password: formData.password,
         profile: profile,
         role: formData.role,
       };
-      postUser(userData);
-      setOpen(!open);
-      setFromData(initialFormDataForNewUser);
+      const result = await postUser(userData).unwrap();
+      if (result?.success) {
+        setOpen(!open);
+        setFromData(initialFormDataForNewUser);
+      }
     } else {
       toaster.push(
         <Message type="error">Please fill out all the form </Message>
@@ -70,6 +75,7 @@ const NewUserModal = (props: IPropsForNewUserModel) => {
       cancelHandler={cancelHandler}
       size="md"
       title="Add new user"
+      loading={postUserLoading}
     >
       <UserForm
         defaultValue={formData}

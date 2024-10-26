@@ -89,5 +89,4 @@ export const model = Schema.Model({
   gender: StringType().isRequired("This field is required."),
   presentAddress: StringType().isRequired("This field is required."),
   phone: StringType().isRequired("This field is required."),
-  email: StringType().isRequired("This field is required."),
 });

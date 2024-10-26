@@ -140,7 +140,11 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
                   }
                 >
                   <InputGroup>
-                    <Input name="value" onChange={searchHandler} />
+                    <Input
+                      name="value"
+                      onChange={searchHandler}
+                      defaultValue={data?.patient?.uuid}
+                    />
                     <InputGroup.Addon>
                       {patientDataFeatching || patientDataLoading ? (
                         <Loader />

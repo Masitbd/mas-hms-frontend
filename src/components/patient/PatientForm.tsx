@@ -93,6 +93,15 @@ const PatientForm = ({
                 name="dateOfBirth"
                 format="dd.MM.yyyy"
                 accepter={DatePicker}
+                oneTap
+                onChange={(v) => {
+                  const age =
+                    new Date().getFullYear() -
+                    new Date(v).getFullYear() +
+                    " " +
+                    "Year(s)";
+                  setfromData((prevValue) => ({ ...prevValue, age: age }));
+                }}
               />
             </Form.Group>
             <Form.Group controlId="religion">
@@ -104,9 +113,9 @@ const PatientForm = ({
                 className="w-full"
               />
             </Form.Group>
-            <Form.Group controlId="nationality">
-              <Form.ControlLabel>Nationality</Form.ControlLabel>
-              <Form.Control name="nationality" />
+            <Form.Group controlId="nationalID">
+              <Form.ControlLabel>National ID</Form.ControlLabel>
+              <Form.Control name="nationalID" />
             </Form.Group>
             <Form.Group controlId="bloodGroup">
               <Form.ControlLabel>Blood Group</Form.ControlLabel>

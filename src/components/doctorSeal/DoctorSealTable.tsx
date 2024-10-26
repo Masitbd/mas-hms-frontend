@@ -1,4 +1,4 @@
-import { Button, Table } from "rsuite";
+import { Button, Table, Tag } from "rsuite";
 
 import { ENUM_MODE } from "@/enum/Mode";
 import {
@@ -14,8 +14,11 @@ import EditIcon from "@rsuite/icons/Edit";
 import TrashIcon from "@rsuite/icons/Trash";
 
 const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
-  const { data: sealData, isLoading: sealDataLoading } =
-    useGetSealQuery(undefined);
+  const {
+    data: sealData,
+    isLoading: sealDataLoading,
+    isFetching: sealDataFeatching,
+  } = useGetSealQuery(undefined, { refetchOnFocus: true });
 
   const { setData, setMode, setModalOpen } = props;
   const [deleteSeal] = useDeleteSealMutation();
@@ -59,8 +62,6 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
     }
   };
 
-  // Testing printing functionality
-
   return (
     <div>
       <Table
@@ -68,7 +69,7 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
         bordered
         cellBordered
         rowHeight={65}
-        loading={sealDataLoading}
+        loading={sealDataLoading || sealDataFeatching}
         data={sealData?.data}
         className="text-md"
       >
@@ -88,6 +89,14 @@ const DoctorSealTable = (props: IPropsForTable<IDoctorSeal>) => {
                 )}
               </>
             )}
+          </Cell>
+        </Column>
+        <Column flexGrow={0.5}>
+          <HeaderCell>Default</HeaderCell>
+          <Cell>
+            {(rowdata) => {
+              return rowdata?.default ? <Tag color="blue">Default</Tag> : "";
+            }}
           </Cell>
         </Column>
         <Column flexGrow={2}>

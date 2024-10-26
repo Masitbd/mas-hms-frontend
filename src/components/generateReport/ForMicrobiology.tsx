@@ -179,6 +179,8 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     if (previousPath) router.push(previousPath);
   };
 
+  // For default seal
+
   if (postLoading || getLoading || isFetching || patchLoading) {
     return <Loading />;
   }
@@ -260,7 +262,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
         )}
 
         <div className="mb-5 mx-5">
-          <Comment result={result} setResult={setResult} />
+          <Comment result={result} setResult={setResult} mode={mode} />
         </div>
         <AuthCheckerForComponent
           requiredPermission={[ENUM_USER_PEMISSION.MANAGE_LAB_REPORTS]}

@@ -194,7 +194,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
               <Cell>
                 {(rowData) => (
                   <>
-                    <div
+                    {/* <div
                       className={`${params.mode == ENUM_MODE.VIEW && "hidden"}`}
                     >
                       <Button
@@ -204,7 +204,7 @@ const TestInformation = (params: IParamsForTestInformation) => {
                       >
                         Delete
                       </Button>
-                    </div>
+                    </div> */}
                     {rowData.status == "pending" && (
                       <AuthCheckerForComponent
                         requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}

@@ -8,6 +8,7 @@ import TestInformation from "@/components/order/TestInformation";
 import {
   useLazyGetInvoiceQuery,
   useLazyGetSingleOrderQuery,
+  usePatchOrderMutation,
   usePostOrderMutation,
 } from "@/redux/api/order/orderSlice";
 import FInancialSection from "@/components/order/FInancialSection";
@@ -43,6 +44,11 @@ const Order = () => {
   };
   const [postOrder, { isSuccess, isError, isLoading: postLoading }] =
     usePostOrderMutation();
+
+  const [
+    patch,
+    { isSuccess: patchSUccess, isError: patchError, isLoading: patchLoading },
+  ] = usePatchOrderMutation();
   const [mode, setMode] = useState("new");
   const [dewModalOpen, setDewMOdalOpen] = useState(false);
 
@@ -108,6 +114,19 @@ const Order = () => {
       ).toFixed(2)
     ));
 
+  const patchSubmitHandler = async (orderData: IOrderData) => {
+    if (mode == ENUM_MODE.EDIT) {
+      const result = await patch({
+        id: data?._id as string,
+        data: orderData,
+      }).unwrap();
+      if (result?.success) {
+        swal("Done", "Order updated successfully", "success");
+      }
+      return;
+    }
+  };
+
   const handlePostORder = async () => {
     if (mode === "view") {
       setData(initialData);
@@ -164,6 +183,14 @@ const Order = () => {
       if (data.patientType == "registered") {
         if (data.patient?._id) {
           orderData.uuid = data.patient.uuid;
+
+          if (mode == ENUM_MODE.EDIT) {
+            patchSubmitHandler(orderData);
+            return;
+          }
+
+          console.log("hit");
+
           const result = await postOrder(orderData).unwrap();
 
           // Handling pdf after order post
@@ -184,6 +211,10 @@ const Order = () => {
       if (data.patientType === "notRegistered") {
         if (refForUnregistered.current.check()) {
           orderData.patient = data.patient;
+          if (mode == ENUM_MODE.EDIT) {
+            patchSubmitHandler(orderData);
+            return;
+          }
           const result = await postOrder(orderData).unwrap();
 
           // Handling pdf after order post
@@ -229,10 +260,17 @@ const Order = () => {
       setData(initialData);
       setMode(ENUM_MODE.NEW);
     }
-    if (isError) {
-      toaster.push(<Message type="error">! Error</Message>);
+    if (isError || patchError) {
+      toaster.push(
+        <Message type="error">! Error. Please try again letter</Message>
+      );
     }
-  }, [isSuccess]);
+    if (patchSUccess) {
+      setModalOpen(!modalOpen);
+      setData(initialData);
+      setMode(ENUM_MODE.NEW);
+    }
+  }, [isSuccess, patchSUccess, patchError]);
   // Handleign vew Order
   const patchAndViewHandler = (data: { mode: string; data: IOrderData }) => {
     setModalOpen(true);
@@ -328,7 +366,12 @@ const Order = () => {
               size="full"
               cancelHandler={cancelHandler}
               okHandler={okHandler}
-              loading={postLoading || invoiceLoading || invoiceFeatching}
+              loading={
+                postLoading ||
+                invoiceLoading ||
+                invoiceFeatching ||
+                patchLoading
+              }
             >
               <>
                 <div>
@@ -381,6 +424,7 @@ const Order = () => {
                         vatAmount={vatAmount}
                         tubePrice={tubePrice}
                         order={data as unknown as IOrderData}
+                        mode={mode}
                       />
 
                       {mode == ENUM_MODE.VIEW && (
@@ -408,7 +452,6 @@ const Order = () => {
                             appearance="primary"
                             color="blue"
                             onClick={() => handlePdf(data.oid as string)}
-                            className={`${mode == "new" && "invisible"}`}
                           >
                             Invoice
                           </Button>

@@ -4,7 +4,7 @@ import {
   usePostSealMutation,
 } from "@/redux/api/doctorSeal/doctorSealSlice";
 import { useEffect, useState } from "react";
-import { Form } from "rsuite";
+import { Checkbox, Form } from "rsuite";
 import swal from "sweetalert";
 import {
   IDoctorSeal,
@@ -15,18 +15,24 @@ import Tiptap from "../tiptap/TipTap";
 import RModal from "../ui/Modal";
 
 const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
-  const [seal, setSeal] = useState("");
   const { data, open, setData, setOpen, mode, setMode } = props;
-  const [postSeal] = usePostSealMutation();
-  const [patchSeal] = usePatchSealMutation();
+  const [seal, setSeal] = useState(data?.seal);
+
+  const [postSeal, { isLoading: postLoading }] = usePostSealMutation();
+  const [patchSeal, { isLoading: patchLoading }] = usePatchSealMutation();
   const modalCancelHandler = () => {
     setOpen(false);
     setData(InitialDoctorSealData as IDoctorSeal);
     setMode(ENUM_MODE.NEW);
   };
+
   const modalOkHandler = async () => {
     if (mode == ENUM_MODE.NEW) {
-      const result = await postSeal({ title: data.title, seal: seal });
+      const result = await postSeal({
+        title: data.title,
+        seal: seal,
+        default: data.default,
+      });
       if ("data" in result) {
         const message = (result as { data: { message: string } })?.data.message;
         swal(`Success! ${message}!`, {
@@ -37,7 +43,7 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
     }
     if (mode == ENUM_MODE.EDIT) {
       const result = await patchSeal({
-        data: { title: data.title, seal: seal },
+        data: { title: data.title, seal: seal, default: data.default },
         id: data._id,
       });
       if ("data" in result) {
@@ -52,6 +58,10 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
     }
   };
 
+  useEffect(() => {
+    setSeal(data?.seal);
+  }, [data?.seal]);
+
   return (
     <div>
       <div>
@@ -61,6 +71,7 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
           title="Add Doctor Seal to Database"
           cancelHandler={modalCancelHandler}
           okHandler={modalOkHandler}
+          loading={postLoading || patchLoading}
         >
           <div>
             <div>
@@ -68,6 +79,15 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
                 <Form.Group controlId="title">
                   <Form.ControlLabel>Title</Form.ControlLabel>
                   <Form.Control name="title" />
+                </Form.Group>
+                <Form.Group controlId="default" className="flex items-center">
+                  <Form.ControlLabel>Default</Form.ControlLabel>
+                  <Form.Control
+                    name="default"
+                    accepter={Checkbox}
+                    defaultChecked={data?.default}
+                    value={!data?.default}
+                  />
                 </Form.Group>
               </Form>
               <div className="my-5">

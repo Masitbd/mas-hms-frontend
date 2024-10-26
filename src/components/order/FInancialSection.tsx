@@ -58,6 +58,7 @@ const FInancialSection = ({
                   vat: Number(value),
                 }));
               }}
+              defaultValue={data?.vat}
             />
           </InputGroup>
         </div>
@@ -73,6 +74,7 @@ const FInancialSection = ({
                 }))
               }
               placeholder="Parcent Discount"
+              defaultValue={data?.parcentDiscount}
             />
           </InputGroup>
         </div>
@@ -89,6 +91,7 @@ const FInancialSection = ({
                   cashDiscount: Number(value),
                 }));
               }}
+              defaultValue={data?.cashDiscount}
             />
           </InputGroup>
         </div>
@@ -104,6 +107,7 @@ const FInancialSection = ({
                   paid: Number(value),
                 }));
               }}
+              defaultValue={data?.paid}
             />
           </InputGroup>
         </div>
