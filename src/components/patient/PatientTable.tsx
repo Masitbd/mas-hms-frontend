@@ -1,4 +1,7 @@
-import { useGetPatientQuery } from "@/redux/api/patient/patientSlice";
+import {
+  useGetPatientQuery,
+  useLazyGetSinglePatientQuery,
+} from "@/redux/api/patient/patientSlice";
 import { useDeleteTestMutation } from "@/redux/api/test/testSlice";
 import VisibleIcon from "@rsuite/icons/Visible";
 import { useEffect, useState } from "react";
@@ -9,6 +12,12 @@ import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import EditIcon from "@rsuite/icons/Edit";
 import TrashIcon from "@rsuite/icons/Trash";
 import { IPatient1 } from "./patientConstant";
+import FileDownloadIcon from "@rsuite/icons/FileDownload";
+import { pdfDataProvider } from "./Functions";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import { TDocumentDefinitions } from "pdfmake/interfaces";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const { Column, HeaderCell, Cell } = Table;
 const PatientTable = ({
@@ -56,6 +65,19 @@ const PatientTable = ({
     isError: TesError,
   } = useGetPatientQuery(searchData);
 
+  // For printing out patient membership card
+  const [getPatient, { isLoading: singlePatientLoading }] =
+    useLazyGetSinglePatientQuery();
+  const handlePrint = async (id: string) => {
+    const data = await getPatient(id).unwrap();
+    if (!data?.data?._id) {
+      toaster.push(<Message type="error">No data found</Message>);
+      return;
+    }
+    const pdfData = pdfDataProvider(data?.data);
+    pdfMake.createPdf(pdfData as unknown as TDocumentDefinitions).print();
+  };
+
   return (
     <div>
       <div className="my-5">
@@ -75,7 +97,7 @@ const PatientTable = ({
       <Table
         autoHeight
         data={testData?.data}
-        loading={testLoading}
+        loading={testLoading || singlePatientLoading}
         className="w-full"
         bordered
         cellBordered
@@ -125,6 +147,15 @@ const PatientTable = ({
                         });
                       }}
                       startIcon={<EditIcon />}
+                      size="sm"
+                    />
+
+                    <Button
+                      color="blue"
+                      appearance="primary"
+                      className="ml-2"
+                      startIcon={<FileDownloadIcon />}
+                      onClick={() => handlePrint(rowdate?.uuid)}
                       size="sm"
                     />
 
