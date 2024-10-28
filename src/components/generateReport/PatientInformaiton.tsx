@@ -68,7 +68,7 @@ const PatientInformaiton = ({
           {new Date(order.createdAt as Date).toDateString()}
         </div>
         <div>
-          <span style={{ fontWeight: "bold" }}>Report Creation Date: </span>
+          <span style={{ fontWeight: "bold" }}>Report Date: </span>
           {new Date(testResult?.createdAt as unknown as Date).toDateString()}
         </div>
         <div>
