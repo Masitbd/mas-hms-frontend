@@ -36,6 +36,7 @@
     "react-dom": "^18",
     "react-redux": "^9.0.4",
     "react-to-print": "^2.15.1",
+    "recharts": "^2.13.1",
     "rsuite": "^5.64.0",
     "sweetalert": "^2.1.2",
     "uuid": "^9.0.1"
@@ -46,6 +47,7 @@
     "@types/pdfmake": "^0.2.9",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/sweetalert": "^2.0.4",
     "@types/uuid": "^9.0.8",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",

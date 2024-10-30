@@ -88,8 +88,9 @@ const LoginPage = () => {
   };
 
   const userLoggedIn = useAppSelector((state) => state.auth.loggedIn);
+  const currentUser = useAppSelector((state) => state.auth.user);
   const loading = useAppSelector((state) => state.loading.loading);
-
+  // console.log(role, "role");
   // Using use effect
 
   useEffect(() => {
@@ -142,7 +143,11 @@ const LoginPage = () => {
     setResetFromData(formValue as IResetFromData);
   };
   if (!loading && userLoggedIn) {
-    router.push("/profile");
+    if (currentUser?.role === "super-admin") {
+      router.push("/home");
+    } else {
+      router.push("/profile");
+    }
   }
   if (!loading && !userLoggedIn) {
     return (
