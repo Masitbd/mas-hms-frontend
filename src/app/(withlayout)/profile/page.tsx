@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import { ENUM_MODE } from "@/enum/Mode";
 import PatchProfile from "@/components/profile/PatchProfile";
 import ChangePassword from "@/components/profile/ChangePassword";
-import EditIcon from "@rsuite/icons/Edit";
 
 const Profile = () => {
   const { data: ProfileData, isLoading } = useGetProfileQuery(undefined);
@@ -43,44 +42,40 @@ const Profile = () => {
                       <span className="capitalize">{role}</span>
                     </p>
 
-                <p>
-                  <strong>Father Name:</strong> {profile.fatherName}
-                </p>
-                <p>
-                  <strong>Mother Name:</strong> {profile.motherName}
-                </p>
-                <p>
-                  <strong>Address:</strong> {profile.address}
-                </p>
-                <p>
-                  <strong>Email:</strong> {profile.email}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {profile.phone}
-                </p>
-              </div>
-              <div className="w-full flex flex-row justify-end mt-10">
-                <Button
-                  onClick={() => setMode(ENUM_MODE.EDIT)}
-                  appearance="ghost"
-                  color="green"
-                  className="mr-5"
-                  startIcon={<EditIcon style={{ fontSize: "20px" }} />}
-                />
-
-                {/* </Button> */}
-
-                <Button
-                  onClick={() => setMode(ENUM_MODE.CHANGE_PASSWROD)}
-                  appearance="ghost"
-                  color="blue"
-                >
-                  Change Password
-                </Button>
-
-                 
+                    <p>
+                      <strong>Father Name:</strong> {profile.fatherName}
+                    </p>
+                    <p>
+                      <strong>Mother Name:</strong> {profile.motherName}
+                    </p>
+                    <p>
+                      <strong>Address:</strong> {profile.address}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {profile.email}
+                    </p>
+                    <p>
+                      <strong>Phone:</strong> {profile.phone}
+                    </p>
+                  </div>
+                  <div className="w-full flex flex-row justify-end mt-10">
+                    <Button
+                      onClick={() => setMode(ENUM_MODE.EDIT)}
+                      appearance="ghost"
+                      color="green"
+                      className="mr-5"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      onClick={() => setMode(ENUM_MODE.CHANGE_PASSWROD)}
+                      appearance="ghost"
+                      color="blue"
+                    >
+                      Change Password
+                    </Button>
+                  </div>
                 </Panel>
-
               </div>
             </>
           )}

@@ -73,22 +73,13 @@ const SpecimenTable = ({
 
   return (
     <div>
-      <Table
-        autoHeight
-        height={600}
-        data={data}
-        loading={isLoading}
-        bordered
-        cellBordered
-        rowHeight={65}
-        className="text-md"
-      >
-        <Column flexGrow={1}>
+      <Table autoHeight data={data} loading={isLoading} bordered cellBordered>
+        <Column flexGrow={3}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
 
-        <Column flexGrow={4}>
+        <Column flexGrow={2}>
           <HeaderCell>Description</HeaderCell>
           <Cell dataKey="description" />
         </Column>
@@ -105,6 +96,7 @@ const SpecimenTable = ({
                     color="red"
                     onClick={() => deleteHandler(rowdate._id)}
                     startIcon={<TrashIcon />}
+                    size="sm"
                   />
 
                   <Button
@@ -117,6 +109,7 @@ const SpecimenTable = ({
                       setPostModelOpen(!open);
                       setMode("patch");
                     }}
+                    size="sm"
                   />
                 </>
               </AuthCheckerForComponent>

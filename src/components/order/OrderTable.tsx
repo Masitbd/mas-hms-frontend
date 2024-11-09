@@ -227,23 +227,22 @@ const OrderTable = ({
         className="w-full"
         bordered
         cellBordered
-        rowHeight={60}
         autoHeight
         wordWrap={"break-word"}
       >
-        <Column align="center" resizable flexGrow={2}>
+        <Column align="center" flexGrow={2}>
           <HeaderCell>Order Id</HeaderCell>
           <Cell dataKey="oid" />
         </Column>
-        <Column resizable flexGrow={2}>
+        <Column flexGrow={2}>
           <HeaderCell>UUID</HeaderCell>
           <Cell dataKey="uuid" />
         </Column>
-        <Column resizable flexGrow={2}>
+        <Column flexGrow={2}>
           <HeaderCell>Name </HeaderCell>
           <Cell dataKey="patient.name" />
         </Column>
-        <Column resizable flexGrow={2}>
+        <Column flexGrow={2}>
           <HeaderCell>Patient Type</HeaderCell>
           <Cell>
             {(rowData) => {
@@ -251,7 +250,7 @@ const OrderTable = ({
             }}
           </Cell>
         </Column>
-        <Column resizable flexGrow={1}>
+        <Column flexGrow={1}>
           <HeaderCell>Delivery Date</HeaderCell>
           <Cell>
             {(rowData) => {
@@ -260,11 +259,11 @@ const OrderTable = ({
             }}
           </Cell>
         </Column>
-        <Column resizable flexGrow={1}>
+        <Column flexGrow={1}>
           <HeaderCell>Due Amount</HeaderCell>
           <Cell dataKey="dueAmount" className="text-red-600" />
         </Column>
-        <Column resizable flexGrow={1}>
+        <Column flexGrow={1}>
           <HeaderCell>Total Price</HeaderCell>
           <Cell dataKey="totalPrice" className="text-red-600" />
         </Column>
@@ -273,22 +272,22 @@ const OrderTable = ({
           <Cell>{(rowdata) => StatusTagProvider(rowdata?.status)}</Cell>
         </Column> */}
 
-        <Column flexGrow={1} resizable>
+        <Column flexGrow={1}>
           <HeaderCell>Action</HeaderCell>
           <Cell>
             {(rowdate) => (
               <>
                 <Button
                   className="ml-2"
-                  color="blue"
+                  color="green"
                   appearance="primary"
-
                   startIcon={<VisibleIcon />}
                   onClick={() => {
                     if (patchHandler) {
                       patchHanlders(rowdate?.oid);
                     }
                   }}
+                  size="sm"
                 />
               </>
             )}

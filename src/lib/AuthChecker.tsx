@@ -22,7 +22,6 @@ const AuthChecker = ({ children }: { children: React.ReactNode }) => {
         dispatch(setAuthStatus({ loggedIn: false }));
       }
     } catch (error) {
-      console.error("Error fetching profile:", error);
       dispatch(setAuthStatus({ loggedIn: false }));
     } finally {
       dispatch(setLoading(false));

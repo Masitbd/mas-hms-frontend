@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -32,6 +33,7 @@ import { useAppSelector } from "@/redux/hook";
 import PatchProfile from "./PatchProfile";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import PasswordChangeByAdmin from "./PasswordChangeByAdmin";
 
 const UserTable = ({
   mode,
@@ -102,6 +104,14 @@ const UserTable = ({
     if (patchUserProfileError) {
     }
   }, [patchUserProfileError, patchUserProfileSuccess]);
+
+  // For changing password by admin
+  const [userInfo, setUserInfo] = useState<IUserData>();
+  const [open, setOpen] = useState(false);
+  const handleChangePasswordChange = (userInfo: IUserData) => {
+    setOpen(true);
+    setUserInfo(userInfo);
+  };
   return (
     <>
       <div>
@@ -110,7 +120,6 @@ const UserTable = ({
           className="w-full"
           bordered
           cellBordered
-          rowHeight={60}
           autoHeight
           loading={usersLoading}
         >
@@ -137,18 +146,42 @@ const UserTable = ({
               {(rowData) => {
                 return (
                   <>
-                    <Button
-                      color="green"
-                      appearance="primary"
-                      startIcon={<VisibleIcon style={{ fontSize: "15px" }} />}
-                      onClick={() => handleSingleUserView(rowData)}
-                    />
+                    <div className="grid grid-cols-3 gap-5">
+                      <Button
+                        color="green"
+                        appearance="primary"
+                        startIcon={<VisibleIcon />}
+                        onClick={() => handleSingleUserView(rowData)}
+                        size="sm"
+                      />
+                      <AuthCheckerForComponent
+                        requiredPermission={[ENUM_USER_PEMISSION.SUPER_ADMIN]}
+                      >
+                        <Button
+                          className="col-span-2"
+                          color="blue"
+                          appearance="primary"
+                          children={"Change Password"}
+                          onClick={() =>
+                            handleChangePasswordChange(rowData as IUserData)
+                          }
+                          size="sm"
+                        />
+                      </AuthCheckerForComponent>
+                    </div>
                   </>
                 );
               }}
             </Cell>
           </Column>
         </Table>
+      </div>
+      <div>
+        <PasswordChangeByAdmin
+          open={open}
+          setOpen={setOpen}
+          user={userInfo as unknown as IProfile}
+        />
       </div>
       <div>
         <RModal

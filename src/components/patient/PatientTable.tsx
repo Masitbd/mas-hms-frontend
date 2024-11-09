@@ -79,7 +79,6 @@ const PatientTable = ({
         className="w-full"
         bordered
         cellBordered
-        rowHeight={60}
       >
         <Column align="center" resizable flexGrow={2}>
           <HeaderCell>User Id</HeaderCell>
@@ -109,6 +108,7 @@ const PatientTable = ({
                   color="red"
                   onClick={() => handleDeletOpen(rowdate._id)}
                   startIcon={<TrashIcon />}
+                  size="sm"
                 />
 
                 <AuthCheckerForComponent
@@ -126,6 +126,7 @@ const PatientTable = ({
                         })
                       }
                       startIcon={<EditIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -139,6 +140,7 @@ const PatientTable = ({
                           mode: "watch",
                         });
                       }}
+                      size="sm"
                     />
                   </>
                 </AuthCheckerForComponent>

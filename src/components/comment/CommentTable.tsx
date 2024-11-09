@@ -62,13 +62,13 @@ const CommentTable = (props: IPropsForTable<IComment>) => {
   return (
     <div>
       <Table
-        height={600}
+        autoHeight
         bordered
         cellBordered
-        rowHeight={65}
         loading={commentDataLoading}
         data={commentData?.data}
         className="text-md"
+        wordWrap={"break-word"}
       >
         <Column flexGrow={2}>
           <HeaderCell>Title</HeaderCell>

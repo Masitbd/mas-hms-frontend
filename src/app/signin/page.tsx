@@ -13,7 +13,10 @@ import EyeIcon from "@rsuite/icons/legacy/Eye";
 import EyeSlashIcon from "@rsuite/icons/legacy/EyeSlash";
 import AdminIcon from "@rsuite/icons/Admin";
 import ReloadIcon from "@rsuite/icons/Reload";
-import { useLoginMutation } from "@/redux/api/authentication/authenticationSlice";
+import {
+  useForgetPasswordMutation,
+  useLoginMutation,
+} from "@/redux/api/authentication/authenticationSlice";
 import { redirect, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setLoading } from "@/redux/features/loading/loading";
@@ -22,8 +25,11 @@ import { setAuthStatus } from "@/redux/features/authentication/authSlice";
 import Loading from "../loading";
 import { FormSetValueFunction } from "@/types/componentsType";
 import config from "@/config";
+import swal from "sweetalert";
 
 const LoginPage = () => {
+  const [post, { isLoading: postForgotPasswordLoading }] =
+    useForgetPasswordMutation();
   const [getProfile, { data: profileData, isSuccess: profileRequestSuccess }] =
     useLazyGetProfileQuery();
   const dispatch = useAppDispatch();
@@ -79,11 +85,17 @@ const LoginPage = () => {
     uuid: "",
   };
   const [resetFromData, setResetFromData] = useState(initialResetFromData);
-  const handlePasswordReset = () => {
+  const handlePasswordReset = async () => {
     if (resetFormRef.current.check()) {
-      toaster.push(
-        <Message type="success">Reset Request sent successfully</Message>
-      );
+      try {
+        const result = await post({ uuid: resetFromData?.uuid }).unwrap();
+        if (result?.success) {
+          swal("Success", `${result?.message}`, "success");
+          setResetFromData({ uuid: "" });
+        }
+      } catch (error) {
+        swal("Error", `${error},'error`);
+      }
     }
   };
 
@@ -230,14 +242,14 @@ const LoginPage = () => {
                 Reset Password
               </h1>
               <div className="text-sm text-slate-500 my-5">
-                After reset request, admin notified. Valid requests get password
-                changed. Retrieve new password from admin
+                Enter your user id. A mail will be sent to your email address
               </div>
               <Form
                 fluid
                 model={resetModel}
                 ref={resetFormRef}
                 onChange={handleResetFormData}
+                formValue={resetFromData}
               >
                 <Form.Group controlId="uuid">
                   <Form.Control name="uuid" type="text" placeholder="UUID" />
@@ -248,6 +260,8 @@ const LoginPage = () => {
                   appearance="primary"
                   color="blue"
                   onClick={handlePasswordReset}
+                  disabled={resetFromData?.uuid?.length == 0}
+                  loading={postForgotPasswordLoading}
                 >
                   Reset Password
                 </Button>

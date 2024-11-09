@@ -53,63 +53,69 @@ const UserPermissionsTable = ({ param }: { param: IAUth }) => {
     singleUserdata?.data[0]?.permissions?.permissions || [];
 
   return (
-    <div>
-      <Table
-        data={permission?.data}
-        bordered
-        cellBordered
-        rowHeight={60}
-        autoHeight
-        loading={permissionLoading || userDataLoading}
-      >
-        <Column flexGrow={2}>
-          <HeaderCell>Permisson Name</HeaderCell>
-          <Cell dataKey="label" />
-        </Column>
+    <AuthCheckerForComponent
+      requiredPermission={[ENUM_USER_PEMISSION.GET_USER_PERMISSIONS]}
+    >
+      <div>
+        <Table
+          data={permission?.data}
+          bordered
+          cellBordered
+          autoHeight
+          loading={permissionLoading || userDataLoading}
+        >
+          <Column flexGrow={2}>
+            <HeaderCell>Permisson Name</HeaderCell>
+            <Cell dataKey="label" />
+          </Column>
 
-        <Column flexGrow={2}>
-          <HeaderCell>...</HeaderCell>
-          <Cell>
-            {(rowData: IPermission) => {
-              return (
-                <AuthCheckerForComponent
-                  requiredPermission={[
-                    ENUM_USER_PEMISSION.MANAGE_USER,
-                    ENUM_USER_PEMISSION.MANAGE_USER_PERMISSIONS,
-                  ]}
-                >
-                  <>
-                    <Button
-                      appearance="primary"
-                      color="red"
-                      disabled={
-                        !availabelUserPermissions
-                          .map((permission) => permission)
-                          .includes(rowData.code as unknown as Number)
-                      }
-                      onClick={() => handlePermissionChange(rowData)}
-                    >
-                      Revoke
-                    </Button>
-                    <Button
-                      appearance="primary"
-                      className="mx-5"
-                      color="green"
-                      disabled={availabelUserPermissions.includes(rowData.code)}
-                      onClick={() => handlePermissionChange(rowData)}
-                    >
-                      {availabelUserPermissions.includes(rowData.code)
-                        ? "Granted"
-                        : "Grant"}
-                    </Button>
-                  </>
-                </AuthCheckerForComponent>
-              );
-            }}
-          </Cell>
-        </Column>
-      </Table>
-    </div>
+          <Column flexGrow={2}>
+            <HeaderCell>...</HeaderCell>
+            <Cell>
+              {(rowData: IPermission) => {
+                return (
+                  <AuthCheckerForComponent
+                    requiredPermission={[
+                      ENUM_USER_PEMISSION.MANAGE_USER_PERMISSIONS,
+                    ]}
+                  >
+                    <>
+                      <Button
+                        appearance="primary"
+                        color="red"
+                        disabled={
+                          !availabelUserPermissions
+                            .map((permission) => permission)
+                            .includes(rowData.code as unknown as Number)
+                        }
+                        onClick={() => handlePermissionChange(rowData)}
+                        size="sm"
+                      >
+                        Revoke
+                      </Button>
+                      <Button
+                        appearance="primary"
+                        className="mx-5"
+                        color="green"
+                        disabled={availabelUserPermissions.includes(
+                          rowData.code
+                        )}
+                        onClick={() => handlePermissionChange(rowData)}
+                        size="sm"
+                      >
+                        {availabelUserPermissions.includes(rowData.code)
+                          ? "Granted"
+                          : "Grant"}
+                      </Button>
+                    </>
+                  </AuthCheckerForComponent>
+                );
+              }}
+            </Cell>
+          </Column>
+        </Table>
+      </div>
+    </AuthCheckerForComponent>
   );
 };
 

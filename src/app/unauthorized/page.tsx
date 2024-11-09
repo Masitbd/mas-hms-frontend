@@ -1,15 +1,29 @@
+import { NavLink } from "@/utils/Navlink";
 import Image from "next/image";
 import React from "react";
+import { Button } from "rsuite";
 
 const Unauthorized = () => {
   return (
-    <div className="flex items-center justify-center w-full h-screen">
+    <div className="flex items-center justify-center w-full h-screen flex-col">
+      <div className="text-5xl font-bold">OOPS !</div>
       <Image
-        src={"/error_401.jpg"}
+        src={"/error_401.png"}
         height={1000}
-        width={1000}
+        width={600}
         alt="Unauthorized page"
       />
+
+      <div className="text-4xl font-bold">
+        You are not authorized to access this page
+      </div>
+      <div className="my-5">
+        <NavLink href={"/"}>
+          <Button appearance="primary" color="blue" size="lg">
+            Back To Homepage
+          </Button>
+        </NavLink>
+      </div>
     </div>
   );
 };

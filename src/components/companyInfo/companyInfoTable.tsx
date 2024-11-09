@@ -63,7 +63,7 @@ const CompnayInfoTable = () => {
     }
   };
   return (
-    <div>
+    <div className="my-5">
       <div className="grid grid-cols-12 gap-5 my-5">
         <Button
           appearance="primary"
@@ -88,8 +88,8 @@ const CompnayInfoTable = () => {
       <Table
         data={companyInfoData?.data}
         autoHeight
-        rowHeight={65}
         loading={companyInfoLoading || companyInfoFeatching || deleteLoading}
+        wordWrap={"break-all"}
       >
         <Column flexGrow={2}>
           <HeaderCell children="name" />
@@ -129,6 +129,7 @@ const CompnayInfoTable = () => {
                         setOpen(true);
                       }}
                       startIcon={<EditIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -140,6 +141,7 @@ const CompnayInfoTable = () => {
                         setOpen(true);
                       }}
                       startIcon={<VisibleIcon />}
+                      size="sm"
                     />
 
                     <Button
@@ -153,6 +155,7 @@ const CompnayInfoTable = () => {
                       }
                       onClick={() => hanldeDelete(rowData)}
                       startIcon={<TrashIcon />}
+                      size="sm"
                     />
                   </div>
                 </>

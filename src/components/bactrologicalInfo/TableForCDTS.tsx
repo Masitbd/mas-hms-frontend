@@ -75,7 +75,7 @@ const TableForCDTS = (props: { title: string }) => {
         />
       </div>
       <div>
-        <Table data={miscData?.data} rowHeight={70} autoHeight>
+        <Table data={miscData?.data} autoHeight className="my-5">
           <Column flexGrow={2}>
             <HeaderCell children="Title" />
             <Cell dataKey="title" />
@@ -104,6 +104,7 @@ const TableForCDTS = (props: { title: string }) => {
                         appearance="primary"
                         color="green"
                         startIcon={<EditIcon />}
+                        size="sm"
                       />
 
                       <Button
@@ -113,6 +114,7 @@ const TableForCDTS = (props: { title: string }) => {
                           deleteHandler(rowData);
                         }}
                         startIcon={<TrashIcon />}
+                        size="sm"
                       />
                     </>
                   </AuthCheckerForComponent>
