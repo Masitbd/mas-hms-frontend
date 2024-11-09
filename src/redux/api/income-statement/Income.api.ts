@@ -33,6 +33,13 @@ const incomeApi = baseApi.injectEndpoints({
         params: args,
       }),
     }),
+    //?gett last income 28
+    getLastTEDaysIncome: build.query({
+      query: () => ({
+        url: "/income-statemnet/last-paid",
+        method: "GET",
+      }),
+    }),
 
     // get due details
 
@@ -51,4 +58,5 @@ export const {
   useGetEmployeeIncomeStatementQuery,
   useGetEmployeeIncomeStatementSummeryQuery,
   useGetDueDetailsQuery,
+  useGetLastTEDaysIncomeQuery,
 } = incomeApi;
