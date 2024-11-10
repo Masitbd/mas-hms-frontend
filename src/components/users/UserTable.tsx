@@ -50,6 +50,7 @@ const UserTable = ({
   setMode: (prop: string) => void;
 }) => {
   const loggedInUser = useAppSelector((state) => state.auth.user);
+
   const { data: users, isLoading: usersLoading } =
     useGetAllUsersQuery(undefined);
 
