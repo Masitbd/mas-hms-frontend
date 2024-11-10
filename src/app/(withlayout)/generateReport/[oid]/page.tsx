@@ -20,7 +20,10 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
     data: orderData,
     isLoading: OrderDataLoading,
     refetch,
-  } = useGetSingleOrderQuery(props.params.oid);
+  } = useGetSingleOrderQuery(props.params.oid, {
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
 
   const { data: reportGroupData, isLoading: reportGroupDataLoading } =
     useGetSingleReportGroupQuery(props.searchParams.reportGroup);

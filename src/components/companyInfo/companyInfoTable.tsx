@@ -59,7 +59,6 @@ const CompnayInfoTable = () => {
       if ("data" in result) {
         swal("Success", "Company info deleted successfully", "success");
       }
-      console.log(result);
     }
   };
   return (

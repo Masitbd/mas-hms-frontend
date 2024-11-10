@@ -10,7 +10,7 @@ const DoctorSeal = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["seal"],
+      invalidatesTags: ["doctor-seal"],
     }),
     patchSeal: build.mutation({
       query: ({ data, id }) => ({
@@ -20,7 +20,7 @@ const DoctorSeal = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["seal"],
+      invalidatesTags: ["doctor-seal"],
     }),
     deleteSeal: build.mutation({
       query: (data) => ({
@@ -28,16 +28,9 @@ const DoctorSeal = baseApi.injectEndpoints({
         method: "delete",
         contentType: "application/json",
       }),
-      invalidatesTags: ["seal"],
+      invalidatesTags: ["doctor-seal"],
     }),
-    getSeal: build.query({
-      query: () => ({
-        url: "/seal",
-        method: "get",
-        contentType: "application/json",
-      }),
-      providesTags: ["seal"],
-    }),
+
     getSingleSeal: build.mutation({
       query: (data: any) => ({
         url: `/seal/${data}`,
@@ -45,11 +38,20 @@ const DoctorSeal = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    getSeal: build.query({
+      query: () => ({
+        url: "/seal",
+        method: "get",
+        contentType: "application/json",
+      }),
+      providesTags: ["doctor-seal"],
+    }),
   }),
 });
 
 export const {
   useGetSealQuery,
+  useLazyGetSealQuery,
   useDeleteSealMutation,
   usePatchSealMutation,
   usePostSealMutation,

@@ -1,15 +1,18 @@
 import React from "react";
 import { IPriceSectionProps } from "./initialDataAndTypes";
 import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
+import { ENUM_MODE } from "@/enum/Mode";
 
 const PriceSection = (props: IPriceSectionProps) => {
-  const { data, discountAmount, totalPrice, vatAmount, tubePrice } = props;
+  const { data, discountAmount, totalPrice, vatAmount, tubePrice, mode } =
+    props;
   const dueAmount =
     totalPrice -
     discountAmount -
     (data.cashDiscount ? data.cashDiscount : 0) -
     (data.paid ? data.paid : 0) +
-    (data.vat ? vatAmount : 0);
+    (data.vat ? vatAmount : 0) -
+    (data?.refundData?.refundApplied ?? 0);
 
   const doesRefundedExists =
     data.tests.length > 0 &&
@@ -20,16 +23,13 @@ const PriceSection = (props: IPriceSectionProps) => {
     refundTestPrice = data?.refundData?.refundApplied || 0;
   }
 
+  console.log(data?.dueAmount >= 0 && mode !== ENUM_MODE.VIEW);
   return (
-    <div className=" border  shadow-lg">
-      <div className="bg-[#3498ff] text-white px-2 py-2">
-        <h2 className="text-center text-xl font-semibold">Price Information</h2>
+    <div className=" border  shadow-lg ">
+      <div className="bg-[#3498ff] text-white px-2 ">
+        <h2 className="text-center text-lg font-semibold">Price Information</h2>
       </div>
       <div className=" px-2">
-        <div className="mt-2">
-          <h2 className="text-xl font-bold">Price Info</h2>
-          <hr />
-        </div>
         <div className=" flex justify-between">
           <div className="font-bold">Total Price</div>
           <div> {totalPrice} </div>
@@ -98,7 +98,9 @@ const PriceSection = (props: IPriceSectionProps) => {
           <div className="font-bold">Due Amount</div>
           <div className="font-bold  text-red-600">
             {(
-              (data?.dueAmount >= 0 ? data?.dueAmount : dueAmount) ?? 0
+              (data?.dueAmount >= 0 && mode == ENUM_MODE.VIEW
+                ? data?.dueAmount
+                : dueAmount) ?? 0
             ).toFixed(2)}
           </div>
         </div>

@@ -7,6 +7,7 @@ import {
   Message,
   SelectPicker,
   Table,
+  Tag,
   toaster,
 } from "rsuite";
 import RModal from "../ui/Modal";
@@ -34,6 +35,12 @@ import PatchProfile from "./PatchProfile";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import PasswordChangeByAdmin from "./PasswordChangeByAdmin";
+import { ENUM_STATUS } from "@/constants/EnumStatus";
+import swal from "sweetalert";
+import {
+  useActivateUserMutation,
+  useRusticateUserMutation,
+} from "@/redux/api/authentication/authenticationSlice";
 
 const UserTable = ({
   mode,
@@ -112,6 +119,69 @@ const UserTable = ({
     setOpen(true);
     setUserInfo(userInfo);
   };
+
+  // handeling rusticate user functionlaity
+  const [rusticateUser, { isLoading: rusticateUserLoading }] =
+    useRusticateUserMutation();
+  const handleRusticateUser = async (user: IUserData) => {
+    const confirm = await swal({
+      text: "Are you sure you want to rusticate this user?",
+      title: "Warning",
+      icon: "error",
+      dangerMode: true,
+      buttons: ["Cancel", true],
+    });
+
+    if (confirm) {
+      const id = user?.user?._id;
+      const requestData = {
+        id: id,
+      };
+
+      try {
+        const response = await rusticateUser(requestData).unwrap();
+        if (response?.success) {
+          swal("Success", "User successfully rusticated", "success");
+        }
+      } catch (error) {
+        toaster.push(
+          <Message type="error">{"Error Occurred" as string}</Message>
+        );
+      }
+    }
+  };
+
+  // handeling Activating user functionality
+  const [activate, { isLoading: activateUserLoading }] =
+    useActivateUserMutation();
+  const handleActivateUser = async (user: IUserData) => {
+    const confirm = await swal({
+      text: "Are you sure you want to Activate this user?",
+      title: "Warning",
+      icon: "error",
+      dangerMode: true,
+      buttons: ["Cancel", true],
+    });
+
+    if (confirm) {
+      const id = user?.user?._id;
+      const requestData = {
+        id: id,
+      };
+
+      try {
+        const response = await activate(requestData).unwrap();
+        if (response?.success) {
+          swal("Success", "User successfully activated", "success");
+        }
+      } catch (error) {
+        toaster.push(
+          <Message type="error">{"Error Occurred" as string}</Message>
+        );
+      }
+    }
+  };
+
   return (
     <>
       <div>
@@ -121,11 +191,23 @@ const UserTable = ({
           bordered
           cellBordered
           autoHeight
-          loading={usersLoading}
+          loading={usersLoading || rusticateUserLoading || activateUserLoading}
         >
-          <Column align="center" flexGrow={2}>
+          <Column align="center" flexGrow={1}>
             <HeaderCell>UUID</HeaderCell>
             <Cell dataKey="uuid" color="" />
+          </Column>
+          <Column align="center" flexGrow={0.5}>
+            <HeaderCell>Status</HeaderCell>
+            <Cell>
+              {(rowData) =>
+                rowData?.user?.status == ENUM_STATUS.ACTIVE ? (
+                  <Tag color="green">Active</Tag>
+                ) : (
+                  <Tag color="red">Rusticated</Tag>
+                )
+              }
+            </Cell>
           </Column>
 
           <Column flexGrow={1}>
@@ -140,13 +222,13 @@ const UserTable = ({
             <HeaderCell>Phone</HeaderCell>
             <Cell dataKey="phone" />
           </Column>
-          <Column flexGrow={1}>
+          <Column flexGrow={2}>
             <HeaderCell>...</HeaderCell>
             <Cell>
               {(rowData) => {
                 return (
                   <>
-                    <div className="grid grid-cols-3 gap-5">
+                    <div className="grid grid-cols-6 gap-5">
                       <Button
                         color="green"
                         appearance="primary"
@@ -158,7 +240,7 @@ const UserTable = ({
                         requiredPermission={[ENUM_USER_PEMISSION.SUPER_ADMIN]}
                       >
                         <Button
-                          className="col-span-2"
+                          className="col-span-3"
                           color="blue"
                           appearance="primary"
                           children={"Change Password"}
@@ -168,6 +250,37 @@ const UserTable = ({
                           size="sm"
                         />
                       </AuthCheckerForComponent>
+                      {rowData?.user?.status == ENUM_STATUS.ACTIVE ? (
+                        <AuthCheckerForComponent
+                          requiredPermission={[ENUM_USER_PEMISSION.SUPER_ADMIN]}
+                        >
+                          <Button
+                            className="col-span-2"
+                            color="red"
+                            appearance="primary"
+                            children={"Rusticate"}
+                            onClick={() =>
+                              handleRusticateUser(rowData as IUserData)
+                            }
+                            size="sm"
+                          />
+                        </AuthCheckerForComponent>
+                      ) : (
+                        <AuthCheckerForComponent
+                          requiredPermission={[ENUM_USER_PEMISSION.SUPER_ADMIN]}
+                        >
+                          <Button
+                            className="col-span-2"
+                            color="green"
+                            appearance="primary"
+                            children={"Activate"}
+                            onClick={() =>
+                              handleActivateUser(rowData as IUserData)
+                            }
+                            size="sm"
+                          />
+                        </AuthCheckerForComponent>
+                      )}
                     </div>
                   </>
                 );
@@ -230,7 +343,15 @@ const UserTable = ({
                               <div className="capitalize text-md font-bold">
                                 {key}
                               </div>
-                              <div>{singleUserdata.data[0].profile[key]}</div>
+                              {key == "dateOfBirth" ? (
+                                <div>
+                                  {new Date(
+                                    singleUserdata.data[0].profile[key]
+                                  )?.toLocaleDateString() ?? "N/A"}
+                                </div>
+                              ) : (
+                                <div>{singleUserdata.data[0].profile[key]}</div>
+                              )}
                             </div>
                           </>
                         );

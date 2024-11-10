@@ -47,6 +47,26 @@ const authenticaiton = baseApi.injectEndpoints({
         contentType: "application/json",
       }),
     }),
+    rusticateUser: build.mutation({
+      query: (data: { id: string }) => ({
+        url: "/auth/rusticate-user",
+        method: "POST",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+      invalidatesTags: ["users"],
+    }),
+    activateUser: build.mutation({
+      query: (data: { id: string }) => ({
+        url: "/auth/activate-user",
+        method: "POST",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+      invalidatesTags: ["users"],
+    }),
   }),
 });
 
@@ -56,4 +76,6 @@ export const {
   useChangeUserPasswordByAdminMutation,
   useResetPasswordMutation,
   useForgetPasswordMutation,
+  useRusticateUserMutation,
+  useActivateUserMutation,
 } = authenticaiton;

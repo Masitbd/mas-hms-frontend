@@ -23,12 +23,12 @@ const PatchProfile = (props: IPatchProfileProps) => {
     },
   ] = usePatchProfileMutation();
 
-  const patchHandler = () => {
+  const patchHandler = async () => {
     if (patchFromRef.current.check()) {
-      patchUserProfile({
+      const result = await patchUserProfile({
         profileData: userData as IProfile,
         uuid: defaultValue.uuid as string,
-      });
+      }).unwrap();
     } else {
       toaster.push(
         <Message type="error">Do Not leave any Field Empty</Message>

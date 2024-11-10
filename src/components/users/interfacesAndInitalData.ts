@@ -39,7 +39,7 @@ export const newUserFormModel = Schema.Model({
   name: StringType().isRequired("This field is required"),
   fatherName: StringType().isRequired("This field is required"),
   motherName: StringType().isRequired("This field is required"),
-  age: NumberType().isRequired("This field is required"),
+  age: StringType().isRequired("This field is required"),
   dateOfBirth: DateType().isRequired("This field is required"),
   gender: StringType().isRequired("This field is required"),
   address: StringType().isRequired("This field is required"),
@@ -82,7 +82,7 @@ export const patchProfileModel = Schema.Model({
   name: StringType().isRequired("This field is required"),
   fatherName: StringType().isRequired("This field is required"),
   motherName: StringType().isRequired("This field is required"),
-  age: NumberType().isRequired("This field is required"),
+  age: StringType().isRequired("This field is required"),
   dateOfBirth: DateType().isRequired("This field is required"),
   gender: StringType().isRequired("This field is required"),
   address: StringType().isRequired("This field is required"),
@@ -96,6 +96,10 @@ export type IUserData = {
   needsPasswordChange: boolean;
   _id: string;
   role: string;
+  user: {
+    _id: string;
+    status: string;
+  };
 };
 
 export type IPatchProfileProps = {

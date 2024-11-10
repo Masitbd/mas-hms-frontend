@@ -8,6 +8,7 @@ import TestInformation from "@/components/order/TestInformation";
 import {
   useLazyGetInvoiceQuery,
   useLazyGetSingleOrderQuery,
+  usePatchOrderMutation,
   usePostOrderMutation,
 } from "@/redux/api/order/orderSlice";
 import FInancialSection from "@/components/order/FInancialSection";
@@ -43,6 +44,11 @@ const Order = () => {
   };
   const [postOrder, { isSuccess, isError, isLoading: postLoading }] =
     usePostOrderMutation();
+
+  const [
+    patch,
+    { isSuccess: patchSUccess, isError: patchError, isLoading: patchLoading },
+  ] = usePatchOrderMutation();
   const [mode, setMode] = useState("new");
   const [dewModalOpen, setDewMOdalOpen] = useState(false);
 
@@ -51,8 +57,8 @@ const Order = () => {
     setModalOpen(!modalOpen);
     setData(initialData);
   };
-  const okHandler = () => {
-    handlePostORder();
+  const okHandler = async () => {
+    await handlePostORder();
   };
   // Handling discount and vat functionality
   let vatAmount = 0;
@@ -107,6 +113,19 @@ const Order = () => {
         (totalPrice - discountAmount - data.cashDiscount)
       ).toFixed(2)
     ));
+
+  const patchSubmitHandler = async (orderData: IOrderData) => {
+    if (mode == ENUM_MODE.EDIT) {
+      const result = await patch({
+        id: data?._id as string,
+        data: orderData,
+      }).unwrap();
+      if (result?.success) {
+        swal("Done", "Order updated successfully", "success");
+      }
+      return;
+    }
+  };
 
   const handlePostORder = async () => {
     if (mode === "view") {
@@ -164,7 +183,27 @@ const Order = () => {
       if (data.patientType == "registered") {
         if (data.patient?._id) {
           orderData.uuid = data.patient.uuid;
-          postOrder(orderData);
+
+          if (mode == ENUM_MODE.EDIT) {
+            patchSubmitHandler(orderData);
+            return;
+          }
+
+          console.log("hit");
+
+          const result = await postOrder(orderData).unwrap();
+
+          // Handling pdf after order post
+          if (result?.success) {
+            const invoice = await getInvoice(result?.data?.oid);
+            const newWindow = window.open("", "_blank");
+
+            if (newWindow) {
+              newWindow.document.write(decodeURIComponent(invoice.data.data));
+              newWindow.document.title = "Managed By HMS system";
+            }
+          }
+          setData(initialData);
         } else {
           toaster.push(<Message type="error">Patient UUID is wrong</Message>);
         }
@@ -172,7 +211,23 @@ const Order = () => {
       if (data.patientType === "notRegistered") {
         if (refForUnregistered.current.check()) {
           orderData.patient = data.patient;
-          postOrder(orderData);
+          if (mode == ENUM_MODE.EDIT) {
+            patchSubmitHandler(orderData);
+            return;
+          }
+          const result = await postOrder(orderData).unwrap();
+
+          // Handling pdf after order post
+          if (result?.success) {
+            const invoice = await getInvoice(result?.data?.oid);
+            const newWindow = window.open("", "_blank");
+
+            if (newWindow) {
+              newWindow.document.write(decodeURIComponent(invoice.data.data));
+              newWindow.document.title = "Managed By HMS system";
+            }
+          }
+          setData(initialData);
         } else {
           toaster.push(
             <Message type="error">Please Fill out all the fields</Message>
@@ -205,10 +260,17 @@ const Order = () => {
       setData(initialData);
       setMode(ENUM_MODE.NEW);
     }
-    if (isError) {
-      toaster.push(<Message type="error">! Error</Message>);
+    if (isError || patchError) {
+      toaster.push(
+        <Message type="error">! Error. Please try again letter</Message>
+      );
     }
-  }, [isSuccess]);
+    if (patchSUccess) {
+      setModalOpen(!modalOpen);
+      setData(initialData);
+      setMode(ENUM_MODE.NEW);
+    }
+  }, [isSuccess, patchSUccess, patchError]);
   // Handleign vew Order
   const patchAndViewHandler = (data: { mode: string; data: IOrderData }) => {
     setModalOpen(true);
@@ -304,7 +366,12 @@ const Order = () => {
               size="full"
               cancelHandler={cancelHandler}
               okHandler={okHandler}
-              loading={postLoading || invoiceLoading || invoiceFeatching}
+              loading={
+                postLoading ||
+                invoiceLoading ||
+                invoiceFeatching ||
+                patchLoading
+              }
             >
               <>
                 <div>
@@ -327,80 +394,78 @@ const Order = () => {
                   />
                 </div>
 
-                <div className="my-10">
-                  <TestInformation
-                    formData={data}
-                    setFormData={setData}
-                    mode={mode}
-                    setRModalOpen={setRmodalOpen}
-                    setRTest={setTest}
-                  />
-                </div>
+                <div className="my-2 grid grid-cols-12">
+                  <div className="col-span-8">
+                    <TestInformation
+                      formData={data}
+                      setFormData={setData}
+                      mode={mode}
+                      setRModalOpen={setRmodalOpen}
+                      setRTest={setTest}
+                    />
+                  </div>
+                  <div className="col-span-4 ml-2">
+                    <FInancialSection
+                      setData={setData}
+                      dueAmount={(
+                        totalPrice -
+                        discountAmount +
+                        vatAmount -
+                        (data.paid ? data.paid : 0)
+                      ).toFixed(2)}
+                      data={data}
+                      mode={mode}
+                    />
+                    <div>
+                      <PriceSection
+                        data={data}
+                        discountAmount={discountAmount}
+                        totalPrice={totalPrice}
+                        vatAmount={vatAmount}
+                        tubePrice={tubePrice}
+                        order={data as unknown as IOrderData}
+                        mode={mode}
+                      />
 
-                <div>
-                  <FInancialSection
-                    setData={setData}
-                    dueAmount={(
-                      totalPrice -
-                      discountAmount +
-                      vatAmount -
-                      (data.paid ? data.paid : 0)
-                    ).toFixed(2)}
-                    data={data}
-                    mode={mode}
-                  />
-                </div>
-
-                <div>
-                  <ForDewCollection
-                    data={data as unknown as IOrderData}
-                    dewModalOpen={dewModalOpen}
-                    setDewModalOpen={setDewMOdalOpen}
-                    setFormData={setFormData as any}
-                  />
-                </div>
-
-                <div>
-                  <PriceSection
-                    data={data}
-                    discountAmount={discountAmount}
-                    totalPrice={totalPrice}
-                    vatAmount={vatAmount}
-                    tubePrice={tubePrice}
-                    order={data as unknown as IOrderData}
-                  />
-
-                  <div className="flex justify-end">
-                    <div
-                      className={`${mode == ENUM_MODE.NEW && "hidden"} mr-2`}
-                    >
-                      <AuthCheckerForComponent
-                        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}
-                      >
-                        <Button
-                          appearance="primary"
-                          color="green"
-                          size="lg"
-                          disabled={data?.dueAmount == 0}
-                          onClick={() => setDewMOdalOpen(!dewModalOpen)}
-                          className={`${mode == "new" && "invisible"}`}
-                        >
-                          {data.dueAmount == 0
-                            ? "Fully Paid"
-                            : "Collect Due Ammount"}
-                        </Button>
-                      </AuthCheckerForComponent>
+                      {mode == ENUM_MODE.VIEW && (
+                        <div className="flex justify-end mt-5">
+                          <div className={` mr-2 `}>
+                            <AuthCheckerForComponent
+                              requiredPermission={[
+                                ENUM_USER_PEMISSION.MANAGE_ORDER,
+                              ]}
+                            >
+                              <Button
+                                appearance="primary"
+                                color="green"
+                                size="lg"
+                                disabled={data?.dueAmount == 0}
+                                onClick={() => setDewMOdalOpen(!dewModalOpen)}
+                              >
+                                {data.dueAmount == 0
+                                  ? "Fully Paid"
+                                  : "Collect Due Ammount"}
+                              </Button>
+                            </AuthCheckerForComponent>
+                          </div>
+                          <Button
+                            appearance="primary"
+                            color="blue"
+                            onClick={() => handlePdf(data.oid as string)}
+                          >
+                            Invoice
+                          </Button>
+                        </div>
+                      )}
                     </div>
-                    <Button
-                      appearance="primary"
-                      color="blue"
-                      onClick={() => handlePdf(data.oid as string)}
-                      className={`${mode == "new" && "invisible"}`}
-                    >
-                      Invoice
-                    </Button>
                   </div>
                 </div>
+                <ForDewCollection
+                  data={data as unknown as IOrderData}
+                  dewModalOpen={dewModalOpen}
+                  setDewModalOpen={setDewMOdalOpen}
+                  setFormData={setFormData as any}
+                />
               </>
             </RModal>
           </div>

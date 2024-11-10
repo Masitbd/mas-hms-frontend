@@ -10,7 +10,7 @@
 
 
 .rs-table .rs-table-cell-header{
-    font-size: 18px;
+    font-size: 1rem;
     color: black;
     font-weight: 600;
     
@@ -19,7 +19,7 @@
 }
 
 .rs-table .rs-table-row{
-    font-size: 16px;
+    font-size: 1rem;
     color: black;
     font-family: "Roboto";
     border-bottom: .5px solid #b3b3b3;

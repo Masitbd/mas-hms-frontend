@@ -13,7 +13,7 @@ const patient = baseApi.injectEndpoints({
       invalidatesTags: ["patient"],
     }),
     patchPatient: build.mutation({
-      query: ({ data, id }) => ({
+      query: (data) => ({
         url: `/patient`,
         method: "PATCH",
         body: data,

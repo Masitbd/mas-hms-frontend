@@ -101,67 +101,22 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
 
   return (
     <>
-      <div className=" p-2 bg-stone-100 rounded-lg">
+      {/* <div className=" p-2 bg-stone-100 rounded-lg">
         <h3 className="text-center font-bold text-2xl">Available Tests</h3>
-        <div className="mt-5" key={25}>
-          {/* <SelectPicker
-            className="z-50"
-            key={1500}
-            onSearch={(value, event) => {
-              handleTestSearch(value);
-            }}
-            data={tests?.map(
-              (
-                test: ITest,
-                index
-              ): { label: string; value: string; index: number } => ({
-                label: test.label,
-                value: { ...test, index } as unknown as string,
-                index: index,
-              })
-            )}
-            open
-            placeholder={"Search"}
-            caretAs={SearchIcon}
-            loading={testSearchLoading}
-            block
-            virtualized={true}
-            renderMenu={(menu) => Menu(menu)}
-            renderMenuItem={(lable: ReactNode, data) => {
-              const item = data as unknown as { index: number; value: ITest };
-              return (
-                <>
-                  <div
-                    className={`grid grid-cols-6 py-1 ${
-                      item?.index % 2 == 0 ? "bg-gray-200" : "bg-white"
-                    }`}
-                  >
-                    <div className="col-span-5 overflow-ellipsis text-sm">
-                      {lable}
-                    </div>
-                    <div className="text-sm">{item?.value?.testCode || 0}</div>
-                  </div>
-                </>
-              );
-            }}
-            disabledItemValues={
-              params.formData.tests.length
-                ? params.formData.tests.map(
-                    (test: ITestsFromOrder) => test?.test
-                  )
-                : []
-            }
-          /> */}
-          <SelectPickerForOrder
-            formData={params.formData}
-            mode={params.mode}
-            setFormData={params.setFormData}
-            setRModalOpen={params.setRModalOpen}
-            setRTest={params.setRTest}
-            addTestHanlder={handleAddTest}
-          />
-        </div>
-        <Table
+        <div className="mt-5" key={25}> */}
+
+      <div className="my-2">
+        <SelectPickerForOrder
+          formData={params.formData}
+          mode={params.mode}
+          setFormData={params.setFormData}
+          setRModalOpen={params.setRModalOpen}
+          setRTest={params.setRTest}
+          addTestHanlder={handleAddTest}
+        />
+      </div>
+      {/* </div> */}
+      {/* <Table
           height={400}
           bordered
           cellBordered
@@ -207,8 +162,8 @@ const AvailableTestSection = (params: IParamsForTestInformation) => {
               )}
             </Cell>
           </Column>
-        </Table>
-      </div>
+        </Table> */}
+      {/* </div> */}
     </>
   );
 };

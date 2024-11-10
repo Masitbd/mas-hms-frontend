@@ -130,4 +130,6 @@ export type IPatient = {
   phone: string;
   email?: string;
   image: string;
+  fatherName?: string;
+  createdAt: string;
 };

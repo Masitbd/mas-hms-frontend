@@ -26,21 +26,13 @@ const ReportViewerMicro = React.forwardRef(
       order: IOrderData;
       reportGroup: IReportGroup;
       result: ITEstREsultForMicroBio;
+      specimenWiseDescription: { title: string; value: string };
     },
 
     ref: LegacyRef<HTMLDivElement>
   ) => {
     const { Cell, Column, ColumnGroup, HeaderCell } = Table;
-    const { order, reportGroup, result } = params;
-    const {
-      data: doctorData,
-      isLoading: doctorDataLoading,
-      isFetching: doctorDataFeatching,
-    } = useGetSingleDoctorQuery(params?.order?.consultant as string);
-
-    const { data: discRiptionData } = useGetMiscQuery({
-      title: params.result.specimen,
-    });
+    const { order, reportGroup, result, specimenWiseDescription } = params;
 
     const temp = result?.temperature;
     const bact = result?.bacteria;
@@ -59,16 +51,12 @@ const ReportViewerMicro = React.forwardRef(
     const fields = ["ANTIBIOTIC", "mic", "interpretation", "breakPoint"];
 
     const growth = result?.growth || false;
-    if (doctorDataLoading || doctorDataFeatching) {
-      return <Loading />;
-    }
 
     return (
       <>
         <div className="my-5 mx-5" ref={ref}>
           <div>
             <PatientInformaiton
-              consultant={{ data: doctorData }}
               order={params.order}
               testResult={params.result}
             />
@@ -91,7 +79,7 @@ const ReportViewerMicro = React.forwardRef(
 
                 <span className="font-sans">
                   {" "}
-                  {replacePlaceholders(discRiptionData?.data[0]?.value)}
+                  {replacePlaceholders(specimenWiseDescription?.value)}
                 </span>
               </div>
             </>
@@ -166,11 +154,23 @@ const ReportViewerMicro = React.forwardRef(
             </>
           )}
           {result?.comment ? (
-            <div className="border border-1  p-2 grid grid-cols-2 gap-1 my-5 rounded-md font-serif">
+            <div
+              style={{
+                border: "1px solid",
+                padding: "10px",
+                display: "grid",
+                gridTemplateColumns: "repeat(2, 1fr)",
+                gap: "4px",
+                margin: "20px 0",
+                borderRadius: "8px",
+                fontFamily: "serif",
+              }}
+            >
               <div
                 dangerouslySetInnerHTML={{
                   __html: result?.comment,
                 }}
+                style={{ whiteSpace: "pre", width: "270mm" }}
               />
             </div>
           ) : (
@@ -178,8 +178,25 @@ const ReportViewerMicro = React.forwardRef(
           )}
           <div>
             {result.seal ? (
-              <div className="flex justify-end items-end font-serif mt-5">
+              <div
+                style={{
+                  fontFamily: "Roboto",
+                  margin: "20px",
+                  padding: "10px",
+
+                  fontSize: "0.875rem",
+                  width: "270mm",
+                  pageBreakBefore: "always",
+                  breakBefore: "always",
+                }}
+                id="seals"
+              >
                 <div
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    overflowWrap: "break-word",
+                    overflow: "auto",
+                  }}
                   dangerouslySetInnerHTML={{
                     __html: result?.seal,
                   }}

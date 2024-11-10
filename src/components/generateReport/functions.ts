@@ -11,6 +11,7 @@ import { useAppSelector } from "@/redux/hook";
 import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import { SetStateAction } from "react";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
+import { HtmlProps } from "next/dist/shared/lib/html-context.shared-runtime";
 
 export const useCleanedTests = (params: {
   oid: string;
@@ -125,7 +126,11 @@ export const useCleanedTests = (params: {
     });
 
     if (!fieldNames.includes("result")) {
-      fieldNames.push("result");
+      if (fieldNames.includes("normalValue")) {
+        const index = fieldNames.findIndex((v) => v == "normalValue");
+        fieldNames[index] = "result";
+        fieldNames.push("normalValue");
+      } else fieldNames.push("result");
     }
   }
 
@@ -151,7 +156,23 @@ export const useCleanedTests = (params: {
         });
         resultFields.push(field);
       });
+
+      if (!fieldNames.includes("result")) {
+        if (fieldNames.includes("normalValue")) {
+          const index = fieldNames.findIndex((v) => v == "normalValue");
+          fieldNames[index] = "result";
+          fieldNames.push("normalValue");
+        } else fieldNames.push("result");
+      }
     }
+  }
+
+  //Filtering the fields that does not have any result field value
+  if (mode == ENUM_MODE.VIEW) {
+    const result = resultFields?.filter(
+      (d) => Object?.hasOwn(d, "result") && d?.result !== null
+    );
+    resultFields = result;
   }
   setResult && setResult(returnResult);
   return { modifiedTest, fieldNames, headings, resultFields, returnResult };
@@ -209,4 +230,284 @@ export const resultSetterForMicroBio = (
   const data = JSON.parse(JSON.stringify(result));
   data[key] = value;
   setResult(data);
+};
+
+export const htmlDocProviderForparameterBased = (
+  data: string,
+  margin: number[]
+) => {
+  return `<!DOCTYPE html>
+        <head>
+        <style>
+        .print-btn {
+  display: flex;
+      align-items: center;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+}
+
+
+    .print-btn:hover {
+      background-color: #45a049;
+    }
+
+    .print-btn svg {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+        @page {
+          size: A4 portrait;
+          margin: ${margin?.map((m) => `${m}px`).join(" ")};
+        }
+           *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+      @media print {
+  .print-button {
+    display: none;
+  }
+
+  body{
+            margin-left: 1rem !important;
+            margin-right: 1rem !important;
+            }
+}
+    
+  #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            z-index: 9999;
+        }
+
+        #main-content {
+            display: none;
+        }
+    </style>
+    
+ <script>
+     window.addEventListener("beforeprint",function() {
+     const height = document.getElementById("seals").offsetHeight
+     document.getElementById("seals").style.height = height + "px";
+      document.getElementById("seals").style.marginTop = (-30 - height) + "px";
+     ;
+
+     window.addEventListener("afterprint", function () {
+            const height = document.getElementById("seals").offsetHeight
+            document.getElementById("seals").style.height = height + "px";
+            document.getElementById("seals").style.marginTop =30 + "px";
+           
+
+
+        })
+     
+
+        
+     })
+
+
+
+
+     
+    
+   
+   
+    
+  </script>
+        </head>
+
+            
+      
+        <body id="main-content">
+          <div id="loading-screen">
+        <p>Loading...</p>
+    </div>
+        ${data}
+         <div class="print-button print-btn">
+           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path
+            d="M19 8h-14c-1.1 0-1.99.9-1.99 2l-.01 6c0 1.1.9 2 2 2h1v4h12v-4h1c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2zm0 8h-14v-6h14v6zm-3-15h-8v4h8v-4zm2 4h-12v-5h12v5z" />
+    </svg>
+    Print
+          </button>
+        </div>
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" onload="cssLoaded()">
+
+    <script>
+        // Function to hide loading screen and show main content once CSS is loaded
+        function cssLoaded() {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+             window.print();
+        } 
+            document.getElementsByClassName("print-button")[0].addEventListener("click", function(){
+ 
+    window.print();
+  });
+  </script
+        
+      </html>`;
+};
+
+export const htmlDocProviderForMicroBiology = (
+  data: string,
+  margin: number[]
+) => {
+  return `<!DOCTYPE html>
+        <head>
+        <style>
+      
+        .print-button {
+  height: 5rem;
+  width: 8rem;
+ 
+  text-align: center;
+  
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 1rem;
+  font-weight: bold;
+  position: fixed;
+  z-index: 1000;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  padding: 30px 30px
+
+}
+
+.print-button:hover {
+ 
+  transform: scale(1.1);
+}
+
+.print-button:active {
+  transform: scale(0.95);
+}
+        @page {
+          size: A4 portrait;
+          margin: ${margin?.map((m) => `${m}px`).join(" ")};
+        }
+           *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+      @media print {
+  .print-button {
+    display: none;
+  }
+     body{
+            margin-left: 1rem !important;
+            margin-right: 1rem !important;
+            }
+}
+    
+  #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            z-index: 9999;
+        }
+
+        #main-content {
+            display: none;
+            margin:0rem 1rem;
+        }
+    </style>
+    
+ <script>
+     window.addEventListener("beforeprint",function() {
+     const height = document.getElementById("seals").offsetHeight
+     document.getElementById("seals").style.height = height + "px";
+      document.getElementById("seals").style.marginTop = (-30 - height) + "px";
+     ;
+
+     window.addEventListener("afterprint", function () {
+            const height = document.getElementById("seals").offsetHeight
+            document.getElementById("seals").style.height = height + "px";
+            document.getElementById("seals").style.marginTop =30 + "px";
+           
+
+
+        })
+     
+
+        
+     })
+
+
+
+
+     
+    
+   
+   
+    
+  </script>
+        </head>
+
+            
+      
+        <body id="main-content">
+          <div id="loading-screen">
+        <p>Loading...</p>
+    </div>
+        ${data}
+         <div class="print-button">
+          <button >
+           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+        <path
+            d="M19 8h-14c-1.1 0-1.99.9-1.99 2l-.01 6c0 1.1.9 2 2 2h1v4h12v-4h1c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2zm0 8h-14v-6h14v6zm-3-15h-8v4h8v-4zm2 4h-12v-5h12v5z" />
+    </svg>
+    Print
+          </button>
+        </div>
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" onload="cssLoaded()">
+
+    <script>
+        // Function to hide loading screen and show main content once CSS is loaded
+        function cssLoaded() {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+             window.print();
+        } 
+            document.getElementsByClassName("print-button")[0].addEventListener("click", function(){
+ 
+    window.print();
+  });
+  </script
+        
+      </html>`;
 };

@@ -30,6 +30,7 @@ export type ItestInformaiton = {
   status?: string;
 };
 export type InitialData = {
+  _id?: string;
   oid?: string;
   totalPrice: number;
   parcentDiscount: number;
@@ -169,6 +170,7 @@ export type IPriceSectionProps = {
   discountAmount: number;
   vatAmount: number;
   tubePrice: number;
+  mode: string;
   order: IOrderData;
 };
 

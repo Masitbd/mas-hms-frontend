@@ -1,63 +1,77 @@
-
 import { ENUM_MODE } from "@/enum/Mode";
-import { usePatchSealMutation, usePostSealMutation } from "@/redux/api/doctorSeal/doctorSealSlice";
+import {
+  usePatchSealMutation,
+  usePostSealMutation,
+} from "@/redux/api/doctorSeal/doctorSealSlice";
 import { useEffect, useState } from "react";
-import { Form } from "rsuite";
+import { Checkbox, Form } from "rsuite";
 import swal from "sweetalert";
-import { IDoctorSeal, InitialDoctorSealData, IPropsForNewAndUpdate } from "../comment/typesAdInitialData";
+import {
+  IDoctorSeal,
+  InitialDoctorSealData,
+  IPropsForNewAndUpdate,
+} from "../comment/typesAdInitialData";
 import Tiptap from "../tiptap/TipTap";
 import RModal from "../ui/Modal";
 
 const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
   const { data, open, setData, setOpen, mode, setMode } = props;
-  const [postSeal] = usePostSealMutation();
-  const [patchSeal] = usePatchSealMutation();
+  const [seal, setSeal] = useState(data?.seal);
+
+  const [postSeal, { isLoading: postLoading }] = usePostSealMutation();
+  const [patchSeal, { isLoading: patchLoading }] = usePatchSealMutation();
   const modalCancelHandler = () => {
     setOpen(false);
     setData(InitialDoctorSealData as IDoctorSeal);
     setMode(ENUM_MODE.NEW);
   };
+
   const modalOkHandler = async () => {
     if (mode == ENUM_MODE.NEW) {
-      const result = await postSeal(data);
-      if ('data' in result) {
+      const result = await postSeal({
+        title: data.title,
+        seal: seal,
+        default: data.default,
+      });
+      if ("data" in result) {
         const message = (result as { data: { message: string } })?.data.message;
         swal(`Success! ${message}!`, {
           icon: "success",
-        })
-        modalCancelHandler()
+        });
+        modalCancelHandler();
       }
     }
     if (mode == ENUM_MODE.EDIT) {
-      const result = await patchSeal({ data: data, id: data._id });
-      if ('data' in result) {
+      const result = await patchSeal({
+        data: { title: data.title, seal: seal, default: data.default },
+        id: data._id,
+      });
+      if ("data" in result) {
         const message = (result as { data: { message: string } })?.data.message;
         swal(`Success! ${message}!`, {
           icon: "success",
-        })
-        modalCancelHandler()
+        });
+        modalCancelHandler();
       }
     } else {
       modalCancelHandler();
     }
   };
-  const [seal, setSeal] = useState("");
+
   useEffect(() => {
-    setData({
-      ...data,
-      seal: seal,
-    });
-  }, [seal]);
+    setSeal(data?.seal);
+  }, [data?.seal]);
 
   return (
     <div>
       <div>
         <RModal
           open={open}
-          size="xl"
+          size="full"
           title="Add Doctor Seal to Database"
           cancelHandler={modalCancelHandler}
           okHandler={modalOkHandler}
+          loading={postLoading || patchLoading}
         >
           <div>
             <div>
@@ -66,10 +80,21 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
                   <Form.ControlLabel>Title</Form.ControlLabel>
                   <Form.Control name="title" />
                 </Form.Group>
+                <Form.Group controlId="default" className="flex items-center">
+                  <Form.ControlLabel>Default</Form.ControlLabel>
+                  <Form.Control
+                    name="default"
+                    accepter={Checkbox}
+                    defaultChecked={data?.default}
+                    value={!data?.default}
+                  />
+                </Form.Group>
               </Form>
               <div className="my-5">
-                <h3>Comment</h3>
-                <Tiptap data={data.seal} setData={setSeal} />
+                <h3>Seal Information</h3>
+                <div style={{ width: "270mm" }}>
+                  <Tiptap data={data.seal} setData={setSeal} />
+                </div>
               </div>
             </div>
           </div>

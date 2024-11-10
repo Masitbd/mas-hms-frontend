@@ -52,6 +52,7 @@ const LoginPage = () => {
       isError: loginError,
       isLoading: LoginLoading,
       data: loginSuccessData,
+      error: loginErrorData,
     },
   ] = useLoginMutation();
   type ILoginData = {
@@ -67,9 +68,9 @@ const LoginPage = () => {
     uuid: StringType().isRequired("This field is required."),
     password: StringType().isRequired("This field is required."),
   });
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (formRef.current.check()) {
-      const res = login(loginData);
+      const res = await login(loginData);
     }
   };
 
@@ -117,9 +118,10 @@ const LoginPage = () => {
       dispatch(setLoading(false));
     }
     if (loginError) {
+      console.log();
       toaster.push(
-        <Message type="error">
-          Login In Failed. Check you password and try again letter
+        <Message type="error" className="text-center">
+          Login Failed! <br /> Check User Id And Password and try again.
         </Message>
       );
       dispatch(setLoading(false));

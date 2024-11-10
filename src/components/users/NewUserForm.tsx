@@ -4,6 +4,7 @@ import EyeIcon from "@rsuite/icons/legacy/Eye";
 import EyeSlashIcon from "@rsuite/icons/legacy/EyeSlash";
 import AdminIcon from "@rsuite/icons/Admin";
 import ReloadIcon from "@rsuite/icons/Reload";
+import { IUserData } from "./interfacesAndInitalData";
 const UserForm = ({
   defaultValue,
   setfromData,
@@ -33,6 +34,7 @@ const UserForm = ({
   const handleChange = () => {
     setVisible(!visible);
   };
+  const todaysDate = new Date();
 
   return (
     <div>
@@ -60,11 +62,26 @@ const UserForm = ({
         </Form.Group>
         <Form.Group controlId="age">
           <Form.ControlLabel>Age</Form.ControlLabel>
-          <Form.Control name="age" type="number" />
+          <Form.Control name="age" />
         </Form.Group>
         <Form.Group controlId="dateOfBirth">
           <Form.ControlLabel>Date Of Birth</Form.ControlLabel>
-          <Form.Control name="dateOfBirth" accepter={DatePicker} />
+          <Form.Control
+            name="dateOfBirth"
+            accepter={DatePicker}
+            onChange={(v) => {
+              const age =
+                new Date().getFullYear() -
+                new Date(v).getFullYear() +
+                " " +
+                "Year(s)";
+              setfromData((prevValue: Partial<IUserData>) => ({
+                ...prevValue,
+                age: age,
+              }));
+            }}
+            value={new Date(defaultValue?.dateOfBirth ?? todaysDate)}
+          />
         </Form.Group>
         <Form.Group controlId="gender">
           <Form.ControlLabel>Gender</Form.ControlLabel>
