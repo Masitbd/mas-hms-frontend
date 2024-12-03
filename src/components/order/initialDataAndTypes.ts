@@ -108,7 +108,7 @@ export const initialData: InitialData = {
     address: "",
     phone: "",
     image: "",
-  },
+  } as IPatient,
   deliveryTime: new Date(),
 };
 

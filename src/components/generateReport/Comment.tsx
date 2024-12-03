@@ -26,7 +26,7 @@ const Comment = (props: {
 
   // For doctors seal
   const [seal, setSeal] = useState(props?.result?.seal);
-  const [defaultSeal, setDefaultSeal] = useState();
+  const [defaultSeal, setDefaultSeal] = useState<IDoctorSeal>();
   const { data: sealData, isLoading: sealDataLoading } =
     useGetSealQuery(undefined);
   const [

@@ -410,7 +410,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
               </div>
             </div>
             <div>
-              <Comment result={result} setResult={setResult} />
+              <Comment result={result} setResult={setResult} mode={mode} />
             </div>
 
             <AuthCheckerForComponent
