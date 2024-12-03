@@ -31,6 +31,7 @@ export const InitalCommentData: IComment = {
 export const InitialDoctorSealData: IDoctorSeal = {
   title: "",
   seal: "",
+  default: false,
 };
 
 export type IPropsForTable<T> = {
