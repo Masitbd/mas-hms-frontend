@@ -25,7 +25,7 @@ const HomePage = () => {
     <div className="py-2 px-5 w-full">
       {/* total income */}
 
-      <div className="grid grid-cols-3 gap-5 justify-items-center">
+      <div className="grid grid-cols-4 gap-5 justify-items-center">
         {/* tota income */}
         <div className="w-full h-36 rounded bg-slate-100 text-center flex flex-col items-center justify-center gap-3">
           <h1 className="text-blue-600 text-xl font-bold">Total Paid Amount</h1>
@@ -44,7 +44,7 @@ const HomePage = () => {
                 + <TrendIcon /> {incoms?.data?.trend?.percentageChange}%
                 <span className="text-xs font-light text-black">
                   {" "}
-                  based on last 28 days
+                  based on last 30 days
                 </span>
               </>
             ) : (
@@ -52,22 +52,35 @@ const HomePage = () => {
                 - <FunnelTrendIcon /> {incoms?.data?.trend?.percentageChange}%
                 <span className="text-xs font-light text-black">
                   {" "}
-                  based on last 28 days
+                  based on last 30 days
                 </span>
               </>
             )}
           </p>
         </div>
         <div className="w-full h-36 rounded bg-blue-100 text-center flex flex-col items-center justify-center gap-3">
-          <h1 className="text-neutral-800 text-xl font-bold">Total Doctors</h1>
+          <h1 className="text-rose-500 text-xl font-bold">
+            Total Due
+          </h1>
           <p className="font-semibold text-slate-600 text-xl">
-            {incoms?.data?.totalDoctors}
+            {incoms?.data?.totalDue}
           </p>
         </div>
-        <div className="w-full h-36 rounded bg-green-50 text-center flex flex-col items-center justify-center gap-3">
-          <h1 className="text-green-700 text-xl font-bold">Total Tests</h1>
+        <div className="w-full h-36 rounded bg-green-100 text-center flex flex-col items-center justify-center gap-3">
+          <h1 className="text-green-800 text-xl font-bold">
+            Today&apos;s Cash Paid
+          </h1>
           <p className="font-semibold text-slate-600 text-xl">
-            {incoms?.data?.totalTests}
+            {incoms?.data?.todayTotalPaid}
+          </p>
+        </div>
+        <div className="w-full h-36 rounded bg-rose-50 text-center flex flex-col items-center justify-center gap-3">
+          <h1 className="text-gray-800 text-xl font-bold">
+            {" "}
+            Today&apos;s Due Paid
+          </h1>
+          <p className="font-semibold text-slate-600 text-xl">
+            {incoms?.data?.todayTotalDuePaid}
           </p>
         </div>
       </div>
@@ -76,7 +89,7 @@ const HomePage = () => {
 
       <div className="w-full h-96 mt-10">
         <p className="py-5 text-center font-bold text-lg">
-          Last 28 Days Paid Statistics
+          Last 30 Days Paid Statistics
         </p>
         {/* Set fixed height for container */}
         <ResponsiveContainer width="100%" height="100%">
