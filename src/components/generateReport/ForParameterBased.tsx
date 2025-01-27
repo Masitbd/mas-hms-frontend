@@ -11,10 +11,12 @@ import { ReactInstance, Ref, useEffect, useRef, useState } from "react";
 import { Button, Input, InputGroup, InputPicker, Loader, Table } from "rsuite";
 import swal from "sweetalert";
 import Comment from "./Comment";
+
 import {
   filterResultFieldsByInvestigation,
   htmlDocProviderForparameterBased,
   resultSetter,
+  testReportGeneratePDF,
   useCleanedTests,
 } from "./functions";
 import {
@@ -33,12 +35,13 @@ import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { setTimeout } from "timers";
 import CountdownModal from "./CountdownModal";
+import { camelToFlat } from "@/utils/CamelToFlat";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
     props.order?.consultant as string
   );
-  const [margin, setMargins] = useState([0, 0, 0, 0]);
+  const [margin, setMargins] = useState([1, 1, 1, 3]);
   const router = useRouter();
   const [getReport, { isLoading: getLoading }] = useLazyGetSingleReportQuery();
   const [patchReport, { isLoading: patchLoading }] = usePatchReporMutation();
@@ -210,6 +213,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
 
   const handlePrint = () => {
     const previousPath = window?.location?.origin + "/testReport/" + order?.oid;
+
     const pdfData = (
       <ReportViewerParameter
         order={props.order}
@@ -222,10 +226,23 @@ const ForParameterBased = (props: IPropsForParameter) => {
         consultant={doctorInfo}
       />
     );
+
+    const params = {
+      order: props.order,
+      reportGroup: props.reportGroup,
+      testResult: result,
+      fieldNames: fieldNames,
+      resultFields: resultFields,
+      headings: headings,
+      consultant: doctorInfo,
+      margin: margin,
+    };
+
+    testReportGeneratePDF(params);
     const data = ReactDOMServer.renderToStaticMarkup(pdfData);
-    const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
+    // const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
     const win = window.open();
-    win?.document.write(dataWithHtml);
+    // win?.document.write(dataWithHtml);
     if (previousPath) router.push(previousPath);
   };
 
