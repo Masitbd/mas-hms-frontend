@@ -32,34 +32,34 @@ const Margin = (props: IPropsForMargin) => {
   return (
     <div className="my-5  grid grid-cols-4 gap-4 px-10">
       <div>
-        Margin Right
-        <Input
-          onChange={(value) => handleMargin(0, Number(value))}
-          defaultValue={(margin[0] / 72).toFixed(2)}
-          type="number"
-        />
-      </div>
-      <div>
         Margin Top
         <Input
-          onChange={(value) => handleMargin(1, Number(value))}
-          defaultValue={(margin[1] / 72).toFixed(2)}
+          onChange={(value) => handleMargin(0, Number(value))}
+          defaultValue={(margin[0] / 72 ?? 0).toFixed(2)}
           type="number"
         />
       </div>
       <div>
         Margin Left
         <Input
-          onChange={(value) => handleMargin(2, Number(value))}
-          defaultValue={(margin[2] / 72).toFixed(2)}
+          onChange={(value) => handleMargin(1, Number(value))}
+          defaultValue={(margin[1] / 72 ?? 0).toFixed(2)}
           type="number"
         />
       </div>
       <div>
         Margin Bottom
         <Input
+          onChange={(value) => handleMargin(2, Number(value))}
+          defaultValue={(margin[2] / 72 ?? 0).toFixed(2)}
+          type="number"
+        />
+      </div>
+      <div>
+        Margin Right
+        <Input
           onChange={(value) => handleMargin(3, Number(value))}
-          defaultValue={(margin[3] / 72).toFixed(2)}
+          defaultValue={(margin[3] / 72 ?? 0).toFixed(2)}
           type="number"
         />
       </div>
