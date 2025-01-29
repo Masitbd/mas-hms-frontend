@@ -55,7 +55,7 @@ const ReportViewerParameter = React.forwardRef(
                 fontWeight: "bold",
               }}
             >
-              {params.reportGroup.label} 
+              {params.reportGroup.label}
             </div>
           </div>
           {params?.testResult?.analyzerMachine ? (
