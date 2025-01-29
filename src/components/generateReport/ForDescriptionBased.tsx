@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "rsuite";
 import RModal from "../ui/Modal";
 import Tiptap from "../tiptap/TipTap";
@@ -15,6 +15,15 @@ const ForDescriptionBased = (params: {
     setOpen(false);
     resultSetter(params.rowData?._id, params.result, data, params.setResult);
   };
+
+  useEffect(() => {
+    if (params?.rowData?.description) {
+      setData(params.rowData?.description);
+    } else if (params.rowData?.result) {
+      setData(params.rowData?.result);
+    }
+  }, [params?.rowData?.description, params?.rowData?.result]);
+
   return (
     <div>
       <Button appearance="primary" color="blue" onClick={() => setOpen(true)}>

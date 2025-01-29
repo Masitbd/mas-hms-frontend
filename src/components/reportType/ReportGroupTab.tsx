@@ -76,6 +76,9 @@ const ReportGroupTab = () => {
 
   // fetching report type data
   const [reportTypeFilterOption, setReportTypeFilterOption] = useState({});
+  const [reportTypeGroup, setReportTypeGroup] = useState<
+    IReportGroup & { group: string }
+  >();
   const {
     isLoading: reportTypeLoading,
     isSuccess: reportTypeSuccess,
@@ -118,8 +121,12 @@ const ReportGroupTab = () => {
 
   const saveHandler = async (SL: number) => {
     const data = tableData[SL];
+    if (data && !data?.investigation && reportTypeGroup?.group) {
+      data.investigation = reportTypeGroup?.group;
+    }
     if (isNewDataOnProgress) {
       const postData = tableData.find((data) => data.status == ENUM_MODE.NEW);
+
       const result = await postReportType(
         postData as unknown as IReportGroupFormData
       );
@@ -217,6 +224,7 @@ const ReportGroupTab = () => {
             setReportTypeFilterOption({
               reportTypeGroup: initialGroupData.data.data[0]._id,
             });
+            setReportTypeGroup(initialGroupData.data.data[0]);
           }
         }
       }
@@ -258,9 +266,13 @@ const ReportGroupTab = () => {
       <div className="multi-line-tabs">
         <Tabs
           defaultActiveKey={defaultTabActiveKey}
-          onSelect={(eventKey) =>
-            setReportTypeFilterOption({ reportTypeGroup: eventKey })
-          }
+          onSelect={(eventKey) => {
+            setReportTypeFilterOption({ reportTypeGroup: eventKey });
+            const reportTypeGroup = groupData?.data?.find(
+              (data: any) => data?._id?.toString() == eventKey?.toString()
+            );
+            setReportTypeGroup(reportTypeGroup);
+          }}
           className=""
         >
           {groupData?.data.length > 0
