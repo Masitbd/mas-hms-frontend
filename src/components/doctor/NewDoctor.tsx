@@ -337,6 +337,7 @@ const NewDoctor = ({
                     type="submit"
                     onClick={handleSubmit}
                     className="mr-5"
+                    loading={postDoctorLoading || patchDctorLoading}
                   >
                     Submit
                   </Button>
