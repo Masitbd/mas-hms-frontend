@@ -79,7 +79,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
       },
       pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
-        ...(infoHeader ? infoHeader?.map((item) => item) : []),
+        ...(infoHeader ? infoHeader.map((item) => item) : []),
         {
           text: `Investigation Income Statement: Between ${
             startDate ? formatDateString(startDate) : "N/A"
@@ -88,11 +88,9 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           alignment: "center",
           margin: [0, 0, 0, 20],
         },
-
-        // Static Table Header
         {
           table: {
-            widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
+            widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80],
             headerRows: 1,
             body: [
               [
@@ -111,8 +109,6 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           },
           margin: [0, 0, 0, 10],
         },
-
-        // Dynamic content for each group
         ...data.map((group) => [
           {
             text: ` ${group?.groupDate}`,
@@ -121,21 +117,57 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           },
           {
             table: {
-              widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
-              body: group.records.map((record) => [
-                record.oid ?? " ",
-                record.totalPrice,
-                record.parcentDiscountAmount,
-                record.cashDiscount,
-                record.totalDis,
-                record.totalPrice - record.totalDis,
-                record.vat,
-                record.totalAmount,
-                record.paid,
-                record.totalAmount - record.paid > 0
-                  ? record.totalAmount - record.paid
-                  : 0,
-              ]),
+              widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80],
+              body: [
+                ...group.records.map((record) => [
+                  record.oid ?? " ",
+                  record.totalPrice,
+                  record.parcentDiscountAmount,
+                  record.cashDiscount,
+                  record.totalDis,
+                  record.totalPrice - record.totalDis,
+                  record.vat,
+                  record.totalAmount,
+                  record.paid,
+                  Math.max(0, record.totalAmount - record.paid),
+                ]),
+                // Summary Row
+                [
+                  { text: "Total", style: "tableHeader" },
+
+                  group.records.reduce(
+                    (acc, record) => acc + record.totalPrice,
+                    0
+                  ),
+                  group.records.reduce(
+                    (acc, record) => acc + record.parcentDiscountAmount,
+                    0
+                  ),
+                  group.records.reduce(
+                    (acc, record) => acc + record.cashDiscount,
+                    0
+                  ),
+                  group.records.reduce(
+                    (acc, record) => acc + record.totalDis,
+                    0
+                  ),
+                  group.records.reduce(
+                    (acc, record) => acc + record.totalPrice - record.totalDis,
+                    0
+                  ),
+                  "",
+                  group.records.reduce(
+                    (acc, record) => acc + record.totalAmount,
+                    0
+                  ),
+                  group.records.reduce((acc, record) => acc + record.paid, 0),
+                  group.records.reduce(
+                    (acc, record) =>
+                      acc + Math.max(0, record.totalAmount - record.paid),
+                    0
+                  ),
+                ],
+              ],
             },
           },
         ]),
@@ -188,6 +220,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
       </div>
 
       <div className="w-full">
+        {/* Table Header */}
         <div className="grid grid-cols-10 bg-gray-100 font-semibold text-center p-2">
           <div>Bill No</div>
           <div>Bill Amount</div>
@@ -200,38 +233,68 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           <div>Amount Paid</div>
           <div>Due</div>
         </div>
-        {data.map((group, groupIndex) => (
-          <div key={groupIndex} className="mb-8">
-            {/* Group Date Row */}
-            <div className="text-lg font-semibold p-2 mb-2">
-              {group.groupDate}
-            </div>
 
-            {/* Records Table */}
-            <div className="w-full border-t ">
-              {/* Table Header */}
+        {data.map((group, groupIndex) => {
+          // Calculate totals for this group
+          const totals = group.records.reduce(
+            (acc, record) => {
+              acc.totalAmount += record.totalAmount;
+              acc.paid += record.paid;
+              acc.totalDiscount += record.totalDis;
+              return acc;
+            },
+            {
+              totalAmount: 0,
+              paid: 0,
+              totalDiscount: 0,
+            }
+          );
 
-              {/* Records Rows */}
-              {group.records.map((record, recordIndex) => (
-                <div
-                  key={recordIndex}
-                  className="grid grid-cols-10 text-center p-2 border-b"
-                >
-                  <div>{record.oid}</div>
-                  <div>{record.totalPrice}</div>
-                  <div>{record.parcentDiscountAmount}</div>
-                  <div>{record.cashDiscount}</div>
-                  <div>{record.totalDis}</div>
-                  <div>{record.totalPrice - record.totalDis}</div>
-                  <div>{record.vat}</div>
-                  <div>{record.totalAmount}</div>
-                  <div>{record.paid}</div>
-                  <div>{record.totalAmount - record.paid}</div>
+          return (
+            <div key={groupIndex} className="mb-8">
+              {/* Group Date Row */}
+              <div className="text-lg font-semibold p-2 mb-2">
+                {group.groupDate}
+              </div>
+
+              {/* Records Table */}
+              <div className="w-full border-t">
+                {/* Records Rows */}
+                {group.records.map((record, recordIndex) => (
+                  <div
+                    key={recordIndex}
+                    className="grid grid-cols-10 text-center p-2 border-b"
+                  >
+                    <div>{record.oid}</div>
+                    <div>{record.totalPrice}</div>
+                    <div>{record.parcentDiscountAmount}</div>
+                    <div>{record.cashDiscount}</div>
+                    <div>{record.totalDis}</div>
+                    <div>{record.totalPrice - record.totalDis}</div>
+                    <div>{record.vat}</div>
+                    <div>{record.totalAmount}</div>
+                    <div>{record.paid}</div>
+                    <div>{record.totalAmount - record.paid}</div>
+                  </div>
+                ))}
+
+                {/* Summary Row */}
+                <div className="grid grid-cols-10 text-center p-2 border-t font-semibold bg-gray-200">
+                  <div>Total</div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div>{totals.totalDiscount}</div>
+                  <div>{totals.totalAmount - totals.totalDiscount}</div>
+                  <div></div>
+                  <div>{totals.totalAmount}</div>
+                  <div>{totals.paid}</div>
+                  <div>{totals.totalAmount - totals.paid}</div>
                 </div>
-              ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <button
