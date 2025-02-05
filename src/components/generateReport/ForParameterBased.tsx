@@ -226,6 +226,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
     const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
     const win = window.open();
     win?.document.write(dataWithHtml);
+    win?.print();
     if (previousPath) router.push(previousPath);
   };
 
@@ -382,13 +383,15 @@ const ForParameterBased = (props: IPropsForParameter) => {
                                         if (fieldName == "normalValue") {
                                           return (
                                             <ol className="list-disc">
-                                              {...rowData[fieldName]
-                                                .split(`"/br"`)
-                                                .map(
+                                              {rowData[fieldName]
+                                                ?.split(`"/br"`)
+                                                ?.map(
                                                   (
                                                     v: string,
                                                     index: number
-                                                  ) => <li key={index}>{v}</li>
+                                                  ) => (
+                                                    <li key={index}>{v}</li>
+                                                  )
                                                 )}
                                             </ol>
                                           );
