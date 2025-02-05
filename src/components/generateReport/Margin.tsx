@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Button,
+  Form,
   Input,
   InputGroup,
   InputPicker,
@@ -11,59 +12,75 @@ import {
 import { IPropsForMargin } from "./initialDataAndTypes";
 const Margin = (props: IPropsForMargin) => {
   const { margin, marginTitle, setMargins } = props;
-
-  const handleMargin = (index: number, data: number) => {
-    const inch = (Number(data) * 72).toFixed(2);
-    const margindata = [...margin];
-    margindata[index] = Number(inch);
-    setMargins(margindata);
-    localStorage.setItem(marginTitle, JSON.stringify(margindata));
+  const [doesChanged, setDoesChanged] = useState(false);
+  const [mData, setMData] = useState<Record<string, number>>({
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  });
+  const pixelTOInch = (data: any) => {
+    return (Number(data) * 72).toFixed(2);
   };
-
+  const inchToPixels = (data: any) => {
+    return Number((Number(data) / 72).toFixed(2) ?? 0);
+  };
   useEffect(() => {
     const storedMargin = JSON.parse(
       localStorage.getItem(marginTitle) as string
     );
     if (storedMargin) {
       setMargins(storedMargin);
+      setMData({
+        top: inchToPixels(storedMargin[0]),
+        left: inchToPixels(storedMargin[1]),
+        bottom: inchToPixels(storedMargin[2]),
+        right: inchToPixels(storedMargin[3]),
+      });
     }
-  }, []);
+    setDoesChanged(true);
+  }, [marginTitle, setMargins]);
+  useEffect(() => {
+    if (!doesChanged) {
+      return;
+    }
+    const marginCopiedData = [
+      Number(pixelTOInch(mData["top"])),
+      Number(pixelTOInch(mData["left"])),
+      Number(pixelTOInch(mData["bottom"])),
+      Number(pixelTOInch(mData["right"])),
+    ];
+    localStorage.setItem(marginTitle, JSON.stringify(marginCopiedData));
 
+    setMargins(marginCopiedData);
+  }, [mData]);
+
+  console.log(margin);
   return (
-    <div className="my-5  grid grid-cols-4 gap-4 px-10">
-      <div>
-        Margin Top
-        <Input
-          onChange={(value) => handleMargin(0, Number(value))}
-          defaultValue={(margin[0] / 72 ?? 0).toFixed(2)}
-          type="number"
-        />
-      </div>
-      <div>
-        Margin Left
-        <Input
-          onChange={(value) => handleMargin(1, Number(value))}
-          defaultValue={(margin[1] / 72 ?? 0).toFixed(2)}
-          type="number"
-        />
-      </div>
-      <div>
-        Margin Bottom
-        <Input
-          onChange={(value) => handleMargin(2, Number(value))}
-          defaultValue={(margin[2] / 72 ?? 0).toFixed(2)}
-          type="number"
-        />
-      </div>
-      <div>
-        Margin Right
-        <Input
-          onChange={(value) => handleMargin(3, Number(value))}
-          defaultValue={(margin[3] / 72 ?? 0).toFixed(2)}
-          type="number"
-        />
-      </div>
-    </div>
+    <>
+      <Form
+        className="my-5  grid grid-cols-4 gap-4 px-10"
+        formValue={mData}
+        onChange={setMData}
+      >
+        <Form.Group>
+          <Form.ControlLabel>Margin Top</Form.ControlLabel>
+          <Form.Control name="top" type="number" />
+        </Form.Group>
+        <Form.Group>
+          <Form.ControlLabel>Margin Left</Form.ControlLabel>
+          <Form.Control name="left" type="number" />
+        </Form.Group>
+        <Form.Group>
+          <Form.ControlLabel>Margin Bottom</Form.ControlLabel>
+          <Form.Control name="bottom" type="number" />
+        </Form.Group>
+        <Form.Group>
+          <Form.ControlLabel>Margin Right</Form.ControlLabel>
+          <Form.Control name="right" type="number" />
+        </Form.Group>
+      </Form>
+    </>
   );
 };
 
