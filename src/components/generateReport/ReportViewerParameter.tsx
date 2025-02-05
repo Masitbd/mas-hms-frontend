@@ -145,6 +145,7 @@ const ReportViewerParameter = React.forwardRef(
                     style={{
                       display: "grid",
                       gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
+                      fontSize: "medium",
                     }}
                   >
                     {resultFields.map((resultField: IResultField) => {
