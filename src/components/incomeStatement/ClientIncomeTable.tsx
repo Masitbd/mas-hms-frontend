@@ -78,10 +78,9 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
       },
       pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
-        // Dynamically header array spread
         ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
-          text: `Investigation Income Statement for each client: Between ${
+          text: `Investigation Income Statement: Between ${
             startDate ? formatDateString(startDate) : "N/A"
           } to ${endDate ? formatDateString(endDate) : "N/A"}`,
           style: "subheader",
@@ -89,65 +88,104 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
           margin: [0, 0, 0, 20],
         },
 
-        // Static Table Header
-        {
-          table: {
-            widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
-            headerRows: 1,
-            body: [
-              [
-                { text: "Date", style: "tableHeader" },
-                { text: "Bill No", style: "tableHeader" },
-                { text: "Bill Amount", style: "tableHeader" },
-                { text: "Total Discount", style: "tableHeader" },
-                { text: "Total Amount", style: "tableHeader" },
-                { text: "VAT", style: "tableHeader" },
-                { text: "Total + VAT", style: "tableHeader" },
-                { text: "Amount Paid", style: "tableHeader" },
-                { text: "Due", style: "tableHeader" },
-              ],
-            ],
-          },
-          margin: [0, 0, 0, 10],
-        },
-
         // Dynamic content for each group
-        ...data.map((group) => [
-          {
-            table: {
-              widths: ["*"], // Single column table
-              body: [
-                [
-                  {
-                    text: group?.name,
-                    style: "groupHeader",
-                    margin: [0, 10, 0, 10],
-                    border: [true, true, true, true],
-                  },
+        ...data.map((group) => {
+          // Calculate totals for each group
+          const totals = group.records.reduce(
+            (acc, record) => {
+              acc.totalPrice += record.totalPrice;
+              acc.totalDiscount += record.totalDiscount;
+              acc.paid += record.paid;
+              acc.dueAmount += record.dueAmount;
+              acc.vat += record.vat;
+              return acc;
+            },
+            {
+              totalPrice: 0,
+              paid: 0,
+              totalDiscount: 0,
+              dueAmount: 0,
+              vat: 0,
+            }
+          );
+
+          return [
+            {
+              text: ` ${group?.name}`,
+              style: "groupHeader",
+              margin: [0, 10, 0, 10],
+            },
+            {
+              table: {
+                widths: [80, 80, 70, 60, 60, 50, 80, 80, 80], // Fixed column widths
+                headerRows: 1,
+                body: [
+                  // Table Header
+                  [
+                    { text: "Date", style: "tableHeader" },
+                    { text: "Bill No", style: "tableHeader" },
+                    { text: "Bill Amount", style: "tableHeader" },
+                    { text: "Total Discount", style: "tableHeader" },
+                    { text: "Total Amount", style: "tableHeader" },
+                    { text: "VAT", style: "tableHeader" },
+                    { text: "Total + VAT", style: "tableHeader" },
+                    { text: "Amount Paid", style: "tableHeader" },
+                    { text: "Due", style: "tableHeader" },
+                  ],
+                  // Table Body
+                  ...group.records.map((record) => [
+                    record.createdAt.slice(0, 10), // Date
+                    record._id, // Bill No
+                    record.totalPrice.toFixed(2), // Bill Amount
+                    record.totalDiscount.toFixed(2), // Total Discount
+                    (record.totalPrice - record.totalDiscount).toFixed(2), // Total Amount
+                    record.vat.toFixed(2), // VAT
+                    (
+                      record.totalPrice +
+                      record.vat -
+                      record.totalDiscount
+                    ).toFixed(2), // Total + VAT
+                    record.paid.toFixed(2), // Amount Paid
+                    record.dueAmount.toFixed(2), // Due
+                  ]),
+                  // Totals Row
+                  [
+                    {
+                      text: "Total",
+                      style: "totalRow",
+                      colSpan: 2,
+                      alignment: "center",
+                    },
+                    {},
+                    { text: totals.totalPrice.toFixed(2), style: "totalRow" },
+                    {
+                      text: totals.totalDiscount.toFixed(2),
+                      style: "totalRow",
+                    },
+                    {
+                      text: (totals.totalPrice - totals.totalDiscount).toFixed(
+                        2
+                      ),
+                      style: "totalRow",
+                    },
+                    { text: totals.vat.toFixed(2), style: "totalRow" },
+                    {
+                      text: (
+                        totals.totalPrice +
+                        totals.vat -
+                        totals.totalDiscount
+                      ).toFixed(2),
+                      style: "totalRow",
+                    },
+                    { text: totals.paid.toFixed(2), style: "totalRow" },
+                    { text: totals.dueAmount.toFixed(2), style: "totalRow" },
+                  ],
                 ],
-              ],
+              },
+              margin: [0, 0, 0, 10],
             },
-            layout: "lightHorizontalLines", // Optional, adds light horizontal lines
-          },
-          {
-            table: {
-              widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80], // Fixed column widths
-              body: group.records.map((record) => [
-                record.createdAt.slice(0, 10), // Date
-                record._id, // Bill No
-                record.totalPrice.toFixed(2), // Bill Amount
-                record.totalDiscount.toFixed(2), // Total Discount
-                (record.totalPrice - record.totalDiscount).toFixed(2), // Total Amount
-                record.vat.toFixed(2), // VAT
-                (record.totalPrice + record.vat - record.totalDiscount).toFixed(
-                  2
-                ), // Total + VAT
-                record.paid.toFixed(2), // Amount Paid
-                record.dueAmount.toFixed(2), // Due
-              ]),
-            },
-          },
-        ]),
+          ];
+        }),
       ],
       styles: {
         header: {
@@ -162,11 +200,16 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
         groupHeader: {
           fontSize: 12,
           bold: true,
-          border: true,
+          margin: [0, 10, 0, 5],
         },
         tableHeader: {
           bold: true,
           fillColor: "#eeeeee",
+          alignment: "center",
+        },
+        totalRow: {
+          bold: true,
+          fillColor: "#d3d3d3",
           alignment: "center",
         },
       },
@@ -209,38 +252,74 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
           <div>Amount Paid</div>
           <div>Due</div>
         </div>
-        {data?.map((group, groupIndex) => (
-          <div key={groupIndex} className="mb-3">
-            {/* Group Date Row */}
+        {data?.map((group, groupIndex) => {
+          const totals = group.records.reduce(
+            (acc, record) => {
+              acc.totalPrice += record.totalPrice;
+              acc.totalDiscount += record.totalDiscount;
+              acc.paid += record.paid;
+              acc.dueAmount += record.dueAmount;
+              acc.vat += record.vat;
+              return acc;
+            },
+            {
+              totalPrice: 0,
+              paid: 0,
+              totalDiscount: 0,
+              dueAmount: 0,
+              vat: 0,
+            }
+          );
+          return (
+            <div key={groupIndex} className="mb-3">
+              {/* Group Date Row */}
 
-            <div className="border border-black p-2 font-bold" key={groupIndex}>
-              {group?.name}
-            </div>
-
-            {group?.records?.map((patient, ptindex) => (
               <div
-                key={ptindex}
-                className="grid grid-cols-9 border border-black "
+                className="border border-black p-2 font-bold"
+                key={groupIndex}
               >
-                <div className="py-1 ps-1">
-                  {patient?.createdAt.slice(0, 10)}
-                </div>
-                <div className="py-1 ps-1">{patient?._id}</div>
-                <div className="py-1 ps-1">{patient?.totalPrice}</div>
-                <div className="py-1 ps-1">{patient?.totalDiscount}</div>
-                <div className="py-1 ps-1">
-                  {patient?.totalPrice - patient.totalDiscount}
-                </div>
-                <div className="py-1 ps-1">{patient.vat}</div>
-                <div className="py-1 ps-1">
-                  {patient?.totalPrice + patient.vat - patient.totalDiscount}
-                </div>
-                <div className="py-1 ps-1">{patient?.paid}</div>
-                <div className="py-1 ps-1">{patient?.dueAmount}</div>
+                {group?.name}
               </div>
-            ))}
-          </div>
-        ))}
+
+              {group?.records?.map((patient, ptindex) => (
+                <div
+                  key={ptindex}
+                  className="grid grid-cols-9 border border-black "
+                >
+                  <div className="py-1 ps-1">
+                    {patient?.createdAt.slice(0, 10)}
+                  </div>
+                  <div className="py-1 ps-1">{patient?._id}</div>
+                  <div className="py-1 ps-1">{patient?.totalPrice}</div>
+                  <div className="py-1 ps-1">{patient?.totalDiscount}</div>
+                  <div className="py-1 ps-1">
+                    {patient?.totalPrice - patient.totalDiscount}
+                  </div>
+                  <div className="py-1 ps-1">{patient.vat}</div>
+                  <div className="py-1 ps-1">
+                    {patient?.totalPrice + patient.vat - patient.totalDiscount}
+                  </div>
+                  <div className="py-1 ps-1">{patient?.paid}</div>
+                  <div className="py-1 ps-1">{patient?.dueAmount}</div>
+                </div>
+              ))}
+
+              <div className="grid grid-cols-9 border border-black bg-gray-200 font-semibold ">
+                <div>Total</div>
+                <div></div>
+                <div>{totals?.totalPrice}</div>
+                <div>{totals?.totalDiscount}</div>
+                <div>{totals?.totalPrice - totals?.totalDiscount}</div>
+                <div>{totals?.vat}</div>
+                <div>
+                  {totals?.totalPrice + totals.vat - totals.totalDiscount}
+                </div>
+                <div>{totals?.paid}</div>
+                <div>{totals?.dueAmount}</div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <button
