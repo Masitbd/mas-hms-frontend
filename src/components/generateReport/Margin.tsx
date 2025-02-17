@@ -55,13 +55,13 @@ const Margin = (props: IPropsForMargin) => {
     setMargins(marginCopiedData);
   }, [mData]);
 
-  console.log(margin);
   return (
     <>
       <Form
-        className="my-5  grid grid-cols-4 gap-4 px-10"
+        className="my-5  grid grid-cols-4 gap-2 px-4"
         formValue={mData}
         onChange={setMData}
+        fluid
       >
         <Form.Group>
           <Form.ControlLabel>Margin Top</Form.ControlLabel>
