@@ -14,7 +14,7 @@ export interface IAdmissionInitialDataParams {
   allocatedBed?: string;
   assignDoct?: string;
   refDoct?: string;
-  totalPrice?: number;
+  totalAmount?: number;
   formData: IAdmissionInitialData;
   setFormData: React.Dispatch<
     React.SetStateAction<IAdmissionInitialDataParams>
@@ -56,7 +56,7 @@ const AdmissionInfo = (param: IAdmissionInitialDataParams) => {
       allocatedBed: value.allocatedBed || prevState.allocatedBed,
       assignDoct: value.assignDoct || prevState.assignDoct,
       refDoct: value.refDoct || prevState.refDoct,
-      totalPrice: selectedBedPrice?.charge ?? prevState.totalPrice,
+      totalAmount: selectedBedPrice?.charge ?? prevState.totalAmount,
 
       // You can update other fields similarly as required
     }));

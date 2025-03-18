@@ -1,7 +1,13 @@
+"use client";
+
 import AdmitPatientModal from "@/components/Patient-Admission/AdminPatientModal";
 import AdmissionTable from "@/components/Patient-Admission/AdmissionTable";
+import { useGetAllAdmissionQuery } from "@/redux/api/admission.api";
 
 const PatientAdmissionPage = () => {
+  const { data: patients, isLoading } = useGetAllAdmissionQuery(undefined);
+  // console.log(patients, "patients");
+
   return (
     <div>
       <div className="bg-[#3498ff] text-white px-2 py-2 my-10">
@@ -11,7 +17,7 @@ const PatientAdmissionPage = () => {
         <AdmitPatientModal />
       </div>
       <div className="mt-10">
-        <AdmissionTable />
+        <AdmissionTable data={patients?.data?.result} />
       </div>
     </div>
   );

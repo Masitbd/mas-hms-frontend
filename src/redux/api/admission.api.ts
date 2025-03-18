@@ -12,9 +12,9 @@ const admissionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["beds"],
     }),
-    getSingleAdmission: build.query({
+    getDetailsAdmission: build.query({
       query: (id) => ({
-        url: `admission/${id}`,
+        url: `/admission/${id}`,
         method: "GET",
       }),
       providesTags: ["beds"],
@@ -31,7 +31,7 @@ const admissionApi = baseApi.injectEndpoints({
     }),
     updateAdmission: build.mutation({
       query: (options) => ({
-        url: `admission/${options.id}`,
+        url: `/admission/${options.id}`,
         method: "PATCH",
         contentType: "application/json",
         data: options.data,
@@ -41,7 +41,7 @@ const admissionApi = baseApi.injectEndpoints({
     }),
     deleteAdmission: build.mutation({
       query: (id) => ({
-        url: `admission/${id}`,
+        url: `/admission/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["beds"],
@@ -54,7 +54,7 @@ const admissionApi = baseApi.injectEndpoints({
 export const {
   useGetAllAdmissionQuery,
   useCreateAdmissionMutation,
-  useGetSingleAdmissionQuery,
+  useGetDetailsAdmissionQuery,
   useUpdateAdmissionMutation,
   useDeleteAdmissionMutation,
 } = admissionApi;

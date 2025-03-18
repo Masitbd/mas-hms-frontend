@@ -22,7 +22,7 @@ const CustomModal = ({ title, text, children, open, setOpen }: TModalProps) => {
   return (
     <>
       <ButtonToolbar>
-        <Button appearance="primary" onClick={handleOpen}>
+        <Button size="lg" appearance="primary" onClick={handleOpen}>
           {text}
         </Button>
       </ButtonToolbar>

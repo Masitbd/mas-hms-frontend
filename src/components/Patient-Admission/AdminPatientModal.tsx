@@ -74,7 +74,7 @@ const AdmitPatientModal = () => {
     },
     []
   );
-  console.log(modalOpen, "open");
+  // console.log(modalOpen, "open");
 
   // console.log(data, "submti data");
 
@@ -95,7 +95,9 @@ const AdmitPatientModal = () => {
   const handleSubmit = async () => {
     try {
       const res = await createAdmission(data).unwrap();
-      console.log(res, "res");
+      if (res.success) {
+        setModalOpen(false);
+      }
     } catch (err) {
       console.log(err, "err");
     }
