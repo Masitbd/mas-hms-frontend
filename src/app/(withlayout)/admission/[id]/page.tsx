@@ -43,7 +43,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
         // console.log(res, "res");
         if (res.success) {
           Swal.fire({
-            title: "Your file has been deleted!",
+            title: "Patient Released!",
             showConfirmButton: false,
             position: "top-end",
             toast: true,
@@ -149,7 +149,13 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
       <div className="flex justify-between px-10 mt-10">
         <DueCollectionModal data={data} />
 
-        <BedTransferModal />
+        <BedTransferModal
+          totalAmount={data?.totalAmount}
+          patientRegNo={data?.regNo}
+          previousBed={data?.allocatedBed}
+          firstAdmitDate={data?.admissionDate}
+          isTransfer={data?.isTransfer}
+        />
         <AddServiceModal />
         {releasing ? (
           <Button appearance="primary" loading />

@@ -9,11 +9,19 @@ interface IModalProps {
   children: ReactNode;
   open: boolean;
   setOpen: (open: boolean) => void;
+  disabled?: boolean | undefined;
 }
 
 type TModalProps = IModalProps;
 
-const CustomModal = ({ title, text, children, open, setOpen }: TModalProps) => {
+const CustomModal = ({
+  title,
+  text,
+  children,
+  open,
+  setOpen,
+  disabled,
+}: TModalProps) => {
   // const [open, setOpen] = useState(false);
 
   const handleOpen = () => setOpen(true);
@@ -22,7 +30,12 @@ const CustomModal = ({ title, text, children, open, setOpen }: TModalProps) => {
   return (
     <>
       <ButtonToolbar>
-        <Button size="lg" appearance="primary" onClick={handleOpen}>
+        <Button
+          disabled={disabled}
+          size="lg"
+          appearance="primary"
+          onClick={handleOpen}
+        >
           {text}
         </Button>
       </ButtonToolbar>

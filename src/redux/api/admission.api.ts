@@ -39,6 +39,18 @@ const admissionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["beds"],
     }),
+    //
+    transferAdmission: build.mutation({
+      query: (data) => ({
+        url: "/admission/transfer",
+        method: "PATCH",
+        contentType: "application/json",
+        data: data,
+        body: data,
+      }),
+      invalidatesTags: ["beds"],
+    }),
+
     deleteAdmission: build.mutation({
       query: (id) => ({
         url: `/admission/${id}`,
@@ -67,6 +79,7 @@ export const {
   useGetAllAdmissionQuery,
   useCreateAdmissionMutation,
   useGetDetailsAdmissionQuery,
+  useTransferAdmissionMutation,
   useUpdateAdmissionMutation,
   useDeleteAdmissionMutation,
   useReleaseAdmittedPatientMutation,

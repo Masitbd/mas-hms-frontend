@@ -36,7 +36,6 @@ const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
       };
 
       const res = await updatePayment(payload).unwrap();
-      console.log(res, "res");
 
       if (res.success) {
         Swal.fire({
@@ -66,6 +65,7 @@ const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
   return (
     <div>
       <CustomModal
+        disabled={dueAmount == 0}
         open={open}
         setOpen={setOpen}
         text="Collect Due"
