@@ -3,8 +3,12 @@
 import AddServiceModal from "@/components/Patient-Admission/AddServiceModal";
 import BedTransferModal from "@/components/Patient-Admission/BedTransferModal";
 import DueCollectionModal from "@/components/Patient-Admission/DueCollectionModal";
-import { useGetDetailsAdmissionQuery } from "@/redux/api/admission.api";
+import {
+  useGetDetailsAdmissionQuery,
+  useReleaseAdmittedPatientMutation,
+} from "@/redux/api/admission.api";
 import { Button } from "rsuite";
+import Swal from "sweetalert2";
 
 type TParams = {
   params: { id: string };
@@ -19,8 +23,41 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
       skip: !id,
     }
   );
+  const [release, { isLoading: releasing }] =
+    useReleaseAdmittedPatientMutation();
+  // handler
+
+  const handleRealese = (id: string, bedId: string) => {
+    const option = { id, bedId };
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Release it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await release(option).unwrap();
+        // console.log(res, "res");
+        if (res.success) {
+          Swal.fire({
+            title: "Your file has been deleted!",
+            showConfirmButton: false,
+            position: "top-end",
+            toast: true,
+            timer: 3000,
+            timerProgressBar: true,
+            icon: "success",
+          });
+        }
+      }
+    });
+  };
 
   const data = detailsAdmission?.data[0];
+  // console.log(data)
 
   return (
     <div className="w-full px-10 mt-5">
@@ -114,9 +151,19 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
 
         <BedTransferModal />
         <AddServiceModal />
-        <Button size="lg" appearance="primary">
-          Release
-        </Button>
+        {releasing ? (
+          <Button appearance="primary" loading />
+        ) : (
+          <Button
+            disabled={data?.status === "released" || releasing}
+            onClick={() => handleRealese(data?._id, data?.allocatedBed)}
+            size="lg"
+            appearance="ghost"
+            color="red"
+          >
+            Release
+          </Button>
+        )}
       </div>
     </div>
   );

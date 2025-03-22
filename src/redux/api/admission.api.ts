@@ -47,6 +47,18 @@ const admissionApi = baseApi.injectEndpoints({
       invalidatesTags: ["beds"],
     }),
 
+    // ? release
+
+    releaseAdmittedPatient: build.mutation({
+      query: (option) => ({
+        url: "/admission/release",
+        method: "POST",
+        body: option,
+        data: option,
+      }),
+      invalidatesTags: ["beds"],
+    }),
+
     //
   }),
 });
@@ -57,4 +69,5 @@ export const {
   useGetDetailsAdmissionQuery,
   useUpdateAdmissionMutation,
   useDeleteAdmissionMutation,
+  useReleaseAdmittedPatientMutation,
 } = admissionApi;
