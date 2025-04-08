@@ -4487,6 +4487,11 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
+to-words@^4.4.0:
+  version "4.4.0"
+  resolved "https://registry.npmjs.org/to-words/-/to-words-4.4.0.tgz"
+  integrity sha512-QJBzzPT4mNZ5xnHgcbR5LiQfLUYDc7HvughfzwAPhgd6QljoqE4wKbQIHmAUf5UybQbjJyI/Iz+HYM9Rv05Tmw==
+
 tr46@~0.0.3:
   version "0.0.3"
   resolved "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz"
