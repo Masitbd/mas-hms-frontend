@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 4000",
     "lint": "next lint"
   },
   "dependencies": {
@@ -40,6 +40,7 @@
     "recharts": "^2.13.1",
     "rsuite": "^5.64.0",
     "sweetalert": "^2.1.2",
+    "to-words": "^4.4.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

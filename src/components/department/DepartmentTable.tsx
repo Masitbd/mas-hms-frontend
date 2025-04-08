@@ -81,9 +81,17 @@ const DepartmentTable = ({
         className="text-md"
         wordWrap={"break-word"}
       >
-        <Column flexGrow={4}>
+        <Column flexGrow={2}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
+        </Column>
+        <Column flexGrow={1}>
+          <HeaderCell>Room Name</HeaderCell>
+          <Cell dataKey="roomName" />
+        </Column>
+        <Column flexGrow={1}>
+          <HeaderCell>Room No.</HeaderCell>
+          <Cell dataKey="roomNo" />
         </Column>
         <Column flexGrow={1}>
           <HeaderCell> Commission %</HeaderCell>

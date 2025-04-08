@@ -17,6 +17,7 @@ const initialDataOfDepartment = {
   commissionParcentage: 0,
   fixedCommission: 0,
   isCommissionFiexed: false,
+  isRoomInfo: false,
 } as IDepartment;
 
 const Department = () => {
