@@ -359,3 +359,32 @@ export const investigationMenuItems = [
     ],
   },
 ];
+export const indoorItems = [
+  {
+    key: "1",
+    title: "World Management",
+    href: "/worlds",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "2",
+    title: "Bed Management",
+    href: "/beds",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_TESTS,
+      ENUM_USER_PEMISSION.MANAGE_TESTS,
+    ],
+  },
+  {
+    key: "3",
+    title: "Patient Admission",
+    href: "/admission",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
+];
