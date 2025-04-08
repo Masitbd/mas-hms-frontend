@@ -16,6 +16,7 @@ import DocPassIcon from "@rsuite/icons/DocPass";
 import {
   financialReportItem,
   generalMenuItems,
+  indoorItems,
   investigationMenuItems,
   labReportMenuItems,
   userMenuItem,
@@ -315,6 +316,43 @@ const Sidebar = () => {
                   ))}
                 </Nav.Menu>
               </AuthCheckerForComponent>
+
+              {/* indoor  */}
+              <Nav.Menu
+                eventKey="6"
+                trigger="hover"
+                title={<div className="font-bold text-black">Indoor</div>}
+                icon={<TreemapIcon />}
+                placement="rightStart"
+              >
+                {indoorItems.map((item, index) => (
+                  <AuthCheckerForComponent
+                    requiredPermission={item.requiredPermission as number[]}
+                    key={index}
+                  >
+                    <Nav.Item
+                      eventKey={`6-${item.key}`}
+                      href={item.href}
+                      as={NavLink}
+                      key={Number(item.key) + 20}
+                      onClick={() => setSelectedItem(item.href)}
+                      style={
+                        selectedItem === item.href
+                          ? {
+                              backgroundColor: "#3498ff",
+                              color: "white",
+                              borderRadius: "5px",
+                            }
+                          : {
+                              color: "black",
+                            }
+                      }
+                    >
+                      {item.title}
+                    </Nav.Item>
+                  </AuthCheckerForComponent>
+                ))}
+              </Nav.Menu>
             </Nav>
           </Sidenav.Body>
         </Sidenav>

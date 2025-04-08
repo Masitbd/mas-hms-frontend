@@ -51,6 +51,8 @@ export const baseApi = createApi({
     "report-margin",
     "order-posted-by",
     "doctor-seal",
+    "beds",
+    "worlds",
   ],
 
   // tagTypes: tagTypes,

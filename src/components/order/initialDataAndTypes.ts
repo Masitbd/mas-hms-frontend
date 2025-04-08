@@ -182,3 +182,39 @@ export const unreagisteredPatientProfileDataPropertyNames = [
   "phone",
   "email",
 ];
+
+export type IAdmissionInitialData = {
+  totalAmount: number;
+  parcentDiscount: number;
+  cashDiscount: number;
+  vat: number;
+  paid: number;
+  discountedBy: "system" | "manual"; // Assuming it can be either "system" or "manual"
+  patientType: "registered" | "notRegistered"; // Assuming possible values
+  regNo: string;
+  name: string;
+  gender: "Male" | "Female" | "Other" | ""; // Assuming gender options
+  fatherName: string;
+  presentAddress: string;
+  permanentAddress: string;
+  age: string; // Change to `number` if needed
+  bloodGroup: string;
+  status: "admitted" | "discharged" | "pending"; // Assuming possible statuses
+  admissionDate: string; // Change to `Date` if it's a Date object
+  admissionTime: string;
+  assignDoct: string;
+  refDoct: string;
+  releaseDate: string; // Change to `Date` if needed
+  maritalStatus: string;
+  occupation: string;
+  education: string;
+  district: string;
+  religion: string;
+  residence: string;
+  citizenShip: string;
+  disease: string;
+  isTransfer: boolean;
+  allocatedBed: string;
+  worldId: string;
+  // deliveryTime: Date; // Uncomment if you need it
+};
