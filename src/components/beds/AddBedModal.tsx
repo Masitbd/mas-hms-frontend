@@ -91,13 +91,13 @@ const AddBedModal = () => {
             <Form.Control name="floor" />
           </Form.Group>
           <Form.Group controlId="worldId">
-            <Form.ControlLabel>World</Form.ControlLabel>
+            <Form.ControlLabel>Bed Category</Form.ControlLabel>
             <Form.Control
               name="worldId"
               accepter={SelectPicker}
               data={worlds?.data?.map((world: any) => ({
-                label: world.worldName, // Replace `name` with the actual key that holds the label
-                value: world._id, // Replace `id` with the actual key that holds the value
+                label: world.worldName,
+                value: world._id,
               }))}
               placeholder="Select World"
               style={{ width: 300 }}

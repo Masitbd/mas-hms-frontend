@@ -387,4 +387,22 @@ export const indoorItems = [
       ENUM_USER_PEMISSION.MANAGE_ORDER,
     ],
   },
+  {
+    key: "4",
+    title: "Desease Management",
+    href: "/desease",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
+  {
+    key: "5",
+    title: "Package Management",
+    href: "/package",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
 ];
