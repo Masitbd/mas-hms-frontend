@@ -362,7 +362,7 @@ export const investigationMenuItems = [
 export const indoorItems = [
   {
     key: "1",
-    title: "World Management",
+    title: "Bed Category",
     href: "/worlds",
     requiredPermission: [
       ENUM_USER_PEMISSION.GET_TESTS,

@@ -1,42 +1,25 @@
-import { useCreateWorldsMutation } from "@/redux/api/world.api";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Button, ButtonToolbar, Form, Modal } from "rsuite";
 import Swal from "sweetalert2";
+import { BedCategoryinitialValue } from "./AddWorldModal";
+import { useUpdateWorldsMutation } from "@/redux/api/world.api";
+import EditIcon from "@rsuite/icons/Edit";
+import { TWorld } from "./WoroldTable";
 
-import { Modal, Button, ButtonToolbar, Form, Schema } from "rsuite";
-
-const { StringType, NumberType } = Schema.Types;
-
-type FormValueType = {
-  worldName: string | null;
-  charge: number | null;
-  fees: number | null;
-};
-
-export const BedCategoryinitialValue: FormValueType = {
-  worldName: null,
-  charge: null,
-  fees: null,
-};
-
-const AddWorldModal = () => {
+const EditWorldModal = ({ item }: { item: TWorld  }) => {
   const [open, setOpen] = useState(false);
-  const [overflow, setOverflow] = useState(true);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const model = Schema.Model({
-    worldName: StringType().isRequired("Category name is required"),
-    charge: NumberType()
-      .isRequired("Charge is required")
-      .isInteger("Charge must be a number"),
-    fees: NumberType()
-      .isRequired("Fees is required")
-      .isInteger("Fees must be a number"),
-  });
-
-  const [createWorld, { isLoading }] = useCreateWorldsMutation();
-
+  const [updateWorld, { isLoading }] = useUpdateWorldsMutation();
   const [formValue, setFormValue] = useState(BedCategoryinitialValue);
+
+  useEffect(() => {
+    if (item) {
+      setFormValue({ ...item });
+    }
+  }, [item]);
 
   const handleFormChange = (updatedValue: Record<string, any>) => {
     setFormValue((prev) => ({ ...prev, ...updatedValue }));
@@ -46,13 +29,16 @@ const AddWorldModal = () => {
     const { worldName, charge, fees } = formValue;
 
     const payload = {
-      worldName,
-      charge: Number(charge),
-      fees: Number(fees),
+      id: item._id,
+      data: {
+        worldName,
+        charge: Number(charge),
+        fees: Number(fees),
+      },
     };
 
     try {
-      const res = await createWorld(payload).unwrap();
+      const res = await updateWorld(payload).unwrap();
       if (res.success) {
         Swal.fire({
           toast: true,
@@ -60,7 +46,7 @@ const AddWorldModal = () => {
           showConfirmButton: false,
           timer: 3000,
           timerProgressBar: true,
-          title: "Added successfully",
+          title: "Updated successfully",
           icon: "success",
         });
         await handleClose();
@@ -81,14 +67,14 @@ const AddWorldModal = () => {
   return (
     <>
       <ButtonToolbar>
-        <Button appearance="primary" onClick={handleOpen}>
-          Add Bed Category
+        <Button appearance="ghost" color="green" onClick={handleOpen}>
+          <EditIcon color="green" />
         </Button>
       </ButtonToolbar>
 
-      <Modal size="50rem" overflow={overflow} open={open} onClose={handleClose}>
+      <Modal size="50rem" overflow={true} open={open} onClose={handleClose}>
         <Modal.Header>
-          <Modal.Title>Bed Category Add</Modal.Title>
+          <Modal.Title>Bed Category Edit</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="px-2">
@@ -96,7 +82,7 @@ const AddWorldModal = () => {
               onChange={handleFormChange}
               onSubmit={handleSubmit}
               formValue={formValue}
-              model={model}
+              //   model={model}
               className="grid grid-cols-2 gap-10 justify-center  w-full"
             >
               <Form.Group controlId="worldName">
@@ -142,4 +128,4 @@ const AddWorldModal = () => {
   );
 };
 
-export default AddWorldModal;
+export default EditWorldModal;
