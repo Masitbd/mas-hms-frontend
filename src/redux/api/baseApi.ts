@@ -53,6 +53,8 @@ export const baseApi = createApi({
     "doctor-seal",
     "beds",
     "worlds",
+    "desease",
+    "packages",
   ],
 
   // tagTypes: tagTypes,
