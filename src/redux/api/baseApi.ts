@@ -52,6 +52,7 @@ export const baseApi = createApi({
     "order-posted-by",
     "doctor-seal",
     "beds",
+    "admission",
     "worlds",
     "desease",
     "packages",

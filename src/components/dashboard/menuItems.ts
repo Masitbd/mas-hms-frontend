@@ -184,6 +184,43 @@ export const financialReportItem = [
       ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
+  // ! indoor
+  {
+    key: "27",
+    title: "Indoor Income Ledger",
+    href: "/financialReport/indoor-income-ledger",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "27",
+    title: "Indoor Due Ledger",
+    href: "/financialReport/indoor-due-list",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "27",
+    title: "Indoor Due Collection",
+    href: "/financialReport/indoor-due-collection",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "27",
+    title: "Indoor Employee Ledger Detaily",
+    href: "/financialReport/indoor-employee-ledger-summery",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
 ];
 
 export const generalMenuItems = [

@@ -9,6 +9,7 @@ import {
   InputPicker,
   Loader,
   Message,
+  Schema,
   toaster,
   Tooltip,
   Whisper,
@@ -24,7 +25,9 @@ import {
 import RegisteredPatient from "./RegPatient";
 import NotRegPatient from "./NotRegPatient";
 
-const PInfo = (porps) => {
+const { StringType, NumberType } = Schema.Types;
+
+const PInfo = (porps: any) => {
   const {
     data,
     setFormData,
@@ -42,6 +45,8 @@ const PInfo = (porps) => {
       isFetching: patientDataFeatching,
     },
   ] = useLazyGetSinglePatientQuery();
+
+  
 
   const searchHandler = async (value: string) => {
     const sdata = await patientSearch(value);
@@ -101,14 +106,16 @@ const PInfo = (porps) => {
         <div className="grid grid-cols-6 gap-5">
           <Form
             onChange={(value, event) =>
-              setFormData((prevData) => ({
+              setFormData((prevData: any) => ({
                 ...prevData,
                 patientType: value.patientType,
               }))
             }
+            // model={patientModel}
             fluid
             formValue={data}
             ref={forwardedRefForPatientType}
+
           >
             <Form.Group controlId="patientType">
               <Form.ControlLabel className="font-bold">

@@ -4,11 +4,13 @@ import CustomModal from "../CustomModal";
 import { Button, Form } from "rsuite";
 import { useUpdateDuePaymentMutation } from "@/redux/api/payment.api";
 import Swal from "sweetalert2";
+import { useAppSelector } from "@/redux/hook";
 type TDueCollection = {
   data: {
+    dueAmount?: number;
     regNo: string;
     totalAmount: number;
-    paymentInfo: {
+    paymentInfo?: {
       totalPaid: number;
     };
   };
@@ -16,9 +18,11 @@ type TDueCollection = {
 
 const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
   const [updatePayment, { isLoading }] = useUpdateDuePaymentMutation();
-
+  const currentUser = useAppSelector((state) => state.auth.user);
   const [open, setOpen] = useState(false);
-  const dueAmount = data?.totalAmount - data?.paymentInfo?.totalPaid;
+  const dueAmount =
+    data?.dueAmount ??
+    (data?.totalAmount ?? 0) - (data?.paymentInfo?.totalPaid ?? 0);
   const [formValue, setFormValue] = useState({ amount: dueAmount });
   const handleFormChange = (updatedValue: Record<string, any>) => {
     setFormValue((prev) => ({ ...prev, ...updatedValue }));
@@ -32,6 +36,8 @@ const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
         regno: data?.regNo,
         data: {
           amount: Number(amount),
+          purpose: "due-collection",
+          receivedBy: currentUser?._id,
         },
       };
 

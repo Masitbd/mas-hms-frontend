@@ -17,7 +17,7 @@ const admissionApi = baseApi.injectEndpoints({
         url: `/admission/${id}`,
         method: "GET",
       }),
-      providesTags: ["beds"],
+      providesTags: ["admission"],
     }),
     createAdmission: build.mutation({
       query: (data) => ({
@@ -27,7 +27,7 @@ const admissionApi = baseApi.injectEndpoints({
         data: data,
         body: data,
       }),
-      invalidatesTags: ["beds"],
+      invalidatesTags: ["admission"],
     }),
     updateAdmission: build.mutation({
       query: (options) => ({
@@ -37,7 +37,7 @@ const admissionApi = baseApi.injectEndpoints({
         data: options.data,
         body: options.data,
       }),
-      invalidatesTags: ["beds"],
+      invalidatesTags: ["admission"],
     }),
     //
     transferAdmission: build.mutation({
@@ -48,7 +48,7 @@ const admissionApi = baseApi.injectEndpoints({
         data: data,
         body: data,
       }),
-      invalidatesTags: ["beds"],
+      invalidatesTags: ["admission", "beds"],
     }),
 
     deleteAdmission: build.mutation({
@@ -68,7 +68,7 @@ const admissionApi = baseApi.injectEndpoints({
         body: option,
         data: option,
       }),
-      invalidatesTags: ["beds"],
+      invalidatesTags: ["admission", "beds"],
     }),
 
     //

@@ -56,14 +56,22 @@ const AdmissionTable = ({ data }: { data: TAdmitedPatient[] }) => {
         <Column flexGrow={1}>
           <HeaderCell>Admission Date</HeaderCell>
           <Cell>
-            {(rowData) => new Date(rowData.admissionDate).toLocaleDateString()}
+            {(rowData) =>
+              rowData?.admissionDate
+                ? new Date(rowData?.admissionDate).toLocaleDateString()
+                : "N/A"
+            }
           </Cell>
         </Column>
 
         <Column flexGrow={1}>
           <HeaderCell>Time</HeaderCell>
           <Cell>
-            {(rowData) => new Date(rowData.admissionDate).toLocaleTimeString()}
+            {(rowData) =>
+              rowData?.admissionDate
+                ? new Date(rowData.admissionDate).toLocaleTimeString()
+                : "N/A"
+            }
           </Cell>
         </Column>
 

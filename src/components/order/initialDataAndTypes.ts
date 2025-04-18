@@ -202,8 +202,8 @@ export type IAdmissionInitialData = {
   status: "admitted" | "discharged" | "pending"; // Assuming possible statuses
   admissionDate: string; // Change to `Date` if it's a Date object
   admissionTime: string;
-  assignDoct: string;
-  refDoct: string;
+  assignDoct: undefined;
+  refDoct: undefined;
   releaseDate: string; // Change to `Date` if needed
   maritalStatus: string;
   occupation: string;
@@ -214,7 +214,10 @@ export type IAdmissionInitialData = {
   citizenShip: string;
   disease: string;
   isTransfer: boolean;
-  allocatedBed: string;
+  allocatedBed: undefined;
   worldId: string;
+  isFixed: boolean;
+  receivedBy: string;
+  fixedBill: undefined;
   // deliveryTime: Date; // Uncomment if you need it
 };

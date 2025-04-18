@@ -12,7 +12,7 @@ const paymentApi = baseApi.injectEndpoints({
         data: options.data,
         body: options.data,
       }),
-      invalidatesTags: ["beds"],
+      invalidatesTags: ["admission"],
     }),
 
     //

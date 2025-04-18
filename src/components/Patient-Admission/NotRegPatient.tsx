@@ -1,6 +1,7 @@
 import { IDoctor } from "@/types/allDepartmentInterfaces";
 import React, { forwardRef } from "react";
-import { DatePicker, Form, InputPicker, Schema } from "rsuite";
+import { DatePicker, Form, InputPicker, Schema, SelectPicker } from "rsuite";
+import { bangladeshDistricts, religions } from "./patient.contance";
 
 type param = {
   setFromData: (params: any) => void;
@@ -13,6 +14,12 @@ const NotRegPatient = (param: param) => {
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
     { label: "Other", value: "other" },
+  ];
+
+  const bloodGroup = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+  const maritalStatus = [
+    { label: "Married", value: "married" },
+    { label: "Unmarried", value: "unmarried" },
   ];
 
   const { StringType, NumberType } = Schema.Types;
@@ -47,23 +54,52 @@ const NotRegPatient = (param: param) => {
     >
       {[
         { label: "Name", name: "name" },
+        { label: "Age", name: "age" },
         {
           label: "Gender",
           name: "gender",
           accepter: InputPicker,
           data: genderType,
         },
-        { label: "Father's Name", name: "fatherName" },
+        {
+          label: "Blood Group",
+          name: "bloodGroup",
+          data: bloodGroup?.map((bld) => ({ label: bld, value: bld })),
+          accepter: SelectPicker,
+        },
+        { label: "Guardian's Name", name: "fatherName" },
         { label: "Present Address", name: "presentAddress" },
         { label: "Permanent Address", name: "permanentAddress" },
-        { label: "Age", name: "age" },
-        { label: "Blood Group", name: "bloodGroup" },
 
-        { label: "Marital Status", name: "maritalStatus" },
+        {
+          label: "Marital Status",
+          name: "maritalStatus",
+          data: maritalStatus?.map((item) => ({
+            label: item.label,
+            value: item.value,
+          })),
+          accepter: SelectPicker,
+        },
         { label: "Occupation", name: "occupation" },
         { label: "Education", name: "education" },
-        { label: "District", name: "district" },
-        { label: "Religion", name: "religion" },
+        {
+          label: "District",
+          name: "district",
+          data: bangladeshDistricts.map((dt) => ({
+            label: dt,
+            value: dt,
+          })),
+          accepter: SelectPicker,
+        },
+        {
+          label: "Religion",
+          name: "religion",
+          data: religions.map((rl) => ({
+            label: rl,
+            value: rl,
+          })),
+          accepter: SelectPicker,
+        },
         { label: "Residence", name: "residence" },
         { label: "Citizenship", name: "citizenShip" },
       ].map(({ label, name, accepter, data }) => (
