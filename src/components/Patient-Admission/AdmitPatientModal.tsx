@@ -1,6 +1,13 @@
 "use client";
 
-import { Button, Form, SelectPicker } from "rsuite";
+import {
+  Button,
+  Form,
+  Message,
+  Schema,
+  SelectPicker,
+  useToaster,
+} from "rsuite";
 
 import { useCallback, useRef, useState } from "react";
 
@@ -20,49 +27,27 @@ import PInfo from "./PInfo";
 import AdmissionInfo, { IAdmissionInitialDataParams } from "./AdmissionInfo";
 import AdmissionPricing from "./AdmissionPricing";
 import { useCreateAdmissionMutation } from "@/redux/api/admission.api";
+import { aInitialData } from "./patient.contance";
+import { useAppSelector } from "@/redux/hook";
 
-export const aInitialData: IAdmissionInitialData = {
-  totalAmount: 0,
-  parcentDiscount: 0,
-  cashDiscount: 0,
-  vat: 0,
-  paid: 0,
-
-  discountedBy: "system",
-  patientType: "notRegistered",
-  regNo: "",
-  name: "",
-  gender: "",
-  fatherName: "",
-  presentAddress: "",
-  permanentAddress: "",
-  age: "",
-  bloodGroup: "",
-  status: "admitted",
-  admissionDate: "",
-  admissionTime: "",
-  assignDoct: "",
-  refDoct: "",
-  releaseDate: "",
-
-  maritalStatus: "",
-
-  occupation: "",
-  education: "",
-  district: "",
-  religion: "",
-  residence: "",
-  citizenShip: "",
-  disease: "",
-  isTransfer: false,
-  allocatedBed: "",
-  worldId: "",
-  // deliveryTime: new Date(),
-};
+const { StringType, NumberType } = Schema.Types;
+const patientModel = Schema.Model({
+  name: StringType().isRequired("This field is required."),
+  age: StringType().isRequired("This field is required."),
+  gender: StringType().isRequired("This field is required."),
+  // phone: NumberType()
+  //   .isRequired("This field is required.")
+  //   .addRule((value: string | number): boolean => {
+  //     const phoneNumber = value.toString();
+  //     return phoneNumber.length === 11;
+  //   }, "Phone number must be 11 digits."),
+});
 
 const AdmitPatientModal = () => {
   const refForUnregistered: React.MutableRefObject<any> = useRef();
   const patientTypeRef: React.MutableRefObject<any> = useRef();
+  const formRef = useRef<any>(null);
+  const toaster = useToaster();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [mode, setMode] = useState("new");
@@ -74,7 +59,8 @@ const AdmitPatientModal = () => {
     },
     []
   );
-  // console.log(modalOpen, "open");
+  const currentUser = useAppSelector((state) => state.auth.user);
+  // console.log(currentUser, "user");
 
   // console.log(data, "submti data");
 
@@ -93,15 +79,36 @@ const AdmitPatientModal = () => {
   };
 
   const handleSubmit = async () => {
-    try {
-      const res = await createAdmission(data).unwrap();
-      if (res.success) {
-        setModalOpen(false);
-      }
-    } catch (err) {
-      console.log(err, "err");
-    }
+    formRef.current
+      ?.checkAsync()
+      .then(async (result: { hasError: boolean; formError: any }) => {
+        if (result?.hasError) {
+          // Check the specific errors
+          const errors = Object.keys(result?.formError || {});
+
+          errors.forEach((errorField) => {
+            toaster.push(
+              <Message showIcon type="error" closable>
+                `<strong> {errorField} </strong> is Required`.
+              </Message>,
+              { duration: 2000 }
+            );
+          });
+        } else {
+          try {
+            data.receivedBy = currentUser?.uuid;
+
+            const res = await createAdmission(data).unwrap();
+            if (res.success) {
+              setModalOpen(false);
+            }
+          } catch (err) {
+            console.log(err, "Error during submission");
+          }
+        }
+      });
   };
+
   const okHandler = async () => {
     await handleSubmit();
   };
@@ -140,17 +147,21 @@ const AdmitPatientModal = () => {
           cancelHandler={cancelHandler}
           okHandler={okHandler}
         >
-          <>
-            <div>
-              <PInfo
-                data={data as unknown as IAdmissionInitialData}
-                forwardedRefForUnregisterd={refForUnregistered}
-                setFormData={setFromData as React.SetStateAction<any>}
-                forwardedRefForPatientType={patientTypeRef}
-                key={2589}
-                mode={mode}
-              />
-            </div>
+          <Form
+            ref={formRef}
+            fluid
+            model={patientModel}
+            formValue={data}
+            onChange={(value) => setFormData((prev) => ({ ...prev, ...value }))}
+          >
+            <PInfo
+              data={data}
+              setFormData={setFromData}
+              forwardedRefForUnregisterd={refForUnregistered}
+              forwardedRefForPatientType={patientTypeRef}
+              key={2589}
+              mode={mode}
+            />
 
             <div className="my-2 grid grid-cols-12">
               <div className="col-span-8">
@@ -166,31 +177,30 @@ const AdmitPatientModal = () => {
                     totalAmount -
                     discountAmount +
                     vatAmount -
-                    (data.paid ? data.paid : 0)
+                    (data.paid || 0)
                   ).toFixed(2)}
                   data={data}
                   mode={mode}
                 />
 
-                <div>
-                  <AdmissionPricing
-                    data={data}
-                    setFormData={setFromData as React.SetStateAction<any>}
-                    discountAmount={discountAmount}
-                    totalAmount={totalAmount}
-                    vatAmount={vatAmount}
-                    mode={mode}
-                  />
-                </div>
+                <AdmissionPricing
+                  data={data}
+                  setFormData={setFromData as React.SetStateAction<any>}
+                  discountAmount={discountAmount}
+                  totalAmount={totalAmount}
+                  vatAmount={vatAmount}
+                  mode={mode}
+                />
               </div>
             </div>
+
             <ForDewCollection
               data={data as unknown as IOrderData}
               dewModalOpen={dewModalOpen}
               setDewModalOpen={setDewMOdalOpen}
-              setFormData={setFormData as any}
+              setFormData={setFromData as React.SetStateAction<any>}
             />
-          </>
+          </Form>
         </RModal>
       )}
     </div>

@@ -184,6 +184,43 @@ export const financialReportItem = [
       ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
     ],
   },
+  // ! indoor
+  {
+    key: "27",
+    title: "Indoor Income Ledger",
+    href: "/financialReport/indoor-income-ledger",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "27",
+    title: "Indoor Due Ledger",
+    href: "/financialReport/indoor-due-list",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "27",
+    title: "Indoor Due Collection",
+    href: "/financialReport/indoor-due-collection",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
+    key: "27",
+    title: "Indoor Employee Ledger Detaily",
+    href: "/financialReport/indoor-employee-ledger-summery",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
 ];
 
 export const generalMenuItems = [
@@ -362,7 +399,7 @@ export const investigationMenuItems = [
 export const indoorItems = [
   {
     key: "1",
-    title: "World Management",
+    title: "Bed Category",
     href: "/worlds",
     requiredPermission: [
       ENUM_USER_PEMISSION.GET_TESTS,
@@ -382,6 +419,24 @@ export const indoorItems = [
     key: "3",
     title: "Patient Admission",
     href: "/admission",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
+  {
+    key: "4",
+    title: "Desease Management",
+    href: "/desease",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
+  {
+    key: "5",
+    title: "Package Management",
+    href: "/package",
     requiredPermission: [
       ENUM_USER_PEMISSION.GET_ORDER,
       ENUM_USER_PEMISSION.MANAGE_ORDER,

@@ -50,6 +50,37 @@ const incomeApi = baseApi.injectEndpoints({
         params: args,
       }),
     }),
+
+    // ! Indoor statement
+
+    getIndoorIncomeLedger: build.query({
+      query: (args) => ({
+        url: "/indoor-finance",
+        method: "GET",
+        params: args,
+      }),
+    }),
+    getIndoorDueLedger: build.query({
+      query: (args) => ({
+        url: "/indoor-finance/due-collection",
+        method: "GET",
+        params: args,
+      }),
+    }),
+    getIndoorDuecollectionLedger: build.query({
+      query: (args) => ({
+        url: "/indoor-finance/due-collection-statement",
+        method: "GET",
+        params: args,
+      }),
+    }),
+    getIndoorEmpDetailsLedger: build.query({
+      query: (args) => ({
+        url: "/indoor-finance/daily-collection-details",
+        method: "GET",
+        params: args,
+      }),
+    }),
   }),
 });
 
@@ -59,4 +90,8 @@ export const {
   useGetEmployeeIncomeStatementSummeryQuery,
   useGetDueDetailsQuery,
   useGetLastTEDaysIncomeQuery,
+  useGetIndoorIncomeLedgerQuery,
+  useGetIndoorDueLedgerQuery,
+  useGetIndoorEmpDetailsLedgerQuery,
+  useGetIndoorDuecollectionLedgerQuery,
 } = incomeApi;

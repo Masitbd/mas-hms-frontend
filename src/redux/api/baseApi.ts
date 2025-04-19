@@ -52,8 +52,11 @@ export const baseApi = createApi({
     "order-posted-by",
     "doctor-seal",
     "beds",
+    "admission",
     "worlds",
     "single-order-payment-info",
+    "desease",
+    "packages",
   ],
 
   // tagTypes: tagTypes,

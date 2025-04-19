@@ -150,11 +150,13 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
         <DueCollectionModal data={data} />
 
         <BedTransferModal
+          id={data?._id}
+          dayStayed={data?.daysStayed}
           totalAmount={data?.totalAmount}
           patientRegNo={data?.regNo}
           previousBed={data?.allocatedBed}
           firstAdmitDate={data?.admissionDate}
-          isTransfer={data?.isTransfer}
+          isReleased={data?.status}
         />
         <AddServiceModal />
         {releasing ? (

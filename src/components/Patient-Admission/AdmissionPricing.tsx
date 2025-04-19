@@ -1,9 +1,11 @@
 "use client";
 
-import { ENUM_MODE } from "@/enum/Mode";
+
 import { useGetAllWorldsQuery } from "@/redux/api/world.api";
-import { useEffect } from "react";
+
 import { IAdmissionInitialDataParams } from "./AdmissionInfo";
+import { useGetAllPackageQuery } from "@/redux/api/package.api";
+import { useMemo } from "react";
 type TAdmissionPricingParams = {
   data: any;
   discountAmount: number;
@@ -21,18 +23,25 @@ type TAdmissionPricingParams = {
 
 const AdmissionPricing = async (params: TAdmissionPricingParams) => {
   const { data: worlds, isLoading } = useGetAllWorldsQuery(undefined);
+  const { data: packageItems, isLoading: pakcageLoading } =
+    useGetAllPackageQuery(undefined);
+
   // console.log(worlds, "workd");
   const { data, discountAmount, vatAmount, mode } = params;
 
-  let totalAmount = 0;
+  const totalAmount = useMemo(() => {
+    const bedPrice = worlds?.data?.find(
+      (item: { _id: string }) => data.worldId === item._id
+    );
+    const fixedPrice = packageItems?.data?.find(
+      (item: { _id: string }) => data.fixedBill === item._id
+    );
 
-  const bedPrice = worlds?.data?.find(
-    (item: { _id: string }) => data.worldId === item._id
-  );
+    if (fixedPrice) return fixedPrice.price;
+    if (bedPrice) return bedPrice.charge;
 
-  if (bedPrice) {
-    totalAmount = bedPrice.charge;
-  }
+    return 0;
+  }, [worlds, packageItems, data.worldId, data.fixedBill]);
 
   // Return your component JSX here if applicable
 
@@ -108,7 +117,7 @@ const AdmissionPricing = async (params: TAdmissionPricingParams) => {
           ""
         )} */}
         <hr />
-        <div className=" flex justify-between">
+        {/* <div className=" flex justify-between">
           <div className="font-bold">Due Amount</div>
           <div className="font-bold  text-red-600">
             {(
@@ -117,7 +126,7 @@ const AdmissionPricing = async (params: TAdmissionPricingParams) => {
                 : dueAmount) ?? 0
             ).toFixed(2)}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

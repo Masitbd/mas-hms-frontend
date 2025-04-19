@@ -26,17 +26,21 @@ type TBed = {
 };
 
 const BedTransferModal = ({
+  id,
+  dayStayed,
   totalAmount,
   previousBed,
   patientRegNo,
   firstAdmitDate,
-  isTransfer,
+  isReleased,
 }: {
+  id: string;
+  dayStayed: number;
   totalAmount: number;
   patientRegNo: string;
   previousBed: string;
   firstAdmitDate: string;
-  isTransfer: Boolean;
+  isReleased: string;
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -128,7 +132,7 @@ const BedTransferModal = ({
   return (
     <div>
       <CustomModal
-        disabled={!!isTransfer}
+        disabled={isReleased === "released"}
         open={open}
         setOpen={setOpen}
         text="Bed Transfer"

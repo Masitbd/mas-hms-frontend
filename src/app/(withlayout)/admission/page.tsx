@@ -1,6 +1,6 @@
 "use client";
 
-import AdmitPatientModal from "@/components/Patient-Admission/AdminPatientModal";
+import AdmitPatientModal from "@/components/Patient-Admission/AdmitPatientModal";
 import AdmissionTable from "@/components/Patient-Admission/AdmissionTable";
 import { useGetAllAdmissionQuery } from "@/redux/api/admission.api";
 
