@@ -22,18 +22,13 @@ import {
 } from "@/components/order/initialDataAndTypes";
 import PatientInformation from "@/components/order/PatientInformation";
 import { ENUM_MODE } from "@/enum/Mode";
-import { useAppDispatch } from "@/redux/hook";
-import { setId } from "@/redux/features/IdStore/idSlice";
-import jsPDF from "jspdf";
-import { URL } from "url";
+
 import Refund from "@/components/order/Refund";
 import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { ITestsFromOrder } from "@/components/generateReport/initialDataAndTypes";
-import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import swal from "sweetalert";
-import GlassMorphismLoader from "@/components/ui/GlassMorphismLoader";
 import InvoiceGenerator from "@/components/order/InvoceGenerator";
 import { printInvoice } from "@/components/order/OrderHelper";
 import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";

@@ -13,6 +13,9 @@ import {
   religionType,
 } from "./patientConstant";
 import { Textarea } from "../companyInfo/TextArea";
+import { ENUM_MODE } from "@/enum/Mode";
+import { useGetOrderAndPaymentInfoByUUIDQuery } from "@/redux/api/order/orderSlice";
+import TransactionList from "./TransactionList";
 
 const PatientForm = ({
   defaultValue,
@@ -35,6 +38,17 @@ const PatientForm = ({
   image: any;
   setImage: React.Dispatch<SetStateAction<any>>;
 }) => {
+  const {
+    isLoading: orderAndPaymentInfoLoading,
+    isFetching: orderAndPaymentInfoFetching,
+    data: orderAndPaymentInfoData,
+    error: orderAndPaymentInfoError,
+  } = useGetOrderAndPaymentInfoByUUIDQuery(
+    { uuid: defaultValue?.uuid },
+    { skip: mode !== "watch" }
+  );
+
+  console.log(orderAndPaymentInfoData);
   return (
     <div>
       <Form
@@ -182,7 +196,27 @@ const PatientForm = ({
           </div>
         </div>
       </Form>
-      {/* Result Fields */}
+      {/* Transaction history of the patient */}
+
+      {mode == "watch" && (
+        <div className="my-5 border  shadow-lg mx-5">
+          <div className="bg-[#3498ff] text-white px-2 py-2">
+            <h2 className="text-center text-xl font-semibold">
+              Order and Transaction History
+            </h2>
+          </div>
+          <div className=" gap-5 justify-center w-full px-2 py-4">
+            <main className="mx-auto py-6">
+              <TransactionList
+                data={orderAndPaymentInfoData?.data}
+                isLoading={orderAndPaymentInfoLoading}
+                error={orderAndPaymentInfoError as string}
+                patientInfo={formData as unknown as IPatient}
+              />
+            </main>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

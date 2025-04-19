@@ -24,7 +24,7 @@ import {
 import RegisteredPatient from "./RegPatient";
 import NotRegPatient from "./NotRegPatient";
 
-const PInfo = (porps) => {
+const PInfo = (porps: any) => {
   const {
     data,
     setFormData,
@@ -101,7 +101,7 @@ const PInfo = (porps) => {
         <div className="grid grid-cols-6 gap-5">
           <Form
             onChange={(value, event) =>
-              setFormData((prevData) => ({
+              setFormData((prevData: any) => ({
                 ...prevData,
                 patientType: value.patientType,
               }))

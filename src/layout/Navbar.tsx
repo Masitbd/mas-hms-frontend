@@ -42,6 +42,13 @@ const CustomNavbar = ({
         <Nav.Item eventKey="3" as={NavLink} href="/order">
           Dashboard
         </Nav.Item>
+        <Nav.Item
+          eventKey="4"
+          as={NavLink}
+          href="https://account-frontend.vercel.app/journal"
+        >
+          Account
+        </Nav.Item>
       </Nav>
       <Nav pullRight className="mr-5">
         Logged In As <span className="font-bold"> {user?.profile?.name}</span>

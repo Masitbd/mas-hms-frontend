@@ -3,6 +3,10 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { ToWords } from "to-words";
 import { TDocumentDefinitions } from "pdfmake/interfaces";
+import LedgerEnum from "@/enum/ENUMAccountHeads";
+import { ENUMJournalType } from "@/enum/ENUMJournalTYpe";
+import { ENUMBudgetType } from "@/enum/ENUMBudgetType";
+import { usePostJournalEntryMutation } from "@/redux/api/journal/journalSlice";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const numberToWord = new ToWords({
   localeCode: "en-BD",
@@ -68,7 +72,7 @@ export const printInvoice = async ({
           fontSize: 8,
           margin: [20, 0],
           alignment: "center",
-          color: "#7d7d7c",
+          color: "#0d0d0d",
         },
       ],
     },
@@ -187,6 +191,14 @@ export const printInvoice = async ({
               style: "info",
               alignment: "right",
             },
+            data?.refBy?.code
+              ? {
+                  text: data?.refBy?.code,
+                  bold: true,
+                  style: "info",
+                  alignment: "right",
+                }
+              : {},
           ],
         ],
         margin: [0, 5],
@@ -211,7 +223,7 @@ export const printInvoice = async ({
               item.name,
 
               item?.deliveryDate,
-              item.price, // Using createdAt as delivery date, similar to OCR sample
+              { text: item.price, alignment: "right" },
             ]),
           ],
         },
@@ -367,15 +379,6 @@ export const printInvoice = async ({
         style: "info",
       },
 
-      {
-        text: `Delivery Date :${data?.deliveryDate}`,
-        style: "info",
-      },
-      {
-        text: `Delivery Time:${data?.deliveryTime}`,
-        style: "info",
-      },
-
       // Room names
       data?.roomNames?.length
         ? {
@@ -428,9 +431,75 @@ export const printInvoice = async ({
       deliveryNotice:
         "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744009021/5bfa98fb23111ff281ed84a598a39451_lsm3fj.png",
       provarbNote:
-        "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744009095/ca643631abb813461b4b0afeb77c4633_wczg9c.png",
+        "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744353421/e8fece3a06117f05f9b97ce0a95bd80a_cbfgju.png",
     },
   };
 
   pdfMake.createPdf(dd as unknown as TDocumentDefinitions).print();
+};
+
+// journal Entry post helper
+
+export interface IJournalEntry {
+  account: string;
+  comment?: string;
+  debit: number;
+  credit: number;
+  memo: string;
+  journalType: string;
+  budgetType: string;
+}
+
+export const useOrderJournalEntryPost = ({
+  orderAmount,
+  paid,
+  due,
+}: {
+  orderAmount: number;
+  paid: number;
+  due: number;
+}) => {
+  const [post, { isLoading }] = usePostJournalEntryMutation();
+  const journalEntry: IJournalEntry[] = [
+    {
+      account: LedgerEnum.ServiceIncome,
+      credit: orderAmount,
+      debit: 0,
+      journalType: ENUMJournalType.GENERAL,
+      budgetType: ENUMBudgetType.REGULAR,
+      memo: "Order Placed",
+    },
+  ];
+
+  if (paid) {
+    journalEntry.unshift({
+      account: LedgerEnum.CashInHand,
+      credit: 0,
+      debit: orderAmount,
+      journalType: ENUMJournalType.GENERAL,
+      budgetType: ENUMBudgetType.REGULAR,
+      memo: "Order Placed",
+    });
+  }
+  if (due) {
+    journalEntry.unshift({
+      account: LedgerEnum.AccountsReceivable,
+      credit: 0,
+      debit: orderAmount,
+      journalType: ENUMJournalType.GENERAL,
+      budgetType: ENUMBudgetType.REGULAR,
+      memo: "Order Placed",
+    });
+  }
+
+  const postJournalEntry = async () => {
+    try {
+      const result = await post(journalEntry).unwrap();
+      return result;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return { postJournalEntry, isLoading };
 };
