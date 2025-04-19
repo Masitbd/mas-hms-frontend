@@ -24,7 +24,6 @@ import {
 
 import RegisteredPatient from "./RegPatient";
 import NotRegPatient from "./NotRegPatient";
-
 const { StringType, NumberType } = Schema.Types;
 
 const PInfo = (porps: any) => {

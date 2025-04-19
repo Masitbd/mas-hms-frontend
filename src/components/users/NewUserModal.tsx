@@ -42,6 +42,7 @@ const NewUserModal = (props: IPropsForNewUserModel) => {
         password: formData.password,
         profile: profile,
         role: formData.role,
+        email: formData?.email,
       };
       const result = await postUser(userData).unwrap();
       if (result?.success) {

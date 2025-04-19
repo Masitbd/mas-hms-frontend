@@ -57,42 +57,49 @@ const LoginPage = () => {
   ] = useLoginMutation();
   type ILoginData = {
     uuid: string;
+    email: string;
     password: string;
   };
   const initialFormData: ILoginData = {
     uuid: "",
     password: "",
+    email: "",
   };
   const [loginData, setLoginData] = useState(initialFormData);
   const model = Schema.Model({
-    uuid: StringType().isRequired("This field is required."),
+    email: StringType()
+      .isRequired("This field is required.")
+      .isEmail("Must be a valid email"),
     password: StringType().isRequired("This field is required."),
   });
   const handleLogin = async () => {
     if (formRef.current.check()) {
+      loginData?.email?.toLocaleLowerCase();
       const res = await login(loginData);
     }
   };
 
   // Handling password reset
   const resetModel = Schema.Model({
-    uuid: StringType().isRequired("This field is required."),
+    email: StringType()
+      .isRequired("This field is required.")
+      .isEmail("Email must be valid"),
   });
   const resetFormRef: React.MutableRefObject<any> = useRef();
   type IResetFromData = {
-    uuid: string;
+    email: string;
   };
   const initialResetFromData: IResetFromData = {
-    uuid: "",
+    email: "",
   };
   const [resetFromData, setResetFromData] = useState(initialResetFromData);
   const handlePasswordReset = async () => {
     if (resetFormRef.current.check()) {
       try {
-        const result = await post({ uuid: resetFromData?.uuid }).unwrap();
+        const result = await post({ email: resetFromData?.email }).unwrap();
         if (result?.success) {
           swal("Success", `${result?.message}`, "success");
-          setResetFromData({ uuid: "" });
+          setResetFromData({ email: "" });
         }
       } catch (error) {
         swal("Error", `${error},'error`);
@@ -213,8 +220,8 @@ const LoginPage = () => {
                 model={model}
                 formValue={loginData}
               >
-                <Form.Group controlId="uuid">
-                  <Form.Control name="uuid" placeholder="USER ID" />
+                <Form.Group controlId="email">
+                  <Form.Control name="email" placeholder="Email" />
                 </Form.Group>
                 <Form.Group controlId="password">
                   <InputGroup inside>
@@ -249,7 +256,7 @@ const LoginPage = () => {
                 Reset Password
               </h1>
               <div className="text-sm text-slate-500 my-5">
-                Enter your user id. A mail will be sent to your email address
+                Enter your Email. A mail will be sent to your email address
               </div>
               <Form
                 fluid
@@ -258,8 +265,8 @@ const LoginPage = () => {
                 onChange={handleResetFormData}
                 formValue={resetFromData}
               >
-                <Form.Group controlId="uuid">
-                  <Form.Control name="uuid" type="text" placeholder="UUID" />
+                <Form.Group controlId="email">
+                  <Form.Control name="email" type="text" placeholder="Email" />
                 </Form.Group>
               </Form>
               <div className="flex items-end justify-end mt-5">
@@ -267,7 +274,7 @@ const LoginPage = () => {
                   appearance="primary"
                   color="blue"
                   onClick={handlePasswordReset}
-                  disabled={resetFromData?.uuid?.length == 0}
+                  disabled={resetFromData?.email?.length == 0}
                   loading={postForgotPasswordLoading}
                 >
                   Reset Password

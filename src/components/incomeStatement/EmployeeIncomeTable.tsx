@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { formatDateString } from "@/utils/FormateDate";
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+
 import {
   useGetCompnayInofQuery,
   useGetDefaultQuery,
@@ -10,7 +9,8 @@ import {
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
-
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // Type for individual records associated with each user
