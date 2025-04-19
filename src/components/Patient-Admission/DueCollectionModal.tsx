@@ -1,37 +1,67 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import CustomModal from "../CustomModal";
-import { Button, Form } from "rsuite";
+import { Button, Form, Message, Schema, toaster } from "rsuite";
 import { useUpdateDuePaymentMutation } from "@/redux/api/payment.api";
 import Swal from "sweetalert2";
+import { useAppSelector } from "@/redux/hook";
 type TDueCollection = {
   data: {
+    dueAmount?: number;
     regNo: string;
     totalAmount: number;
-    paymentInfo: {
+    paymentInfo?: {
       totalPaid: number;
     };
   };
 };
 
+const { NumberType } = Schema.Types;
+const deuModel = Schema.Model({
+  amount: NumberType()
+    .isRequired("Amount is required")
+    .min(1, "Must be at least 1"),
+});
+
 const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
   const [updatePayment, { isLoading }] = useUpdateDuePaymentMutation();
-
+  const currentUser = useAppSelector((state) => state.auth.user);
   const [open, setOpen] = useState(false);
-  const dueAmount = data?.totalAmount - data?.paymentInfo?.totalPaid;
+  const dueAmount =
+    data?.dueAmount ??
+    (data?.totalAmount ?? 0) - (data?.paymentInfo?.totalPaid ?? 0);
   const [formValue, setFormValue] = useState({ amount: dueAmount });
   const handleFormChange = (updatedValue: Record<string, any>) => {
     setFormValue((prev) => ({ ...prev, ...updatedValue }));
   };
 
-  const handleSubmit = async () => {
-    const { amount } = formValue;
+  const formRef = useRef<any>(null);
 
+  const handleSubmit = async () => {
     try {
+      const result = await formRef.current?.checkAsync();
+
+      if (result?.hasError) {
+        const errors = Object.keys(result.formError || {});
+        errors.forEach((field) => {
+          toaster.push(
+            <Message showIcon type="error" closable>
+              <strong>{field}</strong> is required.
+            </Message>,
+            { duration: 2000 }
+          );
+        });
+        return;
+      }
+
+      const { amount } = formValue;
+
       const payload = {
         regno: data?.regNo,
         data: {
           amount: Number(amount),
+          purpose: "due-collection",
+          receivedBy: currentUser?._id,
         },
       };
 
@@ -89,6 +119,7 @@ const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
             onChange={handleFormChange}
             onSubmit={handleSubmit}
             formValue={formValue}
+            model={deuModel}
             className=" w-full  grid-cols-3"
           >
             <Form.Group controlId="bedName">
