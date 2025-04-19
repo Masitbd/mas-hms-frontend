@@ -10,27 +10,28 @@ import {
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
-import DueCollectionModal from "../Patient-Admission/DueCollectionModal";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 type TRecord = {
-  regNo: string;
-  name: string;
-  admissionDate: string; // ISO date string
-  releaseDate: string; // ISO date string or empty if not yet released
-  bedName: string;
-  doctName: string;
-  totalPaid: number;
+  oid: string;
+  regNo?: string;
   amount: number;
-  dueAmount: number;
+  totalPaid: number;
+  createdAt: string;
+};
+
+// Type for each user
+type TUser = {
+  totalAmountPaid: number;
+  receiver: string;
+  totalPaid: number;
+  records: TRecord[];
 };
 
 type TGroup = {
-  records: TRecord[];
   paymentDate: string;
-  totalPaid: number;
-  totalAmountPaid: number;
+  receivers: TUser[];
 };
 
 interface IncomeShowTableProps {
@@ -75,92 +76,96 @@ const EmpDetailsTable: React.FC<IncomeShowTableProps> = ({
 
   // pdf
   const generatePDF = () => {
+    const investigationStatement =
+      startDate && endDate
+        ? {
+            text: `Investigation Income Statement: Between ${formatDateString(
+              startDate
+            )} to ${formatDateString(endDate)}`,
+            style: "subheader",
+            alignment: "center",
+            margin: [0, 0, 0, 20],
+          }
+        : null;
+
+    const preparedData = data?.map((group) => ({
+      ...group,
+      users: (group.receivers || group.receivers)?.map((user) => ({
+        ...user,
+        records: user.records?.map((record) => ({
+          ...record,
+          amount: isNaN(Number(record.amount)) ? 0 : Number(record.amount),
+          date:
+            record.createdAt ||
+            (record.createdAt ? record.createdAt.slice(0, 10) : ""),
+        })),
+        totalPaid: isNaN(Number(user.totalPaid || user.totalAmountPaid))
+          ? 0
+          : Number(user.totalPaid || user.totalAmountPaid),
+      })),
+    }));
+
     const documentDefinition: any = {
-      pageOrientation: "landscape",
-      defaultStyle: {
-        fontSize: 12,
-      },
+      pageOrientation: "portrait",
+      defaultStyle: { fontSize: 12 },
       pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
-        ...(infoHeader ? infoHeader.map((item) => item) : []),
+        ...(infoHeader ? infoHeader : []),
+        investigationStatement,
+
         {
-          text: `Investigation Income Statement: Between ${
-            startDate ? formatDateString(startDate) : "N/A"
-          } to ${endDate ? formatDateString(endDate) : "N/A"}`,
-          style: "subheader",
-          alignment: "center",
-          margin: [0, 0, 0, 20],
+          table: {
+            widths: [150, 150, 150],
+            headerRows: 1,
+            body: [
+              [
+                { text: "Time", style: "tableHeader" },
+                { text: "Particular", style: "tableHeader" },
+                { text: "Debit", style: "tableHeader" },
+              ],
+            ],
+          },
+          margin: [0, 0, 0, 10],
         },
-        ...data
-          .map((group) => {
-            return [
-              {
-                text: `${group?.paymentDate}`,
-                style: "groupHeader",
-                margin: [0, 10, 0, 5],
-              },
-              {
-                table: {
-                  widths: [60, 60, 80, 70, 70, 90, 60],
-                  headerRows: 1,
-                  body: [
-                    [
-                      { text: "Reg No", style: "tableHeader" },
-                      { text: "Bed", style: "tableHeader" },
-                      { text: "Name", style: "tableHeader" },
-                      { text: "Admission", style: "tableHeader" },
-                      { text: "Release", style: "tableHeader" },
 
-                      { text: "Paid", style: "tableHeader" },
-                      { text: "Total Paid", style: "tableHeader" },
-                    ],
-                    ...group.records.map((record) => [
-                      record.regNo ?? " ",
-                      record.bedName ?? " ",
-                      record.name ?? " ",
-                      record.admissionDate?.substring(2, 10) ?? " ",
-                      record.releaseDate?.substring(2, 10) ?? " ",
-
-                      record.amount ?? 0,
-                      record.totalPaid ?? 0,
-                    ]),
-                    [
-                      {
-                        text: "Total",
-                        colSpan: 6,
-                        alignment: "center",
-                        bold: true,
-                      },
-                      {},
-                      {},
-                      {},
-                      {},
-                      {},
-                      { text: group?.totalAmountPaid ?? 0, bold: true },
-                      { text: group?.totalPaid ?? 0, bold: true },
-                    ],
-                  ],
-                },
-                margin: [0, 0, 0, 10],
+        // Dynamic groups
+        ...preparedData?.flatMap((group) => [
+          {
+            text: ` ${group?.paymentDate || group?.paymentDate || " "}`,
+            style: "groupHeader",
+            margin: [0, 10, 0, 10],
+          },
+          ...group.users?.flatMap((user) => [
+            {
+              text: ` ${user?.receiver || user?.receiver || " "}`,
+              style: "nameHeader",
+              margin: [0, 10, 0, 10],
+            },
+            {
+              table: {
+                widths: [150, 150, 150],
+                body: user.records?.map((record) => [
+                  record.date || " ",
+                  record.regNo || " ",
+                  Number(record.amount || 0).toFixed(2),
+                ]),
               },
-            ];
-          })
-          .flat(),
+              margin: [0, 0, 0, 10],
+            },
+            {
+              text: `Total : ${Number(user.totalPaid ?? 0).toFixed(2)}`,
+              style: "totalpaidHeader",
+              margin: [10, 0, 0, 0],
+            },
+          ]),
+        ]),
       ],
       styles: {
-        header: {
-          fontSize: 16,
-          bold: true,
-        },
-        subheader: {
-          fontSize: 12,
-          italics: true,
-          color: "red",
-        },
-        groupHeader: {
-          fontSize: 12,
-          bold: true,
-        },
+        header: { fontSize: 16, bold: true },
+        subheader: { fontSize: 12, italics: true, color: "red" },
+        groupHeader: { fontSize: 12, bold: true, color: "blue" },
+        nameHeader: { fontSize: 12, bold: true, margin: [0, 5, 0, 5] },
+        totalpaidHeader: { fontSize: 12, bold: true },
         tableHeader: {
           bold: true,
           fillColor: "#eeeeee",
@@ -195,60 +200,53 @@ const EmpDetailsTable: React.FC<IncomeShowTableProps> = ({
 
       <div className="w-full">
         {/* Table Header */}
-        <div className="grid grid-cols-7 bg-gray-100 font-semibold text-center p-2">
-          <div>Bill No</div>
-          <div>Bed Name</div>
-          <div>Name</div>
-
-          <div>Admission Date</div>
-          <div>Release Date</div>
-
-          <div>Amount Paid</div>
-          <div>Total Paid</div>
+        <div className="grid grid-cols-3 bg-gray-100 font-semibold text-center p-2">
+          <div>Time</div>
+          <div>Particular</div>
+          <div>Debit</div>
         </div>
 
-        {data.map((group, groupIndex) => {
-          return (
-            <div key={groupIndex} className="mb-8">
-              {/* Group Date Row */}
-              <div className="text-lg font-semibold p-2 mb-2">
-                {group.paymentDate}
-              </div>
+        {data.map((group, groupIndex) => (
+          <div key={groupIndex} className="mb-8">
+            {/* Group Date Row */}
+            <div className="text-lg font-semibold p-2 mb-2 text-blue-700">
+              {group?.paymentDate}
+            </div>
 
-              {/* Records Table */}
-              <div className="w-full border-t">
-                {/* Records Rows */}
-                {group.records.map((record, recordIndex) => (
-                  <div
-                    key={recordIndex}
-                    className="grid grid-cols-7 text-center p-2 border-b"
-                  >
-                    <div>{record.regNo}</div>
-                    <div>{record.bedName}</div>
-                    <div>{record.name}</div>
-                    <div>{record.admissionDate.substring(2, 10)}</div>
-                    <div>{record.releaseDate.substring(2, 10)}</div>
+            {/* Users Data */}
+            {group.receivers.map((user, userIndex) => (
+              <div key={userIndex} className="border-t">
+                {/* User Header */}
+                <div className=" font-semibold p-2 border text-violet-700">
+                  Name: {user?.receiver}
+                </div>
 
-                    <div>{record.amount}</div>
-                    <div>{record.totalPaid}</div>
-                  </div>
-                ))}
+                {/* Records Table */}
+                <div className="w-full border-t">
+                  {/* Table Header */}
 
-                {/* Summary Row */}
-                <div className="grid grid-cols-7 text-center p-2 border-t font-semibold bg-gray-200">
-                  <div>Total</div>
+                  {/* Records Rows */}
+                  {user.records.map((record, recordIndex) => (
+                    <div
+                      key={recordIndex}
+                      className="grid grid-cols-3 text-center p-2 border-b"
+                    >
+                      <div>{record?.createdAt.slice(0, 10)}</div>
+                      <div>{record?.regNo}</div>
+                      <div>{record?.amount || 0}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="p-2 border text-violet-700 font-semibold grid grid-cols-3 text-center   ">
                   <div></div>
                   <div></div>
-                  <div></div>
-
-                  <div></div>
-                  <div>{group?.totalAmountPaid}</div>
-                  <div>{group?.totalPaid}</div>
+                  <div>Total: {user.totalAmountPaid}</div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            ))}
+          </div>
+        ))}
       </div>
 
       <button

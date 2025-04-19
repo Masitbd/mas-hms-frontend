@@ -85,7 +85,7 @@ const AdmitPatientModal = () => {
         if (result?.hasError) {
           // Check the specific errors
           const errors = Object.keys(result?.formError || {});
-          console.log(errors, "error");
+
           errors.forEach((errorField) => {
             toaster.push(
               <Message showIcon type="error" closable>
@@ -96,7 +96,7 @@ const AdmitPatientModal = () => {
           });
         } else {
           try {
-            data.receivedBy = currentUser?._id;
+            data.receivedBy = currentUser?.uuid;
 
             const res = await createAdmission(data).unwrap();
             if (res.success) {

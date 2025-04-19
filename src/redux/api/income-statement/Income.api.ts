@@ -76,7 +76,7 @@ const incomeApi = baseApi.injectEndpoints({
     }),
     getIndoorEmpDetailsLedger: build.query({
       query: (args) => ({
-        url: "/indoor-finance/daily-collection",
+        url: "/indoor-finance/daily-collection-details",
         method: "GET",
         params: args,
       }),
