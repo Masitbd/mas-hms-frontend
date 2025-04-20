@@ -92,7 +92,10 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
               </Form>
               <div className="my-5">
                 <h3>Seal Information</h3>
-                <div style={{ width: "270mm" }}>
+                <div
+                  style={{ width: "270mm", fontFamily: "!monospace" }}
+                  className="!font-mono"
+                >
                   <Tiptap data={data.seal} setData={setSeal} />
                 </div>
               </div>

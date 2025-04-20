@@ -17,7 +17,7 @@ import PatientInformaiton from "./PatientInformaiton";
 import { useGetSingleDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import Loading from "@/app/loading";
 import { useGetMiscQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
-import { Table } from "rsuite";
+import { Grid, Table } from "rsuite";
 import { ISensitivity } from "../bactrologicalInfo/typesAndInitialData";
 
 const ReportViewerMicro = React.forwardRef(
@@ -54,148 +54,250 @@ const ReportViewerMicro = React.forwardRef(
 
     return (
       <>
-        <div className="my-5 mx-5" ref={ref}>
+        <div ref={ref}>
           <div>
             <PatientInformaiton
               order={params.order}
               testResult={params.result}
             />
           </div>
-
-          <div>
-            <div className="flex items-center justify-center">
-              <div className=" border-stone-700 border rounded-md px-5 py-2 text-xl font-serif font-bold">
-                {params.reportGroup.label}
-              </div>
-            </div>
-          </div>
-
-          {!growth ? (
-            <>
-              <div className="font-serif">
-                <h3 className="text-xl font-bold">
-                  CULTURE OF {result?.specimen}
-                </h3>
-
-                <span className="font-sans">
-                  {" "}
-                  {replacePlaceholders(specimenWiseDescription?.value)}
-                </span>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="grid grid-cols-12">
-                <div className="col-span-3 font-serif">Shows Growth Of:</div>
-                <div className="text-xl  font-normal">{result.bacteria}</div>
-                <div className="row-start-2 col-span-3 ">Colony Count:</div>
-                <div className="row-start-2 w-full col-span-3 text-lg">
-                  <code className="block">
-                    1 X {result?.colonyCount?.base} 10
-                    <sup>{result?.colonyCount?.power}</sup> /ml.
-                  </code>
+          <table style={{ width: "100%" }}>
+            <tr>
+              <th style={{ paddingTop: "2rem", paddingBottom: "1rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: "0.5rem",
+                      border: "1px solid black",
+                      borderRadius: "5px",
+                      fontSize: "1.5rem",
+                    }}
+                  >
+                    {params.reportGroup.label}
+                  </div>
                 </div>
-              </div>
+              </th>
+            </tr>
 
-              {result?.sensivityOptions &&
-                result.sensivityOptions.length > 0 && (
-                  <>
-                    {" "}
-                    <div className="my-5  border-stone-500 border-2">
-                      <div className="">
-                        <h2 className="text-center text-xl font-bold  border-stone-500 border-2 py-2 font-serif">
-                          ANTI BIOGRAM OF ORGANISMS ISOLATED
-                        </h2>
-                      </div>
-                      <div className="grid grid-cols-12 divide-y divide-x text-sm font-serif font-bold">
-                        <div className="col-span-5  px-2 py-2 font-bold">
-                          {fields[0]}
-                        </div>
-                        <div className="col-span-2 px-2 py-2 font-bold uppercase">
-                          {fields[1]}
-                        </div>
-                        <div className="col-span-3  px-2 py-2 font-bold uppercase">
-                          {fields[2]}
-                        </div>
-                        <div className="col-span-2  px-2 py-2 font-bold uppercase">
-                          {fields[3]}
-                        </div>
-                        {result?.sensivityOptions &&
-                          result?.sensivityOptions?.length > 0 &&
-                          result.sensivityOptions?.map(
-                            (sensitivity: ISensitivity) => {
-                              return fields.map((field: string) => {
-                                return (
-                                  <>
-                                    <div
-                                      className={`${
-                                        field == fields[0]
-                                          ? "col-span-5"
-                                          : field == fields[2]
-                                          ? "col-span-3"
-                                          : "col-span-2"
-                                      } px-2 py-2 font-serif font-normal`}
-                                    >
-                                      {field == fields[0]
-                                        ? sensitivity.value
-                                        : sensitivity[
-                                            field as keyof ISensitivity
-                                          ]}
-                                    </div>
-                                  </>
-                                );
-                              });
-                            }
-                          )}
-                      </div>
+            {!growth ? (
+              <>
+                <tr style={{ fontFamily: "serif" }}>
+                  <td>
+                    <h3 style={{ fontWeight: "bold", fontSize: "larger" }}>
+                      CULTURE OF {result?.specimen}
+                    </h3>
+
+                    <span style={{ fontFamily: "sans-serif" }}>
+                      {" "}
+                      {replacePlaceholders(specimenWiseDescription?.value)}
+                    </span>
+                  </td>
+                </tr>
+              </>
+            ) : (
+              <>
+                <tr>
+                  <td
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(12,1fr)",
+                    }}
+                  >
+                    <div style={{ gridColumn: "span 3" }}>Shows Growth Of:</div>
+                    <div style={{ fontSize: "large", fontWeight: "normal" }}>
+                      {result.bacteria}
                     </div>
-                  </>
-                )}
-            </>
-          )}
-          {result?.comment ? (
-            <div
-              style={{
-                border: "1px solid",
-                padding: "10px",
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: "4px",
-                margin: "20px 0",
-                borderRadius: "8px",
-                fontFamily: "serif",
-              }}
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: result?.comment,
+                    <div style={{ gridRowStart: "2", gridColumn: "span 3" }}>
+                      Colony Count:
+                    </div>
+                    <div
+                      style={{
+                        gridRowStart: "2",
+                        gridColumn: "span 3",
+                        width: "100%",
+                        fontSize: "large",
+                      }}
+                    >
+                      <code style={{ display: "block" }}>
+                        1 X {result?.colonyCount?.base} 10
+                        <sup>{result?.colonyCount?.power}</sup> /ml.
+                      </code>
+                    </div>
+                  </td>
+                </tr>
+
+                {result?.sensivityOptions &&
+                  result.sensivityOptions.length > 0 && (
+                    <>
+                      {" "}
+                      <tr>
+                        <th
+                          style={{
+                            fontFamily: "serif",
+                            fontSize: "1.5rem",
+                            border: "1px solid black",
+                            textTransform: "uppercase",
+                          }}
+                          colSpan={4}
+                        >
+                          ANTI BIOGRAM OF ORGANISMS ISOLATED
+                        </th>
+                      </tr>
+                      <tr
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: `repeat(12, 1fr)`,
+                          textAlign: "left",
+                          textTransform: "uppercase",
+                          fontSize: "medium",
+                          wordWrap: "break-word",
+                        }}
+                      >
+                        <th
+                          style={{
+                            gridColumn: "span 5",
+                            border: "1px solid black",
+                            padding: "8px",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {fields[0]}
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid black",
+                            gridColumn: "span 2",
+                            padding: "8px",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {fields[1]}
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid black",
+                            gridColumn: "span 3",
+                            padding: "8px",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {fields[2]}
+                        </th>
+                        <th
+                          style={{
+                            border: "1px solid black",
+                            gridColumn: "span 2",
+                            padding: "8px",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {fields[3]}
+                        </th>
+                      </tr>
+                      {result?.sensivityOptions &&
+                        result?.sensivityOptions?.length > 0 &&
+                        result.sensivityOptions?.map(
+                          (sensitivity: ISensitivity) => {
+                            return (
+                              <tr
+                                key={sensitivity?._id}
+                                style={{
+                                  display: "grid",
+                                  gridTemplateColumns: `repeat(12, 1fr)`,
+                                  textAlign: "left",
+                                  fontSize: "medium",
+                                }}
+                              >
+                                {fields.map((field: string) => {
+                                  return (
+                                    <>
+                                      <td
+                                        style={{
+                                          border: "1px solid black",
+                                          gridColumn:
+                                            field == fields[0]
+                                              ? "span 5"
+                                              : field == fields[2]
+                                              ? "span 3"
+                                              : "span 2",
+                                          padding: "6px",
+                                        }}
+                                        key={fields[0]}
+                                      >
+                                        {field == fields[0]
+                                          ? sensitivity.value
+                                          : sensitivity[
+                                              field as keyof ISensitivity
+                                            ]}
+                                      </td>
+                                    </>
+                                  );
+                                })}
+                              </tr>
+                            );
+                          }
+                        )}
+                    </>
+                  )}
+              </>
+            )}
+            {result?.comment ? (
+              <tr
+                style={{
+                  padding: "10px",
+                  margin: "20px 0",
+                  borderRadius: "8px",
+                  fontFamily: "monospace",
+                  pageBreakInside: "avoid",
                 }}
-                style={{ whiteSpace: "pre", width: "270mm" }}
-              />
-            </div>
-          ) : (
-            ""
-          )}
+              >
+                <td
+                  colSpan={4}
+                  dangerouslySetInnerHTML={{
+                    __html: result?.comment,
+                  }}
+                  style={{
+                    overflowWrap: "break-word",
+                    paddingTop: "3rem",
+                  }}
+                />
+              </tr>
+            ) : (
+              ""
+            )}
+
+            <tfoot>
+              <tr>
+                <td>
+                  <div className="footer-space" style={{ height: "100px" }}>
+                    &nbsp;
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
           <div>
             {result.seal ? (
               <div
                 style={{
-                  fontFamily: "Roboto",
-                  margin: "20px",
-                  padding: "10px",
-
-                  fontSize: "0.875rem",
-                  width: "270mm",
-                  pageBreakBefore: "always",
-                  breakBefore: "always",
+                  bottom: 0,
+                  width: "100%",
+                  fontSize: "smaller",
                 }}
                 id="seals"
               >
                 <div
                   style={{
                     whiteSpace: "pre-wrap",
-                    overflowWrap: "break-word",
-                    overflow: "auto",
+
+                    fontFamily: "monospace",
                   }}
                   dangerouslySetInnerHTML={{
                     __html: result?.seal,

@@ -22,20 +22,19 @@ import {
 } from "@/components/order/initialDataAndTypes";
 import PatientInformation from "@/components/order/PatientInformation";
 import { ENUM_MODE } from "@/enum/Mode";
-import { useAppDispatch } from "@/redux/hook";
-import { setId } from "@/redux/features/IdStore/idSlice";
-import jsPDF from "jspdf";
-import { URL } from "url";
+
 import Refund from "@/components/order/Refund";
 import { ITest, IVacuumTube } from "@/types/allDepartmentInterfaces";
 import { ITestsFromOrder } from "@/components/generateReport/initialDataAndTypes";
-import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import swal from "sweetalert";
-import GlassMorphismLoader from "@/components/ui/GlassMorphismLoader";
+import InvoiceGenerator from "@/components/order/InvoceGenerator";
+import { printInvoice } from "@/components/order/OrderHelper";
+import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 
 const Order = () => {
+  const { data: companyInfo } = useGetDefaultQuery({ default: true });
   const refForUnregistered: React.MutableRefObject<any> = useRef();
   const patientTypeRef: React.MutableRefObject<any> = useRef();
   const [data, setFormData] = useState<InitialData>(initialData);
@@ -189,18 +188,15 @@ const Order = () => {
             return;
           }
 
-          console.log("hit");
-
           const result = await postOrder(orderData).unwrap();
 
           // Handling pdf after order post
           if (result?.success) {
-            const invoice = await getInvoice(result?.data?.oid);
-            const newWindow = window.open("", "_blank");
-
-            if (newWindow) {
-              newWindow.document.write(decodeURIComponent(invoice.data.data));
-              newWindow.document.title = "Managed By HMS system";
+            if (result?.success) {
+              const { data: invoiceData } = await getInvoice(
+                result?.data?.oid
+              ).unwrap();
+              printInvoice({ companyInfo: companyInfo, data: invoiceData });
             }
           }
           setData(initialData);
@@ -219,13 +215,10 @@ const Order = () => {
 
           // Handling pdf after order post
           if (result?.success) {
-            const invoice = await getInvoice(result?.data?.oid);
-            const newWindow = window.open("", "_blank");
-
-            if (newWindow) {
-              newWindow.document.write(decodeURIComponent(invoice.data.data));
-              newWindow.document.title = "Managed By HMS system";
-            }
+            const { data: invoiceData } = await getInvoice(
+              result?.data?.oid
+            ).unwrap();
+            printInvoice({ companyInfo: companyInfo, data: invoiceData });
           }
           setData(initialData);
         } else {
@@ -246,12 +239,13 @@ const Order = () => {
   ] = useLazyGetInvoiceQuery();
   const handlePdf = async (id: string) => {
     const invoice = await getInvoice(id);
-    const newWindow = window.open("", "_blank");
+    // const newWindow = window.open("", "_blank");
 
-    if (newWindow) {
-      newWindow.document.write(decodeURIComponent(invoice.data.data));
-      newWindow.document.title = "Managed By HMS system";
-    }
+    // if (newWindow) {
+    //   newWindow.document.write(decodeURIComponent(invoice.data.data));
+    //   newWindow.document.title = "Managed By HMS system";
+    // }
+    console.log(invoice);
   };
   useEffect(() => {
     if (isSuccess) {
@@ -448,13 +442,8 @@ const Order = () => {
                               </Button>
                             </AuthCheckerForComponent>
                           </div>
-                          <Button
-                            appearance="primary"
-                            color="blue"
-                            onClick={() => handlePdf(data.oid as string)}
-                          >
-                            Invoice
-                          </Button>
+
+                          <InvoiceGenerator id={data?.oid as string} />
                         </div>
                       )}
                     </div>

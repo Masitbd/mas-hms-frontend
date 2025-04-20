@@ -7,7 +7,7 @@ import {
 import { IDepartment } from "@/types/allDepartmentInterfaces";
 import { NewFormType } from "@/types/componentsType";
 import React, { useState } from "react";
-import { Button, Form, Schema, Toggle } from "rsuite";
+import { Button, Form, Message, Schema, toaster, Toggle } from "rsuite";
 import swal from "sweetalert";
 
 const NewDepartmentTable = ({
@@ -26,6 +26,10 @@ const NewDepartmentTable = ({
     // commissionParcentage: NumberType().isRequired("This field is required."),
   });
 
+  const model1 = Schema.Model({
+    roomName: StringType().isRequired("This field is required."),
+    roomNo: StringType().isRequired("This field is required."),
+  });
   const [departmentData, setDepartmentData] =
     useState<IDepartment>(defaultData);
   const [postDepartment] = usePostDepartmentMutation();
@@ -63,6 +67,8 @@ const NewDepartmentTable = ({
           setMode("new");
         }
       }
+    } else {
+      toaster.push(<Message type="error">Fill out all the fields</Message>);
     }
   };
   const [fixedCommissionEnabled, setFixedCommissionEnabled] = useState(false);
@@ -79,12 +85,19 @@ const NewDepartmentTable = ({
             commissionParcentage: Number(formValue.commissionParcentage),
             fixedCommission: Number(formValue.fixedCommission),
             isCommissionFiexed: fixedCommissionEnabled,
+            isRoomInfo: formValue?.isRoomInfo,
+            roomName: formValue?.roomName,
+            roomNo: formValue?.roomNo,
           });
 
           // Additional logic if needed
         }}
         ref={formRef}
-        model={model}
+        model={
+          departmentData?.isRoomInfo
+            ? Schema.Model.combine(model, model1)
+            : model
+        }
       >
         <Form.Group controlId="label">
           <Form.ControlLabel>Department Name</Form.ControlLabel>
@@ -118,6 +131,22 @@ const NewDepartmentTable = ({
           <Form.ControlLabel>Description</Form.ControlLabel>
           <Form.Control name="description" />
         </Form.Group>
+        <Form.Group controlId="isRoomInfo">
+          <Form.ControlLabel>Room Info</Form.ControlLabel>
+          <Form.Control name="isRoomInfo" accepter={Toggle}></Form.Control>
+        </Form.Group>
+        {departmentData?.isRoomInfo && (
+          <>
+            <Form.Group controlId="roomName">
+              <Form.ControlLabel>Room Name</Form.ControlLabel>
+              <Form.Control name="roomName"></Form.Control>
+            </Form.Group>
+            <Form.Group controlId="roomNo">
+              <Form.ControlLabel>Room No.</Form.ControlLabel>
+              <Form.Control name="roomNo"></Form.Control>
+            </Form.Group>
+          </>
+        )}
         <Button
           onClick={() => {
             setMode("new");
@@ -129,6 +158,7 @@ const NewDepartmentTable = ({
               commissionParcentage: 0,
               fixedCommission: 0,
               isCommissionFiexed: false,
+              isRoomInfo: false,
             });
           }}
           appearance="subtle"

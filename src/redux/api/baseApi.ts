@@ -54,6 +54,7 @@ export const baseApi = createApi({
     "beds",
     "admission",
     "worlds",
+    "single-order-payment-info",
     "desease",
     "packages",
   ],

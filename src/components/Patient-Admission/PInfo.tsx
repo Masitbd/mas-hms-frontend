@@ -26,6 +26,7 @@ import RegisteredPatient from "./RegPatient";
 import NotRegPatient from "./NotRegPatient";
 
 const MemoizedNotRegPatient = React.memo(NotRegPatient);
+const { StringType, NumberType } = Schema.Types;
 
 const PInfo = (porps: any) => {
   const {

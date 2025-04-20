@@ -1,0 +1,505 @@
+// playground requires you to assign document definition to a variable called dd
+const data = {
+  items: [
+    { name: 'VDRL (Q+Q)', price: 500, status: false, discount: 0, SL: 1 },
+    { name: 'Vacuette 4ml (Blue)', price: 20, status: false, SL: 2 },
+    { name: 'Vacuette Needle (MSN)', price: 30, status: false, SL: 3 }
+  ],
+  isFree: false,
+  isWatermark: true,
+  oid: 'H250200010',
+  name: 'Md. Monir Ahmed',
+  phone: '01828643482',
+  total: 1050,
+  uuid: null,
+  sex: 'Male',
+  age: '49',
+  address: 'Comilla',
+  consultant: 'Dr. Mutasim Billah, Sr. Consultant Cardiologist & Assott. Professor',
+  createdAt: '2/1/2025',
+  paid: 0,
+  tt: false,
+  tds: [],
+  discount: 50,
+  netPrice: 1000,
+  dueAmount: 1000,
+  parcentDiscount: 0,
+  img: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIQAAAAoCAYAAAA/mlIyAAAABmJLR0QA/wD/AP+gvaeTAAAAtElEQVR4nO3bvQ6CMBhAUer7v3NdjOGS8rPpcM4iNAU+4w2bY845N/h4/XoA/osgCEEQgiAEQQiCEAQhCEIQxOMgxhjbGON7vF+/2nvct1o/3m+1dvw8znO2djbD1d6ree6uuztfzfP0OXffbfUbrfZe8YYgBEEIghAEIQhCEIQgCEEQgiAEQQiCEAQhCEIQhCAIQRCCIARBCIIY/v3NnjcEIQhCEIQgCEEQgiAEQQiCEATxBq9DCPsn0TVdAAAAAElFTkSuQmCC',
+  remainingRefund: 0,
+  refundApplied: 0,
+  vat: 0,
+  vatAmount: 0,
+  companyInfo: {
+    name: 'Saaol Heart Center (BD) Ltd.',
+    address: 'House-26, Eskaton Garden Road, Ramna, Dhaka-1000',
+    photoUrl: 'https://res.cloudinary.com/dfnp7ac6l/image/upload/v1729419854/wpxmsazgxbraafxmy4rv.png',
+    phone: 'Phone : 01744251222, 01777780851, 01777780852, 01777780853'
+  },
+  postedBy: { name: 'Md. Khurshid Ali', phone: '01744251222' },
+  refBy: { name: 'Dr. Mutasim Billah, Sr. Consultant Cardiologist & Assott. Professor' }
+};
+
+// Document Definition for pdfmake
+const documentDefinition = {
+  content: [
+      
+      {
+          columns:[
+              
+              [{
+                  image:"logo"
+              }
+                  ]]
+      },
+    // Header Section
+    {
+      text: data.companyInfo.name,
+      style: 'header',
+      alignment: 'center'
+    },
+    {
+      text: data.companyInfo.address,
+      style: 'subheader',
+      alignment: 'center'
+    },
+    {
+      text: data.companyInfo.phone,
+      style: 'subheader',
+      alignment: 'center'
+    },
+    {
+      text: 'Investigation Cash Copy',
+      style: 'title',
+      alignment: 'center',
+      margin: [0, 10]
+    },
+
+    // Patient Information
+    {
+      columns: [
+        [
+          { text: `Patient ID: ${data.oid}`, style: 'info' },
+          { text: `Patient Name: ${data.name}`, style: 'info' },
+          { text: `Address: ${data.address}`, style: 'info' },
+          { text: `Consultant: ${data.consultant}`, style: 'info' }
+        ],
+        [
+          { text: `Date & Time: ${data.createdAt}`, style: 'info', alignment: 'right' },
+          { text: `Age: ${data.age} yrs`, style: 'info', alignment: 'right' },
+          { text: `Sex: ${data.sex}`, style: 'info', alignment: 'right' },
+          { text: `Phone: ${data.phone}`, style: 'info', alignment: 'right' }
+        ]
+      ],
+      margin: [0, 10]
+    },
+
+    // Table of Items/Tests
+    {
+      table: {
+        headerRows: 1,
+        widths: ['10%', '50%', '20%', '20%'],
+        body: [
+          // Header Row
+          [
+            { text: 'SL', style: 'tableHeader' },
+            { text: 'Test Name asdf', style: 'tableHeader' },
+             { text: 'Report Delivery', style: 'tableHeader' },
+            { text: 'Test Rate', style: 'tableHeader' }
+           
+          ],
+          // Data Rows
+          ...data.items.map(item => [
+            item.SL,
+            item.name,
+            data.createdAt,
+            item.price,
+            // Using createdAt as delivery date, similar to OCR sample
+          ])
+        ]
+      },
+      margin: [0, 10]
+    },
+
+    // Totals Section
+    {
+        table:{
+            widths:["*"],
+            body:[
+                [
+                    {
+                        text:"78545dfdfsfaefeafe"
+                    }
+                    ]
+                ]
+        }
+    },
+    {
+      columns: [
+        { text: `Total: ${data.total}`, style: 'info' },
+        { text: `Discount: ${data.discount}`, style: 'info', alignment: 'right' }
+      ],
+      margin: [0, 10]
+    },
+    {
+      columns: [
+        { text: `Net Price: ${data.netPrice}`, style: 'info' },
+        { text: `Due Amount: ${data.dueAmount}`, style: 'info', alignment: 'right' }
+      ]
+    },
+
+    // Footer (Posted By)
+    {
+      text: `Posted By: ${data.postedBy.name} (${data.postedBy.phone})`,
+      style: 'footer',
+      alignment: 'left',
+      margin: [0, 20]
+    }
+  ],
+
+  // Styles
+  styles: {
+    header: { fontSize: 18, bold: true },
+    subheader: { fontSize: 12 },
+    title: { fontSize: 14, bold: true },
+    info: { fontSize: 10, margin: [0, 2] },
+    tableHeader: { fontSize: 10, bold: true, fillColor: '#f2f2f2', alignment: 'center' },
+    footer: { fontSize: 10, italics: true }
+  },
+
+  // Watermark (if enabled)
+  watermark: data.isWatermark ? { text: 'DRAFT', color: 'gray', opacity: 0.3, bold: true } : null
+};
+
+
+
+
+
+
+
+var dd = { pageSize: "A5", // Set page size to A4
+        pageMargins: [20, 10, 20, 50],
+    footer:{
+        stack:[
+            {text:""},
+            
+          {columns:[
+              {
+                  stack:[ {text:"It is our pride to be able to serve you",margin:[20,0,0,0]},{image:"provarbNote",margin:[20,0,0,0],fit:[250,10] }],
+                  width:"60%",
+                  fontSize:10
+                  
+              }
+               
+              ,{
+                  stack:[{text:data?.postedBy?.name,},{text:"Desk Incharge",bold:true}],
+                  alignment:"right",
+                  margin:[20,0],
+                   width:"40%",
+                   fontSize:10
+                  
+              }
+               
+              ]},
+              {image:"deliveryNotice",margin:[20,0],alignment:"center", fit:[250,30]},
+              {text:"Software Developed by MAS IT Solutions, Contact : 48039757, 01915682291, 01714589268",fontSize:8, margin:[20,0],alignment:"center",color:"#7d7d7c"}
+               
+               
+              
+            ]
+    },
+    
+	content: [
+	          // Totals Section
+    {
+        table:{
+            widths:["15%","80%"],
+            body:[
+                [
+                    {
+                  image:"logo", fit: [60, 60]
+              },
+              [
+                        
+    {
+      text: data.companyInfo.name,
+      style: 'header',
+      alignment: 'center',
+      margin:[0,5,0,0]
+    }, {
+      text: data.companyInfo.address,
+      style: 'subheader',
+      alignment: 'center'
+    }, {
+      text: data.companyInfo.phone,
+      style: 'subheader',
+      alignment: 'center'
+    },
+                        ]
+                    ]
+                ]
+        },
+         layout:"noBorders"
+        
+        
+    },
+    
+    
+    
+    
+    
+     {
+        table:{
+            widths:["*"],
+        
+            headerRows: 1,
+            body:[
+                [
+                  {text:"",	border: [false, false, false, true],}  
+                    ]
+                ]
+        },
+    },
+// Patient Information
+
+
+
+{
+    text:"Investigation Cash Copy",alignment:"center",bold:true,fontSize:14,decoration:"underline"
+},
+
+    {
+      columns: [
+        [
+         { text: [
+                 { text: "Order ID: ", bold: true },data?.oid
+                 ],
+                   style: "info",
+          },
+          { text: `Patient Name: ${data.name}`, style: 'info' },
+          { text: `Address: ${data.address}`, style: 'info' },
+          { text: `Consultant: ${data.consultant}`, style: 'info' }
+        ],
+        [
+          { text: `Date & Time: ${data.createdAt}`, style: 'info', alignment: 'right' },
+          { text: `Age: ${data.age} yrs`, style: 'info', alignment: 'right' },
+          { text: `Sex: ${data.sex}`, style: 'info', alignment: 'right' },
+          { text: `Phone: ${data.phone}`, style: 'info', alignment: 'right' }
+        ]
+      ],
+      margin: [0, 5]
+    },
+     // Table of Items/Tests
+    {
+      table: {
+        headerRows: 1,
+        widths: ['10%', '50%', '20%', '20%'],
+        body: [
+          // Header Row
+          [
+            { text: 'SL', style: 'tableHeader' },
+            { text: 'Test Name', style: 'tableHeader' },
+            
+            { text: 'Report Delivery', style: 'tableHeader' },
+            { text: 'Test Rate', style: 'tableHeader' },
+          ],
+          // Data Rows
+          ...data.items.map(item => [
+            item.SL,
+            item.name,
+           
+            data.createdAt, item.price, // Using createdAt as delivery date, similar to OCR sample
+          ])
+        ]
+      },
+      margin: [0, 5],
+      style:"testTable"
+      
+    },
+    
+      // Totals Section
+        // Totals Section
+{
+            columns: [
+                
+                {
+                    stack:[
+                        
+                        {
+                            table:{
+                                widths:["*"],
+                                body:[[{
+                                    text:"Paid",
+                                    alignment:"center",
+                                    fontSize:20,
+                                    bold:true,
+                                    margin:[0,10]
+                                }]]
+                            }
+                        }],
+                    width:"40%"
+                },
+              {
+                stack: [
+                    
+                 // sub total
+                  {
+                    text: [{ text: "Subtotal: " }],
+                    style: "totalText",
+                  },
+                  
+                   // refund
+                 data?.grossRefundAmount ?  {
+                    text: [{ text: "Refunded: " }],
+                    style: "totalText"
+                  }:{},
+                  
+                  
+                  //Discount
+                  {
+                    text: `Discount (${data?.parcentDiscount}%):`,
+                    style: "totalText"
+                  },
+                  {
+                    text: [{ text: `VAT (${data?.vat}%): ` }],
+                    style: "totalText",
+                  },
+                  {
+                    text: [{ text: "Net Price: " }],
+                    style: "totalText",
+                  },
+                  
+                  
+                   {
+                    text: [{ text: "Paid: " }],
+                    style: "totalText",
+                  },
+                  
+                  
+                   data?.refundApplied ?  {
+                    text: [{ text: "Refunded: " }],
+                    style: "totalText"
+                  }:{},
+                  
+                   data?.remainingRefund ?  {
+                    text: [{ text: "Cash Refund : " }],
+                    style: "totalText"
+                  }:{},
+                  
+                   {
+                    text: [{ text: "Due: " }],
+                    style: "totalText",
+                  },
+                  
+                ],
+                width: "40%",
+                alignment: "right",
+              },
+              {
+                stack: [
+                  {
+                    text: [{ text: data.total }],
+                   
+                  },
+                  {
+                    text: [{ text: data.discount }],
+                   
+                  },
+                  {
+                    text: [{ text: data.vatAmount }],
+                   
+                  },
+                  {
+                    text: [{ text: data.netPrice }],
+                   
+                  },
+                  {
+                    text: [{ text: `(${data.paid})` }],
+                   
+                  },
+                  
+                  data?.refundApplied ?  {
+                    text: [{ text: `${data.refundApplied}` }],
+                   
+                  }:{},
+                  
+                  
+                   data?.remainingRefund ?  {
+                    text: [{ text: `${data.remainingRefund}` }],
+                   
+                  }:{},
+                   {
+                    text: [{ text: data.dueAmount }],
+                   
+                  },
+                ],
+               
+                alignment: "right",
+                width:"20%",style:"amountText"
+              },
+              
+             
+        ]
+},   
+
+{
+  text:"Amount In Word:" ,
+  style:"info"
+},
+   
+{
+  text:"Delivery Date :"  ,style:"info"
+},
+{
+  text:"Delivery Time:"  ,style:"info"
+},
+   {
+                            table:{
+                                widths:["auto","auto"],
+                                body:[[{
+                                    text:"Pathology",
+                                    alignment:"center",
+                                   
+                                    bold:true,
+                                    
+                                },{
+                                    text:"Xray",
+                                    alignment:"center",
+                                   
+                                    bold:true,
+                                    
+                                }],[{
+                                    text:"210",
+                                    alignment:"center",
+                                   
+                                    bold:true,
+                                    
+                                },{
+                                    text:"211",
+                                    alignment:"center",
+                                   
+                                    bold:true,
+                                    
+                                }]]
+                            },margin:[0,10]
+                        }
+
+
+
+	], 
+	  styles: {amountText:{fontSize:9},
+	  testTable:{fontSize:9},
+    header: { fontSize: 16, bold: true },
+    subheader: { fontSize: 10 },
+    title: { fontSize: 12, bold: true },
+    info: { fontSize: 9, margin: [0, 1], },
+    tableHeader: { fontSize: 9, bold: true, fillColor: '#f2f2f2', alignment: 'center' },
+    footer: { fontSize: 10, italics: true },totalText:{
+        fontSize:9,bold:true
+    }
+  },images:{
+      logo:"https://res.cloudinary.com/dfnp7ac6l/image/upload/v1743747018/o5k3hyku0dmmav1zks9z.jpg",
+      deliveryNotice:"https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744009021/5bfa98fb23111ff281ed84a598a39451_lsm3fj.png",
+      provarbNote:"https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744009095/ca643631abb813461b4b0afeb77c4633_wczg9c.png"
+  }
+	
+}
