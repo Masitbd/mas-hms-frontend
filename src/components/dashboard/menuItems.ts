@@ -425,6 +425,24 @@ export const indoorItems = [
     ],
   },
   {
+    key: "3",
+    title: "Today's Admitted Patient",
+    href: "/today-admitted",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
+  {
+    key: "3",
+    title: "Patient Admission Over Period",
+    href: "/admission-over-period",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.GET_ORDER,
+      ENUM_USER_PEMISSION.MANAGE_ORDER,
+    ],
+  },
+  {
     key: "4",
     title: "Desease Management",
     href: "/desease",

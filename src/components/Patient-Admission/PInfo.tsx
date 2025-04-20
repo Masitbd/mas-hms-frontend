@@ -25,7 +25,7 @@ import {
 import RegisteredPatient from "./RegPatient";
 import NotRegPatient from "./NotRegPatient";
 
-const { StringType, NumberType } = Schema.Types;
+const MemoizedNotRegPatient = React.memo(NotRegPatient);
 
 const PInfo = (porps: any) => {
   const {
@@ -45,8 +45,6 @@ const PInfo = (porps: any) => {
       isFetching: patientDataFeatching,
     },
   ] = useLazyGetSinglePatientQuery();
-
-  
 
   const searchHandler = async (value: string) => {
     const sdata = await patientSearch(value);
@@ -115,7 +113,6 @@ const PInfo = (porps: any) => {
             fluid
             formValue={data}
             ref={forwardedRefForPatientType}
-
           >
             <Form.Group controlId="patientType">
               <Form.ControlLabel className="font-bold">
@@ -181,7 +178,7 @@ const PInfo = (porps: any) => {
             />
           )}
           {data.patientType === "notRegistered" && (
-            <NotRegPatient
+            <MemoizedNotRegPatient
               doctorData={doctorData?.data}
               setFromData={setFormData}
               data={data}

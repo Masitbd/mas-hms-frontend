@@ -158,7 +158,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
           firstAdmitDate={data?.admissionDate}
           isReleased={data?.status}
         />
-        <AddServiceModal />
+        <AddServiceModal regNo={data?.regNo} />
         {releasing ? (
           <Button appearance="primary" loading />
         ) : (

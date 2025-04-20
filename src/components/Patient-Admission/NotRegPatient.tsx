@@ -1,5 +1,5 @@
 import { IDoctor } from "@/types/allDepartmentInterfaces";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useCallback, useMemo } from "react";
 import { DatePicker, Form, InputPicker, Schema, SelectPicker } from "rsuite";
 import { bangladeshDistricts, religions } from "./patient.contance";
 
@@ -37,19 +37,34 @@ const NotRegPatient = (param: param) => {
         return true;
       }, "Phone number must be 11 digits."),
   });
+  const handleChange = useCallback(
+    (value: Record<string, any>) => {
+      param.setFromData((prevState: any) => ({
+        ...prevState,
+        ...value,
+      }));
+    },
+    [param.setFromData]
+  );
+
+  const bloodGroupOptions = useMemo(
+    () => bloodGroup?.map((bld) => ({ label: bld, value: bld })),
+    [bloodGroup]
+  );
+
+  const districtsOptions = useMemo(
+    () => bangladeshDistricts.map((dt) => ({ label: dt, value: dt })),
+    [bangladeshDistricts]
+  );
+
   return (
     <Form
       className="contents patient-information-not-reg "
-      onChange={(value, event) => {
-        param.setFromData((prevState: any) => ({
-          ...prevState,
-
-          ...value,
-        }));
-      }}
-      formValue={param?.data?.patient}
+      onChange={handleChange}
+      formValue={param?.data}
       model={model}
       ref={param.forwardedRef}
+      checkTrigger="blur"
       fluid
     >
       {[
@@ -64,7 +79,7 @@ const NotRegPatient = (param: param) => {
         {
           label: "Blood Group",
           name: "bloodGroup",
-          data: bloodGroup?.map((bld) => ({ label: bld, value: bld })),
+          data: bloodGroupOptions,
           accepter: SelectPicker,
         },
         { label: "Guardian's Name", name: "fatherName" },
@@ -85,10 +100,7 @@ const NotRegPatient = (param: param) => {
         {
           label: "District",
           name: "district",
-          data: bangladeshDistricts.map((dt) => ({
-            label: dt,
-            value: dt,
-          })),
+          data: districtsOptions,
           accepter: SelectPicker,
         },
         {
