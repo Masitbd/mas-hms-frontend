@@ -50,9 +50,12 @@ const PInfo = (porps: any) => {
   const searchHandler = async (value: string) => {
     const sdata = await patientSearch(value);
 
-    setFormData({ ...data, patient: sdata?.data?.data });
     if (sdata?.data?.data?._id) {
-      setFormData({ ...data, patient: sdata.data.data });
+      // setFormData((prev)=>{ ...data, patient: sdata.data.data });
+      setFormData((prev: any) => ({
+        ...data,
+        patient: sdata.data.data,
+      }));
     }
   };
 
