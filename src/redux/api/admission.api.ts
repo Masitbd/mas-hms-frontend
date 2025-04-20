@@ -12,6 +12,22 @@ const admissionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["beds"],
     }),
+    getTodayAdmissionPatient: build.query({
+      query: (args) => ({
+        url: "/admission/today-admit",
+        method: "GET",
+        params: args,
+      }),
+      providesTags: ["beds"],
+    }),
+    getAdmissionOverPeriod: build.query({
+      query: (args) => ({
+        url: "/admission/admit-overperiod",
+        method: "GET",
+        params: args,
+      }),
+      providesTags: ["beds"],
+    }),
     getDetailsAdmission: build.query({
       query: (id) => ({
         url: `/admission/${id}`,
@@ -50,6 +66,16 @@ const admissionApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["admission", "beds"],
     }),
+    addPateintService: build.mutation({
+      query: (data) => ({
+        url: "/admission/add-service",
+        method: "PATCH",
+        contentType: "application/json",
+        data: data,
+        body: data,
+      }),
+      invalidatesTags: ["admission", "beds"],
+    }),
 
     deleteAdmission: build.mutation({
       query: (id) => ({
@@ -77,9 +103,12 @@ const admissionApi = baseApi.injectEndpoints({
 
 export const {
   useGetAllAdmissionQuery,
+  useGetTodayAdmissionPatientQuery,
+  useGetAdmissionOverPeriodQuery,
   useCreateAdmissionMutation,
   useGetDetailsAdmissionQuery,
   useTransferAdmissionMutation,
+  useAddPateintServiceMutation,
   useUpdateAdmissionMutation,
   useDeleteAdmissionMutation,
   useReleaseAdmittedPatientMutation,

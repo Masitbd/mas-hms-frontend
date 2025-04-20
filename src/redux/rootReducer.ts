@@ -5,6 +5,7 @@ import conditionSlice from "./features/condition/conditionSlice";
 import delpopuo from "./features/delpopup/delpopuo";
 import docxTemSlice from "./features/discriptiveTem/docxTemSlice";
 import loading from "./features/loading/loading";
+import serviceReducer from "./features/services/serviceSlice";
 
 export const reducer = {
   docxContent: docxTemSlice,
@@ -13,5 +14,6 @@ export const reducer = {
   loading: loading,
   del: delpopuo,
   auth: authSlice,
-  [baseApi.reducerPath]: baseApi.reducer
+  service: serviceReducer,
+  [baseApi.reducerPath]: baseApi.reducer,
 };

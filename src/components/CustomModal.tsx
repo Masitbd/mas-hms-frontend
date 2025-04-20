@@ -10,6 +10,7 @@ interface IModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   disabled?: boolean | undefined;
+  size?: string;
 }
 
 type TModalProps = IModalProps;
@@ -21,6 +22,7 @@ const CustomModal = ({
   open,
   setOpen,
   disabled,
+  size,
 }: TModalProps) => {
   // const [open, setOpen] = useState(false);
 
@@ -40,9 +42,16 @@ const CustomModal = ({
         </Button>
       </ButtonToolbar>
 
-      <Modal size="50rem" overflow={true} open={open} onClose={handleClose}>
+      <Modal
+        size={size ? size : "50rem"}
+        overflow={true}
+        open={open}
+        backdrop="static"
+        onClose={handleClose}
+        className="p-5"
+      >
         <Modal.Header>
-          <Modal.Title>{title}</Modal.Title>
+          <Modal.Title className="text-center">{title}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="px-2">{children}</div>
