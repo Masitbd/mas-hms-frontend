@@ -63,6 +63,7 @@ const PatientTable = ({
     data: testData,
     isLoading: testLoading,
     isError: TesError,
+    isFetching,
   } = useGetPatientQuery(searchData);
 
   // For printing out patient membership card
@@ -97,7 +98,7 @@ const PatientTable = ({
       <Table
         autoHeight
         data={testData?.data}
-        loading={testLoading || singlePatientLoading}
+        loading={testLoading || singlePatientLoading || isFetching}
         className="w-full"
         bordered
         cellBordered
