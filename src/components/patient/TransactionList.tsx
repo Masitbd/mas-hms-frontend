@@ -32,8 +32,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
       ),
     0
   );
-  const totalDue = totalValue - totalPaid;
-
+  const totalDue = data.reduceRight((s, c) => s + (c.dueAmount ?? 0), 0);
   // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {

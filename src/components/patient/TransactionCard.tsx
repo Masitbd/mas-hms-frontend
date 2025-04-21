@@ -14,7 +14,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({ record }) => {
     (sum, t) => (t.transactionType === "debit" ? sum + t.amount : sum),
     0
   );
-  const dueAmount = record.netPayable - totalPaid;
+  const dueAmount = record.dueAmount;
 
   // Format date to a readable format
   const formatDate = (dateString: string) => {
