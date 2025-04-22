@@ -2,12 +2,18 @@
 
 import React from "react";
 import { Table } from "rsuite";
+import EditBedModal from "./EditBedModal";
 const { Column, HeaderCell, Cell } = Table;
 
 type TWorld = {
   worldName: string;
   charge: number;
   fees: number;
+  bedName:string;
+  worldId?: {
+    _id: string;
+    worldName: string;
+  } | null;
 };
 
 type TWorldTable = {
@@ -57,6 +63,16 @@ const BedsTable: React.FC<TWorldTable> = ({ worldData, isLoading }) => {
           <HeaderCell>World Name</HeaderCell>
           <Cell>
             {(rowData) => (rowData.worldId ? rowData.worldId.worldName : "N/A")}
+          </Cell>
+        </Column>
+        <Column flexGrow={2}>
+          <HeaderCell>Action</HeaderCell>
+          <Cell>
+            {(rowData) => (
+              <div className="flex items-center">
+                <EditBedModal item={rowData} />
+              </div>
+            )}
           </Cell>
         </Column>
       </Table>
