@@ -12,10 +12,11 @@ const bedApi = baseApi.injectEndpoints({
       }),
       providesTags: ["beds"],
     }),
-    getSingleBed: build.query({
-      query: (id) => ({
-        url: `/beds/${id}`,
+    getBedForAdmin: build.query({
+      query: (args) => ({
+        url: "/beds/for-admin",
         method: "GET",
+        params: args,
       }),
       providesTags: ["beds"],
     }),
@@ -54,7 +55,7 @@ const bedApi = baseApi.injectEndpoints({
 export const {
   useGetAllBedQuery,
   useCreateBedMutation,
-  useGetSingleBedQuery,
+  useGetBedForAdminQuery,
   useUpdateBedMutation,
   useDeleteBedMutation,
 } = bedApi;

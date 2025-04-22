@@ -40,6 +40,20 @@ const BedsTable: React.FC<TWorldTable> = ({ worldData, isLoading }) => {
           <Cell dataKey="phone" />
         </Column>
         <Column flexGrow={2}>
+          <HeaderCell>is Allocated</HeaderCell>
+          <Cell>
+            {(rowData) => (
+              <span
+                className={
+                  rowData?.isAllocated ? "text-red-600" : "text-green-500"
+                }
+              >
+                {rowData?.isAllocated ? "Allocated" : "Not Allocated"}
+              </span>
+            )}
+          </Cell>
+        </Column>
+        <Column flexGrow={2}>
           <HeaderCell>World Name</HeaderCell>
           <Cell>
             {(rowData) => (rowData.worldId ? rowData.worldId.worldName : "N/A")}

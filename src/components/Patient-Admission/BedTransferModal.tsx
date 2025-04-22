@@ -44,6 +44,8 @@ const BedTransferModal = ({
 }) => {
   const [open, setOpen] = useState(false);
 
+  console.log(id, "id in ");
+
   const [formData, setFormData] = useState<TFormValue>({
     worldId: "",
     allocatedBed: "",

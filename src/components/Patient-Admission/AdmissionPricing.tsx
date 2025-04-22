@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useGetAllWorldsQuery } from "@/redux/api/world.api";
 
 import { IAdmissionInitialDataParams } from "./AdmissionInfo";
@@ -8,7 +7,7 @@ import { useGetAllPackageQuery } from "@/redux/api/package.api";
 import { useMemo } from "react";
 type TAdmissionPricingParams = {
   data: any;
-  discountAmount: number;
+  // discountAmount: number;
   vatAmount: number;
   mode: string;
   order?: {
@@ -27,7 +26,7 @@ const AdmissionPricing = async (params: TAdmissionPricingParams) => {
     useGetAllPackageQuery(undefined);
 
   // console.log(worlds, "workd");
-  const { data, discountAmount, vatAmount, mode } = params;
+  const { data, vatAmount, mode } = params;
 
   const totalAmount = useMemo(() => {
     const bedPrice = worlds?.data?.find(
@@ -46,6 +45,15 @@ const AdmissionPricing = async (params: TAdmissionPricingParams) => {
   // Return your component JSX here if applicable
 
   const dueAmount = 0;
+
+  let discountAmount = 0;
+
+  if (data.parcentDiscount > 0) {
+    const discount = Number(
+      ((data.parcentDiscount / 100) * Number(totalAmount)).toFixed(2)
+    );
+    discountAmount = Number((discountAmount + discount).toFixed(2));
+  }
 
   return (
     <div className=" border  shadow-lg ">
