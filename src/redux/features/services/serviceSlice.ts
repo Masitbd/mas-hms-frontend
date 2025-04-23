@@ -82,6 +82,52 @@ export const serviceSlice = createSlice({
   name: "service",
   initialState,
   reducers: {
+    // addService: (state, action: PayloadAction<AddServicePayload>) => {
+    //   const {
+    //     serviceCategory,
+    //     serviceId,
+    //     serviceName,
+    //     servicedBy = "",
+    //     amount,
+    //     quantity = 1,
+    //     allocatedBed,
+    //     doctorId,
+    //   } = action.payload;
+
+    //   // Calculate the total amount for this service
+    //   const totalAmount = amount * quantity;
+
+    //   // Create the service object to add to the services array
+    //   const newService: ServiceItem = {
+    //     serviceCategory,
+    //     serviceId,
+    //     serviceName,
+    //     servicedBy,
+    //     amount,
+    //     quantity,
+    //     totalAmount,
+    //     allocatedBed,
+    //     doctorId,
+    //   };
+
+    //   // Add to the general services array
+    //   state.services.push(newService);
+
+    //   // Add to the specific bill category and update its total
+    //   if (serviceCategory === "doctor's related") {
+    //     state.doctorBill.items.push(newService);
+    //     state.doctorBill.total += totalAmount;
+    //   } else if (serviceCategory === "beds & cabins") {
+    //     state.bedCabinsBill.items.push(newService);
+    //     state.bedCabinsBill.total += totalAmount;
+    //   } else {
+    //     state.hospitalBill.items.push(newService);
+    //     state.hospitalBill.total += totalAmount;
+    //   }
+
+    //   // Update the overall total bill
+    //   state.totalBill += totalAmount;
+    // },
     addService: (state, action: PayloadAction<AddServicePayload>) => {
       const {
         serviceCategory,
@@ -94,10 +140,8 @@ export const serviceSlice = createSlice({
         doctorId,
       } = action.payload;
 
-      // Calculate the total amount for this service
       const totalAmount = amount * quantity;
 
-      // Create the service object to add to the services array
       const newService: ServiceItem = {
         serviceCategory,
         serviceId,
@@ -110,10 +154,23 @@ export const serviceSlice = createSlice({
         doctorId,
       };
 
-      // Add to the general services array
+      // Only check for duplicates if NOT doctor's related
+      if (serviceCategory !== "doctor's related") {
+        const isDuplicate = state.services.some(
+          (service) =>
+            service.serviceId === serviceId &&
+            service.serviceCategory === serviceCategory
+        );
+
+        if (isDuplicate) {
+          return; // Skip duplicate
+        }
+      }
+
+      // Push to services array
       state.services.push(newService);
 
-      // Add to the specific bill category and update its total
+      // Add to respective bill category
       if (serviceCategory === "doctor's related") {
         state.doctorBill.items.push(newService);
         state.doctorBill.total += totalAmount;
@@ -125,7 +182,7 @@ export const serviceSlice = createSlice({
         state.hospitalBill.total += totalAmount;
       }
 
-      // Update the overall total bill
+      // Update total bill
       state.totalBill += totalAmount;
     },
 

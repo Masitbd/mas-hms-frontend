@@ -430,6 +430,7 @@ const AddServiceModal = ({ regNo }: { regNo: string }) => {
   return (
     <div>
       <CustomModal
+        // @ts-ignore
         size="90rem"
         open={open}
         setOpen={setOpen}

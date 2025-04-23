@@ -87,6 +87,18 @@ const incomeApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    getIndoorPateintHospitalBillDetails: build.query({
+      query: (id) => ({
+        url: `/indoor-finance/hospital-bill-details/${id}`,
+        method: "GET",
+      }),
+    }),
+    getIndoorPateintDoctors: build.query({
+      query: (id) => ({
+        url: `/indoor-finance/doctor-bills/${id}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -101,4 +113,6 @@ export const {
   useGetIndoorEmpDetailsLedgerQuery,
   useGetIndoorDuecollectionLedgerQuery,
   useGetIndoorPateintHospitalBillsummeryQuery,
+  useGetIndoorPateintHospitalBillDetailsQuery,
+  useGetIndoorPateintDoctorsQuery,
 } = incomeApi;

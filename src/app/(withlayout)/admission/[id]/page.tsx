@@ -2,13 +2,19 @@
 
 import AddServiceModal from "@/components/Patient-Admission/AddServiceModal";
 import BedTransferModal from "@/components/Patient-Admission/BedTransferModal";
+import DoctorBills from "@/components/Patient-Admission/DoctorBills";
 import DueCollectionModal from "@/components/Patient-Admission/DueCollectionModal";
 import HospitalBillSummeryModal from "@/components/Patient-Admission/HospitalBillSummeryModal";
+import HospitalBillDetails from "@/components/Patient-Admission/HosptalBillDetails";
 import {
   useGetDetailsAdmissionQuery,
   useReleaseAdmittedPatientMutation,
 } from "@/redux/api/admission.api";
-import { useGetIndoorPateintHospitalBillsummeryQuery } from "@/redux/api/income-statement/Income.api";
+import {
+  useGetIndoorPateintDoctorsQuery,
+  useGetIndoorPateintHospitalBillDetailsQuery,
+  useGetIndoorPateintHospitalBillsummeryQuery,
+} from "@/redux/api/income-statement/Income.api";
 import { Button } from "rsuite";
 import Swal from "sweetalert2";
 
@@ -32,6 +38,13 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
       skip: !id,
     }
   );
+  const { data: hospitalBillDetails } =
+    useGetIndoorPateintHospitalBillDetailsQuery(id, {
+      skip: !id,
+    });
+  const { data: doctorBills } = useGetIndoorPateintDoctorsQuery(id, {
+    skip: !id,
+  });
 
   // console.log(hospitalBill, "bill hospital");
 
@@ -212,6 +225,8 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
         />
         <AddServiceModal regNo={data?.regNo} />
         <HospitalBillSummeryModal data={hospitalBill?.data} />
+        <HospitalBillDetails data={hospitalBillDetails?.data} />
+        <DoctorBills data={doctorBills?.data} />
         {releasing ? (
           <Button appearance="primary" loading />
         ) : (
