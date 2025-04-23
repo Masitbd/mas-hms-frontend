@@ -117,7 +117,7 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
     const documentDefinition: any = {
       pageMargins: infoHeader ? [40, 60, 40, 100] : pageMargin,
       content: [
-        // ...(infoHeader || []),
+        ...(infoHeader || []),
         {
           text: "HOSPITAL BILL",
           bold: true,
