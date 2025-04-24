@@ -214,7 +214,7 @@ export const financialReportItem = [
   },
   {
     key: "27",
-    title: "Indoor Employee Ledger Detaily",
+    title: "Indoor Employee Ledger Details",
     href: "/financialReport/indoor-employee-ledger-summery",
     requiredPermission: [
       ENUM_USER_PEMISSION.SUPER_ADMIN,

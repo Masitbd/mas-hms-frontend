@@ -125,6 +125,9 @@ const AdmitPatientModal = () => {
   let discountAmount = 0;
   let totalAmount = 0;
 
+
+
+
   return (
     <div>
       <Button
@@ -189,7 +192,7 @@ const AdmitPatientModal = () => {
                 <AdmissionPricing
                   data={data}
                   setFormData={setFromData as React.SetStateAction<any>}
-                  discountAmount={discountAmount}
+                  // discountAmount={discountAmount}
                   totalAmount={totalAmount}
                   vatAmount={vatAmount}
                   mode={mode}

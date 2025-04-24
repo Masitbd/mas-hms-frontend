@@ -17,11 +17,6 @@ type TDueCollection = {
 };
 
 const { NumberType } = Schema.Types;
-const deuModel = Schema.Model({
-  amount: NumberType()
-    .isRequired("Amount is required")
-    .min(1, "Must be at least 1"),
-});
 
 const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
   const [updatePayment, { isLoading }] = useUpdateDuePaymentMutation();
@@ -34,6 +29,14 @@ const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
   const handleFormChange = (updatedValue: Record<string, any>) => {
     setFormValue((prev) => ({ ...prev, ...updatedValue }));
   };
+
+  const { NumberType } = Schema.Types;
+  const deuModel = Schema.Model({
+    amount: NumberType()
+      .isRequired("Amount is required")
+      .min(1, "Must be at least 1")
+      .max(dueAmount, `Amount cannot exceed ${dueAmount}`),
+  });
 
   const formRef = useRef<any>(null);
 
@@ -122,9 +125,9 @@ const DueCollectionModal: React.FC<TDueCollection> = ({ data }) => {
             model={deuModel}
             className=" w-full  grid-cols-3"
           >
-            <Form.Group controlId="bedName">
+            <Form.Group controlId="amount">
               <Form.ControlLabel>Pay Now</Form.ControlLabel>
-              <Form.Control type="number" name="amount" />
+              <Form.Control type="number" name="amount" max={dueAmount} />
             </Form.Group>
             <Button
               className="max-h-11 mt-5 w-full"

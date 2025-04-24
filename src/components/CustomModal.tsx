@@ -5,12 +5,14 @@ import { Modal, Button, ButtonToolbar } from "rsuite";
 
 interface IModalProps {
   title: string;
-  text: string;
+  text: string | JSX.Element;
   children: ReactNode;
   open: boolean;
   setOpen: (open: boolean) => void;
   disabled?: boolean | undefined;
-  size?: string;
+  size?: "xs" | "sm" | "md" | "lg";
+  color?: "blue" | "red" | "green" | "yellow";
+  appearance?: "primary" | "ghost";
 }
 
 type TModalProps = IModalProps;
@@ -23,6 +25,8 @@ const CustomModal = ({
   setOpen,
   disabled,
   size,
+  color,
+  appearance,
 }: TModalProps) => {
   // const [open, setOpen] = useState(false);
 
@@ -34,8 +38,9 @@ const CustomModal = ({
       <ButtonToolbar>
         <Button
           disabled={disabled}
-          size="lg"
-          appearance="primary"
+          size={size || "lg"}
+          color={color || "blue"}
+          appearance={appearance || "primary"}
           onClick={handleOpen}
         >
           {text}
