@@ -80,13 +80,15 @@ export const printInvoice = async ({
     content: [
       {
         table: {
-          widths: ["15%", "80%"],
+          widths: companyInfo?.data?.photoUrl ? ["15%", "80%"] : ["2%", "98%"],
           body: [
             [
-              {
-                image: "logo",
-                fit: [60, 60],
-              },
+              companyInfo?.data?.photoUrl
+                ? {
+                    image: "logo",
+                    fit: [60, 60],
+                  }
+                : { text: "logo", color: "white", fontsize: 1 },
               [
                 {
                   text: companyInfo?.data?.name ?? " ",
@@ -427,7 +429,9 @@ export const printInvoice = async ({
       },
     },
     images: {
-      logo: companyInfo?.data?.photoUrl,
+      logo:
+        companyInfo?.data?.photoUrl ??
+        "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744009021/5bfa98fb23111ff281ed84a598a39451_lsm3fj.png",
       deliveryNotice:
         "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744009021/5bfa98fb23111ff281ed84a598a39451_lsm3fj.png",
       provarbNote:
@@ -435,6 +439,7 @@ export const printInvoice = async ({
     },
   };
 
+  console.log(dd);
   pdfMake.createPdf(dd as unknown as TDocumentDefinitions).print();
 };
 

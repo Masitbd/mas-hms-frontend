@@ -27,6 +27,7 @@ const ReportViewerMicro = React.forwardRef(
       reportGroup: IReportGroup;
       result: ITEstREsultForMicroBio;
       specimenWiseDescription: { title: string; value: string };
+      consultant: IDoctor;
     },
 
     ref: LegacyRef<HTMLDivElement>
@@ -59,6 +60,7 @@ const ReportViewerMicro = React.forwardRef(
             <PatientInformaiton
               order={params.order}
               testResult={params.result}
+              reportGroup={params.reportGroup._id}
             />
           </div>
           <table style={{ width: "100%" }}>
@@ -289,7 +291,7 @@ const ReportViewerMicro = React.forwardRef(
                 style={{
                   bottom: 0,
                   width: "100%",
-                  fontSize: "smaller",
+                  fontSize: "small",
                 }}
                 id="seals"
               >

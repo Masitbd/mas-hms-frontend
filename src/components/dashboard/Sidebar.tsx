@@ -84,8 +84,9 @@ const Sidebar = () => {
               >
                 <Nav.Menu
                   eventKey="1"
-                  trigger="hover"
-                  title={<div className="font-bold text-black">General</div>}
+                  title={
+                    <div className="font-bold text-black bg-white">General</div>
+                  }
                   icon={<GearCircleIcon />}
                   placement="rightStart"
                 >
@@ -129,9 +130,10 @@ const Sidebar = () => {
               >
                 <Nav.Menu
                   eventKey="2"
-                  trigger="hover"
                   title={
-                    <div className="font-bold text-black">Manage Users</div>
+                    <div className="font-bold text-black bg-white">
+                      Manage Users
+                    </div>
                   }
                   icon={<UserInfoIcon />}
                   placement="rightStart"
@@ -181,9 +183,10 @@ const Sidebar = () => {
               >
                 <Nav.Menu
                   eventKey="3"
-                  trigger="hover"
                   title={
-                    <div className="font-bold text-black">Investigation</div>
+                    <div className="font-bold text-black bg-white">
+                      Investigation
+                    </div>
                   }
                   icon={<TreemapIcon />}
                   placement="rightStart"
@@ -237,9 +240,10 @@ const Sidebar = () => {
               >
                 <Nav.Menu
                   eventKey="4"
-                  trigger="hover"
                   title={
-                    <div className="font-bold text-black">Lab Reports</div>
+                    <div className="font-bold text-black bg-white">
+                      Lab Reports
+                    </div>
                   }
                   icon={<DocPassIcon />}
                   placement="rightStart"
@@ -278,9 +282,8 @@ const Sidebar = () => {
               >
                 <Nav.Menu
                   eventKey="5"
-                  trigger="hover"
                   title={
-                    <div className="font-bold text-black">
+                    <div className="font-bold text-black bg-white">
                       Financial Reports
                     </div>
                   }
@@ -320,8 +323,9 @@ const Sidebar = () => {
               {/* indoor  */}
               <Nav.Menu
                 eventKey="6"
-                trigger="hover"
-                title={<div className="font-bold text-black">Indoor</div>}
+                title={
+                  <div className="font-bold text-black bg-white">Indoor</div>
+                }
                 icon={<TreemapIcon />}
                 placement="rightStart"
               >
