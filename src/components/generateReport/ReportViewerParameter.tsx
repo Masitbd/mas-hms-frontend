@@ -87,6 +87,7 @@ const ReportViewerParameter = React.forwardRef(
                     data: { data: IDoctor };
                   }
                 }
+                reportGroup={params.reportGroup._id}
               />
             </div>
           </thead>
@@ -268,7 +269,7 @@ const ReportViewerParameter = React.forwardRef(
               // position: "fixed",
               bottom: 0,
               width: "100%",
-              fontSize: "smaller",
+              fontSize: "small",
             }}
             id="seals"
           >

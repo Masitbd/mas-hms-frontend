@@ -39,7 +39,12 @@ import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import ReactDOMServer from "react-dom/server";
 import { htmlDocProviderForparameterBased } from "./functions";
 import CountdownModal from "./CountdownModal";
+import { useGetSingleDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 const ForMicrobiology = (props: IPropsForMicroBiology) => {
+  const { data: doctorInfo } = useGetSingleDoctorQuery(
+    props.order?.consultant as string,
+    { skip: !props.order?.consultant }
+  );
   const [time, setTime] = useState(0);
   const [updata, setUpdate] = useState(1);
   const [patchReport, { isLoading: patchLoading }] = usePatchReporMutation();
@@ -66,22 +71,15 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     if (mode == ENUM_MODE.NEW) {
       const postResult = await post(data);
       if ("data" in postResult) {
-        setTime(5);
-
-        setTimeout(() => {
-          router.push(`/testReport/${order.oid}`);
-          swal("Success", "Data Posted Successfully", { icon: "success" });
-        }, 5000);
+        router.push(`/testReport/${order.oid}`);
+        swal("Success", "Data Posted Successfully", { icon: "success" });
       }
     }
     if (mode == ENUM_MODE.EDIT) {
       const data = await patchReport(result);
       if ("data" in data) {
-        setTime(5);
-        setTimeout(() => {
-          router.push(`/testReport/${order.oid}`);
-          swal("Success", "Data updated successfully", { icon: "success" });
-        }, 5000);
+        router.push(`/testReport/${order.oid}`);
+        swal("Success", "Data updated successfully", { icon: "success" });
       }
     }
   };
@@ -169,6 +167,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
         ref={componentRef as Ref<HTMLDivElement>}
         result={result}
         specimenWiseDescription={discRiptionData?.data[0]}
+        consultant={doctorInfo}
       />
     );
     const data = ReactDOMServer.renderToStaticMarkup(pdfData);
@@ -232,6 +231,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
               ref={componentRef as Ref<HTMLDivElement>}
               result={result}
               specimenWiseDescription={discRiptionData?.data[0]}
+              consultant={doctorInfo}
             />
           </div>
         </div>
