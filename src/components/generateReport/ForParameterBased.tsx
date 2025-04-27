@@ -33,6 +33,7 @@ import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { setTimeout } from "timers";
 import CountdownModal from "./CountdownModal";
+import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -203,7 +204,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
   // });
 
   const handlePrint = () => {
-    const previousPath = window?.location?.origin + "/testReport/" + order?.oid;
+    const previousPath =
+      window?.location?.origin +
+      ENUM_BASEPATH.PATH +
+      "/testReport/" +
+      order?.oid;
     const pdfData = (
       <ReportViewerParameter
         order={props.order}

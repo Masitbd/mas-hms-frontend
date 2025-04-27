@@ -40,6 +40,7 @@ import ReactDOMServer from "react-dom/server";
 import { htmlDocProviderForparameterBased } from "./functions";
 import CountdownModal from "./CountdownModal";
 import { useGetSingleDoctorQuery } from "@/redux/api/doctor/doctorSlice";
+import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 const ForMicrobiology = (props: IPropsForMicroBiology) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
     props.order?.consultant as string,
@@ -158,7 +159,11 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
   // });
 
   const handlePrint = () => {
-    const previousPath = window?.location?.origin + "/testReport/" + order?.oid;
+    const previousPath =
+      window?.location?.origin +
+      ENUM_BASEPATH.PATH +
+      "/testReport/" +
+      order?.oid;
 
     const pdfData = (
       <ReportViewerMicro
