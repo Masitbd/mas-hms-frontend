@@ -26,6 +26,7 @@ import Loading from "../loading";
 import { FormSetValueFunction } from "@/types/componentsType";
 import config from "@/config";
 import swal from "sweetalert";
+import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 
 const LoginPage = () => {
   const [post, { isLoading: postForgotPasswordLoading }] =
@@ -175,8 +176,7 @@ const LoginPage = () => {
       <div
         className="bg-cover bg-center h-screen  bg-no-repeat flex items-center justify-center"
         style={{
-          background:
-            "linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)),url('/login_page_bg.jpg')",
+          background: `linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.5)),url('${ENUM_BASEPATH.PATH}/login_page_bg.jpg')`,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
         }}
