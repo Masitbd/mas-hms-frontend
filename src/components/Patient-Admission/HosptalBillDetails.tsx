@@ -48,6 +48,7 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
       general = 0,
       refDoct,
       gender,
+      totalPaid,
       groupedServices = [],
     } = patient;
 
@@ -232,6 +233,37 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
                 {},
                 {},
                 { text: totalAmount.toFixed(2), bold: true, fontSize: 12 },
+              ],
+              [
+                {
+                  text: "Total Paid",
+                  colSpan: 4,
+                  alignment: "right",
+                  bold: true,
+                  fontSize: 12,
+                },
+                {},
+                {},
+                {},
+                { text: totalPaid, bold: true, fontSize: 12 },
+              ],
+              [
+                {
+                  text: "Due Amount",
+                  colSpan: 4,
+                  alignment: "right",
+                  bold: true,
+                  fontSize: 12,
+                },
+                {},
+                {},
+                {},
+                {
+                  text: totalAmount.toFixed(2) - totalPaid,
+                  bold: true,
+                  fontSize: 12,
+                  color: "red",
+                },
               ],
             ],
           },
