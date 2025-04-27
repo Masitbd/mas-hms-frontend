@@ -263,12 +263,20 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
       },
     };
 
-    pdfMake.createPdf(documentDefinition).download("hospital_bill.pdf");
+    pdfMake.createPdf(documentDefinition).print();
   };
 
   return (
     <div>
-      <Button onClick={generateHospitalBillPDF}> Hospital Bill Summery </Button>
+      <Button
+        className="w-48 h-11"
+        appearance="ghost"
+        color="blue"
+        onClick={generateHospitalBillPDF}
+      >
+        {" "}
+        Hospital Bill Summery{" "}
+      </Button>
     </div>
   );
 };

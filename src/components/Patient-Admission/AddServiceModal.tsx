@@ -431,13 +431,13 @@ const AddServiceModal = ({ regNo }: { regNo: string }) => {
     <div>
       <CustomModal
         // @ts-ignore
-        size="90rem"
+        size="80rem"
         open={open}
         setOpen={setOpen}
         text="Add Service"
         title="Add Service"
       >
-        <p> {regNo} </p>
+        <p> RegNo: {regNo} </p>
         <div className="rounded p-5">
           <div className="grid grid-cols-2 gap-6">
             <form onSubmit={handleSubmit(onSubmit)}>

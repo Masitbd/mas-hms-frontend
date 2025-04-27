@@ -11,7 +11,7 @@ interface IModalProps {
   setOpen: (open: boolean) => void;
   disabled?: boolean | undefined;
   size?: "xs" | "sm" | "md" | "lg";
-  color?: "blue" | "red" | "green" | "yellow";
+  color?: "blue" | "red" | "green" | "yellow" | "violet";
   appearance?: "primary" | "ghost";
 }
 
@@ -42,6 +42,7 @@ const CustomModal = ({
           color={color || "blue"}
           appearance={appearance || "primary"}
           onClick={handleOpen}
+          className="w-48 h-11"
         >
           {text}
         </Button>

@@ -231,6 +231,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
           <Button appearance="primary" loading />
         ) : (
           <Button
+            className="w-48 h-11"
             disabled={data?.status === "released" || releasing}
             onClick={() =>
               handleRealese(

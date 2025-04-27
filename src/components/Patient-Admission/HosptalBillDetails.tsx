@@ -278,12 +278,19 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
       },
     };
 
-    pdfMake.createPdf(documentDefinition).download("hospital_bill_details.pdf");
+    pdfMake.createPdf(documentDefinition).print();
   };
 
   return (
     <div>
-      <Button onClick={generateHospitalBillPDF}> Hospital Bill Details </Button>
+      <Button
+        className="w-48 h-11"
+        appearance="primary"
+        onClick={generateHospitalBillPDF}
+      >
+        {" "}
+        Hospital Bill Details{" "}
+      </Button>
     </div>
   );
 };

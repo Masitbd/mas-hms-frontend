@@ -139,6 +139,8 @@ const BedTransferModal = ({
         setOpen={setOpen}
         text="Bed Transfer"
         title="Bed Transfer"
+        appearance="ghost"
+        color="violet"
       >
         <div>
           <p className="font-bold">Now Total Amount : {totalAmount}</p>

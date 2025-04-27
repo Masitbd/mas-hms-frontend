@@ -208,12 +208,20 @@ const DoctorBills = ({ data }: { data: any }) => {
       },
     };
 
-    pdfMake.createPdf(documentDefinition).download("doctor_bill.pdf");
+    pdfMake.createPdf(documentDefinition).print();
   };
 
   return (
     <div>
-      <Button onClick={generateHospitalBillPDF}> Doctor Bill </Button>
+      <Button
+        className="w-48 h-11"
+        appearance="ghost"
+        color="cyan"
+        onClick={generateHospitalBillPDF}
+      >
+        {" "}
+        Doctor Bill{" "}
+      </Button>
     </div>
   );
 };
