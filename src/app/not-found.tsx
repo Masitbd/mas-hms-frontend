@@ -9,7 +9,12 @@ const NotFoundPage = () => {
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center flex-col">
       <div className="flex flex-col">
-        <Image src={notFound} height={1000} width={1000} alt="Not Found Page" />
+        <Image
+          src={`${ENUM_BASEPATH.PATH}notFound.png`}
+          height={1000}
+          width={1000}
+          alt="Not Found Page"
+        />
       </div>
       <div className="text-6xl font-extrabold ">Not Found</div>
       <div className="my-5">
