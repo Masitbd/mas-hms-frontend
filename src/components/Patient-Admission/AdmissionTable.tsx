@@ -2,6 +2,8 @@
 import { Table, Button } from "rsuite";
 import VisibleIcon from "@rsuite/icons/Visible";
 import Link from "next/link";
+import EditIcon from "@rsuite/icons/Edit";
+
 const { Column, HeaderCell, Cell } = Table;
 
 export type TAdmitedPatient = {
@@ -31,7 +33,7 @@ export type TAdmitedPatient = {
 };
 
 const AdmissionTable = ({ data }: { data: TAdmitedPatient[] }) => {
-  console.log(data, "data in table");
+  
 
   return (
     <div className="w-full">
@@ -90,11 +92,19 @@ const AdmissionTable = ({ data }: { data: TAdmitedPatient[] }) => {
 
           <Cell style={{ padding: "6px" }}>
             {(rowData) => (
-              <Button appearance="link">
-                <Link href={`/admission/${rowData._id}`}>
-                  <VisibleIcon className="text-lg" />
-                </Link>
-              </Button>
+              <div className="flex">
+                <Button appearance="link">
+                  <Link href={`/admission/${rowData._id}`}>
+                    <VisibleIcon className="text-lg" />
+                  </Link>
+                </Button>
+
+                <Button appearance="ghost" color="green">
+                  <Link href={`/admission/edit/${rowData._id}`}>
+                    <EditIcon color="green" />
+                  </Link>
+                </Button>
+              </div>
             )}
           </Cell>
         </Column>

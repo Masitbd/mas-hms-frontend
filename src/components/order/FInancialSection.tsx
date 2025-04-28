@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { Input, InputGroup, Message, SelectPicker, toaster } from "rsuite";
 import CheckIcon from "@rsuite/icons/Check";
 import { ENUM_MODE } from "@/enum/Mode";
+export const discountOption = [
+  { label: "System", value: "system" },
+  { label: "Doctor", value: "doctor" },
+  { label: "Both", value: "both" },
+  { label: "Free Patient", value: "free" },
+];
 
 const FInancialSection = ({
   setData,
@@ -14,13 +20,6 @@ const FInancialSection = ({
   data: any;
   mode: string;
 }) => {
-  const discountOption = [
-    { label: "System", value: "system" },
-    { label: "Doctor", value: "doctor" },
-    { label: "Both", value: "both" },
-    { label: "Free Patient", value: "free" },
-  ];
-
   return (
     <div className={` ${mode == ENUM_MODE.VIEW && "hidden"}`}>
       <div className="bg-[#3498ff] text-white px-1">

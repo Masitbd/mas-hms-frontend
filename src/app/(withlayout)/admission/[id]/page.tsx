@@ -18,7 +18,7 @@ import {
 import { Button } from "rsuite";
 import Swal from "sweetalert2";
 
-type TParams = {
+export type TParams = {
   params: { id: string };
 };
 
