@@ -14,9 +14,19 @@ const paymentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["admission"],
     }),
+    updateDisCountPayment: build.mutation({
+      query: (options) => ({
+        url: `/payments/update/${options.patientRegNo}`,
+        method: "PATCH",
+        contentType: "application/json",
+        data: options.data,
+        body: options.data,
+      }),
+      invalidatesTags: ["admission"],
+    }),
 
     //
   }),
 });
 
-export const { useUpdateDuePaymentMutation } = paymentApi;
+export const { useUpdateDuePaymentMutation, useUpdateDisCountPaymentMutation } = paymentApi;

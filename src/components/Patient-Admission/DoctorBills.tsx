@@ -41,6 +41,7 @@ const DoctorBills = ({ data }: { data: any }) => {
       regNo,
       name,
       guradin,
+      totalPaid,
       admissionDate,
       releaseDate,
       bedName,
@@ -163,6 +164,37 @@ const DoctorBills = ({ data }: { data: any }) => {
                 {},
                 { text: grandTotal.toFixed(2), bold: true },
               ],
+              [
+                {
+                  text: "Total Paid",
+                  colSpan: 4,
+                  alignment: "right",
+                  bold: true,
+                  fontSize: 12,
+                },
+                {},
+                {},
+                {},
+                { text: totalPaid, bold: true, fontSize: 12 },
+              ],
+              [
+                {
+                  text: "Due Amount",
+                  colSpan: 4,
+                  alignment: "right",
+                  bold: true,
+                  fontSize: 12,
+                },
+                {},
+                {},
+                {},
+                {
+                  text: grandTotal.toFixed(2) - totalPaid,
+                  bold: true,
+                  fontSize: 12,
+                  color: "red",
+                },
+              ],
             ],
           },
           layout: "lightHorizontalLines",
@@ -208,12 +240,20 @@ const DoctorBills = ({ data }: { data: any }) => {
       },
     };
 
-    pdfMake.createPdf(documentDefinition).download("doctor_bill.pdf");
+    pdfMake.createPdf(documentDefinition).print();
   };
 
   return (
     <div>
-      <Button onClick={generateHospitalBillPDF}> Doctor Bill </Button>
+      <Button
+        className="w-48 h-11"
+        appearance="ghost"
+        color="cyan"
+        onClick={generateHospitalBillPDF}
+      >
+        {" "}
+        Doctor Bill{" "}
+      </Button>
     </div>
   );
 };

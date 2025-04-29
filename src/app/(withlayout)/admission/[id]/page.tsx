@@ -18,7 +18,7 @@ import {
 import { Button } from "rsuite";
 import Swal from "sweetalert2";
 
-type TParams = {
+export type TParams = {
   params: { id: string };
 };
 
@@ -231,6 +231,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
           <Button appearance="primary" loading />
         ) : (
           <Button
+            className="w-48 h-11"
             disabled={data?.status === "released" || releasing}
             onClick={() =>
               handleRealese(

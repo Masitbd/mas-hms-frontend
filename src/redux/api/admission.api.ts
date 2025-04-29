@@ -10,7 +10,7 @@ const admissionApi = baseApi.injectEndpoints({
         method: "GET",
         params: args,
       }),
-      providesTags: ["beds"],
+      providesTags: ["admission"],
     }),
     getTodayAdmissionPatient: build.query({
       query: (args) => ({
@@ -18,7 +18,7 @@ const admissionApi = baseApi.injectEndpoints({
         method: "GET",
         params: args,
       }),
-      providesTags: ["beds"],
+      providesTags: ["admission"],
     }),
     getAdmissionOverPeriod: build.query({
       query: (args) => ({
@@ -26,7 +26,7 @@ const admissionApi = baseApi.injectEndpoints({
         method: "GET",
         params: args,
       }),
-      providesTags: ["beds"],
+      providesTags: ["admission"],
     }),
     getDetailsAdmission: build.query({
       query: (id) => ({

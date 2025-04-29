@@ -46,6 +46,7 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
       regNo,
       name,
       guradin,
+      totalPaid,
       admissionDate,
       releaseDate,
       bedName,
@@ -218,6 +219,37 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
                 {},
                 { text: totalAmount.toFixed(2), bold: true, fontSize: 12 },
               ],
+              [
+                {
+                  text: "Total Paid",
+                  colSpan: 4,
+                  alignment: "right",
+                  bold: true,
+                  fontSize: 12,
+                },
+                {},
+                {},
+                {},
+                { text: totalPaid, bold: true, fontSize: 12 },
+              ],
+              [
+                {
+                  text: "Due Amount",
+                  colSpan: 4,
+                  alignment: "right",
+                  bold: true,
+                  fontSize: 12,
+                },
+                {},
+                {},
+                {},
+                {
+                  text: totalAmount.toFixed(2) - totalPaid,
+                  bold: true,
+                  fontSize: 12,
+                  color: "red",
+                },
+              ],
             ],
           },
           margin: [0, 10],
@@ -263,12 +295,20 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
       },
     };
 
-    pdfMake.createPdf(documentDefinition).download("hospital_bill.pdf");
+    pdfMake.createPdf(documentDefinition).print();
   };
 
   return (
     <div>
-      <Button onClick={generateHospitalBillPDF}> Hospital Bill Summery </Button>
+      <Button
+        className="w-48 h-11"
+        appearance="ghost"
+        color="blue"
+        onClick={generateHospitalBillPDF}
+      >
+        {" "}
+        Hospital Bill Summery{" "}
+      </Button>
     </div>
   );
 };
