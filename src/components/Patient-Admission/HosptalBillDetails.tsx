@@ -40,9 +40,11 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
     const {
       regNo,
       name,
-      guradin,
+      age,
+      guardian,
       admissionDate,
       releaseDate,
+      assignDoct,
       bedName,
       bedCharge = 0,
       general = 0,
@@ -120,7 +122,7 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
       content: [
         ...(infoHeader || []),
         {
-          text: "HOSPITAL BILL",
+          text: "HOSPITAL BILL Details",
           bold: true,
           fontSize: 12,
           alignment: "center",
@@ -133,10 +135,13 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
             {
               columns: [
                 {
-                  text: [{ text: "RegNo: ", bold: true }, regNo || "N/A"],
+                  text: [{ text: "BillNo: ", bold: true }, regNo || "N/A"],
                 },
                 {
-                  text: [{ text: "Gender: ", bold: true }, gender || "N/A"],
+                  text: [{ text: "Age: ", bold: true }, age || "N/A"],
+                },
+                {
+                  text: [{ text: "Sex: ", bold: true }, gender || "N/A"],
                 },
                 {
                   text: [{ text: "Cabin/Bed: ", bold: true }, bedName || "N/A"],
@@ -150,11 +155,19 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
               margin: [0, 0, 0, 5],
             },
             {
-              text: [{ text: "Father’s Name: ", bold: true }, guradin || "N/A"],
+              text: [
+                { text: "Guardian's Name: ", bold: true },
+                guardian || "N/A",
+              ],
               margin: [0, 0, 0, 5],
             },
             {
-              text: [{ text: "Referred By: ", bold: true }, refDoct || "N/A"],
+              text: [
+                { text: "Conslt By: ", bold: true },
+                assignDoct || "N/A",
+                { text: "          " }, // Adding multiple spaces
+                Array.isArray(refDoct) ? refDoct.join(", ") : refDoct || "N/A",
+              ],
               margin: [0, 0, 0, 5],
             },
             {

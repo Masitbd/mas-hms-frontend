@@ -39,7 +39,10 @@ const DoctorBills = ({ data }: { data: any }) => {
     const patient = data?.[0];
     const {
       regNo,
+      assignDoct,
       name,
+      age,
+      gender,
       guradin,
       totalPaid,
       admissionDate,
@@ -60,7 +63,7 @@ const DoctorBills = ({ data }: { data: any }) => {
       content: [
         ...(infoHeader || []),
         {
-          text: "HOSPITAL BILL",
+          text: "Doctor BILL",
           bold: true,
           fontSize: 12,
           alignment: "center",
@@ -73,22 +76,17 @@ const DoctorBills = ({ data }: { data: any }) => {
             {
               columns: [
                 {
-                  width: "50%",
-                  columns: [
-                    { text: "RegNo: ", bold: true, width: "25%" },
-                    { text: regNo || "N/A", width: "75%" },
-                  ],
+                  text: [{ text: "BillNo: ", bold: true }, regNo || "N/A"],
                 },
                 {
-                  width: "50%",
-                  columns: [
-                    { text: "Cabin/Bed: ", bold: true, width: "25%" },
-                    {
-                      text: bedName || "N/A",
-                      width: "30%",
-                      alignment: "right",
-                    },
-                  ],
+                  text: [{ text: "Age: ", bold: true }, age || "N/A"],
+                },
+                {
+                  text: [{ text: "Sex: ", bold: true }, gender || "N/A"],
+                },
+                {
+                  text: [{ text: "Cabin/Bed: ", bold: true }, bedName || "N/A"],
+                  alignment: "right",
                 },
               ],
               margin: [0, 0, 0, 5],
@@ -98,11 +96,19 @@ const DoctorBills = ({ data }: { data: any }) => {
               margin: [0, 0, 0, 5],
             },
             {
-              text: [{ text: "Father’s Name: ", bold: true }, guradin || "N/A"],
+              text: [
+                { text: "Guardian’s Name: ", bold: true },
+                guradin || "N/A",
+              ],
               margin: [0, 0, 0, 5],
             },
             {
-              text: [{ text: "Referred By: ", bold: true }, refDoct || "N/A"],
+              text: [
+                { text: "Conslt By: ", bold: true },
+                assignDoct || "N/A",
+                { text: "          " }, // Adding multiple spaces
+                Array.isArray(refDoct) ? refDoct.join(", ") : refDoct || "N/A",
+              ],
               margin: [0, 0, 0, 5],
             },
             {

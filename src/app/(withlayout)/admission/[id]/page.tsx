@@ -46,8 +46,6 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
     skip: !id,
   });
 
-  // console.log(hospitalBill, "bill hospital");
-
   const [release, { isLoading: releasing }] =
     useReleaseAdmittedPatientMutation();
   // handler
@@ -122,7 +120,6 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
   };
 
   const data = detailsAdmission?.data[0];
-  // console.log(data)
 
   return (
     <div className="w-full px-10 mt-5">
@@ -211,7 +208,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
       </div>
       {/* button group */}
 
-      <div className="flex justify-between px-10 mt-10">
+      <div className="grid grid-cols-3 lg:grid-cols-4 2xl:grid-cols-7 gap-5 px-10 mt-10">
         <DueCollectionModal data={data} />
 
         <BedTransferModal

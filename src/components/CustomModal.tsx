@@ -10,7 +10,8 @@ interface IModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   disabled?: boolean | undefined;
-  size?: "xs" | "sm" | "md" | "lg";
+  size?: string;
+  buttonSize?: "xs" | "sm" | "md" | "lg";
   color?: "blue" | "red" | "green" | "yellow" | "violet";
   appearance?: "primary" | "ghost";
 }
@@ -26,6 +27,7 @@ const CustomModal = ({
   disabled,
   size,
   color,
+  buttonSize,
   appearance,
 }: TModalProps) => {
   // const [open, setOpen] = useState(false);
@@ -38,11 +40,13 @@ const CustomModal = ({
       <ButtonToolbar>
         <Button
           disabled={disabled}
-          size={size || "lg"}
+          size={buttonSize || "lg"}
           color={color || "blue"}
           appearance={appearance || "primary"}
           onClick={handleOpen}
-          className="w-48 h-11"
+          className={`${!buttonSize ? "w-48" : "w-10"}  ${
+            !buttonSize ? "h-11" : "h-6"
+          }`}
         >
           {text}
         </Button>

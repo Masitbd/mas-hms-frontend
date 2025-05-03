@@ -189,7 +189,7 @@ const Order = () => {
             return;
           }
 
-          console.log("hit");
+    
 
           const result = await postOrder(orderData).unwrap();
 
