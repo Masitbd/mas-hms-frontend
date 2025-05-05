@@ -19,12 +19,11 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
     null | { text?: string; image?: string }[]
   >(null);
 
-  // console.log("heaer", infoHeader);
-
   useEffect(() => {
     const generateHeader = async () => {
       const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
-      setInfoHeader(header); // Set the state with the generated header
+      console.log("Generated Header:", header);
+      setInfoHeader(header);
     };
 
     if (comapnyInfo?.data) {
@@ -45,12 +44,15 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
     const {
       regNo,
       name,
+      age,
+      gender,
       guradin,
       totalPaid,
       admissionDate,
       releaseDate,
       bedName,
       bedCharge,
+      assignDoct,
       refDoct,
       general,
       serviceSummary,
@@ -80,17 +82,23 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
     }
 
     const totalAmount =
-      serviceSummary.reduce((acc: any, item: any) => acc + item.total, 0) +
-      general +
-      bedCharge;
+      serviceSummary.reduce(
+        (acc: any, item: { total: number }) => acc + item.total,
+        0
+      ) +
+      (general || 0) +
+      (bedCharge || 0);
+
+    // Calculate due amount directly as a number
+    const dueAmount = totalAmount - (totalPaid || 0);
 
     const documentDefinition: any = {
       pageMargins: infoHeader ? [40, 60, 40, 100] : pageMargin,
       content: [
         // Header
-        ...(infoHeader ? infoHeader : []),
+        ...(infoHeader || []),
         {
-          text: "HOSPITAL BILL",
+          text: "HOSPITAL BILL Summery",
           bold: true,
           fontSize: 12,
           alignment: "center",
@@ -102,37 +110,47 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
         // Patient Info
         {
           stack: [
-            // {
-            //   columns: [
-            //     {
-            //       text: [{ text: "RegNo: ", bold: true }, regNo || "N/A"],
-            //       width: "50%",
-            //     },
-            //     {
-            //       text: [{ text: "Cabin/Bed: ", bold: true }, bedName || "N/A"],
-            //       width: "50%",
-            //       alignment: "right",
-            //     },
-            //   ],
-            //   margin: [0, 0, 0, 5],
-            // },
             {
               columns: [
                 {
-                  width: "50%",
+                  width: "25%",
                   columns: [
-                    { text: "RegNo: ", bold: true, width: "25%" },
-                    { text: regNo || "N/A", width: "75%" },
+                    { text: "BillNo: ", bold: true, width: "auto" },
+                    { text: regNo || "N/A", width: "*" },
                   ],
                 },
+
+                // age
                 {
-                  width: "50%",
+                  width: "25%",
                   columns: [
-                    { text: "Cabin/Bed: ", bold: true, width: "25%" },
+                    { text: "Age: ", bold: true, width: "auto" },
+                    {
+                      text: age || "N/A",
+                      width: "*",
+                    },
+                  ],
+                },
+
+                // gender
+                {
+                  width: "25%",
+                  columns: [
+                    { text: "Sex: ", bold: true, width: "auto" },
+                    {
+                      text: gender || "N/A",
+                      width: "*",
+                    },
+                  ],
+                },
+
+                {
+                  width: "25%",
+                  columns: [
+                    { text: "Cabin/Bed: ", bold: true, width: "auto" },
                     {
                       text: bedName || "N/A",
-                      width: "30%",
-                      alignment: "right",
+                      width: "*",
                     },
                   ],
                 },
@@ -144,11 +162,20 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
               margin: [0, 0, 0, 5],
             },
             {
-              text: [{ text: "Father’s Name: ", bold: true }, guradin || "N/A"],
+              text: [
+                { text: "Guardian's Name: ", bold: true },
+                guradin || "N/A",
+              ],
               margin: [0, 0, 0, 5],
             },
             {
-              text: [{ text: "Referred By: ", bold: true }, refDoct || "N/A"],
+              text: [
+                { text: "Conslt By: ", bold: true },
+                assignDoct || "N/A",
+                { text: "          " }, // Adding multiple spaces
+                Array.isArray(refDoct) ? refDoct.join(", ") : refDoct || "N/A",
+              ],
+
               margin: [0, 0, 0, 5],
             },
             {
@@ -222,29 +249,29 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
               [
                 {
                   text: "Total Paid",
-                  colSpan: 4,
+                  colSpan: 2,
                   alignment: "right",
                   bold: true,
                   fontSize: 12,
                 },
                 {},
-                {},
-                {},
-                { text: totalPaid, bold: true, fontSize: 12 },
+                {
+                  text: totalPaid ? totalPaid.toFixed(2) : "0.00",
+                  bold: true,
+                  fontSize: 12,
+                },
               ],
               [
                 {
                   text: "Due Amount",
-                  colSpan: 4,
+                  colSpan: 2,
                   alignment: "right",
                   bold: true,
                   fontSize: 12,
                 },
                 {},
-                {},
-                {},
                 {
-                  text: totalAmount.toFixed(2) - totalPaid,
+                  text: dueAmount.toFixed(2), // Use pre-calculated dueAmount
                   bold: true,
                   fontSize: 12,
                   color: "red",
@@ -256,7 +283,7 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
         },
       ],
 
-      footer: function (currentPage: any, pageCount: any) {
+      footer: function (currentPage: number, pageCount: any) {
         return [
           {
             columns: [
@@ -297,7 +324,6 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
 
     pdfMake.createPdf(documentDefinition).print();
   };
-
   return (
     <div>
       <Button

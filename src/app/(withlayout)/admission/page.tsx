@@ -6,7 +6,7 @@ import { useGetAllAdmissionQuery } from "@/redux/api/admission.api";
 
 const PatientAdmissionPage = () => {
   const { data: patients, isLoading } = useGetAllAdmissionQuery(undefined);
-  // console.log(patients, "patients");
+
 
   return (
     <div>

@@ -65,7 +65,7 @@ const BacteriaTable = () => {
   const [patchModalOpen, setPatchModalOpen] = useState(false);
   const [patchData, setPatchData] = useState<ICondition>();
   const patchHandler = (data: ICondition) => {
-    console.log(data);
+    
     setPatchData(data);
     setPatchModalOpen(!patchModalOpen);
   };

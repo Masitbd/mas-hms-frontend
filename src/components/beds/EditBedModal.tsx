@@ -75,7 +75,7 @@ const EditBedModal = ({ item }: { item: any }) => {
         handleClose();
       }
     } catch (err) {
-      console.log(err, "error");
+     
       Swal.fire({
         toast: true,
         position: "top-end",
@@ -95,7 +95,7 @@ const EditBedModal = ({ item }: { item: any }) => {
         setOpen={setOpen}
         title="Update Bed"
         color="green"
-        size="sm"
+        buttonSize="xs"
         appearance="ghost"
         text={<EditIcon />}
       >

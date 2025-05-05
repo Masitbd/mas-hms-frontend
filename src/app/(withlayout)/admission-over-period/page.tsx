@@ -46,14 +46,14 @@ const AdmissionOverPeriodPage = () => {
     endDate: formattedEndDate,
   };
 
-  //   console.log(formattedStartDate, "stawrt", formattedEndDate);
+
 
   if (formValue.startDate) queryDate.startDate = formattedStartDate;
   if (formValue.endDate) queryDate.endDate = formattedEndDate;
 
   const { data } = useGetAdmissionOverPeriodQuery(queryDate);
 
-  //   console.log(data, "datea");
+ 
 
   return (
     <div>

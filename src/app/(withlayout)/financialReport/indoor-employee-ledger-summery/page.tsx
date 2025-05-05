@@ -32,7 +32,7 @@ const IndoorEmpLedgerSummeryPage = () => {
   if (formValue.endDate) queryDate.endDate = formattedEndDate;
 
   const { data, isLoading } = useGetIndoorEmpDetailsLedgerQuery(queryDate);
-  console.log(data);
+
 
   return (
     <div>
