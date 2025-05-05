@@ -239,6 +239,82 @@ export const htmlDocProviderForparameterBased = (
   return `<!DOCTYPE html>
         <head>
         <style>
+        .ProseMirror {
+  position: relative;
+}
+
+.ProseMirror {
+ font-family: monospace !important;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: break-spaces;
+  -webkit-font-variant-ligatures: none;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+}
+
+.ProseMirror [contenteditable="false"] {
+  white-space: normal;
+}
+
+.ProseMirror [contenteditable="false"] [contenteditable="true"] {
+  white-space: pre-wrap;
+}
+
+.ProseMirror pre {
+  white-space: pre-wrap;
+}
+
+img.ProseMirror-separator {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  margin: 0;
+}
+
+.ProseMirror-gapcursor:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid black;
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes ProseMirror-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection *::-moz-selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection * {
+  caret-color: transparent;
+}
+
+.ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+
+.tippy-box[data-animation=fade][data-state=hidden] {
+  opacity: 0
+}
         .print-btn {
   display: flex;
       align-items: center;
@@ -276,53 +352,40 @@ export const htmlDocProviderForparameterBased = (
         }
 
       @media print {
-  .print-button {
-    display: none;
-  }
-
-  body{
-            margin-left: 1rem !important;
-            margin-right: 1rem !important;
-            }
-}
-    
-  #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: white;
-            z-index: 9999;
-        }
-
-        #main-content {
+          .print-button {
             display: none;
-        }
+          }
+
+        
+}
+
+
+  #seals {
+            position: fixed !important;}
+       
+    
+
     </style>
     
  <script>
-     window.addEventListener("beforeprint",function() {
-     const height = document.getElementById("seals").offsetHeight
-     document.getElementById("seals").style.height = height + "px";
-      document.getElementById("seals").style.marginTop = (-30 - height) + "px";
-     ;
+    //  window.addEventListener("beforeprint",function() {
+    //  const height = document.getElementById("seals").offsetHeight
+    //  document.getElementById("seals").style.height = height + "px";
+    //   document.getElementById("seals").style.marginTop = (-30 - height) + "px";
+    //  ;
 
-     window.addEventListener("afterprint", function () {
-            const height = document.getElementById("seals").offsetHeight
-            document.getElementById("seals").style.height = height + "px";
-            document.getElementById("seals").style.marginTop =30 + "px";
+    //  window.addEventListener("afterprint", function () {
+    //         const height = document.getElementById("seals").offsetHeight
+    //         document.getElementById("seals").style.height = height + "px";
+    //         document.getElementById("seals").style.marginTop =30 + "px";
            
 
 
-        })
+    //     })
      
 
         
-     })
+    //  })
 
 
 
@@ -338,11 +401,9 @@ export const htmlDocProviderForparameterBased = (
             
       
         <body id="main-content">
-          <div id="loading-screen">
-        <p>Loading...</p>
-    </div>
+          
         ${data}
-         <div class="print-button print-btn">
+         <div class="print-button print-btn" onclick="window.print()" >
            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
         <path
             d="M19 8h-14c-1.1 0-1.99.9-1.99 2l-.01 6c0 1.1.9 2 2 2h1v4h12v-4h1c1.1 0 2-.9 2-2v-6c0-1.1-.9-2-2-2zm0 8h-14v-6h14v6zm-3-15h-8v4h8v-4zm2 4h-12v-5h12v5z" />
@@ -350,19 +411,19 @@ export const htmlDocProviderForparameterBased = (
     Print
           </button>
         </div>
-         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" onload="cssLoaded()">
+       
 
     <script>
         // Function to hide loading screen and show main content once CSS is loaded
-        function cssLoaded() {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-             window.print();
-        } 
-            document.getElementsByClassName("print-button")[0].addEventListener("click", function(){
+        // function cssLoaded() {
+        //     document.getElementById('loading-screen').style.display = 'none';
+        //     document.getElementById('main-content').style.display = 'block';
+        //      window.print();
+        // } 
+  //           document.getElementsByClassName("print-button")[0].addEventListener("click", function(){
  
-    window.print();
-  });
+  //   window.print();
+  // });
   </script
         
       </html>`;
@@ -375,6 +436,83 @@ export const htmlDocProviderForMicroBiology = (
   return `<!DOCTYPE html>
         <head>
         <style>
+         .ProseMirror {
+  position: relative;
+}
+
+.ProseMirror {
+ font-family: monospace !important;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  white-space: break-spaces;
+  -webkit-font-variant-ligatures: none;
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0; /* the above doesn't seem to work in Edge */
+}
+
+.ProseMirror [contenteditable="false"] {
+  white-space: normal;
+}
+
+.ProseMirror [contenteditable="false"] [contenteditable="true"] {
+  white-space: pre-wrap;
+}
+
+.ProseMirror pre {
+  white-space: pre-wrap;
+}
+
+img.ProseMirror-separator {
+  display: inline !important;
+  border: none !important;
+  margin: 0 !important;
+  width: 1px !important;
+  height: 1px !important;
+}
+
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+  margin: 0;
+}
+
+.ProseMirror-gapcursor:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid black;
+  animation: ProseMirror-cursor-blink 1.1s steps(2, start) infinite;
+}
+
+@keyframes ProseMirror-cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection *::-moz-selection {
+  background: transparent;
+}
+
+.ProseMirror-hideselection * {
+  caret-color: transparent;
+}
+
+.ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+
+.tippy-box[data-animation=fade][data-state=hidden] {
+  opacity: 0
+}
+     
       
         .print-button {
   height: 5rem;
@@ -422,10 +560,13 @@ export const htmlDocProviderForMicroBiology = (
   .print-button {
     display: none;
   }
-     body{
+      body{
             margin-left: 1rem !important;
             margin-right: 1rem !important;
-            }
+            width:${((1020 - (margin[0] ?? 0) - (margin[2] ?? 0)) / 3.78)
+              ?.toFixed(1)
+              ?.toString()}mm !important;
+         }
 }
     
   #loading-screen {

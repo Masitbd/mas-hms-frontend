@@ -24,10 +24,12 @@ const patient = baseApi.injectEndpoints({
     }),
 
     getPatient: build.query({
-      query: () => ({
+      query: (query: any) => ({
         url: "/patient",
         method: "get",
         contentType: "application/json",
+
+        params: query,
       }),
       providesTags: ["patient"],
     }),

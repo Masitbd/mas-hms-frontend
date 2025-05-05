@@ -1,10 +1,10 @@
 import { Editor } from "@tiptap/react";
 import "./TestViewD.css";
 
-interface MenuBarProps{
-  editor: Editor | null
+interface MenuBarProps {
+  editor: Editor | null;
 }
-const MenuBar = ({editor}: MenuBarProps) => {
+const MenuBar = ({ editor }: MenuBarProps) => {
   // const { editor } = useCurrentEditor();
   // const dispatch = useAppDispatch();
 
@@ -22,7 +22,7 @@ const MenuBar = ({editor}: MenuBarProps) => {
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
-        className={`flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1${
+        className={`flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1 ${
           editor.isActive("bold") ? "is-active red" : ""
         }`}
       >
@@ -68,7 +68,7 @@ const MenuBar = ({editor}: MenuBarProps) => {
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         disabled={!editor.can().chain().focus().toggleStrike().run()}
-        className={`flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1${
+        className={`flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1 ${
           editor.isActive("strike") ? "is-active" : ""
         }`}
       >

@@ -34,67 +34,67 @@ const ReportViewerParameter = React.forwardRef(
 
     return (
       <>
-        <div
-          ref={ref}
-          style={{ margin: "20px", padding: "10px", width: "260mm" }}
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            padding: "10px",
+            tableLayout: "auto",
+          }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <thead>
             <div
               style={{
-                border: "3px solid #4b5563", // stone-700
-                borderRadius: "8px",
-                padding: "10px 20px",
-                fontSize: "1.25rem", // text-xl
-                fontFamily: "serif",
-                fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
-              {params.reportGroup.label}
+              <div
+                style={{
+                  border: "3px solid #4b5563", // stone-700
+                  borderRadius: "8px",
+                  padding: "10px 20px",
+                  fontSize: "1.25rem", // text-xl
+                  fontFamily: "serif",
+                  fontWeight: "bold",
+                }}
+              >
+                {params.reportGroup.label}
+              </div>
             </div>
-          </div>
-          {params?.testResult?.analyzerMachine ? (
-            <div
-              style={{
-                border: "1px solid black",
-                borderRadius: "8px",
-                textAlign: "center",
-                margin: "20px 0",
-                fontFamily: "monospace",
-                padding: "1rem 2.5rem",
-              }}
-            >
-              {params.testResult.analyzerMachine}
-            </div>
-          ) : null}
+            {params?.testResult?.analyzerMachine ? (
+              <div
+                style={{
+                  border: "1px solid black",
+                  borderRadius: "8px",
+                  textAlign: "center",
+                  margin: "20px 0",
+                  fontFamily: "monospace",
+                  padding: "1rem 2.5rem",
+                }}
+              >
+                {params.testResult.analyzerMachine}
+              </div>
+            ) : null}
 
-          <div>
-            <PatientInformaiton
-              order={order}
-              testResult={testResult}
-              consultant={
-                { data: params.consultant } as unknown as {
-                  data: { data: IDoctor };
+            <div>
+              <PatientInformaiton
+                order={order}
+                testResult={testResult}
+                consultant={
+                  { data: params.consultant } as unknown as {
+                    data: { data: IDoctor };
+                  }
                 }
-              }
-            />
-          </div>
-
-          <div
-            style={{
-              border: "1px solid",
-              borderRadius: "8px",
-              padding: "10px",
-            }}
-          >
+                reportGroup={params.reportGroup._id}
+              />
+            </div>
+          </thead>
+          <tbody>
             {params.reportGroup.testResultType !== "descriptive" && (
               <>
-                <div
+                <tr
                   style={{
                     display: "grid",
                     gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
@@ -106,157 +106,179 @@ const ReportViewerParameter = React.forwardRef(
                       return null;
                     }
                     return (
-                      <div key={field} style={{ paddingBottom: "8px" }}>
+                      <td
+                        key={field}
+                        style={{ padding: "8px", border: "1px solid black" }}
+                      >
                         <span style={{ fontWeight: "bold" }}>
                           {camelToFlat(field)}{" "}
                         </span>
-                      </div>
+                      </td>
                     );
                   })}
-                </div>
-                <hr />
+                </tr>
               </>
             )}
 
-            <div>
-              {headings.map((heading: string) => {
-                const doesHaveResult = resultFields.find(
-                  (v) => v.investigation === heading
-                );
-                if (!doesHaveResult) return null;
-                return (
-                  <>
-                    <div
+            {headings.map((heading: string) => {
+              const doesHaveResult = resultFields.find(
+                (v) => v.investigation === heading
+              );
+              if (!doesHaveResult) return null;
+              return (
+                <>
+                  <tr>
+                    <th
                       style={{
                         textTransform: "uppercase",
                         fontFamily: "serif",
                         fontWeight: "bold",
                         fontSize: "1.125rem",
-                        borderBottom: "1px solid black",
-                        paddingTop: "10px",
+                        textAlign: "left",
+                        border: "1px solid black",
+                        padding: "8px",
                       }}
                     >
                       {heading}:
-                    </div>
-                    <div
-                      style={{
-                        display: "grid",
-                        gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
-                      }}
-                    >
-                      {resultFields.map((resultField: IResultField) => {
-                        if (resultField.investigation === heading) {
-                          return fieldNames.map((fieldName: string) => {
-                            return (
-                              <>
-                                {params.reportGroup.testResultType ===
-                                "descriptive" ? (
-                                  fieldName === "result" ? (
-                                    <div>
-                                      <div
-                                        style={{
-                                          gridColumn: "span 2",
-                                          fontFamily: "serif",
-                                          whiteSpace: "pre-wrap",
-                                          overflowWrap: "break-word",
-                                          overflow: "auto",
-                                        }}
-                                        dangerouslySetInnerHTML={{
-                                          __html: resultField?.result,
-                                        }}
-                                      />
-                                    </div>
-                                  ) : null
-                                ) : (
-                                  <div
+                    </th>
+                  </tr>
+                  <tr
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
+                      fontSize: "medium",
+                    }}
+                  >
+                    {resultFields.map((resultField: IResultField) => {
+                      if (resultField.investigation === heading) {
+                        return fieldNames.map((fieldName: string) => {
+                          return (
+                            <>
+                              {params.reportGroup.testResultType ===
+                              "descriptive" ? (
+                                fieldName === "result" ? (
+                                  <td
                                     style={{
-                                      borderBottom: "1px solid black",
-                                      padding: "5px",
+                                      border: "1px solid black",
+                                      padding: "8px",
                                     }}
                                   >
-                                    <div key={fieldName}>
-                                      <span
-                                        style={{
-                                          fontFamily: "serif",
-                                          fontWeight:
-                                            fieldName === "result"
-                                              ? "900"
-                                              : "normal",
-                                        }}
-                                      >
-                                        {resultField[fieldName]
-                                          ? resultField[fieldName] + "   "
-                                          : ""}
-                                      </span>
-                                      <span
-                                        style={{
-                                          fontSize: "0.875rem",
-                                          fontFamily: "monospace",
-                                        }}
-                                      >
-                                        {fieldName === "result"
-                                          ? resultField?.unit
-                                            ? resultField.unit
-                                            : " "
-                                          : "  "}
-                                      </span>
-                                    </div>
+                                    <div
+                                      style={{
+                                        gridColumn: "span 2",
+                                        fontFamily: "serif",
+                                        whiteSpace: "pre-wrap",
+                                        overflowWrap: "break-word",
+                                        overflow: "auto",
+                                        padding: "8px",
+                                      }}
+                                      dangerouslySetInnerHTML={{
+                                        __html: resultField?.result,
+                                      }}
+                                    />
+                                  </td>
+                                ) : null
+                              ) : (
+                                <td
+                                  style={{
+                                    border: "1px solid black",
+                                    padding: "8px",
+                                  }}
+                                >
+                                  <div key={fieldName}>
+                                    <span
+                                      style={{
+                                        fontFamily: "serif",
+                                        fontWeight:
+                                          fieldName === "result"
+                                            ? "900"
+                                            : "normal",
+                                      }}
+                                    >
+                                      {resultField[fieldName]
+                                        ? resultField[fieldName] + "   "
+                                        : ""}
+                                    </span>
+                                    <span
+                                      style={{
+                                        fontSize: "0.875rem",
+                                        fontFamily: "monospace",
+                                      }}
+                                    >
+                                      {fieldName === "result"
+                                        ? resultField?.unit
+                                          ? resultField.unit
+                                          : " "
+                                        : "  "}
+                                    </span>
                                   </div>
-                                )}
-                              </>
-                            );
-                          });
-                        }
-                        return null;
-                      })}
-                    </div>
-                  </>
-                );
-              })}
-            </div>
-          </div>
+                                </td>
+                              )}
+                            </>
+                          );
+                        });
+                      }
+                      return null;
+                    })}
+                  </tr>
+                </>
+              );
+            })}
 
-          {params?.testResult?.comment ? (
-            <div
-              style={{
-                border: "1px solid",
-                padding: "10px",
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: "4px",
-                margin: "20px 0",
-                borderRadius: "8px",
-                fontFamily: "serif",
-              }}
-            >
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: params?.testResult?.comment,
+            {params?.testResult?.comment ? (
+              <tr
+                style={{
+                  padding: "10px",
+                  margin: "20px 0",
+                  borderRadius: "8px",
+                  fontFamily: "monospace",
+                  pageBreakInside: "avoid",
                 }}
-                style={{ whiteSpace: "pre", width: "270mm" }}
-              />
-            </div>
-          ) : null}
-        </div>
+              >
+                <td
+                  colSpan={Number(fieldsLength ?? 0)}
+                  dangerouslySetInnerHTML={{
+                    __html: params?.testResult?.comment,
+                  }}
+                  style={{
+                    overflowWrap: "break-word",
+                    paddingTop: "3rem",
+                  }}
+                />
+              </tr>
+            ) : null}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan={Number(fieldsLength ?? 1)}>
+                <div className="footer-space" style={{ height: "100px" }}>
+                  &nbsp;
+                </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+
         {params?.testResult?.seal ? (
           <div
             style={{
-              fontFamily: "Roboto",
-              margin: "20px",
-              padding: "10px",
-
-              fontSize: "0.875rem",
-              width: "270mm",
-              pageBreakBefore: "always",
-              breakBefore: "always",
+              // margin: "20px",
+              // pageBreakBefore: "always",
+              // breakBefore: "always",
+              // maxHeight: "200px",
+              // position: "fixed",
+              bottom: 0,
+              width: "100%",
+              fontSize: "small",
             }}
             id="seals"
           >
             <div
               style={{
                 whiteSpace: "pre-wrap",
-                overflowWrap: "break-word",
-                overflow: "auto",
+                // overflowWrap: "break-word",
+                // overflow: "auto",
+                fontFamily: "monospace",
               }}
               dangerouslySetInnerHTML={{
                 __html: params?.testResult?.seal,

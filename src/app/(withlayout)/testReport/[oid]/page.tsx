@@ -18,6 +18,9 @@ const Page = ({ params }: { params: { oid: string } }) => {
     isFetching,
     refetch,
   } = useGetSingleOrderQuery(params.oid, { refetchOnMountOrArgChange: true });
+  useEffect(() => {
+    refetch();
+  }, []);
 
   if (orderDataLoading || isFetching) return <Loading />;
 
