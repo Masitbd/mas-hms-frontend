@@ -74,9 +74,6 @@ const AdmitPatientModal = () => {
 
   const [formValue, setFormValue] = useState(initialValue);
 
-  // const handleFormChange = (updatedValue: Record<string, any>) => {
-  //   setFormValue((prev) => ({ ...prev, ...updatedValue }));
-  // };
   const handleFormChange = useCallback((value: Record<string, any>) => {
     setFormData((prev) => ({ ...prev, ...value }));
   }, []);
@@ -124,9 +121,6 @@ const AdmitPatientModal = () => {
   let vatAmount = 0;
   let discountAmount = 0;
   let totalAmount = 0;
-
-
-
 
   return (
     <div>
