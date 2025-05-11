@@ -11,7 +11,7 @@ import {
 import { useGetSingleReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import { NavLink } from "@/utils/Navlink";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "rsuite";
 import CheckIcon from "@rsuite/icons/Check";
@@ -32,6 +32,13 @@ const TestReportSelector = ({
     page: "delivery" | "generateReport";
   };
 }) => {
+  const searchParam = useSearchParams();
+  searchParams = {
+    oid: searchParam.get("oid") as string,
+    mode: searchParam.get("mode") as string,
+    reportGroup: searchParam.get("reportGroup") as string,
+    page: searchParam.get("page") as "delivery" | "generateReport",
+  };
   // For status change
   const [changeStatus, { isLoading: statusLoading }] =
     useSingleStatusChangerMutation();
@@ -49,13 +56,7 @@ const TestReportSelector = ({
     isLoading: orderDataLoading,
     isFetching: orderDataFetching,
   } = useGetSingleOrderQuery(searchParams?.oid);
-  console.log(
-    orderData?.data[0]?.tests?.filter(
-      (t: any) =>
-        t.status !== "delivered" &&
-        t.test.reportGroup?.toString() === searchParams?.reportGroup
-    )
-  );
+
   useEffect(() => {
     if (
       reportGroupData?.data?.testResultType == ENUM_REPORT_TYPE.PARAMETER &&
