@@ -39,7 +39,7 @@ const reportTest = baseApi.injectEndpoints({
     getSingleReport: build.query({
       query: (props: {
         oid: string;
-        params: { reportGroup: string; resultType: string };
+        params: { reportGroup: string; resultType: string; test?: string };
       }) => ({
         url: `/report/test/${props.oid}`,
         method: "GET",

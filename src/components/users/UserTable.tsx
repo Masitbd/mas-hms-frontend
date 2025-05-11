@@ -323,7 +323,10 @@ const UserTable = ({
               {mode == "edit" ? (
                 <>
                   <PatchProfile
-                    defaultValue={singleUserdata.data[0].profile}
+                    defaultValue={{
+                      ...singleUserdata.data[0],
+                      ...singleUserdata.data[0]?.profile,
+                    }}
                     mode={mode}
                     setMode={setMode}
                     key={105}
@@ -351,7 +354,14 @@ const UserTable = ({
                                   )?.toLocaleDateString() ?? "N/A"}
                                 </div>
                               ) : (
-                                <div>{singleUserdata.data[0].profile[key]}</div>
+                                <div className="capitalize">
+                                  {
+                                    {
+                                      ...singleUserdata.data[0],
+                                      ...singleUserdata.data[0]?.profile,
+                                    }[key]
+                                  }
+                                </div>
                               )}
                             </div>
                           </>

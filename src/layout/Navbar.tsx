@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { setAuthStatus } from "@/redux/features/authentication/authSlice";
 import { redirect } from "next/navigation";
 import { baseApi } from "@/redux/api/baseApi";
+import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 
 const CustomNavbar = ({
   onSelect,
@@ -42,14 +43,19 @@ const CustomNavbar = ({
         <Nav.Item eventKey="3" as={NavLink} href="/order">
           Dashboard
         </Nav.Item>
-        <Nav.Item eventKey="4" as={NavLink} href="http://148.135.137.151:9001">
+        <Nav.Item eventKey="4" as={NavLink} href="http://148.135.137.151:3005">
           Account
         </Nav.Item>
       </Nav>
       <Nav pullRight className="mr-5">
         Logged In As <span className="font-bold"> {user?.profile?.name}</span>
         <Nav.Menu
-          icon={<Avatar src={user?.profile?.image ?? "/avater.jpg"} circle />}
+          icon={
+            <Avatar
+              src={user?.profile?.image ?? `${ENUM_BASEPATH.PATH}avater.jpg`}
+              circle
+            />
+          }
         ></Nav.Menu>
         <Button appearance="primary" color="red" onClick={handleLogout}>
           Logout

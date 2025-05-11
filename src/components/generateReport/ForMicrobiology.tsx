@@ -40,6 +40,7 @@ import ReactDOMServer from "react-dom/server";
 import { htmlDocProviderForparameterBased } from "./functions";
 import CountdownModal from "./CountdownModal";
 import { useGetSingleDoctorQuery } from "@/redux/api/doctor/doctorSlice";
+import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 const ForMicrobiology = (props: IPropsForMicroBiology) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
     props.order?.consultant as string,
@@ -68,6 +69,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     data.oid = oid;
     data.reportGroup = reportGroup;
     data.conductedBy = conductedBy;
+    data.test = props.test;
     if (mode == ENUM_MODE.NEW) {
       const postResult = await post(data);
       if ("data" in postResult) {
@@ -97,6 +99,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
           params: {
             reportGroup: props.reportGroup.label,
             resultType: props.reportGroup.testResultType,
+            test: props.test,
           },
         });
         if (reportData.data && isMounted) {
@@ -158,7 +161,11 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
   // });
 
   const handlePrint = () => {
-    const previousPath = window?.location?.origin + "/testReport/" + order?.oid;
+    const previousPath =
+      window?.location?.origin +
+      ENUM_BASEPATH.PATH +
+      "/testReport/" +
+      order?.oid;
 
     const pdfData = (
       <ReportViewerMicro
