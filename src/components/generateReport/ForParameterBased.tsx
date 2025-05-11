@@ -34,6 +34,7 @@ import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { setTimeout } from "timers";
 import CountdownModal from "./CountdownModal";
 import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
+import { ENUM_REPORT_TYPE } from "@/enum/ENUMReportType";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -237,6 +238,9 @@ const ForParameterBased = (props: IPropsForParameter) => {
           params: {
             reportGroup: props.reportGroup.label,
             resultType: props.reportGroup.testResultType,
+            ...(reportGroup?.testResultType == ENUM_REPORT_TYPE.DESCRIPTIVE
+              ? { test: tests[0]?.test?._id }
+              : {}),
           },
         });
 

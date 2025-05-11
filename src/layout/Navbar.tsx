@@ -52,7 +52,7 @@ const CustomNavbar = ({
         <Nav.Menu
           icon={
             <Avatar
-              src={user?.profile?.image ?? `${ENUM_BASEPATH.PATH}/avater.jpg`}
+              src={user?.profile?.image ?? `${ENUM_BASEPATH.PATH}avater.jpg`}
               circle
             />
           }

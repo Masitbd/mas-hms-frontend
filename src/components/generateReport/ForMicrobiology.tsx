@@ -69,6 +69,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     data.oid = oid;
     data.reportGroup = reportGroup;
     data.conductedBy = conductedBy;
+    data.test = props.test;
     if (mode == ENUM_MODE.NEW) {
       const postResult = await post(data);
       if ("data" in postResult) {
@@ -98,6 +99,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
           params: {
             reportGroup: props.reportGroup.label,
             resultType: props.reportGroup.testResultType,
+            test: props.test,
           },
         });
         if (reportData.data && isMounted) {

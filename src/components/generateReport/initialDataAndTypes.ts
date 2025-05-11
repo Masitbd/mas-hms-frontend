@@ -9,7 +9,12 @@ import { ISensitivity } from "../bactrologicalInfo/typesAndInitialData";
 
 export type IPropsForGenerateReport = {
   params: { oid: string };
-  searchParams: { reportGroup: string; mode: string };
+  searchParams: {
+    reportGroup: string;
+    mode: string;
+    test?: string;
+    reportType: string;
+  };
 };
 
 export type ITestsFromOrder = {
@@ -73,6 +78,7 @@ export type ITEstREsultForMicroBio = {
   comment?: string;
   seal?: string;
   _id?: string;
+  test: string;
 };
 
 export const InitialValueForMicro: ITEstREsultForMicroBio = {
@@ -89,6 +95,7 @@ export const InitialValueForMicro: ITEstREsultForMicroBio = {
   sensivityOptions: [],
   comment: "",
   seal: "",
+  test: "",
 };
 
 export type IPropsForMicroBiology = {
@@ -96,4 +103,5 @@ export type IPropsForMicroBiology = {
   reportGroup: IReportGroup;
   order: IOrderData;
   mode: string;
+  test: string;
 };
