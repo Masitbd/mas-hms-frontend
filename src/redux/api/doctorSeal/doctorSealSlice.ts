@@ -39,10 +39,11 @@ const DoctorSeal = baseApi.injectEndpoints({
       }),
     }),
     getSeal: build.query({
-      query: () => ({
+      query: (props?: { default?: boolean }) => ({
         url: "/seal",
         method: "get",
         contentType: "application/json",
+        params: props,
       }),
       providesTags: ["doctor-seal"],
     }),

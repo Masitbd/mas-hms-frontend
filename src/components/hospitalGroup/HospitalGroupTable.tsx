@@ -82,11 +82,11 @@ const HospitalGroupTable = ({
         cellBordered
         className="text-md"
       >
-        <Column flexGrow={1}>
+        <Column flexGrow={2}>
           <HeaderCell>Title</HeaderCell>
           <Cell dataKey="label" />
         </Column>
-        <Column flexGrow={4}>
+        <Column flexGrow={3}>
           <HeaderCell>Description</HeaderCell>
           <Cell dataKey="description" />
         </Column>

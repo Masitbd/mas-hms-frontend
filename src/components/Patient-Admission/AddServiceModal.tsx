@@ -612,7 +612,7 @@ const AddServiceModal = ({ regNo }: { regNo: string }) => {
                 </div>
                 {doctorBill.items.length > 0 && (
                   <div className="mb-3 flex justify-between">
-                    <h3 className="font-bold">Doctor's Bill</h3>
+                    <h3 className="font-bold">Doctors`&apos;`s Bill</h3>
                     <p>{doctorBill.total.toFixed(2)}</p>
                   </div>
                 )}

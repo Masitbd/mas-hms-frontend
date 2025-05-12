@@ -5,10 +5,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import moment from "moment";
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
-import {
-  useGetCompnayInofQuery,
-  useGetDefaultQuery,
-} from "@/redux/api/companyInfo/companyInfoSlice";
+import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 
@@ -79,7 +76,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
       content: [
         ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
-          text: `Investigation Employee Ledger: Between ${
+          text: `Employee Income Ledger: Between ${
             startDate ? moment(startDate).format("YYYY-MM-DD") : "N/A"
           } to ${endDate ? moment(endDate).format("YYYY-MM-DD") : "N/A"}`,
           style: "subheader",
@@ -186,7 +183,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement for each client : Between{" "}
+          Employee Income Ledger: Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>

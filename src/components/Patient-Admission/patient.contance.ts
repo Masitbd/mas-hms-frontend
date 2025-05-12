@@ -107,4 +107,4 @@ export const aInitialData: IAdmissionInitialData = {
   worldId: "",
   isFixed: false,
   // deliveryTime: new Date(),
-};
+} as IAdmissionInitialData;

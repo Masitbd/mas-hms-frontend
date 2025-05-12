@@ -42,6 +42,9 @@ const CustomNavbar = ({
         <Nav.Item eventKey="3" as={NavLink} href="/order">
           Dashboard
         </Nav.Item>
+        <Nav.Item eventKey="4" as={NavLink} href="http://148.135.137.151:9001">
+          Account
+        </Nav.Item>
       </Nav>
       <Nav pullRight className="mr-5">
         Logged In As <span className="font-bold"> {user?.profile?.name}</span>

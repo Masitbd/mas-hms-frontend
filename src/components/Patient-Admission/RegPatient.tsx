@@ -24,7 +24,7 @@ const RegisteredPatient = (param: IRegisteredPatient) => {
       </div>
 
       <div className="flex flex-col">
-        <h2 className="font-bold">Father's Name</h2>
+        <h2 className="font-bold">Father`&apos;`s Name</h2>
         <span className="font-[Roboto]">
           {param.formData.patient.fatherName}
         </span>

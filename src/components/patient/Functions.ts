@@ -1,6 +1,11 @@
 import { IPatient } from "@/types/allDepartmentInterfaces";
 import JsBarcode from "jsbarcode";
 import { toaster } from "rsuite";
+import { TransactionRecord } from "./Types";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import { TDocumentDefinitions } from "pdfmake/interfaces";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const pdfDataProvider = (params: IPatient) => {
   const regDate = new Date(params.createdAt).toLocaleDateString();
@@ -91,4 +96,147 @@ export const pdfDataProvider = (params: IPatient) => {
   };
 
   return data;
+};
+
+export const printOrderSummery = (data: {
+  patientInfo: IPatient;
+  orders: TransactionRecord[];
+}) => {
+  const totalValue = data.orders.reduce(
+    (sum, record) => sum + record.netPayable,
+    0
+  );
+  const totalPaid = data.orders.reduce(
+    (sum, record) =>
+      sum +
+      record.transactions.reduce(
+        (tSum, t) => (t.transactionType === "debit" ? tSum + t.amount : tSum),
+        0
+      ),
+    0
+  );
+  const totalDue = totalValue - totalPaid;
+  const dd = {
+    content: [
+      {
+        text: "Order Summery",
+        bold: true,
+        fontSize: 20,
+        alignment: "center",
+        decoration: "underline",
+        margin: [0, 10, 0, 5],
+      },
+      {
+        columns: [
+          {
+            width: "*",
+            text: `Customer Name: ${data?.patientInfo.name}`,
+          },
+          {
+            width: "*",
+            text: `ID: ${data?.patientInfo?.uuid}`,
+          },
+          {
+            width: "*",
+            text: `Total Order: ${data?.orders?.length}`,
+          },
+        ],
+      },
+      {
+        columns: [
+          {
+            width: "*",
+            text: `Total Amount: ${totalValue}`,
+          },
+          {
+            width: "*",
+            text: `Total Paid: ${totalPaid}`,
+          },
+          {
+            width: "*",
+            text: `Total Due: ${totalDue}`,
+          },
+        ],
+      },
+
+      ,
+      ...data?.orders.map((order, index) => {
+        const hasTransactions =
+          order.transactions && order.transactions.length > 0;
+        let remainingDue = Number(order?.totalPrice);
+
+        return [
+          {
+            text: `Order ${index + 1}: ${order.oid}`,
+            style: "header",
+            margin: [0, 10, 0, 5],
+          },
+          {
+            table: {
+              widths: ["auto", "*", "*", "*"],
+              body: [
+                [
+                  "Total Price:",
+                  order.netPayable,
+                  "Total Due:",
+                  order?.dueAmount ?? 0,
+                ],
+
+                [
+                  "Created At:",
+                  new Date(order.createdAt).toLocaleString(),
+                  "Total Paid:",
+                  order.netPayable,
+                ],
+              ],
+            },
+            layout: "noBorders",
+            margin: [0, 0, 0, 10],
+          },
+          hasTransactions
+            ? {
+                text: "Transactions:",
+                style: "subheader",
+                margin: [0, 0, 0, 5],
+              }
+            : { text: "No Transactions", italics: true, margin: [0, 0, 0, 10] },
+          hasTransactions
+            ? {
+                table: {
+                  headerRows: 1,
+                  widths: ["auto", "*", "*", "auto"],
+                  body: [
+                    ["Date", "Description", "Amount", "Due"],
+                    ...order.transactions.map((tx) => {
+                      remainingDue = remainingDue - Number(tx.amount);
+                      return [
+                        new Date(tx.createdAt).toLocaleString(),
+                        tx.description,
+                        tx.amount,
+
+                        remainingDue,
+                      ];
+                    }),
+                  ],
+                },
+                layout: "lightHorizontalLines",
+                margin: [0, 0, 0, 20],
+              }
+            : "",
+        ];
+      }),
+    ],
+    styles: {
+      header: {
+        fontSize: 14,
+        bold: true,
+      },
+      subheader: {
+        fontSize: 12,
+        bold: true,
+      },
+    },
+  };
+
+  pdfMake.createPdf(dd as TDocumentDefinitions).print();
 };

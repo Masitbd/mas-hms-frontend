@@ -36,7 +36,8 @@ import CountdownModal from "./CountdownModal";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
-    props.order?.consultant as string
+    props.order?.consultant as string,
+    { skip: !props.order?.consultant }
   );
   const [margin, setMargins] = useState([0, 0, 0, 0]);
   const router = useRouter();
@@ -145,23 +146,16 @@ const ForParameterBased = (props: IPropsForParameter) => {
       const data = await patchReport(result);
 
       if ("data" in data) {
-        setTime(5);
-        setTimeout(() => {
-          swalButtonHandler(" Report Updated Successfully.");
-
-          router.push(`/testReport/${order.oid}`);
-        }, 5000);
+        swalButtonHandler(" Report Updated Successfully.");
+        router.push(`/testReport/${order.oid}`);
       }
     }
     if (mode == ENUM_MODE.NEW) {
       const data = await post(result);
       if ("data" in data) {
-        setTime(5);
-        setTimeout(() => {
-          swalButtonHandler(" Report posted Successfully.");
+        swalButtonHandler(" Report Posted Successfully.");
 
-          router.push(`/testReport/${order.oid}`);
-        }, 5000);
+        router.push(`/testReport/${order.oid}`);
       }
     }
   };
@@ -226,6 +220,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
     const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
     const win = window.open();
     win?.document.write(dataWithHtml);
+    win?.print();
     if (previousPath) router.push(previousPath);
   };
 
@@ -382,13 +377,15 @@ const ForParameterBased = (props: IPropsForParameter) => {
                                         if (fieldName == "normalValue") {
                                           return (
                                             <ol className="list-disc">
-                                              {...rowData[fieldName]
-                                                .split(`"/br"`)
-                                                .map(
+                                              {rowData[fieldName]
+                                                ?.split(`"/br"`)
+                                                ?.map(
                                                   (
                                                     v: string,
                                                     index: number
-                                                  ) => <li key={index}>{v}</li>
+                                                  ) => (
+                                                    <li key={index}>{v}</li>
+                                                  )
                                                 )}
                                             </ol>
                                           );

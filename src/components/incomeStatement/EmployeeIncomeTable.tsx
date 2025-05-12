@@ -1,8 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { formatDateString } from "@/utils/FormateDate";
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+
 import {
   useGetCompnayInofQuery,
   useGetDefaultQuery,
@@ -10,7 +9,8 @@ import {
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
-
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // Type for individual records associated with each user
@@ -79,7 +79,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
     const investigationStatement =
       startDate && endDate
         ? {
-            text: `Investigation Income Statement: Between ${formatDateString(
+            text: `Employee Income Statement: Between ${formatDateString(
               startDate
             )} to ${formatDateString(endDate)}`,
             style: "subheader",
@@ -216,7 +216,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement : Between{" "}
+          Employee Income Statement : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>

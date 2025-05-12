@@ -154,7 +154,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
         {/*  */}
         <div className="border py-2 px-1 rounded">
           <p>
-            <span className="font-bold me-2">World Name : </span>
+            <span className="font-bold me-2">Bed Category : </span>
             {data?.allocatedBedDetails?.world?.worldName}
           </p>
         </div>

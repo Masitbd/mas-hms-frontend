@@ -11,7 +11,12 @@ const order = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order", "singleOrder", "order-posted-by"],
+      invalidatesTags: [
+        "order",
+        "singleOrder",
+        "order-posted-by",
+        "single-order-payment-info",
+      ],
     }),
 
     getOrder: build.query({
@@ -41,7 +46,12 @@ const order = baseApi.injectEndpoints({
         data: data.data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order", "singleOrder", "order-posted-by"],
+      invalidatesTags: [
+        "order",
+        "singleOrder",
+        "order-posted-by",
+        "single-order-payment-info",
+      ],
     }),
     getInvoice: build.query({
       query: (data) => ({
@@ -61,7 +71,7 @@ const order = baseApi.injectEndpoints({
         data: { amount: data.amount },
         contentType: "application/json",
       }),
-      invalidatesTags: ["order", "singleOrder"],
+      invalidatesTags: ["order", "singleOrder", "single-order-payment-info"],
     }),
     singleStatusChanger: build.mutation({
       query: (data: { oid: string; status: string; reportGroup: string }) => ({
@@ -71,7 +81,7 @@ const order = baseApi.injectEndpoints({
         data: data,
         contentType: "application/json",
       }),
-      invalidatesTags: ["order", "singleOrder"],
+      invalidatesTags: ["order", "singleOrder", "single-order-payment-info"],
     }),
     getOrderPostedBy: build.query({
       query: () => ({
@@ -79,6 +89,13 @@ const order = baseApi.injectEndpoints({
         method: "GET",
       }),
       providesTags: ["order-posted-by"],
+    }),
+    getOrderAndPaymentInfoByUUID: build.query({
+      query: ({ uuid }: { uuid: string }) => ({
+        url: `/order/payment-info/${uuid}`,
+        method: "GET",
+      }),
+      providesTags: ["single-order-payment-info"],
     }),
   }),
 });
@@ -94,4 +111,5 @@ export const {
   useDewColletcionMutation,
   useSingleStatusChangerMutation,
   useGetOrderPostedByQuery,
+  useGetOrderAndPaymentInfoByUUIDQuery,
 } = order;

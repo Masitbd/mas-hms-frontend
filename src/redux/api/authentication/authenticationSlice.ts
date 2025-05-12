@@ -39,7 +39,7 @@ const authenticaiton = baseApi.injectEndpoints({
       }),
     }),
     forgetPassword: build.mutation({
-      query: (data: { uuid: string }) => ({
+      query: (data: { email: string }) => ({
         url: "/auth/forgot-password",
         method: "POST",
         body: data,
