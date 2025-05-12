@@ -165,6 +165,7 @@ const AdmissionInfo = (param: IAdmissionInitialDataParams) => {
             value={param.formData.admissionDate}
             data-show-meridian
             cleanable
+            oneTap
             {...({} as any)}
           />
         </Form.Group>
@@ -178,6 +179,7 @@ const AdmissionInfo = (param: IAdmissionInitialDataParams) => {
             value={param.formData.admissionDate}
             showMeridian
             cleanable
+            oneTap
             {...({} as any)}
           />
         </Form.Group>
