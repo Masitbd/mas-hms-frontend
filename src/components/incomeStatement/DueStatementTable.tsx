@@ -95,7 +95,7 @@ const DueStatemnetTable: React.FC<TGroup> = ({ data }) => {
         // Header Section
         ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
-          text: `Statement Of Investigate of Due Bill: ${
+          text: `Statement of Due Bills: ${
             formattedStartDate === formattedEndDate
               ? formattedStartDate
               : `from ${formattedStartDate} to ${formattedEndDate}`
@@ -353,7 +353,7 @@ const DueStatemnetTable: React.FC<TGroup> = ({ data }) => {
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Due Statement : Between{" "}
+          Statement of Due Bills : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>

@@ -88,7 +88,7 @@ const RefDoctorTable: React.FC<IncomeShowTableProps> = ({
       content: [
         ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
-          text: `Investigation Income Statement By Ref Doctor: Between ${
+          text: `Income Statement By Ref Doctor: Between ${
             startDate ? formatDateString(startDate) : "N/A"
           } to ${endDate ? formatDateString(endDate) : "N/A"}`,
           style: "subheader",
@@ -240,7 +240,7 @@ const RefDoctorTable: React.FC<IncomeShowTableProps> = ({
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement By Ref Doctor : Between{" "}
+          Income Statement By Ref Doctor : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>
