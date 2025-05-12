@@ -220,7 +220,11 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
           firstAdmitDate={data?.admissionDate}
           isReleased={data?.status}
         />
-        <AddServiceModal regNo={data?.regNo} />
+        <AddServiceModal
+          regNo={data?.regNo}
+          consultant={data?.assignDoct}
+          refDoct={data?.refDoct}
+        />
         <HospitalBillSummeryModal data={hospitalBill?.data} />
         <HospitalBillDetails data={hospitalBillDetails?.data} />
         <DoctorBills data={doctorBills?.data} />

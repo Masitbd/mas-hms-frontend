@@ -1,203 +1,3 @@
-// "use client";
-// import React, { useEffect, useMemo, useState } from "react";
-// import CustomModal from "../CustomModal";
-// import { useForm, Controller, useWatch } from "react-hook-form";
-// import { Button, Input, SelectPicker } from "rsuite";
-// import { useGetHospitalGroupQuery } from "@/redux/api/hospitalGroup/hospitalGroupSlice";
-// import { useGetAllWorldsQuery } from "@/redux/api/world.api";
-// import { useGetAllBedQuery } from "@/redux/api/bed.api";
-// import { useGetAllDoctorsQuery } from "@/redux/api/financialReport/financialReportSlice";
-// import { useGetTestsQuery } from "@/redux/api/test/testSlice";
-// const AddServiceModal = () => {
-//   const [open, setOpen] = useState(false);
-//   const { control, handleSubmit, setValue, watch, reset } = useForm();
-//   const [doctId, setDoctId] = useState(false);
-//   const [bedId, setBedId] = useState(false);
-//   const [groupId, setGroupId] = useState("");
-
-//   const { data: groups, isLoading } = useGetHospitalGroupQuery(undefined);
-//   // console.log(groups, "datea");
-
-//   const selectedGroup = useWatch({ control, name: "group" });
-//   const selectedBedCategory = useWatch({ control, name: "world" });
-
-//   useEffect(() => {
-//     if (!selectedGroup) return;
-
-//     const { value, _id } = selectedGroup;
-
-//     if (value === "doctor's related") {
-//       setDoctId(_id);
-//       setBedId(false); // optional: reset others
-//       setGroupId("");
-//     } else if (value === "beds & cabins") {
-//       setBedId(_id);
-//       setDoctId(false);
-//       setGroupId("");
-//     } else {
-//       setGroupId(_id);
-//       setDoctId(false);
-//       setBedId(false);
-//     }
-//   }, [selectedGroup]);
-
-//   const { data: bedCategory } = useGetAllWorldsQuery(undefined);
-//   const { data: beds } = useGetAllBedQuery({ worldId: selectedBedCategory });
-//   const { data: doctors } = useGetAllDoctorsQuery(undefined, {
-//     skip: !doctId,
-//   });
-//   const { data: services } = useGetTestsQuery(
-//     { hospitalGroup: groupId },
-//     {
-//       skip: !groupId,
-//     }
-//   );
-
-//   const dynamicOptions = useMemo(() => {
-//     if (selectedGroup?.value === "doctor's related") {
-//       return doctors?.data?.map((doc: any) => ({
-//         label: doc.name,
-//         value: doc._id,
-//         fullObject: doc,
-//       }));
-//     } else if (selectedGroup?.value === "beds & cabins") {
-//       return bedCategory?.data?.map((world: any) => ({
-//         label: world.worldName,
-//         value: world._id,
-//       }));
-//     } else {
-//       return services?.data?.data?.map((service: any) => ({
-//         label: service.label,
-//         value: service._id,
-//         fullObject: service,
-//       }));
-//     }
-//   }, [selectedGroup, doctors, beds, services]);
-
-//   useEffect(() => {
-//     setValue("serviceId", null); // reset service when group changes
-//   }, [selectedGroup, setValue]);
-
-//   const selectedService = dynamicOptions?.find(
-//     (opt: any) => opt.value === watch("serviceId")
-//   )?.fullObject;
-
-//   console.log(selectedService, "service");
-//   const onsubmit = (data: any) => {
-//     setValue("serviceId", null);
-//     setValue("group", null);
-//     reset({ group: null, serviceId: null });
-//   };
-
-//   return (
-//     <div>
-//       <CustomModal
-//         size="90rem"
-//         open={open}
-//         setOpen={setOpen}
-//         text="Add Service"
-//         title="Add Service"
-//       >
-//         <div className=" rounded p-5">
-//           <div className="grid grid-cols-2 gap-6">
-//             <form onSubmit={handleSubmit(onsubmit)}>
-//               <div className="grid grid-cols-2 gap-5 border p-3">
-//                 <div>
-//                   <p> Select Group </p>
-//                   <Controller
-//                     name="group"
-//                     control={control}
-//                     defaultValue={null}
-//                     render={({ field }) => (
-//                       <SelectPicker
-//                         {...field}
-//                         data={groups?.data?.map((item: any) => ({
-//                           label: item?.label,
-//                           value: item,
-//                         }))}
-//                         style={{ width: 300 }}
-//                         onChange={(value) => field.onChange(value)}
-//                         value={field.value}
-//                         placeholder="Select an option"
-//                         cleanable
-//                       />
-//                     )}
-//                   />
-//                 </div>
-//                 <div>
-//                   <p> Select Service </p>
-//                   <Controller
-//                     name="serviceId"
-//                     control={control}
-//                     defaultValue={null}
-//                     render={({ field }) => (
-//                       <SelectPicker
-//                         {...field}
-//                         data={dynamicOptions}
-//                         style={{ width: 300 }}
-//                         disabled={!selectedGroup?._id}
-//                         onChange={(value) => field.onChange(value)}
-//                         value={field.value}
-//                         placeholder="Select an option"
-//                         cleanable
-//                       />
-//                     )}
-//                   />
-//                 </div>
-//                 <div>
-//                   <p> Quantity</p>
-
-//                   <div className="flex items-center gap-4 mt-1 ">
-//                     <Button color="red" appearance="ghost">
-//                       -
-//                     </Button>
-//                     <p> 1 </p>
-//                     <Button appearance="primary">+</Button>
-//                   </div>
-//                 </div>
-//                 <div>
-//                   <p> Amount </p>
-//                   <Controller
-//                     name="amount"
-//                     control={control}
-//                     defaultValue={null}
-//                     render={({ field }) => (
-//                       <Input
-//                         {...field}
-//                         type="number"
-//                         style={{ width: 300 }}
-//                         onChange={(value) => field.onChange(value)}
-//                         value={field.value}
-//                         placeholder="Enter Amount"
-//                       />
-//                     )}
-//                   />
-//                 </div>
-//                 <div></div>
-//                 <div className="w-full flex justify-end">
-//                   <Button appearance="primary">Add</Button>
-//                 </div>
-//               </div>
-//             </form>
-//             {/* bill */}
-//             <div className="border p-3">
-//               <p className="text-center text-xl font-bold pb-2 border-b-2">
-//                 Bill Summery
-//               </p>
-//             </div>
-//           </div>
-//           {/* services */}
-//           <div className="mt-8 border ">
-//             <h1 className="text-center text-xl font-bold">Service Summery</h1>
-//           </div>
-//         </div>
-//       </CustomModal>
-//     </div>
-//   );
-// };
-
-// export default AddServiceModal;
-
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import CustomModal from "../CustomModal";
@@ -219,7 +19,6 @@ import {
   selectHospitalBill,
   selectTotalBill,
   ServiceItem,
-  selectBackendFormat,
 } from "@/redux/features/services/serviceSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { useAddPateintServiceMutation } from "@/redux/api/admission.api";
@@ -242,7 +41,16 @@ interface OptionType {
   fullObject?: any;
 }
 
-const AddServiceModal = ({ regNo }: { regNo: string }) => {
+const AddServiceModal = ({
+  regNo,
+  consultant,
+  refDoct,
+}: {
+  regNo: string;
+  consultant: string;
+  refDoct: string;
+}) => {
+  console.log(consultant, refDoct, "payloaquljlk");
   const [open, setOpen] = useState<boolean>(false);
   const { control, handleSubmit, setValue, watch, reset } =
     useForm<FormValues>();
@@ -395,6 +203,9 @@ const AddServiceModal = ({ regNo }: { regNo: string }) => {
       services: backendPayload,
       allocatedBed,
       totalBill,
+      refDoct,
+      servicedBy: currentUser.uuid,
+      consultant,
     };
 
     try {
