@@ -45,12 +45,13 @@ const AddServiceModal = ({
   regNo,
   consultant,
   refDoct,
+  isReleased,
 }: {
   regNo: string;
   consultant: string;
   refDoct: string;
+  isReleased: string;
 }) => {
-  console.log(consultant, refDoct, "payloaquljlk");
   const [open, setOpen] = useState<boolean>(false);
   const { control, handleSubmit, setValue, watch, reset } =
     useForm<FormValues>();
@@ -142,8 +143,6 @@ const AddServiceModal = ({
       setQuantity(quantity - 1);
     }
   };
-
-  const selectedSId = watch("serviceId");
 
   const onSubmit = (data: FormValues): void => {
     if (!selectedGroup || !selectedServiceId || !amount) {
@@ -241,6 +240,7 @@ const AddServiceModal = ({
   return (
     <div>
       <CustomModal
+        disabled={isReleased === "released"}
         // @ts-ignore
         size="80rem"
         open={open}

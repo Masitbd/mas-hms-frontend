@@ -224,6 +224,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
           regNo={data?.regNo}
           consultant={data?.assignDoct}
           refDoct={data?.refDoct}
+          isReleased={data?.status}
         />
         <HospitalBillSummeryModal data={hospitalBill?.data} />
         <HospitalBillDetails data={hospitalBillDetails?.data} />
