@@ -3,7 +3,6 @@ import { IRegisteredPatient } from "../order/initialDataAndTypes";
 import { patientFields } from "./patient.constance";
 
 const RegisteredPatient = ({
-  doctors,
   formData,
   patient,
   setFormData,

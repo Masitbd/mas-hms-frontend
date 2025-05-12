@@ -10,7 +10,6 @@ import {
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
-import DueCollectionModal from "../Patient-Admission/DueCollectionModal";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -84,7 +83,7 @@ const DueCollectionTable: React.FC<IncomeShowTableProps> = ({
       content: [
         ...(infoHeader ? infoHeader.map((item) => item) : []),
         {
-          text: `Investigation Income Statement: Between ${
+          text: `Indoor Due Collection Statement: Between ${
             startDate ? formatDateString(startDate) : "N/A"
           } to ${endDate ? formatDateString(endDate) : "N/A"}`,
           style: "subheader",
@@ -187,7 +186,7 @@ const DueCollectionTable: React.FC<IncomeShowTableProps> = ({
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement : Between{" "}
+          Indoor Due Collection Statement : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>
