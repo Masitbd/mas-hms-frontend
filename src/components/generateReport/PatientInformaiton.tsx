@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IOrderData } from "../order/initialDataAndTypes";
 import {
   ITEstREsultForMicroBio,
@@ -6,20 +6,24 @@ import {
   ITestsFromOrder,
 } from "./initialDataAndTypes";
 import { IDoctor, ISpecimen, ITest } from "@/types/allDepartmentInterfaces";
+import { useGetSingleReportTypeQuery } from "@/redux/api/reportType/reportType";
 
 const PatientInformaiton = ({
   order,
   testResult,
   consultant,
   reportGroup,
+  tests,
 }: {
   order: IOrderData;
   testResult?: ITestResultForParameter | ITEstREsultForMicroBio;
   consultant?: { data: { data: IDoctor } };
   reportGroup?: string;
+  tests?: ITestsFromOrder[];
 }) => {
   const specimen = new Set();
-  order?.tests
+
+  tests
     ?.filter((t: any) => t?.test?.reportGroup == reportGroup?.toString())
     ?.map((t: any) => {
       if (t?.test?.specimen && Array.isArray(t?.test?.specimen)) {

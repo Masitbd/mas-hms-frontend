@@ -192,6 +192,20 @@ const TestReportSelector = ({
             orderDataLoading={orderDataLoading}
           />
         </div>
+        <div className="p-2">
+          <div className="p-2 flex items-end justify-end">
+            <NavLink href={`/testReport/${searchParams.oid}`}>
+              <Button
+                className="mb-5 col-span-4 mx-2"
+                appearance="primary"
+                color="red"
+                size="lg"
+              >
+                Back
+              </Button>
+            </NavLink>
+          </div>
+        </div>
       </div>
     </div>
   );

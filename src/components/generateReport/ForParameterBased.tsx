@@ -35,6 +35,7 @@ import { setTimeout } from "timers";
 import CountdownModal from "./CountdownModal";
 import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 import { ENUM_REPORT_TYPE } from "@/enum/ENUMReportType";
+import { NavLink } from "@/utils/Navlink";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -220,6 +221,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
         headings={headings}
         ref={componentRef as Ref<HTMLDivElement>}
         consultant={doctorInfo}
+        tests={props.tests}
       />
     );
     const data = ReactDOMServer.renderToStaticMarkup(pdfData);
@@ -280,6 +282,16 @@ const ForParameterBased = (props: IPropsForParameter) => {
                   />
                 </div>
                 <div className="flex justify-end mr-9">
+                  <NavLink href={`/testReport/${order.oid}`}>
+                    <Button
+                      className="mb-5 col-span-4 mx-2"
+                      appearance="primary"
+                      color="red"
+                      size="lg"
+                    >
+                      Back
+                    </Button>
+                  </NavLink>
                   <Button
                     onClick={handlePrint}
                     className="mb-5 col-span-4"
@@ -309,6 +321,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
                 headings={headings}
                 ref={componentRef as Ref<HTMLDivElement>}
                 consultant={doctorInfo}
+                tests={props.tests}
               />
             </div>
           </div>

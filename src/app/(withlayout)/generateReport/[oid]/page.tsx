@@ -68,6 +68,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           reportGroup={reportGroupData?.data as IReportGroup}
           order={orderData?.data[0]}
           test={props.searchParams?.test as string}
+          tests={testsAccordingResultType}
         />
       );
       break;

@@ -41,6 +41,7 @@ import { htmlDocProviderForparameterBased } from "./functions";
 import CountdownModal from "./CountdownModal";
 import { useGetSingleDoctorQuery } from "@/redux/api/doctor/doctorSlice";
 import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
+import { NavLink } from "@/utils/Navlink";
 const ForMicrobiology = (props: IPropsForMicroBiology) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
     props.order?.consultant as string,
@@ -105,6 +106,11 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
         if (reportData.data && isMounted) {
           setResult(JSON.parse(JSON.stringify(reportData.data.data[0])));
         }
+      } else if (isMounted) {
+        setResult((prevValue) => ({
+          ...prevValue,
+          specimen: props.tests[0]?.test?.specimen[0]?.label as string,
+        }));
       }
       setUpdate(updata + 1);
     })();
@@ -175,6 +181,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
         result={result}
         specimenWiseDescription={discRiptionData?.data[0]}
         consultant={doctorInfo}
+        tests={props.tests}
       />
     );
     const data = ReactDOMServer.renderToStaticMarkup(pdfData);
@@ -211,6 +218,16 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
                   />
                 </div>
                 <div className="flex justify-end mr-9">
+                  <NavLink href={`/testReport/${order.oid}`}>
+                    <Button
+                      className="mb-5 col-span-4 mx-2"
+                      appearance="primary"
+                      color="red"
+                      size="lg"
+                    >
+                      Back
+                    </Button>
+                  </NavLink>
                   <Button
                     onClick={handlePrint}
                     className="mb-5 col-span-4"
@@ -239,6 +256,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
               result={result}
               specimenWiseDescription={discRiptionData?.data[0]}
               consultant={doctorInfo}
+              tests={props.tests}
             />
           </div>
         </div>

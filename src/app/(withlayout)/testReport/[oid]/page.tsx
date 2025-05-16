@@ -6,9 +6,10 @@ import {
   useGetOrderQuery,
   useGetSingleOrderQuery,
 } from "@/redux/api/order/orderSlice";
+import { NavLink } from "@/utils/Navlink";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useRef } from "react";
-import { Divider } from "rsuite";
+import { Button, Divider } from "rsuite";
 
 const Page = ({ params }: { params: { oid: string } }) => {
   const {
@@ -62,6 +63,18 @@ const Page = ({ params }: { params: { oid: string } }) => {
           <div>
             <TestTableForReport data={orderData?.data[0]} />
           </div>
+        </div>
+        <div className="p-2 flex items-end justify-end">
+          <NavLink href={`/testReport`}>
+            <Button
+              className="mb-5 col-span-4 mx-2"
+              appearance="primary"
+              color="red"
+              size="lg"
+            >
+              Back
+            </Button>
+          </NavLink>
         </div>
       </div>
     </div>

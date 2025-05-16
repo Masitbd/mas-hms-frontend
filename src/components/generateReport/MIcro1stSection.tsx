@@ -41,7 +41,7 @@ const MIcro1stSection = (props: {
               props.setResult
             )
           }
-          defaultValue={props.result?.specimen}
+          value={props.result?.specimen}
         />
       </div>
 

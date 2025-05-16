@@ -5,8 +5,12 @@ import {
   IDoctor,
   IReportGroup,
   IResultField,
+  ITest,
 } from "@/types/allDepartmentInterfaces";
-import { ITestResultForParameter } from "./initialDataAndTypes";
+import {
+  ITestResultForParameter,
+  ITestsFromOrder,
+} from "./initialDataAndTypes";
 import { camelToFlat } from "@/utils/CamelToFlat";
 import { getPageMargins } from "./functions";
 import PatientInformaiton from "./PatientInformaiton";
@@ -23,6 +27,7 @@ const ReportViewerParameter = React.forwardRef(
       headings: string[];
       resultFields: IResultField[];
       consultant: IDoctor;
+      tests: ITestsFromOrder[];
     },
     ref: LegacyRef<HTMLDivElement>
   ) => {
@@ -88,6 +93,7 @@ const ReportViewerParameter = React.forwardRef(
                   }
                 }
                 reportGroup={params.reportGroup._id}
+                tests={params.tests}
               />
             </div>
           </thead>
