@@ -10,6 +10,7 @@ import {
   Isensitivity,
   ITEstREsultForMicroBio,
   ITestResultForParameter,
+  ITestsFromOrder,
 } from "./initialDataAndTypes";
 import { camelToFlat } from "@/utils/CamelToFlat";
 import { getPageMargins } from "./functions";
@@ -28,6 +29,7 @@ const ReportViewerMicro = React.forwardRef(
       result: ITEstREsultForMicroBio;
       specimenWiseDescription: { title: string; value: string };
       consultant: IDoctor;
+      tests: ITestsFromOrder[];
     },
 
     ref: LegacyRef<HTMLDivElement>
@@ -61,6 +63,7 @@ const ReportViewerMicro = React.forwardRef(
               order={params.order}
               testResult={params.result}
               reportGroup={params.reportGroup._id}
+              tests={params.tests}
             />
           </div>
           <table style={{ width: "100%" }}>

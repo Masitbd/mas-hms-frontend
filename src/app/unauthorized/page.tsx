@@ -1,14 +1,16 @@
+import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 import { NavLink } from "@/utils/Navlink";
 import Image from "next/image";
 import React from "react";
 import { Button } from "rsuite";
 
 const Unauthorized = () => {
+  console.log(`${ENUM_BASEPATH.PATH}error_401.png`);
   return (
     <div className="flex items-center justify-center w-full h-screen flex-col">
       <div className="text-5xl font-bold">OOPS !</div>
       <Image
-        src={"/error_401.png"}
+        src={`${ENUM_BASEPATH.PATH}error_401.png`}
         height={1000}
         width={600}
         alt="Unauthorized page"

@@ -12,6 +12,7 @@ import { IPdrv } from "@/app/(withlayout)/pdrv/page";
 import { SetStateAction } from "react";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import { HtmlProps } from "next/dist/shared/lib/html-context.shared-runtime";
+import { ENUM_REPORT_TYPE } from "@/enum/ENUMReportType";
 
 export const useCleanedTests = (params: {
   oid: string;
@@ -53,7 +54,7 @@ export const useCleanedTests = (params: {
   let headings: string[] = [];
   let resultFields: IResultField[] = [];
   const user = useAppSelector((state) => state.auth.user);
-  let returnResult =
+  let returnResult: any =
     mode == ENUM_MODE.NEW
       ? {
           oid: oid,
@@ -64,6 +65,16 @@ export const useCleanedTests = (params: {
         }
       : result;
 
+  // setting the test id for descriptive and bacterial result
+
+  if (
+    (reportGroup?.testResultType == ENUM_REPORT_TYPE.DESCRIPTIVE ||
+      reportGroup?.testResultType == ENUM_REPORT_TYPE.BACTERIAL) &&
+    returnResult &&
+    mode == ENUM_MODE.NEW
+  ) {
+    returnResult.test = tests[0].test?._id;
+  }
   if (mode == ENUM_MODE.NEW) {
     modifiedTest = tests.map((test: ITestsFromOrder) => {
       if (test.test.resultFields.length > 0) {

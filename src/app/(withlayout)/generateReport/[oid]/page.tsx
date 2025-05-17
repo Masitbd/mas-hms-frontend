@@ -5,6 +5,7 @@ import ForParameterBased from "@/components/generateReport/ForParameterBased";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
 import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import { ENUM_REPORT_TYPE } from "@/enum/ENUMReportType";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import {
@@ -66,6 +67,8 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           oid={orderData?.data[0]?.oid}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={orderData?.data[0]}
+          test={props.searchParams?.test as string}
+          tests={testsAccordingResultType}
         />
       );
       break;
@@ -79,11 +82,19 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
     if (orderData?.data?.length > 0 && reportGroupData?.data?._id) {
       const filteredTest = orderData?.data[0]?.tests.filter(
         (test: { test: ITest; status: string }) => {
-          return (
-            test.test.reportGroup == reportGroupData?.data?._id &&
-            test.status !== "tube" &&
-            test.status !== ENUM_TEST_STATUS.REFUNDED
-          );
+          if (props?.searchParams?.reportType == ENUM_REPORT_TYPE.PARAMETER) {
+            return (
+              test.test.reportGroup == reportGroupData?.data?._id &&
+              test.status !== "tube" &&
+              test.status !== ENUM_TEST_STATUS.REFUNDED
+            );
+          } else {
+            return (
+              test.test?._id == props?.searchParams?.test &&
+              test.status !== "tube" &&
+              test.status !== ENUM_TEST_STATUS.REFUNDED
+            );
+          }
         }
       );
       setTestAccordignResultType(filteredTest);

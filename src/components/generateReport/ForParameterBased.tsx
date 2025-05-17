@@ -33,6 +33,9 @@ import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { setTimeout } from "timers";
 import CountdownModal from "./CountdownModal";
+import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
+import { ENUM_REPORT_TYPE } from "@/enum/ENUMReportType";
+import { NavLink } from "@/utils/Navlink";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -203,7 +206,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
   // });
 
   const handlePrint = () => {
-    const previousPath = window?.location?.origin + "/testReport/" + order?.oid;
+    const previousPath =
+      window?.location?.origin +
+      ENUM_BASEPATH.PATH +
+      "/testReport/" +
+      order?.oid;
     const pdfData = (
       <ReportViewerParameter
         order={props.order}
@@ -214,6 +221,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
         headings={headings}
         ref={componentRef as Ref<HTMLDivElement>}
         consultant={doctorInfo}
+        tests={props.tests}
       />
     );
     const data = ReactDOMServer.renderToStaticMarkup(pdfData);
@@ -232,6 +240,9 @@ const ForParameterBased = (props: IPropsForParameter) => {
           params: {
             reportGroup: props.reportGroup.label,
             resultType: props.reportGroup.testResultType,
+            ...(reportGroup?.testResultType == ENUM_REPORT_TYPE.DESCRIPTIVE
+              ? { test: tests[0]?.test?._id }
+              : {}),
           },
         });
 
@@ -271,6 +282,16 @@ const ForParameterBased = (props: IPropsForParameter) => {
                   />
                 </div>
                 <div className="flex justify-end mr-9">
+                  <NavLink href={`/testReport/${order.oid}`}>
+                    <Button
+                      className="mb-5 col-span-4 mx-2"
+                      appearance="primary"
+                      color="red"
+                      size="lg"
+                    >
+                      Back
+                    </Button>
+                  </NavLink>
                   <Button
                     onClick={handlePrint}
                     className="mb-5 col-span-4"
@@ -300,6 +321,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
                 headings={headings}
                 ref={componentRef as Ref<HTMLDivElement>}
                 consultant={doctorInfo}
+                tests={props.tests}
               />
             </div>
           </div>

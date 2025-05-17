@@ -5,6 +5,7 @@ import EyeSlashIcon from "@rsuite/icons/legacy/EyeSlash";
 import AdminIcon from "@rsuite/icons/Admin";
 import ReloadIcon from "@rsuite/icons/Reload";
 import { IUserData } from "./interfacesAndInitalData";
+import { useAppSelector } from "@/redux/hook";
 const UserForm = ({
   defaultValue,
   setfromData,
@@ -18,6 +19,7 @@ const UserForm = ({
   model?: any;
   mode: string;
 }) => {
+  const user = useAppSelector((state) => state?.auth?.user);
   const genderType = [
     { label: "Male", value: "Male" },
     { label: "Female", value: "Female" },
@@ -26,6 +28,7 @@ const UserForm = ({
 
   const roleType = [
     { label: "Admin", value: "admin" },
+    { label: "Accountant", value: "accountant" },
     { label: "User", value: "user" },
     { label: "Other", value: "other" },
   ];
@@ -105,17 +108,21 @@ const UserForm = ({
           <Form.ControlLabel>Email</Form.ControlLabel>
           <Form.Control name="email" type="email" />
         </Form.Group>
+        {user?.role == "admin" || user.role == "super-admin" ? (
+          <Form.Group controlId="role">
+            <Form.ControlLabel>Role</Form.ControlLabel>
+            <Form.Control
+              name="role"
+              accepter={InputPicker}
+              data={roleType}
+              className="w-full"
+            />
+          </Form.Group>
+        ) : (
+          <></>
+        )}
         {mode !== "edit" && (
           <>
-            <Form.Group controlId="role">
-              <Form.ControlLabel>Role</Form.ControlLabel>
-              <Form.Control
-                name="role"
-                accepter={InputPicker}
-                data={roleType}
-                className="w-full"
-              />
-            </Form.Group>
             <Form.Group controlId="password">
               <InputGroup inside>
                 <Form.Control
