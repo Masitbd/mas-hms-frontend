@@ -62,7 +62,7 @@ const Comment = (props: {
   const [activeKey, setActiveKey] = useState(0);
   return (
     <>
-      <div className="grid grid-cols-12 gap-5">
+      <div className="grid grid-cols-6 gap-5">
         <Button
           onClick={() => {
             activeKey == 1 ? setActiveKey(0) : setActiveKey(1);

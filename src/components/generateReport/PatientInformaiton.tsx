@@ -19,14 +19,12 @@ const PatientInformaiton = ({
   testResult?: ITestResultForParameter | ITEstREsultForMicroBio;
   consultant?: { data: { data: IDoctor } };
   reportGroup?: string;
-}) => {
-  const specimen = new Set();
-  order?.tests
   tests?: ITestsFromOrder[];
 }) => {
   const specimen = new Set();
 
-  tests?.filter((t: any) => t?.test?.reportGroup == reportGroup?.toString())
+  tests
+    ?.filter((t: any) => t?.test?.reportGroup == reportGroup?.toString())
     ?.map((t: any) => {
       if (t?.test?.specimen && Array.isArray(t?.test?.specimen)) {
         return t?.test?.specimen?.map((s: ISpecimen) => specimen.add(s.label));
