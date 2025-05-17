@@ -104,4 +104,5 @@ export type IPropsForMicroBiology = {
   order: IOrderData;
   mode: string;
   test: string;
+  tests: ITestsFromOrder[];
 };
