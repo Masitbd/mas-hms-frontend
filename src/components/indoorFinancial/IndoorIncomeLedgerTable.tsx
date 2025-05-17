@@ -84,7 +84,7 @@ const IndIncTable: React.FC<IncomeShowTableProps> = ({
       content: [
         ...(infoHeader ? infoHeader.map((item) => item) : []),
         {
-          text: `Investigation Income Statement: Between ${
+          text: `Indoor Income Statement: Between ${
             startDate ? formatDateString(startDate) : "N/A"
           } to ${endDate ? formatDateString(endDate) : "N/A"}`,
           style: "subheader",
@@ -187,7 +187,7 @@ const IndIncTable: React.FC<IncomeShowTableProps> = ({
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement : Between{" "}
+          Indoor Income Statement : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>

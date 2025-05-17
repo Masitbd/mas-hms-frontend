@@ -100,7 +100,7 @@ const BedsTable: React.FC<TWorldTable> = ({ worldData, isLoading }) => {
           </Cell>
         </Column>
         <Column flexGrow={2}>
-          <HeaderCell>World Name</HeaderCell>
+          <HeaderCell>Bed Category</HeaderCell>
           <Cell>
             {(rowData) => (rowData.worldId ? rowData.worldId.worldName : "N/A")}
           </Cell>

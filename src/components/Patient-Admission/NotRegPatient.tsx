@@ -1,7 +1,8 @@
 import { IDoctor } from "@/types/allDepartmentInterfaces";
-import React, { forwardRef, useCallback, useMemo } from "react";
-import { DatePicker, Form, InputPicker, Schema, SelectPicker } from "rsuite";
-import { bangladeshDistricts, religions } from "./patient.contance";
+import React, { useCallback } from "react";
+import { Form, Schema } from "rsuite";
+
+import { patientFields } from "./patient.constance";
 
 type param = {
   setFromData: (params: any) => void;
@@ -10,18 +11,6 @@ type param = {
   forwardedRef: React.MutableRefObject<any>;
 };
 const NotRegPatient = (param: param) => {
-  const genderType = [
-    { label: "Male", value: "Male" },
-    { label: "Female", value: "Female" },
-    { label: "Other", value: "other" },
-  ];
-
-  const bloodGroup = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-  const maritalStatus = [
-    { label: "Married", value: "married" },
-    { label: "Unmarried", value: "unmarried" },
-  ];
-
   const { StringType, NumberType } = Schema.Types;
   const model = Schema.Model({
     name: StringType().isRequired("This field is required."),
@@ -47,16 +36,6 @@ const NotRegPatient = (param: param) => {
     [param.setFromData]
   );
 
-  const bloodGroupOptions = useMemo(
-    () => bloodGroup?.map((bld) => ({ label: bld, value: bld })),
-    [bloodGroup]
-  );
-
-  const districtsOptions = useMemo(
-    () => bangladeshDistricts.map((dt) => ({ label: dt, value: dt })),
-    [bangladeshDistricts]
-  );
-
   return (
     <Form
       className="contents patient-information-not-reg "
@@ -67,54 +46,7 @@ const NotRegPatient = (param: param) => {
       checkTrigger="blur"
       fluid
     >
-      {[
-        { label: "Name", name: "name" },
-        { label: "Age", name: "age" },
-        {
-          label: "Gender",
-          name: "gender",
-          accepter: InputPicker,
-          data: genderType,
-        },
-        {
-          label: "Blood Group",
-          name: "bloodGroup",
-          data: bloodGroupOptions,
-          accepter: SelectPicker,
-        },
-        { label: "Guardian's Name", name: "fatherName" },
-        { label: "Present Address", name: "presentAddress" },
-        { label: "Permanent Address", name: "permanentAddress" },
-
-        {
-          label: "Marital Status",
-          name: "maritalStatus",
-          data: maritalStatus?.map((item) => ({
-            label: item.label,
-            value: item.value,
-          })),
-          accepter: SelectPicker,
-        },
-        { label: "Occupation", name: "occupation" },
-        { label: "Education", name: "education" },
-        {
-          label: "District",
-          name: "district",
-          data: districtsOptions,
-          accepter: SelectPicker,
-        },
-        {
-          label: "Religion",
-          name: "religion",
-          data: religions.map((rl) => ({
-            label: rl,
-            value: rl,
-          })),
-          accepter: SelectPicker,
-        },
-        { label: "Residence", name: "residence" },
-        { label: "Citizenship", name: "citizenShip" },
-      ].map(({ label, name, accepter, data }) => (
+      {patientFields.map(({ label, name, accepter, data }) => (
         <Form.Group controlId={name} key={name}>
           <Form.ControlLabel>{label}</Form.ControlLabel>
           <Form.Control

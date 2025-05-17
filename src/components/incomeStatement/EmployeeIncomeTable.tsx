@@ -79,7 +79,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
     const investigationStatement =
       startDate && endDate
         ? {
-            text: `Investigation Income Statement: Between ${formatDateString(
+            text: `Employee Income Statement: Between ${formatDateString(
               startDate
             )} to ${formatDateString(endDate)}`,
             style: "subheader",
@@ -216,7 +216,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement : Between{" "}
+          Employee Income Statement : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>

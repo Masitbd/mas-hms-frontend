@@ -80,7 +80,7 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
       content: [
         ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
-          text: `Investigation Income Statement: Between ${
+          text: `Client Wise Income Statement: Between ${
             startDate ? formatDateString(startDate) : "N/A"
           } to ${endDate ? formatDateString(endDate) : "N/A"}`,
           style: "subheader",
@@ -234,7 +234,7 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
         <p>{comapnyInfo?.data?.address}</p>
         <p>HelpLine:{comapnyInfo?.data?.phone} (24 Hours Open)</p>
         <p className="italic text-red-600 text-center mb-5 font-semibold">
-          Investigation Income Statement for each client : Between{" "}
+          Client Wise Income Statement : Between{" "}
           {startDate ? formatDateString(startDate) : "N/A"} to{" "}
           {endDate ? formatDateString(endDate) : "N/A"}
         </p>

@@ -10,6 +10,7 @@ import {
   useGetDetailsAdmissionQuery,
   useReleaseAdmittedPatientMutation,
 } from "@/redux/api/admission.api";
+import { useGetEmployeeQuery } from "@/redux/api/employee/employeeSlice";
 import {
   useGetIndoorPateintDoctorsQuery,
   useGetIndoorPateintHospitalBillDetailsQuery,
@@ -24,6 +25,8 @@ export type TParams = {
 
 const AdmissionDetilsPage = ({ params }: TParams) => {
   const { id } = params;
+
+  const { data: employees } = useGetEmployeeQuery(undefined);
 
   const { data: detailsAdmission, isLoading } = useGetDetailsAdmissionQuery(
     id,
@@ -54,11 +57,19 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
     const option = { id, bedId };
 
     if (dueAmount > 0) {
+      const inputOptions = employees?.data?.data?.reduce(
+        (acc: any, emp: any) => {
+          acc[emp.name] = emp.name;
+          return acc;
+        },
+        {} as Record<string, string>
+      );
       Swal.fire({
         title: "Release with due amount?",
         text: `The patient has a due amount of ৳${dueAmount}. Are you sure you want to proceed?`,
         icon: "warning",
-        input: "text",
+        input: "select",
+        inputOptions,
         inputLabel: "Enter authorized person's name",
         inputPlaceholder: "Authorized by...",
         showCancelButton: true,
@@ -76,6 +87,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
       }).then(async (result) => {
         if (result.isConfirmed && result.value) {
           const authorPerson = result.value;
+
           const res = await release({ ...option, authorPerson }).unwrap();
           if (res.success) {
             Swal.fire({
@@ -154,7 +166,7 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
         {/*  */}
         <div className="border py-2 px-1 rounded">
           <p>
-            <span className="font-bold me-2">World Name : </span>
+            <span className="font-bold me-2">Bed Category : </span>
             {data?.allocatedBedDetails?.world?.worldName}
           </p>
         </div>
@@ -220,7 +232,12 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
           firstAdmitDate={data?.admissionDate}
           isReleased={data?.status}
         />
-        <AddServiceModal regNo={data?.regNo} />
+        <AddServiceModal
+          regNo={data?.regNo}
+          consultant={data?.assignDoct}
+          refDoct={data?.refDoct}
+          isReleased={data?.status}
+        />
         <HospitalBillSummeryModal data={hospitalBill?.data} />
         <HospitalBillDetails data={hospitalBillDetails?.data} />
         <DoctorBills data={doctorBills?.data} />
