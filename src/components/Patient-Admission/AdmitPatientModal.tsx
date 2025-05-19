@@ -66,14 +66,6 @@ const AdmitPatientModal = () => {
 
   const [createAdmission, { isLoading }] = useCreateAdmissionMutation();
 
-  const initialValue = {
-    worldName: null,
-    charge: null,
-    fees: null,
-  };
-
-  const [formValue, setFormValue] = useState(initialValue);
-
   const handleFormChange = useCallback((value: Record<string, any>) => {
     setFormData((prev) => ({ ...prev, ...value }));
   }, []);
@@ -100,6 +92,7 @@ const AdmitPatientModal = () => {
 
             const res = await createAdmission(data).unwrap();
             if (res.success) {
+              setFormData(aInitialData);
               setModalOpen(false);
             }
           } catch (err) {
