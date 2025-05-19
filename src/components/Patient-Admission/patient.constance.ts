@@ -29,6 +29,7 @@ const districtsOptions = bangladeshDistricts.map((dt) => ({
 export const patientFields = [
   { label: "Name", name: "name" },
   { label: "Age", name: "age" },
+  { label: "Phone", name: "phone" },
   {
     label: "Gender",
     name: "gender",

@@ -233,7 +233,14 @@ const AdmissionDetilsPage = ({ params }: TParams) => {
           isReleased={data?.status}
         />
         <AddServiceModal
+          patientType={data?.patientType}
+          name={data?.name}
+          age={data?.age}
+          address={data?.address}
+          uuid={data?.uuid}
+          gender={data?.gender}
           regNo={data?.regNo}
+          phone={data?.phone}
           consultant={data?.assignDoct}
           refDoct={data?.refDoct}
           isReleased={data?.status}

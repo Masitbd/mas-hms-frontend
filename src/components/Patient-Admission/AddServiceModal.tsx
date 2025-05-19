@@ -24,6 +24,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { useAddPateintServiceMutation } from "@/redux/api/admission.api";
 import Swal from "sweetalert2";
 
+
 const { Column, HeaderCell, Cell } = Table;
 
 interface FormValues {
@@ -46,11 +47,25 @@ const AddServiceModal = ({
   consultant,
   refDoct,
   isReleased,
+  name,
+  age,
+  gender,
+  uuid,
+  patientType,
+  address,
+  phone,
 }: {
   regNo: string;
   consultant: string;
   refDoct: string;
   isReleased: string;
+  name: string;
+  age: string;
+  gender: string;
+  uuid: string;
+  patientType: string;
+  address: string;
+  phone?: string;
 }) => {
   const [open, setOpen] = useState<boolean>(false);
   const { control, handleSubmit, setValue, watch, reset } =
@@ -205,8 +220,17 @@ const AddServiceModal = ({
       refDoct,
       servicedBy: currentUser.uuid,
       consultant,
+      patientType,
+      uuid,
+      patient: {
+        name,
+        gender,
+        age,
+        address,
+        phone,
+      },
     };
-
+    console.log(paylaod);
     try {
       const res = await serviceAdd(paylaod).unwrap();
 

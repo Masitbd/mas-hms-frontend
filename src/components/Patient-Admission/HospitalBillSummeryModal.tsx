@@ -22,7 +22,7 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
   useEffect(() => {
     const generateHeader = async () => {
       const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
-      console.log("Generated Header:", header);
+      // console.log("Generated Header:", header);
       setInfoHeader(header);
     };
 
