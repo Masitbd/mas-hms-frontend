@@ -35,12 +35,16 @@ const patientModel = Schema.Model({
   name: StringType().isRequired("This field is required."),
   age: StringType().isRequired("This field is required."),
   gender: StringType().isRequired("This field is required."),
-  // phone: NumberType()
-  //   .isRequired("This field is required.")
-  //   .addRule((value: string | number): boolean => {
-  //     const phoneNumber = value.toString();
-  //     return phoneNumber.length === 11;
-  //   }, "Phone number must be 11 digits."),
+  disease: StringType().isRequired("This field is required."),
+  allocatedBed: StringType().isRequired("This field is required."),
+  refDoct: StringType().isRequired("This field is required."),
+  assignDoct: StringType().isRequired("This field is required."),
+  phone: NumberType()
+    .isRequired("This field is required.")
+    .addRule((value: string | number): boolean => {
+      const phoneNumber = value.toString();
+      return phoneNumber.length === 11;
+    }, "Phone number must be 11 digits."),
 });
 
 const AdmitPatientModal = () => {
