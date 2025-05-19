@@ -226,19 +226,19 @@ const OrderTable = ({
         autoHeight
         wordWrap={"break-word"}
       >
-        <Column align="center" flexGrow={2}>
+        <Column align="center" flexGrow={1.5}>
           <HeaderCell>Order Id</HeaderCell>
           <Cell dataKey="oid" />
         </Column>
-        <Column flexGrow={2}>
+        <Column flexGrow={1.5}>
           <HeaderCell>UUID</HeaderCell>
           <Cell dataKey="uuid" />
         </Column>
-        <Column flexGrow={2}>
+        <Column flexGrow={3}>
           <HeaderCell>Name </HeaderCell>
           <Cell dataKey="patient.name" />
         </Column>
-        <Column flexGrow={2}>
+        <Column flexGrow={1.5}>
           <HeaderCell>Patient Type</HeaderCell>
           <Cell>
             {(rowData) => {
@@ -268,7 +268,7 @@ const OrderTable = ({
           <Cell>{(rowdata) => StatusTagProvider(rowdata?.status)}</Cell>
         </Column> */}
 
-        <Column flexGrow={1}>
+        <Column flexGrow={1.5}>
           <HeaderCell>Action</HeaderCell>
           <Cell>
             {(rowdate) => (
