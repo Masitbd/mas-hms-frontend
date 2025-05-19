@@ -35,12 +35,16 @@ const patientModel = Schema.Model({
   name: StringType().isRequired("This field is required."),
   age: StringType().isRequired("This field is required."),
   gender: StringType().isRequired("This field is required."),
-  // phone: NumberType()
-  //   .isRequired("This field is required.")
-  //   .addRule((value: string | number): boolean => {
-  //     const phoneNumber = value.toString();
-  //     return phoneNumber.length === 11;
-  //   }, "Phone number must be 11 digits."),
+  disease: StringType().isRequired("This field is required."),
+  allocatedBed: StringType().isRequired("This field is required."),
+  refDoct: StringType().isRequired("This field is required."),
+  assignDoct: StringType().isRequired("This field is required."),
+  phone: NumberType()
+    .isRequired("This field is required.")
+    .addRule((value: string | number): boolean => {
+      const phoneNumber = value.toString();
+      return phoneNumber.length === 11;
+    }, "Phone number must be 11 digits."),
 });
 
 const AdmitPatientModal = () => {
@@ -65,14 +69,6 @@ const AdmitPatientModal = () => {
   // console.log(data, "submti data");
 
   const [createAdmission, { isLoading }] = useCreateAdmissionMutation();
-
-  const initialValue = {
-    worldName: null,
-    charge: null,
-    fees: null,
-  };
-
-  const [formValue, setFormValue] = useState(initialValue);
 
   const handleFormChange = useCallback((value: Record<string, any>) => {
     setFormData((prev) => ({ ...prev, ...value }));
@@ -100,6 +96,7 @@ const AdmitPatientModal = () => {
 
             const res = await createAdmission(data).unwrap();
             if (res.success) {
+              setFormData(aInitialData);
               setModalOpen(false);
             }
           } catch (err) {
