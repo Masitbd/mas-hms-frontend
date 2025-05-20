@@ -40,6 +40,13 @@ const packageApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["packages"],
     }),
+    getSinglePackage: build.query({
+      query: (id) => ({
+        url: `/packages/${id}`,
+        method: "GET",
+      }),
+      providesTags: ["packages"],
+    }),
 
     //
   }),
@@ -50,4 +57,6 @@ export const {
   useGetAllPackageQuery,
   useUpdatePackageMutation,
   useDeletePackageMutation,
+  useGetSinglePackageQuery,
+  useLazyGetSinglePackageQuery,
 } = packageApi;

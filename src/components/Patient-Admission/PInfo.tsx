@@ -107,12 +107,12 @@ const PInfo = (porps: any) => {
       <div className="px-2 py-2">
         <div className="grid grid-cols-6 gap-5">
           <Form
-            onChange={(value, event) =>
-              setFormData((prevData: any) => ({
-                ...prevData,
-                patientType: value.patientType,
-              }))
-            }
+            // onChange={(value, event) =>
+            //   setFormData((prevData: any) => ({
+            //     ...prevData,
+            //     patientType: value.patientType,
+            //   }))
+            // }
             // model={patientModel}
             fluid
             formValue={data}
