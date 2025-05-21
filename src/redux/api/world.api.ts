@@ -59,4 +59,5 @@ export const {
   useGetSingleWorldsQuery,
   useUpdateWorldsMutation,
   useDeleteWorldsMutation,
+  useLazyGetSingleWorldsQuery,
 } = worldApi;

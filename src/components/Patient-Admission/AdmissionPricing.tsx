@@ -1,10 +1,16 @@
 "use client";
 
-import { useGetAllWorldsQuery } from "@/redux/api/world.api";
+import {
+  useGetAllWorldsQuery,
+  useLazyGetSingleWorldsQuery,
+} from "@/redux/api/world.api";
 
 import { IAdmissionInitialDataParams } from "./AdmissionInfo";
-import { useGetAllPackageQuery } from "@/redux/api/package.api";
-import { useMemo } from "react";
+import {
+  useGetAllPackageQuery,
+  useLazyGetSinglePackageQuery,
+} from "@/redux/api/package.api";
+import { useEffect, useMemo, useState } from "react";
 type TAdmissionPricingParams = {
   data: any;
   // discountAmount: number;
@@ -20,30 +26,31 @@ type TAdmissionPricingParams = {
   >;
 };
 
-const AdmissionPricing = async (params: TAdmissionPricingParams) => {
-  const { data: worlds, isLoading } = useGetAllWorldsQuery(undefined);
-  const { data: packageItems, isLoading: pakcageLoading } =
-    useGetAllPackageQuery(undefined);
+const AdmissionPricing = (params: TAdmissionPricingParams) => {
+  const [getWord] = useLazyGetSingleWorldsQuery();
+  const [getPackage] = useLazyGetSinglePackageQuery();
 
-  // console.log(worlds, "workd");
   const { data, vatAmount, mode } = params;
+  const [totalAmount, setTotalAmount] = useState(0);
 
-  const totalAmount = useMemo(() => {
-    const bedPrice = worlds?.data?.find(
-      (item: { _id: string }) => data.worldId === item._id
-    );
-    const fixedPrice = packageItems?.data?.find(
-      (item: { _id: string }) => data.fixedBill === item._id
-    );
-
-    if (fixedPrice) return fixedPrice.price;
-    if (bedPrice) return bedPrice.charge;
-
-    return 0;
-  }, [worlds, packageItems, data.worldId, data.fixedBill]);
-
-  // Return your component JSX here if applicable
-
+  useEffect(() => {
+    (async function () {
+      if (data.fixedBill) {
+        const sdata = await getPackage(data?.fixedBill).unwrap();
+        if (sdata?.data?.price) {
+          setTotalAmount(sdata.data.price);
+          return;
+        }
+      }
+      if (data?.worldId) {
+        const sdata = await getWord(data?.worldId).unwrap();
+        if (sdata?.data?.charge) {
+          setTotalAmount(sdata.data.charge);
+          return;
+        }
+      }
+    })();
+  }, [data.worldId, data.fixedBill]);
   const dueAmount = 0;
 
   let discountAmount = 0;
