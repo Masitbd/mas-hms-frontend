@@ -16,15 +16,7 @@ const NotRegPatient = (param: param) => {
     name: StringType().isRequired("This field is required."),
     age: StringType().isRequired("This field is required."),
     gender: StringType().isRequired("This field is required."),
-    phone: NumberType()
-      .isRequired("This field is required.")
-      .addRule((value: string | number): boolean => {
-        const phoneNumber = value.toString();
-        if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
-          return false;
-        }
-        return true;
-      }, "Phone number must be 11 digits."),
+    phone: StringType().isRequired("This field is required."),
   });
   const handleChange = useCallback(
     (value: Record<string, any>) => {

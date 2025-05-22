@@ -97,6 +97,11 @@ const PInfo = (porps: any) => {
     );
   }
 
+  // Define the patient model for form validation
+  const patientmodel = Schema.Model({
+    patientType: StringType().isRequired("Patient type is required"),
+  });
+
   return (
     <div className="border  shadow-lg">
       <div className="bg-[#3498ff] text-white ">
@@ -107,13 +112,13 @@ const PInfo = (porps: any) => {
       <div className="px-2 py-2">
         <div className="grid grid-cols-6 gap-5">
           <Form
-            // onChange={(value, event) =>
-            //   setFormData((prevData: any) => ({
-            //     ...prevData,
-            //     patientType: value.patientType,
-            //   }))
-            // }
-            // model={patientModel}
+            onChange={(value, event) =>
+              setFormData((prevData: any) => ({
+                ...prevData,
+                patientType: value.patientType,
+              }))
+            }
+            model={patientmodel}
             fluid
             formValue={data}
             ref={forwardedRefForPatientType}
