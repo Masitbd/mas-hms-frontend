@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Form,
-  Message,
-  Schema,
-  SelectPicker,
-  useToaster,
-} from "rsuite";
+import { Button, Form, Message, Schema, useToaster } from "rsuite";
 
 import { useCallback, useRef, useState } from "react";
 
@@ -104,6 +97,7 @@ const AdmitPatientModal = () => {
 
   const okHandler = async () => {
     await handleSubmit();
+    await setFormData(aInitialData);
   };
 
   const cancelHandler = () => {

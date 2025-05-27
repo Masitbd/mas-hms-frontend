@@ -5,7 +5,7 @@ import { Button } from "rsuite";
 import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
-import { convertNumberToWords } from "@/utils/convertnumberToword";
+
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -53,7 +53,7 @@ const DoctorBills = ({ data }: { data: any }) => {
 
     // Calculate the Grand Total
     const grandTotal = data.reduce(
-      (total: any, item: any) => total + item.amount,
+      (total: any, item: any) => total + item.totalAmount,
       0
     );
 
@@ -155,7 +155,7 @@ const DoctorBills = ({ data }: { data: any }) => {
                 item.doctorName,
                 item.quantity.toString(),
                 item.amount.toString(),
-                item.amount.toString(),
+                item.totalAmount.toString(),
               ]),
               // Add a row for the Grand Total
               [
