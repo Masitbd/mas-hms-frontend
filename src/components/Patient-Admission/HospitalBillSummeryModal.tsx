@@ -56,20 +56,21 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
       refDoct,
       general,
       serviceSummary,
+      fixedBillInfo,
     } = patient;
-
+    const isFixedBill = !!fixedBillInfo?.price;
     // Build the service rows dynamically
     const serviceRows = serviceSummary.map((item: any) => [
       item.category,
       new Date(admissionDate).toLocaleDateString("en-GB"),
-      item.total.toFixed(2),
+      isFixedBill ? "00.00" : item.total.toFixed(2),
     ]);
 
     if (general) {
       serviceRows.push([
         "General Charge",
         new Date(admissionDate).toLocaleDateString("en-GB"),
-        general.toFixed(2),
+        isFixedBill ? "00.00" : general.toFixed(2),
       ]);
     }
 
@@ -77,11 +78,11 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
       serviceRows.push([
         "Bed Charge",
         new Date(admissionDate).toLocaleDateString("en-GB"),
-        bedCharge.toFixed(2),
+        isFixedBill ? "00.00" : bedCharge.toFixed(2),
       ]);
     }
 
-    const totalAmount =
+    const calculatedTotal =
       serviceSummary.reduce(
         (acc: any, item: { total: number }) => acc + item.total,
         0
@@ -89,6 +90,7 @@ const HospitalBillSummeryModal = ({ data }: { data: any }) => {
       (general || 0) +
       (bedCharge || 0);
 
+    const totalAmount = isFixedBill ? fixedBillInfo?.price : calculatedTotal;
     // Calculate due amount directly as a number
     const dueAmount = totalAmount - (totalPaid || 0);
 
