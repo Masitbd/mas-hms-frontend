@@ -108,6 +108,7 @@ const AdmitPatientModal = () => {
 
   const okHandler = async () => {
     await handleSubmit();
+    await setFormData(aInitialData);
   };
 
   const cancelHandler = () => {

@@ -24,7 +24,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { useAddPateintServiceMutation } from "@/redux/api/admission.api";
 import Swal from "sweetalert2";
 
-
 const { Column, HeaderCell, Cell } = Table;
 
 interface FormValues {
@@ -230,7 +229,7 @@ const AddServiceModal = ({
         phone,
       },
     };
-    console.log(paylaod);
+
     try {
       const res = await serviceAdd(paylaod).unwrap();
 
