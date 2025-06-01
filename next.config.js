@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // basePath: "/ddcg/diagnostic",
-  // assetPrefix: "/ddcg/diagnostic",
+  basePath: "/ddcg/diagnostic",
+  assetPrefix: "/ddcg/diagnostic",
 
   images: {
     remotePatterns: [
