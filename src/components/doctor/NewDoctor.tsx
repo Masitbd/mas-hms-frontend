@@ -58,7 +58,6 @@ const NewDoctor = ({
   } = useGetEmployeeQuery({});
 
   const model = Schema.Model({
-    title: StringType().isRequired("This field is required."),
     name: StringType().isRequired("This field is required."),
   });
 

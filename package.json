@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 3000",
+    "start": "next start -p 9010",
     "lint": "next lint"
   },
   "dependencies": {
@@ -22,7 +22,6 @@
     "@tiptap/react": "^2.3.2",
     "@tiptap/starter-kit": "^2.3.2",
     "@types/lodash": "^4.17.16",
-    "@welldone-software/why-did-you-render": "^10.0.1",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.0.0",
