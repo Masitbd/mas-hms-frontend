@@ -23,7 +23,6 @@ const PriceSection = (props: IPriceSectionProps) => {
     refundTestPrice = data?.refundData?.refundApplied || 0;
   }
 
-  console.log(data?.dueAmount >= 0 && mode !== ENUM_MODE.VIEW);
   return (
     <div className=" border  shadow-lg ">
       <div className="bg-[#3498ff] text-white px-2 ">

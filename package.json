@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 9010",
+    "start": "next start -p 3000",
     "lint": "next lint"
-  },
+
+
+    
+  },          
   "dependencies": {
     "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^2.0.1",

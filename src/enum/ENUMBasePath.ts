@@ -1,4 +1,4 @@
 export enum ENUM_BASEPATH {
-  PATH = "/ddcg/diagnostic/",
+  PATH = "/",
 }
 // /ddcg/diagnostic

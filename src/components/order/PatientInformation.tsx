@@ -22,6 +22,7 @@ import {
 import { ENUM_MODE } from "@/enum/Mode";
 import { IPatient } from "@/types/allDepartmentInterfaces";
 import SearchPeopleIcon from "@rsuite/icons/SearchPeople";
+import RefByAndConsoultant from "./RefByAndConsoultant";
 
 const PatientInformation = (porps: IpatientInforMationProps) => {
   const {
@@ -68,7 +69,7 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
           </div>
 
           <hr />
-          <div className="grid grid-cols-3 gap-5 py-2 px-2">
+          <div className="grid grid-cols-4 gap-5 py-2 px-2">
             {unreagisteredPatientProfileDataPropertyNames?.map(
               (value, index) => {
                 return (
@@ -83,6 +84,8 @@ const PatientInformation = (porps: IpatientInforMationProps) => {
                 );
               }
             )}
+
+            <RefByAndConsoultant data={data} />
           </div>
         </div>
       </>
