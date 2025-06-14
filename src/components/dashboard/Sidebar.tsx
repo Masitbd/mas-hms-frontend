@@ -321,7 +321,7 @@ const Sidebar = () => {
               </AuthCheckerForComponent>
 
               {/* indoor  */}
-              <Nav.Menu
+              {/*  <Nav.Menu
                 eventKey="6"
                 title={
                   <div className="font-bold text-black bg-white">Indoor</div>
@@ -356,7 +356,7 @@ const Sidebar = () => {
                     </Nav.Item>
                   </AuthCheckerForComponent>
                 ))}
-              </Nav.Menu>
+              </Nav.Menu>*/}
             </Nav>
           </Sidenav.Body>
         </Sidenav>
