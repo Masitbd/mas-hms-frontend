@@ -249,10 +249,10 @@ const OrderTable = ({
           </Cell>
         </Column>
         <Column flexGrow={1}>
-          <HeaderCell>Delivery Date</HeaderCell>
+          <HeaderCell>Order Date</HeaderCell>
           <Cell>
             {(rowData) => {
-              const date = new Date(rowData?.deliveryTime);
+              const date = new Date(rowData?.createdAt);
               return <>{date?.toLocaleDateString()}</>;
             }}
           </Cell>

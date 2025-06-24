@@ -3,7 +3,7 @@
 import IncomeShowTable from "@/components/incomeStatement/IncomeShowTable";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 import { useGetIncomeStatementMutation } from "@/redux/api/income-statement/Income.api";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
 
 export interface IFormValues {
@@ -51,6 +51,16 @@ const IncomeStatementPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (formValue) {
+      const beginning = new Date();
+      beginning.setHours(0, 0, 0);
+      const ending = new Date();
+      ending.setHours(23, 59, 59);
+      setFormValue({ startDate: beginning, endDate: ending });
+    }
+  }, []);
 
   return (
     <div className="">

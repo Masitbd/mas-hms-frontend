@@ -119,18 +119,24 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
             table: {
               widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80],
               body: [
-                ...group.records.map((record) => [
-                  record.oid ?? " ",
-                  record.totalPrice,
-                  record.parcentDiscountAmount,
-                  record.cashDiscount,
-                  record.totalDis,
-                  record.totalPrice - record.totalDis,
-                  record.vat,
-                  record.totalAmount,
-                  record.paid,
-                  Math.max(0, record.totalAmount - record.paid),
-                ]),
+                ...[...group.records]
+                  ?.sort((a, b) => {
+                    const idA = Number(a?.oid?.substring(1) ?? 0);
+                    const idB = Number(b?.oid?.substring(1) ?? 0);
+                    return idA - idB;
+                  })
+                  .map((record) => [
+                    record.oid ?? " ",
+                    record.totalPrice,
+                    record.parcentDiscountAmount,
+                    record.cashDiscount,
+                    record.totalDis,
+                    record.totalPrice - record.totalDis,
+                    record.vat,
+                    record.totalAmount,
+                    record.paid,
+                    Math.max(0, record.totalAmount - record.paid),
+                  ]),
                 // Summary Row
                 [
                   { text: "Total", style: "tableHeader" },
@@ -260,23 +266,29 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               {/* Records Table */}
               <div className="w-full border-t">
                 {/* Records Rows */}
-                {group.records.map((record, recordIndex) => (
-                  <div
-                    key={recordIndex}
-                    className="grid grid-cols-10 text-center p-2 border-b"
-                  >
-                    <div>{record.oid}</div>
-                    <div>{record.totalPrice}</div>
-                    <div>{record.parcentDiscountAmount}</div>
-                    <div>{record.cashDiscount}</div>
-                    <div>{record.totalDis}</div>
-                    <div>{record.totalPrice - record.totalDis}</div>
-                    <div>{record.vat}</div>
-                    <div>{record.totalAmount}</div>
-                    <div>{record.paid}</div>
-                    <div>{record.totalAmount - record.paid}</div>
-                  </div>
-                ))}
+                {[...group.records]
+                  ?.sort((a, b) => {
+                    const idA = Number(a?.oid?.substring(1) ?? 0);
+                    const idB = Number(b?.oid?.substring(1) ?? 0);
+                    return idA - idB;
+                  })
+                  .map((record, recordIndex) => (
+                    <div
+                      key={recordIndex}
+                      className="grid grid-cols-10 text-center p-2 border-b"
+                    >
+                      <div>{record.oid}</div>
+                      <div>{record.totalPrice}</div>
+                      <div>{record.parcentDiscountAmount}</div>
+                      <div>{record.cashDiscount}</div>
+                      <div>{record.totalDis}</div>
+                      <div>{record.totalPrice - record.totalDis}</div>
+                      <div>{record.vat}</div>
+                      <div>{record.totalAmount}</div>
+                      <div>{record.paid}</div>
+                      <div>{record.totalAmount - record.paid}</div>
+                    </div>
+                  ))}
 
                 {/* Summary Row */}
                 <div className="grid grid-cols-10 text-center p-2 border-t font-semibold bg-gray-200">

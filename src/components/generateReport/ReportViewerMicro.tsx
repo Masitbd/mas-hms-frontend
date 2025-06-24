@@ -60,14 +60,15 @@ const ReportViewerMicro = React.forwardRef(
         <div ref={ref}>
           <div>
             <PatientInformaiton
-              order={params.order}
+              order={params.order as IOrderData & { refBy: IDoctor }}
               testResult={params.result}
               reportGroup={params.reportGroup._id}
               tests={params.tests}
+              reportGroupData={params?.reportGroup}
             />
           </div>
           <table style={{ width: "100%" }}>
-            <tr>
+            {/* <tr>
               <th style={{ paddingTop: "2rem", paddingBottom: "1rem" }}>
                 <div
                   style={{
@@ -89,7 +90,7 @@ const ReportViewerMicro = React.forwardRef(
                   </div>
                 </div>
               </th>
-            </tr>
+            </tr> */}
 
             {!growth ? (
               <>

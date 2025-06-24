@@ -249,6 +249,7 @@ export const htmlDocProviderForparameterBased = (
 ) => {
   return `<!DOCTYPE html>
         <head>
+         <title>Diagnostic Report</title>
         <style>
         .ProseMirror {
   position: relative;
@@ -446,6 +447,7 @@ export const htmlDocProviderForMicroBiology = (
 ) => {
   return `<!DOCTYPE html>
         <head>
+         <title>Diagnostic Report</title>
         <style>
          .ProseMirror {
   position: relative;
