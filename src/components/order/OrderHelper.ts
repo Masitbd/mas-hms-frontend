@@ -165,7 +165,16 @@ export const printInvoice = async ({
           ],
           [
             {
-              text: [{ text: "Billing Date: ", bold: true }, data.createdAt],
+              text: [
+                { text: "Billing Date: ", bold: true },
+                {
+                  text: `${new Date(
+                    data.createdAt
+                  ).toLocaleDateString()} ${new Date(
+                    data?.createdAt
+                  ).toLocaleTimeString()}`,
+                },
+              ],
               style: "info",
               alignment: "right",
             },
@@ -435,7 +444,7 @@ export const printInvoice = async ({
       deliveryNotice:
         "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744009021/5bfa98fb23111ff281ed84a598a39451_lsm3fj.png",
       provarbNote:
-        "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1744353421/e8fece3a06117f05f9b97ce0a95bd80a_cbfgju.png",
+        "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1751428068/357234fab793f067aa9445a45bf154e0_jvnrj2.png",
     },
   };
 

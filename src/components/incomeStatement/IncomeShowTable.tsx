@@ -133,9 +133,17 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                     record.totalDis,
                     record.totalPrice - record.totalDis,
                     record.vat,
-                    record.totalAmount,
+                    record.totalAmount -
+                      (record?.totalDis ?? 0) +
+                      (record.vat ?? 0),
                     record.paid,
-                    Math.max(0, record.totalAmount - record.paid),
+                    Math.max(
+                      0,
+                      record.totalAmount -
+                        record.paid -
+                        (record?.totalDis ?? 0) +
+                        (record.vat ?? 0)
+                    ),
                   ]),
                 // Summary Row
                 [
@@ -163,13 +171,24 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   ),
                   "",
                   group.records.reduce(
-                    (acc, record) => acc + record.totalAmount,
+                    (acc, record) =>
+                      acc +
+                      record.totalAmount -
+                      (record?.totalDis ?? 0) +
+                      (record.vat ?? 0),
                     0
                   ),
                   group.records.reduce((acc, record) => acc + record.paid, 0),
                   group.records.reduce(
                     (acc, record) =>
-                      acc + Math.max(0, record.totalAmount - record.paid),
+                      acc +
+                      Math.max(
+                        0,
+                        record.totalAmount -
+                          record.paid -
+                          (record?.totalDis ?? 0) +
+                          (record.vat ?? 0)
+                      ),
                     0
                   ),
                 ],
@@ -247,12 +266,14 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               acc.totalAmount += record.totalAmount;
               acc.paid += record.paid;
               acc.totalDiscount += record.totalDis;
+              acc.vat += record.vat;
               return acc;
             },
             {
               totalAmount: 0,
               paid: 0,
               totalDiscount: 0,
+              vat: 0,
             }
           );
 
@@ -284,9 +305,16 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                       <div>{record.totalDis}</div>
                       <div>{record.totalPrice - record.totalDis}</div>
                       <div>{record.vat}</div>
-                      <div>{record.totalAmount}</div>
+                      <div>
+                        {record.totalAmount - record.totalDis + record.vat}
+                      </div>
                       <div>{record.paid}</div>
-                      <div>{record.totalAmount - record.paid}</div>
+                      <div>
+                        {record.totalAmount -
+                          record.totalDis +
+                          record.vat -
+                          record.paid}
+                      </div>
                     </div>
                   ))}
 
@@ -299,9 +327,16 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   <div>{totals.totalDiscount}</div>
                   <div>{totals.totalAmount - totals.totalDiscount}</div>
                   <div></div>
-                  <div>{totals.totalAmount}</div>
+                  <div>
+                    {totals.totalAmount - totals.totalDiscount + totals.vat}
+                  </div>
                   <div>{totals.paid}</div>
-                  <div>{totals.totalAmount - totals.paid}</div>
+                  <div>
+                    {totals.totalAmount -
+                      totals.totalDiscount +
+                      totals.vat -
+                      totals.paid}
+                  </div>
                 </div>
               </div>
             </div>
