@@ -43,7 +43,11 @@ const CustomNavbar = ({
         <Nav.Item eventKey="3" as={NavLink} href="/order">
           Dashboard
         </Nav.Item>
-        <Nav.Item eventKey="4" as={NavLink} href="http://148.135.137.151:3005">
+        <Nav.Item
+          eventKey="4"
+          as={NavLink}
+          href="http://148.135.137.151/ddcg/account/"
+        >
           Account
         </Nav.Item>
       </Nav>
