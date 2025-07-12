@@ -276,6 +276,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               vat: 0,
             }
           );
+          console.log(totals);
 
           return (
             <div key={groupIndex} className="mb-8">
@@ -305,16 +306,9 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                       <div>{record.totalDis}</div>
                       <div>{record.totalPrice - record.totalDis}</div>
                       <div>{record.vat}</div>
-                      <div>
-                        {record.totalAmount - record.totalDis + record.vat}
-                      </div>
+                      <div>{record.totalAmount + record.vat}</div>
                       <div>{record.paid}</div>
-                      <div>
-                        {record.totalAmount -
-                          record.totalDis +
-                          record.vat -
-                          record.paid}
-                      </div>
+                      <div>{record.totalAmount + record.vat - record.paid}</div>
                     </div>
                   ))}
 
@@ -325,18 +319,11 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   <div></div>
                   <div></div>
                   <div>{totals.totalDiscount}</div>
-                  <div>{totals.totalAmount - totals.totalDiscount}</div>
+                  <div>{totals.totalAmount}</div>
                   <div></div>
-                  <div>
-                    {totals.totalAmount - totals.totalDiscount + totals.vat}
-                  </div>
+                  <div>{totals.totalAmount + totals.vat}</div>
                   <div>{totals.paid}</div>
-                  <div>
-                    {totals.totalAmount -
-                      totals.totalDiscount +
-                      totals.vat -
-                      totals.paid}
-                  </div>
+                  <div>{totals.totalAmount + totals.vat - totals.paid}</div>
                 </div>
               </div>
             </div>
