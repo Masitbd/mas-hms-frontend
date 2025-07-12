@@ -119,18 +119,32 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
             table: {
               widths: [80, 80, 70, 60, 60, 80, 50, 80, 80, 80],
               body: [
-                ...group.records.map((record) => [
-                  record.oid ?? " ",
-                  record.totalPrice,
-                  record.parcentDiscountAmount,
-                  record.cashDiscount,
-                  record.totalDis,
-                  record.totalPrice - record.totalDis,
-                  record.vat,
-                  record.totalAmount,
-                  record.paid,
-                  Math.max(0, record.totalAmount - record.paid),
-                ]),
+                ...[...group.records]
+                  ?.sort((a, b) => {
+                    const idA = Number(a?.oid?.substring(1) ?? 0);
+                    const idB = Number(b?.oid?.substring(1) ?? 0);
+                    return idA - idB;
+                  })
+                  .map((record) => [
+                    record.oid ?? " ",
+                    record.totalPrice,
+                    record.parcentDiscountAmount,
+                    record.cashDiscount,
+                    record.totalDis,
+                    record.totalPrice - record.totalDis,
+                    record.vat,
+                    record.totalAmount -
+                      (record?.totalDis ?? 0) +
+                      (record.vat ?? 0),
+                    record.paid,
+                    Math.max(
+                      0,
+                      record.totalAmount -
+                        record.paid -
+                        (record?.totalDis ?? 0) +
+                        (record.vat ?? 0)
+                    ),
+                  ]),
                 // Summary Row
                 [
                   { text: "Total", style: "tableHeader" },
@@ -157,13 +171,24 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   ),
                   "",
                   group.records.reduce(
-                    (acc, record) => acc + record.totalAmount,
+                    (acc, record) =>
+                      acc +
+                      record.totalAmount -
+                      (record?.totalDis ?? 0) +
+                      (record.vat ?? 0),
                     0
                   ),
                   group.records.reduce((acc, record) => acc + record.paid, 0),
                   group.records.reduce(
                     (acc, record) =>
-                      acc + Math.max(0, record.totalAmount - record.paid),
+                      acc +
+                      Math.max(
+                        0,
+                        record.totalAmount -
+                          record.paid -
+                          (record?.totalDis ?? 0) +
+                          (record.vat ?? 0)
+                      ),
                     0
                   ),
                 ],
@@ -241,12 +266,14 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               acc.totalAmount += record.totalAmount;
               acc.paid += record.paid;
               acc.totalDiscount += record.totalDis;
+              acc.vat += record.vat;
               return acc;
             },
             {
               totalAmount: 0,
               paid: 0,
               totalDiscount: 0,
+              vat: 0,
             }
           );
 
@@ -260,23 +287,36 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               {/* Records Table */}
               <div className="w-full border-t">
                 {/* Records Rows */}
-                {group.records.map((record, recordIndex) => (
-                  <div
-                    key={recordIndex}
-                    className="grid grid-cols-10 text-center p-2 border-b"
-                  >
-                    <div>{record.oid}</div>
-                    <div>{record.totalPrice}</div>
-                    <div>{record.parcentDiscountAmount}</div>
-                    <div>{record.cashDiscount}</div>
-                    <div>{record.totalDis}</div>
-                    <div>{record.totalPrice - record.totalDis}</div>
-                    <div>{record.vat}</div>
-                    <div>{record.totalAmount}</div>
-                    <div>{record.paid}</div>
-                    <div>{record.totalAmount - record.paid}</div>
-                  </div>
-                ))}
+                {[...group.records]
+                  ?.sort((a, b) => {
+                    const idA = Number(a?.oid?.substring(1) ?? 0);
+                    const idB = Number(b?.oid?.substring(1) ?? 0);
+                    return idA - idB;
+                  })
+                  .map((record, recordIndex) => (
+                    <div
+                      key={recordIndex}
+                      className="grid grid-cols-10 text-center p-2 border-b"
+                    >
+                      <div>{record.oid}</div>
+                      <div>{record.totalPrice}</div>
+                      <div>{record.parcentDiscountAmount}</div>
+                      <div>{record.cashDiscount}</div>
+                      <div>{record.totalDis}</div>
+                      <div>{record.totalPrice - record.totalDis}</div>
+                      <div>{record.vat}</div>
+                      <div>
+                        {record.totalAmount - record.totalDis + record.vat}
+                      </div>
+                      <div>{record.paid}</div>
+                      <div>
+                        {record.totalAmount -
+                          record.totalDis +
+                          record.vat -
+                          record.paid}
+                      </div>
+                    </div>
+                  ))}
 
                 {/* Summary Row */}
                 <div className="grid grid-cols-10 text-center p-2 border-t font-semibold bg-gray-200">
@@ -287,9 +327,16 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   <div>{totals.totalDiscount}</div>
                   <div>{totals.totalAmount - totals.totalDiscount}</div>
                   <div></div>
-                  <div>{totals.totalAmount}</div>
+                  <div>
+                    {totals.totalAmount - totals.totalDiscount + totals.vat}
+                  </div>
                   <div>{totals.paid}</div>
-                  <div>{totals.totalAmount - totals.paid}</div>
+                  <div>
+                    {totals.totalAmount -
+                      totals.totalDiscount +
+                      totals.vat -
+                      totals.paid}
+                  </div>
                 </div>
               </div>
             </div>

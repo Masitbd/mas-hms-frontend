@@ -48,7 +48,7 @@ const ReportViewerParameter = React.forwardRef(
           }}
         >
           <thead>
-            <div
+            {/* <div
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -67,7 +67,7 @@ const ReportViewerParameter = React.forwardRef(
               >
                 {params.reportGroup.label}
               </div>
-            </div>
+            </div> */}
             {params?.testResult?.analyzerMachine ? (
               <div
                 style={{
@@ -85,7 +85,7 @@ const ReportViewerParameter = React.forwardRef(
 
             <div>
               <PatientInformaiton
-                order={order}
+                order={order as IOrderData & { refBy: IDoctor }}
                 testResult={testResult}
                 consultant={
                   { data: params.consultant } as unknown as {
@@ -94,6 +94,7 @@ const ReportViewerParameter = React.forwardRef(
                 }
                 reportGroup={params.reportGroup._id}
                 tests={params.tests}
+                reportGroupData={params.reportGroup}
               />
             </div>
           </thead>

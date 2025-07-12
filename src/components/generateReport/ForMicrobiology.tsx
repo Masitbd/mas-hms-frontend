@@ -187,7 +187,9 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     const data = ReactDOMServer.renderToStaticMarkup(pdfData);
     const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
     const win = window.open();
+
     win?.document.write(dataWithHtml);
+
     win?.print();
 
     if (previousPath) router.push(previousPath);

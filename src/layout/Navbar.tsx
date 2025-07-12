@@ -46,7 +46,7 @@ const CustomNavbar = ({
         <Nav.Item
           eventKey="4"
           as={NavLink}
-          href="http://148.135.137.151/ddcg/account"
+          href="http://148.135.137.151/ddcg/account/"
         >
           Account
         </Nav.Item>

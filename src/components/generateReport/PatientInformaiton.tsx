@@ -5,7 +5,12 @@ import {
   ITestResultForParameter,
   ITestsFromOrder,
 } from "./initialDataAndTypes";
-import { IDoctor, ISpecimen, ITest } from "@/types/allDepartmentInterfaces";
+import {
+  IDoctor,
+  IReportGroup,
+  ISpecimen,
+  ITest,
+} from "@/types/allDepartmentInterfaces";
 import { useGetSingleReportTypeQuery } from "@/redux/api/reportType/reportType";
 
 const PatientInformaiton = ({
@@ -14,12 +19,14 @@ const PatientInformaiton = ({
   consultant,
   reportGroup,
   tests,
+  reportGroupData,
 }: {
-  order: IOrderData;
+  order: IOrderData & { refBy: IDoctor };
   testResult?: ITestResultForParameter | ITEstREsultForMicroBio;
   consultant?: { data: { data: IDoctor } };
   reportGroup?: string;
   tests?: ITestsFromOrder[];
+  reportGroupData: IReportGroup;
 }) => {
   const specimen = new Set();
 
@@ -51,16 +58,16 @@ const PatientInformaiton = ({
           <span style={{ fontFamily: "serif" }}>{order.oid}</span>
         </div>
         <div>
+          <span style={{ fontWeight: "bold" }}>Report Date: </span>
+          {new Date(testResult?.createdAt as unknown as Date).toDateString()}
+        </div>
+        <div>
           <span style={{ fontWeight: "bold" }}>Name: </span>
           {order.patient?.name}
         </div>
         <div>
           <span style={{ fontWeight: "bold" }}>Age: </span>
           {order.patient?.age} Year(s)
-        </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Sex: </span>
-          {order.patient?.gender}
         </div>
         <div>
           <span style={{ fontWeight: "bold" }}>Consultant: </span>
@@ -72,12 +79,8 @@ const PatientInformaiton = ({
             : " "}
         </div>
         <div>
-          <span style={{ fontWeight: "bold" }}>Receiving Date: </span>
-          {new Date(order.createdAt as Date).toDateString()}
-        </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Report Date: </span>
-          {new Date(testResult?.createdAt as unknown as Date).toDateString()}
+          <span style={{ fontWeight: "bold" }}>Sex: </span>
+          {order.patient?.gender}
         </div>
         <div>
           <span style={{ fontWeight: "bold" }}>
@@ -85,6 +88,20 @@ const PatientInformaiton = ({
             <span style={{ fontWeight: "normal" }}>
               {Array.from(specimen as unknown as string[])?.join(", ")}
             </span>
+          </span>
+        </div>
+
+        <div>
+          <span style={{ fontWeight: "bold" }}>Receiving Date: </span>
+          {new Date(order.createdAt as Date).toDateString()}
+        </div>
+        <div>
+          <span style={{ fontWeight: "bold" }}>Report Category: </span>
+          {reportGroupData?.label}
+        </div>
+        <div>
+          <span style={{ fontWeight: "bold" }}>
+            {order?.refBy ? order?.refBy?.code : <></>}
           </span>
         </div>
       </div>
