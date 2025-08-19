@@ -46,11 +46,12 @@ const PatientInformaiton = ({
           padding: "8px",
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "8px",
+          gap: "1px 1px",
           margin: "20px 0",
           borderRadius: "8px",
           fontFamily: "serif",
           width: "100%",
+          fontSize: ".950rem",
         }}
       >
         <div>

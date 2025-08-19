@@ -48,26 +48,6 @@ const ReportViewerParameter = React.forwardRef(
           }}
         >
           <thead>
-            {/* <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  border: "3px solid #4b5563", // stone-700
-                  borderRadius: "8px",
-                  padding: "10px 20px",
-                  fontSize: "1.25rem", // text-xl
-                  fontFamily: "serif",
-                  fontWeight: "bold",
-                }}
-              >
-                {params.reportGroup.label}
-              </div>
-            </div> */}
             {params?.testResult?.analyzerMachine ? (
               <div
                 style={{
@@ -97,6 +77,29 @@ const ReportViewerParameter = React.forwardRef(
                 reportGroupData={params.reportGroup}
               />
             </div>
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    border: "3px solid #4b5563", // stone-700
+                    borderRadius: "8px",
+                    padding: "5px 10px",
+                    fontSize: "1.25rem", // text-xl
+                    fontFamily: "serif",
+                    fontWeight: "bold",
+                    marginBottom: "5px",
+                  }}
+                >
+                  {params.reportGroup.label}
+                </div>
+              </div>
+            </div>
           </thead>
           <tbody>
             {params.reportGroup.testResultType !== "descriptive" && (
@@ -115,7 +118,11 @@ const ReportViewerParameter = React.forwardRef(
                     return (
                       <td
                         key={field}
-                        style={{ padding: "8px", border: "1px solid black" }}
+                        style={{
+                          padding: "2px 4px",
+                          border: "1px solid black",
+                          fontSize: ".950rem",
+                        }}
                       >
                         <span style={{ fontWeight: "bold" }}>
                           {camelToFlat(field)}{" "}
@@ -140,10 +147,10 @@ const ReportViewerParameter = React.forwardRef(
                         textTransform: "uppercase",
                         fontFamily: "serif",
                         fontWeight: "bold",
-                        fontSize: "1.125rem",
+                        fontSize: ".950rem",
                         textAlign: "left",
-                        border: "1px solid black",
-                        padding: "8px",
+                        border: ".2px solid black",
+                        padding: "2px",
                       }}
                     >
                       {heading}:
@@ -167,7 +174,7 @@ const ReportViewerParameter = React.forwardRef(
                                   <td
                                     style={{
                                       border: "1px solid black",
-                                      padding: "8px",
+                                      padding: "1px !important",
                                     }}
                                   >
                                     <div
@@ -177,7 +184,8 @@ const ReportViewerParameter = React.forwardRef(
                                         whiteSpace: "pre-wrap",
                                         overflowWrap: "break-word",
                                         overflow: "auto",
-                                        padding: "8px",
+                                        padding: "1px",
+                                        fontSize: ".950rem",
                                       }}
                                       dangerouslySetInnerHTML={{
                                         __html: resultField?.result,
@@ -188,8 +196,9 @@ const ReportViewerParameter = React.forwardRef(
                               ) : (
                                 <td
                                   style={{
-                                    border: "1px solid black",
-                                    padding: "8px",
+                                    border: ".1px solid gray",
+                                    padding: "2px 4px",
+                                    fontSize: ".950rem",
                                   }}
                                 >
                                   <div key={fieldName}>
@@ -208,7 +217,7 @@ const ReportViewerParameter = React.forwardRef(
                                     </span>
                                     <span
                                       style={{
-                                        fontSize: "0.875rem",
+                                        fontSize: ".950rem",
                                         fontFamily: "monospace",
                                       }}
                                     >
