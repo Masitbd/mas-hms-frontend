@@ -45,6 +45,7 @@ import { IReportGroup } from "@/types/allDepartmentInterfaces";
 import ForDescriptive from "./ForDescriptive";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+import { Textarea } from "../companyInfo/TextArea";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -354,11 +355,12 @@ const ReportGroupTab = () => {
                                   onChange={handleChange}
                                 />
                               </Column>
-                              <Column flexGrow={1}>
+                              <Column flexGrow={2}>
                                 <HeaderCell>Normal Value</HeaderCell>
                                 <EditableCell
                                   dataKey={"normalValue"}
                                   onChange={handleChange}
+                                  as={Textarea}
                                 />
                               </Column>
                               <Column flexGrow={1}>

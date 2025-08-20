@@ -216,13 +216,16 @@ const TestTableForReport = (props: { data: IOrderData }) => {
     });
   }, []);
 
+  console.log(reportGroupData);
   return (
     <div>
       <div className="">
         <div className="">
           <Table
             loading={reportGroupDataLoading}
-            data={reportGroupData}
+            data={reportGroupData?.sort((a, b) =>
+              a.label.localeCompare(b.label)
+            )}
             bordered
             cellBordered
             autoHeight

@@ -58,7 +58,7 @@ const PatientInformaiton = ({
           <span style={{ fontWeight: "bold" }}>ID: </span>
           <span style={{ fontFamily: "serif" }}>{order.oid}</span>
         </div>
-        <div>
+        <div style={{ textAlign: "right" }}>
           <span style={{ fontWeight: "bold" }}>Report Date: </span>
           {new Date(testResult?.createdAt as unknown as Date).toDateString()}
         </div>
@@ -66,22 +66,22 @@ const PatientInformaiton = ({
           <span style={{ fontWeight: "bold" }}>Name: </span>
           {order.patient?.name}
         </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Age: </span>
-          {order.patient?.age} Year(s)
-        </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Consultant: </span>
-          {order?.consultant &&
-          typeof order?.consultant === "object" &&
-          order?.consultant?.title &&
-          order?.consultant?.name
-            ? order?.consultant?.title + " " + order?.consultant?.name
-            : " "}
-        </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Sex: </span>
-          {order.patient?.gender}
+        <div
+          style={{
+            textAlign: "right",
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "20px",
+          }}
+        >
+          <div>
+            <span style={{ fontWeight: "bold" }}>Age: </span>
+            {order.patient?.age}
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <span style={{ fontWeight: "bold" }}>Sex: </span>
+            {order.patient?.gender}
+          </div>
         </div>
         <div>
           <span style={{ fontWeight: "bold" }}>
@@ -91,12 +91,23 @@ const PatientInformaiton = ({
             </span>
           </span>
         </div>
-
-        <div>
+        <div style={{ textAlign: "right" }}>
           <span style={{ fontWeight: "bold" }}>Receiving Date: </span>
           {new Date(order.createdAt as Date).toDateString()}
         </div>
-        <div>
+        <div style={{ gridColumn: "span 2" }}>
+          <span style={{ fontWeight: "bold", gridColumn: "2" }}>
+            Consultant:{" "}
+          </span>
+          {order?.consultant &&
+          typeof order?.consultant === "object" &&
+          order?.consultant?.title &&
+          order?.consultant?.name
+            ? order?.consultant?.title + " " + order?.consultant?.name
+            : " "}
+        </div>
+
+        {/* <div>
           <span style={{ fontWeight: "bold" }}>Report Category: </span>
           {reportGroupData?.label}
         </div>
@@ -104,7 +115,7 @@ const PatientInformaiton = ({
           <span style={{ fontWeight: "bold" }}>
             {order?.refBy ? order?.refBy?.code : <></>}
           </span>
-        </div>
+        </div> */}
       </div>
     </>
   );
