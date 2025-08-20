@@ -68,8 +68,8 @@ const ReportViewerMicro = React.forwardRef(
             />
           </div>
           <table style={{ width: "100%" }}>
-            {/* <tr>
-              <th style={{ paddingTop: "2rem", paddingBottom: "1rem" }}>
+            <tr>
+              <th style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
                 <div
                   style={{
                     display: "flex",
@@ -90,7 +90,7 @@ const ReportViewerMicro = React.forwardRef(
                   </div>
                 </div>
               </th>
-            </tr> */}
+            </tr>
 
             {!growth ? (
               <>
@@ -147,8 +147,8 @@ const ReportViewerMicro = React.forwardRef(
                         <th
                           style={{
                             fontFamily: "serif",
-                            fontSize: "1.5rem",
-                            border: "1px solid black",
+                            fontSize: "1rem",
+                            border: ".5px solid gray",
                             textTransform: "uppercase",
                           }}
                           colSpan={4}
@@ -162,15 +162,15 @@ const ReportViewerMicro = React.forwardRef(
                           gridTemplateColumns: `repeat(12, 1fr)`,
                           textAlign: "left",
                           textTransform: "uppercase",
-                          fontSize: "medium",
+                          fontSize: "1rem",
                           wordWrap: "break-word",
                         }}
                       >
                         <th
                           style={{
                             gridColumn: "span 5",
-                            border: "1px solid black",
-                            padding: "8px",
+                            border: ".5px solid gray",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -178,9 +178,9 @@ const ReportViewerMicro = React.forwardRef(
                         </th>
                         <th
                           style={{
-                            border: "1px solid black",
+                            border: ".5px solid gray",
                             gridColumn: "span 2",
-                            padding: "8px",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -188,9 +188,9 @@ const ReportViewerMicro = React.forwardRef(
                         </th>
                         <th
                           style={{
-                            border: "1px solid black",
+                            border: ".5px solid gray",
                             gridColumn: "span 3",
-                            padding: "8px",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -198,9 +198,9 @@ const ReportViewerMicro = React.forwardRef(
                         </th>
                         <th
                           style={{
-                            border: "1px solid black",
+                            border: ".5px solid gray",
                             gridColumn: "span 2",
-                            padding: "8px",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -218,7 +218,7 @@ const ReportViewerMicro = React.forwardRef(
                                   display: "grid",
                                   gridTemplateColumns: `repeat(12, 1fr)`,
                                   textAlign: "left",
-                                  fontSize: "medium",
+                                  fontSize: ".950rem",
                                 }}
                               >
                                 {fields.map((field: string) => {
@@ -226,14 +226,14 @@ const ReportViewerMicro = React.forwardRef(
                                     <>
                                       <td
                                         style={{
-                                          border: "1px solid black",
+                                          border: ".5px solid gray",
                                           gridColumn:
                                             field == fields[0]
                                               ? "span 5"
                                               : field == fields[2]
                                               ? "span 3"
                                               : "span 2",
-                                          padding: "6px",
+                                          padding: "1px 4px",
                                         }}
                                         key={fields[0]}
                                       >
