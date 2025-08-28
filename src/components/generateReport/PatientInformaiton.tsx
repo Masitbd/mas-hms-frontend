@@ -60,7 +60,9 @@ const PatientInformaiton = ({
         </div>
         <div style={{ textAlign: "right" }}>
           <span style={{ fontWeight: "bold" }}>Report Date: </span>
-          {new Date(testResult?.createdAt as unknown as Date).toDateString()}
+          {new Date(
+            testResult?.createdAt as unknown as Date
+          )?.toLocaleDateString("en-GB")}
         </div>
         <div>
           <span style={{ fontWeight: "bold" }}>Name: </span>
@@ -83,29 +85,41 @@ const PatientInformaiton = ({
             {order.patient?.gender}
           </div>
         </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>
-            Specimen:{" "}
-            <span style={{ fontWeight: "normal" }}>
-              {Array.from(specimen as unknown as string[])?.join(", ")}
+        {specimen.size > 0 ? (
+          <div>
+            <span style={{ fontWeight: "bold" }}>
+              Specimen:{" "}
+              <span style={{ fontWeight: "normal" }}>
+                {Array.from(specimen as unknown as string[])?.join(", ")}
+              </span>
             </span>
-          </span>
-        </div>
-        <div style={{ textAlign: "right" }}>
+          </div>
+        ) : (
+          <></>
+        )}
+        <div
+          style={
+            specimen?.size > 0 ? { textAlign: "right" } : { textAlign: "left" }
+          }
+        >
           <span style={{ fontWeight: "bold" }}>Receiving Date: </span>
-          {new Date(order.createdAt as Date).toDateString()}
+          {new Date(order.createdAt as Date)?.toLocaleDateString("en-GB")}
         </div>
-        <div style={{ gridColumn: "span 2" }}>
-          <span style={{ fontWeight: "bold", gridColumn: "2" }}>
-            Consultant:{" "}
-          </span>
-          {order?.consultant &&
-          typeof order?.consultant === "object" &&
-          order?.consultant?.title &&
-          order?.consultant?.name
-            ? order?.consultant?.title + " " + order?.consultant?.name
-            : " "}
-        </div>
+        {order?.consultant ? (
+          <div style={{ gridColumn: "span 2" }}>
+            <span style={{ fontWeight: "bold", gridColumn: "2" }}>
+              Consultant:{" "}
+            </span>
+            {order?.consultant &&
+            typeof order?.consultant === "object" &&
+            order?.consultant?.title &&
+            order?.consultant?.name
+              ? order?.consultant?.title + " " + order?.consultant?.name
+              : " "}
+          </div>
+        ) : (
+          <></>
+        )}
 
         {/* <div>
           <span style={{ fontWeight: "bold" }}>Report Category: </span>

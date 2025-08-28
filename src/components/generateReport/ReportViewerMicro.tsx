@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { forwardRef, LegacyRef, useRef } from "react";
-import { IOrderData } from "../order/initialDataAndTypes";
+import { IOrderData, ItestInformaiton } from "../order/initialDataAndTypes";
 import {
   IDoctor,
   IReportGroup,
@@ -55,6 +55,10 @@ const ReportViewerMicro = React.forwardRef(
 
     const growth = result?.growth || false;
 
+    const test = order?.tests?.find(
+      (t) =>
+        typeof t.test == "object" && t.test?._id?.toString() == result?.test
+    );
     return (
       <>
         <div ref={ref}>
@@ -90,6 +94,16 @@ const ReportViewerMicro = React.forwardRef(
                   </div>
                 </div>
               </th>
+            </tr>
+            <tr>
+              <td
+                colSpan={4}
+                style={{ fontWeight: "bold", fontSize: "1.5rem" }}
+              >
+                <u>
+                  {typeof test?.test == "object" && (test?.test?.label ?? "")}
+                </u>
+              </td>
             </tr>
 
             {!growth ? (

@@ -48,21 +48,6 @@ const ReportViewerParameter = React.forwardRef(
           }}
         >
           <thead>
-            {params?.testResult?.analyzerMachine ? (
-              <div
-                style={{
-                  border: "1px solid black",
-                  borderRadius: "8px",
-                  textAlign: "center",
-                  margin: "20px 0",
-                  fontFamily: "monospace",
-                  padding: "1rem 2.5rem",
-                }}
-              >
-                {params.testResult.analyzerMachine}
-              </div>
-            ) : null}
-
             <div>
               <PatientInformaiton
                 order={order as IOrderData & { refBy: IDoctor }}
@@ -99,6 +84,20 @@ const ReportViewerParameter = React.forwardRef(
                   {params.reportGroup.label}
                 </div>
               </div>
+              {params?.testResult?.analyzerMachine ? (
+                <div
+                  style={{
+                    border: "1px solid black",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    margin: "10px 0",
+                    fontFamily: "monospace",
+                    padding: ".5rem 2.5rem",
+                  }}
+                >
+                  {params.testResult.analyzerMachine}
+                </div>
+              ) : null}
             </div>
           </thead>
           <tbody>

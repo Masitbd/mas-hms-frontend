@@ -5,12 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-   "start": "next start -p 3000",
+    "start": "next start -p 3000",
     "lint": "next lint"
-
-                                                              
-
-  },          
+  },
   "dependencies": {
     "@react-pdf/renderer": "^3.4.4",
     "@reduxjs/toolkit": "^2.0.1",
@@ -42,6 +39,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.55.0",
+    "react-quill": "^2.0.0",
     "react-redux": "^9.0.4",
     "react-to-print": "^2.15.1",
     "recharts": "^2.13.1",
