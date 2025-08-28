@@ -24,6 +24,15 @@ const reportType = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["reportType"],
     }),
+    deleteReportType: build.mutation({
+      query: (data) => ({
+        url: `/reportType/${data}`,
+        method: "DELETE",
+
+        contentType: "application/json",
+      }),
+      invalidatesTags: ["reportType"],
+    }),
 
     getReportType: build.query({
       query: (data: {
@@ -54,4 +63,5 @@ export const {
   useGetReportTypeQuery,
   useGetSingleReportTypeQuery,
   useLazyGetReportTypeQuery,
+  useDeleteReportTypeMutation,
 } = reportType;

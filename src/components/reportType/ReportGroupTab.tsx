@@ -8,6 +8,7 @@ import {
 } from "@/redux/api/reportGroup/reportGroupSlice";
 import EditIcon from "@rsuite/icons/Edit";
 import {
+  useDeleteReportTypeMutation,
   useGetReportTypeQuery,
   useLazyGetReportTypeQuery,
   usePatchReportTypeMutation,
@@ -46,6 +47,7 @@ import ForDescriptive from "./ForDescriptive";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { Textarea } from "../companyInfo/TextArea";
+import Swal from "sweetalert2";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -232,6 +234,31 @@ const ReportGroupTab = () => {
       setLoading(false);
     })();
   }, []);
+
+  // Handle report type group Delete
+  const [deleteReportType, { isLoading: reportTypeDeleteLoading }] =
+    useDeleteReportTypeMutation();
+  const handleReportTypeDelete = async (id: any) => {
+    const willDelete = Swal.fire({
+      title: "Are you sure you want to delete this ?",
+      confirmButtonColor: "red",
+      confirmButtonText: "Delete",
+      showConfirmButton: true,
+      icon: "warning",
+      showCancelButton: true,
+      cancelButtonColor: "blue",
+      cancelButtonText: "Cancel",
+    }).then(async (t) => {
+      if (t.isConfirmed) {
+        const result = await deleteReportType(id?._id).unwrap();
+        if (result?.success) {
+          Swal.fire("Success", "Report Type Deleted Successfully", "success");
+        } else {
+          Swal.fire("Error", "Failed to delete. Try Again", "error");
+        }
+      }
+    });
+  };
 
   if (loading) {
     return <Loading />;
@@ -464,15 +491,31 @@ const ReportGroupTab = () => {
                                           ENUM_USER_PEMISSION.MANAGE_TESTS,
                                         ]}
                                       >
-                                        <Button
-                                          appearance="primary"
-                                          color="blue"
-                                          onClick={() => {
-                                            handleEditState(rowIndex as number);
-                                          }}
-                                        >
-                                          Edit
-                                        </Button>
+                                        <div className=" flex gap-2">
+                                          <Button
+                                            appearance="primary"
+                                            color="blue"
+                                            onClick={() => {
+                                              handleEditState(
+                                                rowIndex as number
+                                              );
+                                            }}
+                                            loading={reportTypeDeleteLoading}
+                                          >
+                                            Edit
+                                          </Button>
+
+                                          <Button
+                                            appearance="primary"
+                                            color="red"
+                                            onClick={() => {
+                                              handleReportTypeDelete(rowData);
+                                            }}
+                                            loading={reportTypeDeleteLoading}
+                                          >
+                                            Delete
+                                          </Button>
+                                        </div>
                                       </AuthCheckerForComponent>
                                     )}
                                   </>
