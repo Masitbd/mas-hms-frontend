@@ -15,11 +15,11 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "rsuite";
 import CheckIcon from "@rsuite/icons/Check";
-import VisibleIcon from "@rsuite/icons/Visible";
-import Swal from "sweetalert2";
+
 import TestTable from "../../../components/TestTable";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import { ENUM_MODE } from "@/enum/Mode";
+import swal from "sweetalert";
 
 const TestReportSelector = ({
   searchParams,
