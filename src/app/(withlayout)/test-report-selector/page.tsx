@@ -39,9 +39,19 @@ const TestReportSelector = ({
     reportGroup: searchParam.get("reportGroup") as string,
     page: searchParam.get("page") as "delivery" | "generateReport",
   };
+
+  // ✅ Extract primitives (stable deps)
+  const oid = searchParam.get("oid") || "";
+  const mode = searchParam.get("mode") || "";
+  const reportGroup = searchParam.get("reportGroup") || "";
+  const page =
+    (searchParam.get("page") as "delivery" | "generateReport") ||
+    "generateReport";
   // For status change
-  const [changeStatus, { isLoading: statusLoading }] =
-    useSingleStatusChangerMutation();
+  const [
+    changeStatus,
+    { isLoading: statusLoading, isError: statusChangerError },
+  ] = useSingleStatusChangerMutation();
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
 
   const router = useRouter();
@@ -98,15 +108,30 @@ const TestReportSelector = ({
   useEffect(() => {
     if (
       reportGroupData?.data?.testResultType == ENUM_REPORT_TYPE.PARAMETER &&
-      searchParams?.page == "delivery"
+      searchParams?.page == "delivery" &&
+      reportGroupData?.data &&
+      !statusLoading
     ) {
-      statusChangeHandler({
-        oid: searchParams?.oid,
-        reportGroupLabel: reportGroupData?.data?.label,
-        reportType: reportGroupData?.data?.testResultType,
-      });
+      if (!statusChangerError && !statusLoading) {
+        console.log("hi");
+        statusChangeHandler({
+          oid: searchParams?.oid,
+          reportGroupLabel: reportGroupData?.data?.label,
+          reportType: reportGroupData?.data?.testResultType,
+        });
+      } else {
+        router.push(`/testReport/${searchParams?.oid}`);
+      }
     }
-  }, [searchParams, test, reportGroupData]);
+  }, [
+    reportGroupData?.data,
+    reportGroupData?.data?.testResultType,
+    page,
+    oid,
+    changeStatus,
+    statusLoading,
+    router,
+  ]);
 
   const filteredTests = orderData?.data[0]?.tests?.filter(
     (t: ITestsFromOrder & { test: ITest }) => {
