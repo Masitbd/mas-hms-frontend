@@ -86,11 +86,11 @@ const TestReportSelector = ({
           : {}),
       }).unwrap();
       if (result?.success) {
-        Swal.fire("Success", "Report Status Changed Successfully", "success");
+        swal("Success", "Report Status Changed Successfully", "success");
       }
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", error as string, "error");
+      swal("Error", error as string, "error");
     } finally {
       router.push(`/testReport/${searchParams?.oid}`);
     }
