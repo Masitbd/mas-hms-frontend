@@ -25,6 +25,23 @@ const Comment = (props: {
   const [comment, setComment] = useState(props?.result?.comment);
 
   // For doctors seal
+  const [margins, setMargins] = useState([0, 0, 0, 0]);
+  const [width, setWidth] = useState(270);
+  useEffect(() => {
+    const storedMargin = JSON.parse(localStorage.getItem("p") as string) ?? [
+      0, 0, 0, 0,
+    ];
+    if (storedMargin) {
+      setMargins(storedMargin);
+      if (storedMargin[1] || storedMargin[3]) {
+        const left = Number(storedMargin[1] ?? 0) / 2.19;
+        const right = Number(storedMargin[3] ?? 0) / 2.19;
+        const width = 270 - Math.max(left + right - 50 / 2.19, 0);
+        setWidth(width);
+      }
+    }
+  }, [setMargins]);
+
   const [seal, setSeal] = useState(props?.result?.seal);
   const [defaultSeal, setDefaultSeal] = useState<IDoctorSeal>();
   const { data: sealData, isLoading: sealDataLoading } =
@@ -118,7 +135,7 @@ const Comment = (props: {
         </Accordion.Panel>
         <Accordion.Panel eventKey={2}>
           <div className="w-full border border-stone-200 rounded-md p-10">
-            <div style={{ width: "270mm" }} className="!font-mono">
+            <div style={{ width: `${width}mm` }} className="!font-mono">
               <Tiptap data={seal} setData={setSeal} />
             </div>
             <div>
