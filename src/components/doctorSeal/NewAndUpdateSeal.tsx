@@ -15,6 +15,24 @@ import Tiptap from "../tiptap/TipTap";
 import RModal from "../ui/Modal";
 
 const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
+  const [margins, setMargins] = useState([0, 0, 0, 0]);
+  const [width, setWidth] = useState(270);
+  useEffect(() => {
+    const storedMargin = JSON.parse(localStorage.getItem("p") as string) ?? [
+      0, 0, 0, 0,
+    ];
+    if (storedMargin) {
+      setMargins(storedMargin);
+      if (storedMargin[1] || storedMargin[3]) {
+        const left = Number(storedMargin[1] ?? 0) / 2.19;
+        const right = Number(storedMargin[3] ?? 0) / 2.19;
+        const width = 270 - Math.max(left + right - 50 / 2.19, 0);
+        setWidth(width);
+      }
+    }
+  }, [setMargins]);
+
+  console.log(margins);
   const { data, open, setData, setOpen, mode, setMode } = props;
   const [seal, setSeal] = useState(data?.seal);
 
@@ -93,7 +111,7 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
               <div className="my-5">
                 <h3>Seal Information</h3>
                 <div
-                  style={{ width: "270mm", fontFamily: "!monospace" }}
+                  style={{ width: `${width}mm`, fontFamily: "!monospace" }}
                   className="!font-mono"
                 >
                   <Tiptap data={data.seal} setData={setSeal} />
