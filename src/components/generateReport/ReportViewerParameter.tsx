@@ -28,6 +28,7 @@ const ReportViewerParameter = React.forwardRef(
       resultFields: IResultField[];
       consultant: IDoctor;
       tests: ITestsFromOrder[];
+      toggle: boolean;
     },
     ref: LegacyRef<HTMLDivElement>
   ) => {
@@ -140,21 +141,25 @@ const ReportViewerParameter = React.forwardRef(
               if (!doesHaveResult) return null;
               return (
                 <>
-                  <tr>
-                    <th
-                      style={{
-                        textTransform: "uppercase",
-                        fontFamily: "serif",
-                        fontWeight: "bold",
-                        fontSize: ".950rem",
-                        textAlign: "left",
-                        border: ".2px solid black",
-                        padding: "2px",
-                      }}
-                    >
-                      {heading}:
-                    </th>
-                  </tr>
+                  {params?.toggle ? (
+                    <tr>
+                      <th
+                        style={{
+                          textTransform: "uppercase",
+                          fontFamily: "serif",
+                          fontWeight: "bold",
+                          fontSize: ".950rem",
+                          textAlign: "left",
+                          border: ".2px solid black",
+                          padding: "2px",
+                        }}
+                      >
+                        {heading}:
+                      </th>
+                    </tr>
+                  ) : (
+                    <></>
+                  )}
                   <tr
                     style={{
                       display: "grid",
