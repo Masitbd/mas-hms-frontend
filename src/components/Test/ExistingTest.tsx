@@ -32,7 +32,7 @@ const ExistingTest = ({
   reportGroupId,
 }: {
   formData: ITest;
-  setFormData: (props: ITest) => void;
+  setFormData: any;
   existingModal: boolean;
   setExistingModal: (prpos: boolean) => void;
   reportGroupId?: string;
@@ -62,10 +62,19 @@ const ExistingTest = ({
   const addTestHandler = (params: IResultField) => {
     const nextData = Object.assign({}, formData);
     const nextResultData = Object.assign({}, params);
-    nextData?.resultFields?.length ? "" : (nextData.resultFields = []);
-    nextResultData.gid = nextData.resultFields?.length + 1;
-    nextData.resultFields.push(nextResultData);
-    setFormData(nextData);
+    // nextData?.resultFields?.length ? "" : (nextData.resultFields = []);
+    // nextResultData.gid = nextData.resultFields?.length + 1;
+    // nextData.resultFields.push(nextResultData);
+    setFormData((prev: ITest) => ({
+      ...prev,
+      resultFields: [
+        ...(prev.resultFields || []),
+        {
+          ...params,
+          gid: (prev.resultFields?.length || 0) + 1,
+        },
+      ],
+    }));
   };
 
   // cherker for already added test
