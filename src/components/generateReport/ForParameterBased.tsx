@@ -36,6 +36,7 @@ import CountdownModal from "./CountdownModal";
 import { ENUM_BASEPATH } from "@/enum/ENUMBasePath";
 import { ENUM_REPORT_TYPE } from "@/enum/ENUMReportType";
 import { NavLink } from "@/utils/Navlink";
+import HeadingOption from "./HeadingOption";
 
 const ForParameterBased = (props: IPropsForParameter) => {
   const { data: doctorInfo } = useGetSingleDoctorQuery(
@@ -222,6 +223,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
         ref={componentRef as Ref<HTMLDivElement>}
         consultant={doctorInfo}
         tests={props.tests}
+        toggle={toggle}
       />
     );
     const data = ReactDOMServer.renderToStaticMarkup(pdfData);
@@ -253,6 +255,9 @@ const ForParameterBased = (props: IPropsForParameter) => {
     })();
   }, []);
 
+  // Heading option
+  const [toggle, setToggle] = useState(false);
+
   if (postLoading || getLoading || patchLoading) {
     return <Loading />;
   }
@@ -274,12 +279,17 @@ const ForParameterBased = (props: IPropsForParameter) => {
             <div className="p-2">
               <div className="shadow-lg rounded-md py-5 my-5 mx-2">
                 <div>
-                  <Margin
-                    margin={margin}
-                    marginTitle="p"
-                    setMargins={setMargins}
-                    key={"p"}
-                  />
+                  <div>
+                    <Margin
+                      margin={margin}
+                      marginTitle="p"
+                      setMargins={setMargins}
+                      key={"p"}
+                    />
+                  </div>
+                  <div>
+                    <HeadingOption setToggleP={setToggle} />
+                  </div>
                 </div>
                 <div className="flex justify-end mr-9">
                   <NavLink href={`/testReport/${order.oid}`}>
@@ -322,6 +332,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
                 ref={componentRef as Ref<HTMLDivElement>}
                 consultant={doctorInfo}
                 tests={props.tests}
+                toggle={toggle}
               />
             </div>
           </div>
