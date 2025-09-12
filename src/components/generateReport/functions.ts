@@ -47,6 +47,7 @@ export const useCleanedTests = (params: {
     "createdAt",
     "updatedAt",
     "__v",
+    "testId",
   ];
   let modifiedTest;
   let specimen: string[] = [];
@@ -80,7 +81,10 @@ export const useCleanedTests = (params: {
       if (test.test.resultFields.length > 0) {
         // Checking if the tests contains any result fields
         const cleanedResultFields = test.test.resultFields.map((rfData) => {
-          let resultField = { ...rfData };
+          let resultField = {
+            testId: test?.test?._id,
+            ...rfData,
+          } as IResultField;
 
           // setting the default value to the result
           if (

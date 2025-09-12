@@ -32,6 +32,7 @@ export type IPropsForParameter = {
   order: IOrderData;
   mode: string;
   refeatch: any;
+  testIds?: string[];
 };
 
 export type ITestResultForParameter = {

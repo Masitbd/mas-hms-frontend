@@ -147,7 +147,10 @@ const ForParameterBased = (props: IPropsForParameter) => {
 
   const handleSubmit = async () => {
     if (mode == ENUM_MODE.EDIT) {
-      const data = await patchReport(result);
+      const data = await patchReport({
+        ...result,
+        testIds: props?.testIds as unknown as string,
+      });
 
       if ("data" in data) {
         swalButtonHandler(" Report Updated Successfully.");
@@ -155,7 +158,10 @@ const ForParameterBased = (props: IPropsForParameter) => {
       }
     }
     if (mode == ENUM_MODE.NEW) {
-      const data = await post(result);
+      const data = await post({
+        ...result,
+        testIds: props?.testIds as unknown as string,
+      });
       if ("data" in data) {
         swalButtonHandler(" Report Posted Successfully.");
 
@@ -242,15 +248,22 @@ const ForParameterBased = (props: IPropsForParameter) => {
           params: {
             reportGroup: props.reportGroup.label,
             resultType: props.reportGroup.testResultType,
-            ...(reportGroup?.testResultType == ENUM_REPORT_TYPE.DESCRIPTIVE
-              ? { test: tests[0]?.test?._id }
-              : {}),
+            testIds: props?.testIds?.join("'") as unknown as string[],
           },
-        });
+        }).unwrap();
 
-        setResultForHook(reportData.data.data[0]);
+        // Modifying the data
 
-        setResult(reportData.data.data[0]);
+        const modifiedTestData = {
+          ...reportData.data[0],
+          testResult: [].concat(
+            ...reportData?.data?.map((t: any) => t?.testResult)
+          ),
+        };
+
+        setResultForHook(modifiedTestData);
+
+        setResult(modifiedTestData);
       }
     })();
   }, []);

@@ -43,6 +43,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           order={JSON.parse(JSON.stringify(orderData?.data[0]))}
           mode={props.searchParams.mode}
           refeatch={refetch}
+          testIds={props.searchParams.test?.split(",")}
         />
       );
       break;
@@ -80,21 +81,25 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
 
   useEffect(() => {
     if (orderData?.data?.length > 0 && reportGroupData?.data?._id) {
+      const testDataForParameter = props?.searchParams?.test?.split(",");
+
       const filteredTest = orderData?.data[0]?.tests.filter(
         (test: { test: ITest; status: string }) => {
           if (props?.searchParams?.reportType == ENUM_REPORT_TYPE.PARAMETER) {
             return (
-              test.test.reportGroup == reportGroupData?.data?._id &&
+              testDataForParameter?.includes(
+                test.test?._id?.toString() as string
+              ) &&
               test.status !== "tube" &&
               test.status !== ENUM_TEST_STATUS.REFUNDED
             );
           } else {
-            return (
-              test.test?._id == props?.searchParams?.test &&
-              test.status !== "tube" &&
-              test.status !== ENUM_TEST_STATUS.REFUNDED
-            );
           }
+          return (
+            test.test?._id == props?.searchParams?.test &&
+            test.status !== "tube" &&
+            test.status !== ENUM_TEST_STATUS.REFUNDED
+          );
         }
       );
       setTestAccordignResultType(filteredTest);

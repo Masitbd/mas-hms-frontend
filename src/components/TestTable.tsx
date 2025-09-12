@@ -1,5 +1,5 @@
-import React from "react";
-import { Table, Button } from "rsuite";
+import React, { Dispatch, SetStateAction } from "react";
+import { Table, Button, Checkbox } from "rsuite";
 import { NavLink } from "@/utils/Navlink";
 import TestStatusElement from "@/components/testReport/TestStatusElement";
 import CheckIcon from "@rsuite/icons/Check";
@@ -28,6 +28,9 @@ interface TestTableProps {
   statusLoading: boolean;
   reportGroupLoading: boolean;
   orderDataLoading: boolean;
+  setTestIds: Dispatch<SetStateAction<never[]>>;
+  testIds: string[];
+  page: string;
 }
 
 const TestTable: React.FC<TestTableProps> = ({
@@ -39,6 +42,9 @@ const TestTable: React.FC<TestTableProps> = ({
   statusLoading,
   reportGroupLoading,
   orderDataLoading,
+  testIds,
+  setTestIds,
+  page,
 }) => {
   return (
     <Table loading={loading} data={data}>
@@ -101,6 +107,41 @@ const TestTable: React.FC<TestTableProps> = ({
           }}
         </Cell>
       </Column>
+
+      {page !== "delivery" ? (
+        <Column flexGrow={1}>
+          <HeaderCell>Select</HeaderCell>
+          <Cell>
+            {(rowdata) => {
+              return (
+                <Checkbox
+                  color="blue"
+                  value={rowdata?.test?._id}
+                  onChange={(v1, v2) => {
+                    if (v2) {
+                      setTestIds(
+                        (prevValue) =>
+                          [
+                            ...prevValue,
+                            rowdata?.test?._id?.toString(),
+                          ] as never[]
+                      );
+                    } else {
+                      setTestIds(
+                        (testIds?.filter(
+                          (id) => id !== rowdata?.test?._id?.toString()
+                        ) ?? []) as never[]
+                      );
+                    }
+                  }}
+                />
+              );
+            }}
+          </Cell>
+        </Column>
+      ) : (
+        <></>
+      )}
     </Table>
   );
 };
