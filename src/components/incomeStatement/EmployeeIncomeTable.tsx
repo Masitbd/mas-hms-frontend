@@ -25,6 +25,7 @@ type TRecord = {
 
 // Type for each user
 type TUser = {
+  name: string;
   postedBy: string; // The person who posted the record
   totalPaid: number; // Total amount paid by the user
   records: TRecord[]; // Array of records associated with the user
@@ -139,7 +140,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
           },
           ...group?.users?.map((user) => [
             {
-              text: ` ${user?.postedBy ?? " "}`,
+              text: ` ${user?.name ?? " "}`,
               style: "nameHeader",
               margin: [0, 10, 0, 10],
             },
@@ -251,7 +252,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
               <div key={userIndex} className="border-t">
                 {/* User Header */}
                 <div className=" font-semibold p-2 border">
-                  Name: {user?.postedBy}
+                  Name: {user?.name}
                 </div>
 
                 {/* Records Table */}
