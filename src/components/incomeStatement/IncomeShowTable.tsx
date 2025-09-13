@@ -157,7 +157,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   ),
                   "",
                   group.records.reduce(
-                    (acc, record) => acc + record.totalAmount,
+                    (acc, record) => acc + record.totalAmount + record.vat,
                     0
                   ),
                   group.records.reduce((acc, record) => acc + record.paid, 0),
