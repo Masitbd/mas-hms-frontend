@@ -238,7 +238,7 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           // Calculate totals for this group
           const totals = group.records.reduce(
             (acc, record) => {
-              acc.totalAmount += record.totalAmount;
+              acc.totalAmount += record.totalAmount + record?.vat;
               acc.paid += record.paid;
               acc.totalDiscount += record.totalDis;
               acc.totalPrice += record.totalPrice;
