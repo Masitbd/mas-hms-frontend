@@ -241,12 +241,14 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               acc.totalAmount += record.totalAmount;
               acc.paid += record.paid;
               acc.totalDiscount += record.totalDis;
+              acc.totalPrice += record.totalPrice;
               return acc;
             },
             {
               totalAmount: 0,
               paid: 0,
               totalDiscount: 0,
+              totalPrice: 0,
             }
           );
 
@@ -281,11 +283,11 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                 {/* Summary Row */}
                 <div className="grid grid-cols-10 text-center p-2 border-t font-semibold bg-gray-200">
                   <div>Total</div>
-                  <div></div>
+                  <div>{totals?.totalPrice}</div>
                   <div></div>
                   <div></div>
                   <div>{totals.totalDiscount}</div>
-                  <div>{totals.totalAmount - totals.totalDiscount}</div>
+                  <div>{totals.totalPrice - totals.totalDiscount}</div>
                   <div></div>
                   <div>{totals.totalAmount}</div>
                   <div>{totals.paid}</div>
