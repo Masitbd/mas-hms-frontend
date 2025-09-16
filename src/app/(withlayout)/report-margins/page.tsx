@@ -29,7 +29,7 @@ export type Margins = {
   left: number;
 };
 
-type Props = {
+type MarginPageProps = {
   /** Your own Router.push (or similar) can be passed here */
   onCancel?: () => void;
   /** Called after a successful save */
@@ -46,11 +46,7 @@ const model = Schema.Model({
   left: NumberType().isRequired("Required").min(0, "≥ 0").max(500, "≤ 500"),
 });
 
-export default function MarginSettingsForm({
-  onCancel,
-  onSaved,
-  initialLockUniform = false,
-}: Props) {
+const MarginSettingsForm = () => {
   const [post] = usePostReportMarginMutation();
   const [fetch] = useLazyGetReportMarginQuery();
 
@@ -58,7 +54,7 @@ export default function MarginSettingsForm({
 
   const [loading, setLoading] = React.useState(true);
   const [saving, setSaving] = React.useState(false);
-  const [uniform, setUniform] = React.useState(initialLockUniform);
+  const [uniform, setUniform] = React.useState(false);
   const [formValue, setFormValue] = React.useState<Margins>({
     top: 0,
     right: 0,
@@ -142,7 +138,6 @@ export default function MarginSettingsForm({
         </Message>,
         { placement: "topEnd" }
       );
-      onSaved?.(formValue);
     } catch (err: any) {
       toaster.push(
         <Message showIcon type="error" closable>
@@ -153,7 +148,7 @@ export default function MarginSettingsForm({
     } finally {
       setSaving(false);
     }
-  }, [formValue, onSaved, toaster]);
+  }, [formValue, toaster]);
 
   const handleReset = React.useCallback(() => {
     if (loadedValue) setFormValue(loadedValue);
@@ -287,7 +282,7 @@ export default function MarginSettingsForm({
               <ButtonToolbar className="flex gap-2">
                 <Button
                   appearance="ghost"
-                  onClick={onCancel}
+                  // onClick={onCancel}
                   startIcon={<X size={16} />}
                 >
                   Cancel
@@ -308,4 +303,6 @@ export default function MarginSettingsForm({
       </Panel>
     </div>
   );
-}
+};
+
+export default MarginSettingsForm;
