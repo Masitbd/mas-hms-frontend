@@ -8,15 +8,12 @@ import EmployeeIncomeShowTable from "@/components/incomeStatement/EmployeeIncome
 import { useGetEmployeeIncomeStatementSummeryQuery } from "@/redux/api/income-statement/Income.api";
 import EmployeeIncomeSummeryTable from "@/components/incomeStatement/EmployeeIncomeSummeryTable";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const EmpIncomeSummeryPage = () => {
-  const [isSearchEnable, setIsSearchEnable] = useState(false);
   const query: Record<string, any> = {};
 
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   const handleChange = (value: Record<string, any>) => {
     setFormValue({
@@ -31,26 +28,12 @@ const EmpIncomeSummeryPage = () => {
   if (formValue.startDate) query.startDate = formattedStartDate;
   if (formValue.endDate) query.endDate = formattedEndDate;
 
-  const { data: employeeIncome } = useGetEmployeeIncomeStatementSummeryQuery(
-    query,
-    {
-      skip: !isSearchEnable,
-    }
-  );
+  const { data: employeeIncome } =
+    useGetEmployeeIncomeStatementSummeryQuery(query);
 
   // console.log(employeeIncome, "income res");
 
   // Handle form submission
-  const handleSubmit = async (
-    formValue: Record<string, any> | null,
-    event?: React.FormEvent<HTMLFormElement>
-  ) => {
-    if (formValue) {
-      // Format the dates
-
-      setIsSearchEnable(true);
-    }
-  };
 
   return (
     <div className="">
@@ -63,7 +46,6 @@ const EmpIncomeSummeryPage = () => {
         <div className="mx-2">
           <Form
             onChange={handleChange}
-            onSubmit={handleSubmit}
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
@@ -92,15 +74,6 @@ const EmpIncomeSummeryPage = () => {
                 }
               />
             </Form.Group>
-
-            <Button
-              className="max-h-11 mt-5"
-              size="sm"
-              appearance="primary"
-              type="submit"
-            >
-              Search
-            </Button>
           </Form>
 
           {employeeIncome && employeeIncome?.data?.length > 0 && (

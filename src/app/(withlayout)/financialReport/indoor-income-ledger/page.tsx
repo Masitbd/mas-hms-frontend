@@ -6,12 +6,10 @@ import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 import { useGetIndoorIncomeLedgerQuery } from "@/redux/api/income-statement/Income.api";
 import { Button, DatePicker, Form } from "rsuite";
 import IndIncTable from "@/components/indoorFinancial/IndoorIncomeLedgerTable";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const IndoorIncomeLedgerPage = () => {
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   const handleChange = (value: Record<string, any>) => {
     setFormValue({

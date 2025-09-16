@@ -7,13 +7,10 @@ import { IFormValues } from "../income-statement/page";
 import { useGetEmployeeLedgerQuery } from "@/redux/api/financialReport/financialReportSlice";
 import EmployeeLedgerTable from "@/components/incomeStatement/EmployeeLedger";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const EmployeeLedgerPage = () => {
-  const [isSearchEnable, setIsSearchEnable] = useState(false);
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   // Handle form value change
   const handleChange = (value: Record<string, any>) => {
@@ -30,10 +27,7 @@ const EmployeeLedgerPage = () => {
 
   // Call the query when search is enabled
   const { data: employeeLdgers } = useGetEmployeeLedgerQuery(
-    query, // Pass the constructed query object
-    {
-      skip: !isSearchEnable, // Only run the query when search is enabled
-    }
+    query // Pass the constructed query object
   );
 
   // console.log("data", employeeLdgers);
@@ -41,14 +35,6 @@ const EmployeeLedgerPage = () => {
   const [transformedData, setTransformedData] = useState([]);
 
   // Handle form submission
-  const handleSubmit = async (
-    formValue: Record<string, any> | null,
-    event?: React.FormEvent<HTMLFormElement>
-  ) => {
-    if (formValue) {
-      setIsSearchEnable(true);
-    }
-  };
 
   // Create a map from names to mainDocs
   useEffect(() => {
@@ -91,7 +77,6 @@ const EmployeeLedgerPage = () => {
         <div className="mx-2">
           <Form
             onChange={handleChange}
-            onSubmit={handleSubmit}
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
@@ -120,15 +105,6 @@ const EmployeeLedgerPage = () => {
                 }
               />
             </Form.Group>
-
-            <Button
-              className="max-h-11 mt-5"
-              size="sm"
-              appearance="primary"
-              type="submit"
-            >
-              Search
-            </Button>
           </Form>
 
           {employeeLdgers && employeeLdgers?.data && (
