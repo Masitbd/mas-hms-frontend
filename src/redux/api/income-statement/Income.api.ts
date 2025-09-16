@@ -50,6 +50,13 @@ const incomeApi = baseApi.injectEndpoints({
         params: args,
       }),
     }),
+    getOutdoorDueStatement: build.query({
+      query: (args) => ({
+        url: "/income-statemnet/due-collection-statement",
+        method: "GET",
+        params: args,
+      }),
+    }),
 
     // ! Indoor statement
 
@@ -110,6 +117,7 @@ export const {
   useGetEmployeeIncomeStatementQuery,
   useGetEmployeeIncomeStatementSummeryQuery,
   useGetDueDetailsQuery,
+  useGetOutdoorDueStatementQuery,
   useGetLastTEDaysIncomeQuery,
   useGetIndoorIncomeLedgerQuery,
   useGetIndoorDueLedgerQuery,

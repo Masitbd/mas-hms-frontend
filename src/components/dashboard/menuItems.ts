@@ -131,6 +131,15 @@ export const financialReportItem = [
     ],
   },
   {
+    key: "28",
+    title: "Due Collection Statement",
+    href: "/due-collection-statement",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
     key: "21",
     title: "Clientwise Inocme Statement",
     href: "/client-statement",
