@@ -187,11 +187,7 @@ const TestTableForReport = (props: { data: IOrderData }) => {
       </div>
     );
 
-    if (
-      rowData?.testResultType == ENUM_REPORT_TYPE.PARAMETER &&
-      status !== ENUM_TEST_STATUS.PENDING &&
-      status !== ENUM_TEST_STATUS.REFUNDED
-    ) {
+    if (status !== ENUM_TEST_STATUS.REFUNDED) {
       return component;
     }
 
