@@ -76,7 +76,7 @@ const ReportViewerParameter = React.forwardRef(
                     border: "3px solid #4b5563", // stone-700
                     borderRadius: "8px",
                     padding: "5px 10px",
-                    fontSize: "1.25rem", // text-xl
+                    fontSize: "1rem", // text-xl
                     fontFamily: "serif",
                     fontWeight: "bold",
                     marginBottom: "5px",
@@ -120,7 +120,7 @@ const ReportViewerParameter = React.forwardRef(
                         key={field}
                         style={{
                           padding: "2px 4px",
-                          border: "1px solid black",
+                          border: ".001px solid black",
                           fontSize: ".950rem",
                         }}
                       >
@@ -148,9 +148,9 @@ const ReportViewerParameter = React.forwardRef(
                           textTransform: "uppercase",
                           fontFamily: "serif",
                           fontWeight: "bold",
-                          fontSize: ".950rem",
+                          fontSize: ".800rem",
                           textAlign: "left",
-                          border: ".2px solid black",
+                          border: ".001px dotted black",
                           padding: "2px",
                         }}
                       >
@@ -177,7 +177,7 @@ const ReportViewerParameter = React.forwardRef(
                                 fieldName === "result" ? (
                                   <td
                                     style={{
-                                      border: "1px solid black",
+                                      // border: ".001px dotted black",
                                       padding: "1px !important",
                                     }}
                                   >
@@ -189,7 +189,7 @@ const ReportViewerParameter = React.forwardRef(
                                         overflowWrap: "break-word",
                                         overflow: "auto",
                                         padding: "1px",
-                                        fontSize: ".950rem",
+                                        fontSize: ".800rem",
                                       }}
                                       dangerouslySetInnerHTML={{
                                         __html: resultField?.result,
@@ -200,9 +200,9 @@ const ReportViewerParameter = React.forwardRef(
                               ) : (
                                 <td
                                   style={{
-                                    border: ".1px solid gray",
+                                    borderBottom: ".1rem dotted gray ",
                                     padding: "2px 4px",
-                                    fontSize: ".950rem",
+                                    fontSize: ".800rem",
                                   }}
                                 >
                                   <div key={fieldName}>
@@ -221,7 +221,7 @@ const ReportViewerParameter = React.forwardRef(
                                     </span>
                                     <span
                                       style={{
-                                        fontSize: ".950rem",
+                                        fontSize: ".800rem",
                                         fontFamily: "monospace",
                                       }}
                                     >

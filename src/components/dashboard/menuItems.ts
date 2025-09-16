@@ -280,6 +280,12 @@ export const generalMenuItems = [
       ENUM_USER_PEMISSION.MANAGE_INVOICE_MARGIN,
     ],
   },
+  {
+    key: "8",
+    title: "Report Margin",
+    href: "/report-margins",
+    requiredPermission: [ENUM_USER_PEMISSION.USER, ENUM_USER_PEMISSION.USER],
+  },
 ];
 
 export const labReportMenuItems = [

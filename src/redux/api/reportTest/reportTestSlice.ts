@@ -43,7 +43,7 @@ const reportTest = baseApi.injectEndpoints({
           reportGroup: string;
           resultType: string;
           test?: string;
-          testIds: string[];
+          testIds?: string[];
         };
       }) => ({
         url: `/report/test/${props.oid}`,

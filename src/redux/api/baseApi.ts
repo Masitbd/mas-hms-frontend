@@ -57,6 +57,7 @@ export const baseApi = createApi({
     "single-order-payment-info",
     "desease",
     "packages",
+    "report-margin",
   ],
 
   // tagTypes: tagTypes,

@@ -46,6 +46,7 @@ const TestTable: React.FC<TestTableProps> = ({
   setTestIds,
   page,
 }) => {
+  console.log(reportGroupData);
   return (
     <Table loading={loading} data={data}>
       <Column flexGrow={2}>
@@ -108,7 +109,8 @@ const TestTable: React.FC<TestTableProps> = ({
         </Cell>
       </Column>
 
-      {page !== "delivery" ? (
+      {page !== "delivery" &&
+      reportGroupData?.data?.testResultType == "parameter" ? (
         <Column flexGrow={1}>
           <HeaderCell>Select</HeaderCell>
           <Cell>

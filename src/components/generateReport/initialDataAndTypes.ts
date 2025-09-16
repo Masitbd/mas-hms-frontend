@@ -33,6 +33,7 @@ export type IPropsForParameter = {
   mode: string;
   refeatch: any;
   testIds?: string[];
+  margins?: number[];
 };
 
 export type ITestResultForParameter = {
@@ -106,4 +107,5 @@ export type IPropsForMicroBiology = {
   mode: string;
   test: string;
   tests: ITestsFromOrder[];
+  margins?: number[];
 };

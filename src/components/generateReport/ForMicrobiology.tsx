@@ -74,15 +74,19 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     if (mode == ENUM_MODE.NEW) {
       const postResult = await post(data);
       if ("data" in postResult) {
-        router.push(`/testReport/${order.oid}`);
         swal("Success", "Data Posted Successfully", { icon: "success" });
+        router.push(
+          `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}`
+        );
       }
     }
     if (mode == ENUM_MODE.EDIT) {
       const data = await patchReport(result);
       if ("data" in data) {
-        router.push(`/testReport/${order.oid}`);
         swal("Success", "Data updated successfully", { icon: "success" });
+        router.push(
+          `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}`
+        );
       }
     }
   };
@@ -167,32 +171,35 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
   // });
 
   const handlePrint = () => {
-    const previousPath =
-      window?.location?.origin +
-      ENUM_BASEPATH.PATH +
-      "/testReport/" +
-      order?.oid;
+    // const previousPath =
+    //   window?.location?.origin +
+    //   ENUM_BASEPATH.PATH +
+    //   "/testReport/" +
+    //   order?.oid;
 
-    const pdfData = (
-      <ReportViewerMicro
-        order={props.order}
-        reportGroup={reportGroup}
-        ref={componentRef as Ref<HTMLDivElement>}
-        result={result}
-        specimenWiseDescription={discRiptionData?.data[0]}
-        consultant={doctorInfo}
-        tests={props.tests}
-      />
+    // const pdfData = (
+    //   <ReportViewerMicro
+    //     order={props.order}
+    //     reportGroup={reportGroup}
+    //     ref={componentRef as Ref<HTMLDivElement>}
+    //     result={result}
+    //     specimenWiseDescription={discRiptionData?.data[0]}
+    //     consultant={doctorInfo}
+    //     tests={props.tests}
+    //   />
+    // );
+    // const data = ReactDOMServer.renderToStaticMarkup(pdfData);
+    // const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
+    // const win = window.open();
+
+    // win?.document.write(dataWithHtml);
+
+    // win?.print();
+
+    // if (previousPath) router.push(previousPath);
+    router.push(
+      `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=bacterial&test=${props?.test}`
     );
-    const data = ReactDOMServer.renderToStaticMarkup(pdfData);
-    const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
-    const win = window.open();
-
-    win?.document.write(dataWithHtml);
-
-    win?.print();
-
-    if (previousPath) router.push(previousPath);
   };
 
   // For default seal
@@ -207,50 +214,32 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
         <div className="">
           <div className="my-5 border  shadow-lg mx-5">
             <div className="bg-[#3498ff] text-white px-2 py-2">
-              <h2 className="text-center text-xl font-semibold">Margin</h2>
-            </div>
-            <div className="p-2">
-              <div className="shadow-lg rounded-md py-5 my-5 mx-2">
-                <div>
-                  <Margin
-                    margin={margin}
-                    marginTitle="p"
-                    setMargins={setMargins}
-                    key={"p"}
-                  />
-                </div>
-                <div className="flex justify-end mr-9">
-                  <NavLink href={`/testReport/${order.oid}`}>
-                    <Button
-                      className="mb-5 col-span-4 mx-2"
-                      appearance="primary"
-                      color="red"
-                      size="lg"
-                    >
-                      Back
-                    </Button>
-                  </NavLink>
-                  <Button
-                    onClick={handlePrint}
-                    className="mb-5 col-span-4"
-                    appearance="primary"
-                    color="blue"
-                    size="lg"
-                  >
-                    Print
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="">
-          <div className="my-5 border  shadow-lg mx-5">
-            <div className="bg-[#3498ff] text-white px-2 py-2">
               <h2 className="text-center text-xl font-semibold">Report</h2>
             </div>
-            <div className="p-2"></div>
+            <div className="p-2">
+              {" "}
+              <div className="flex justify-end mr-9">
+                <NavLink href={`/testReport/${order.oid}`}>
+                  <Button
+                    className="mb-5 col-span-4 mx-2"
+                    appearance="primary"
+                    color="red"
+                    size="lg"
+                  >
+                    Back
+                  </Button>
+                </NavLink>
+                <Button
+                  onClick={handlePrint}
+                  className="mb-5 col-span-4"
+                  appearance="primary"
+                  color="blue"
+                  size="lg"
+                >
+                  Print
+                </Button>
+              </div>
+            </div>
             <ReportViewerMicro
               order={props.order}
               reportGroup={reportGroup}
