@@ -87,7 +87,7 @@ const ReportViewerMicro = React.forwardRef(
                       padding: "0.5rem",
                       border: "1px solid black",
                       borderRadius: "5px",
-                      fontSize: "1.5rem",
+                      fontSize: "1 rem",
                     }}
                   >
                     {params.reportGroup.label}
@@ -96,10 +96,7 @@ const ReportViewerMicro = React.forwardRef(
               </th>
             </tr>
             <tr>
-              <td
-                colSpan={4}
-                style={{ fontWeight: "bold", fontSize: "1.5rem" }}
-              >
+              <td colSpan={4} style={{ fontWeight: "bold", fontSize: "1 rem" }}>
                 <u>
                   {typeof test?.test == "object" && (test?.test?.label ?? "")}
                 </u>
@@ -232,7 +229,7 @@ const ReportViewerMicro = React.forwardRef(
                                   display: "grid",
                                   gridTemplateColumns: `repeat(12, 1fr)`,
                                   textAlign: "left",
-                                  fontSize: ".950rem",
+                                  fontSize: ".800rem",
                                 }}
                               >
                                 {fields.map((field: string) => {
@@ -240,7 +237,7 @@ const ReportViewerMicro = React.forwardRef(
                                     <>
                                       <td
                                         style={{
-                                          border: ".5px solid gray",
+                                          border: ".5px dashed gray",
                                           gridColumn:
                                             field == fields[0]
                                               ? "span 5"

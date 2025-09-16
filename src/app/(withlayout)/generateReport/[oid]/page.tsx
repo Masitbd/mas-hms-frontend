@@ -13,10 +13,16 @@ import {
   useGetSingleOrderQuery,
 } from "@/redux/api/order/orderSlice";
 import { useGetSingleReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
+import { useGetReportMarginQuery } from "@/redux/api/reportMargin/reportMargin.api";
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
 import React, { useEffect, useState } from "react";
 
 const GenerateReport = (props: IPropsForGenerateReport) => {
+  const {
+    data: marginData,
+    isLoading: marginDataLoading,
+    isFetching: marginDataFetching,
+  } = useGetReportMarginQuery(undefined);
   const {
     data: orderData,
     isLoading: OrderDataLoading,
@@ -43,6 +49,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           order={JSON.parse(JSON.stringify(orderData?.data[0]))}
           mode={props.searchParams.mode}
           refeatch={refetch}
+          testIds={props.searchParams.test?.split(",")}
         />
       );
       break;
@@ -56,6 +63,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           order={JSON.parse(JSON.stringify(orderData?.data[0]))}
           mode={props.searchParams.mode}
           refeatch={refetch}
+          testIds={props.searchParams.test?.split(",")}
         />
       );
       break;
@@ -80,29 +88,44 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
 
   useEffect(() => {
     if (orderData?.data?.length > 0 && reportGroupData?.data?._id) {
+      const testDataForParameter = props?.searchParams?.test?.split(",");
+
       const filteredTest = orderData?.data[0]?.tests.filter(
         (test: { test: ITest; status: string }) => {
           if (props?.searchParams?.reportType == ENUM_REPORT_TYPE.PARAMETER) {
             return (
-              test.test.reportGroup == reportGroupData?.data?._id &&
+              testDataForParameter?.includes(
+                test.test?._id?.toString() as string
+              ) &&
               test.status !== "tube" &&
               test.status !== ENUM_TEST_STATUS.REFUNDED
             );
           } else {
-            return (
-              test.test?._id == props?.searchParams?.test &&
-              test.status !== "tube" &&
-              test.status !== ENUM_TEST_STATUS.REFUNDED
-            );
           }
+          return (
+            test.test?._id == props?.searchParams?.test &&
+            test.status !== "tube" &&
+            test.status !== ENUM_TEST_STATUS.REFUNDED
+          );
         }
       );
       setTestAccordignResultType(filteredTest);
       setTestResultType(reportGroupData?.data?.testResultType);
     }
-  }, [orderData, reportGroupData, OrderDataLoading, reportGroupDataLoading]);
+  }, [
+    orderData,
+    reportGroupData,
+    OrderDataLoading,
+    reportGroupDataLoading,
+    marginData,
+  ]);
 
-  if (OrderDataLoading || reportGroupDataLoading) {
+  if (
+    OrderDataLoading ||
+    reportGroupDataLoading ||
+    marginDataFetching ||
+    marginDataLoading
+  ) {
     return <Loading />;
   } else {
     return (

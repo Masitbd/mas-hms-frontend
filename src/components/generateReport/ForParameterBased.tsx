@@ -126,40 +126,46 @@ const ForParameterBased = (props: IPropsForParameter) => {
   );
 
   const swalButtonHandler = async (text: string) => {
-    const alertButton = await swal({
+    swal({
       icon: "success",
       text: text,
       title: "Success",
-      buttons: {
-        confirm: {
-          text: "OK",
-          value: true,
-          visible: true,
-          className: "btn btn-primary",
-          closeModal: true,
-        },
-      },
     });
-    if (alertButton) {
-      router.push(`/testReport/${order.oid}`);
-    }
   };
 
   const handleSubmit = async () => {
     if (mode == ENUM_MODE.EDIT) {
-      const data = await patchReport(result);
+      const data = await patchReport({
+        ...result,
+        testIds: props?.testIds as unknown as string,
+      });
 
       if ("data" in data) {
         swalButtonHandler(" Report Updated Successfully.");
-        router.push(`/testReport/${order.oid}`);
+        router.push(
+          `/report-print/${props.oid}?reportGroup=${
+            props.reportGroup?._id
+          }&mode=view&reportType=${
+            props?.reportGroup?.testResultType
+          }&test=${props?.testIds?.join(",")}`
+        );
       }
     }
     if (mode == ENUM_MODE.NEW) {
-      const data = await post(result);
+      const data = await post({
+        ...result,
+        testIds: props?.testIds as unknown as string,
+      });
       if ("data" in data) {
         swalButtonHandler(" Report Posted Successfully.");
 
-        router.push(`/testReport/${order.oid}`);
+        router.push(
+          `/report-print/${props.oid}?reportGroup=${
+            props.reportGroup?._id
+          }&mode=view&reportType=${
+            props?.reportGroup?.testResultType
+          }&test=${props?.testIds?.join(",")}`
+        );
       }
     }
   };
@@ -207,31 +213,38 @@ const ForParameterBased = (props: IPropsForParameter) => {
   // });
 
   const handlePrint = () => {
-    const previousPath =
-      window?.location?.origin +
-      ENUM_BASEPATH.PATH +
-      "/testReport/" +
-      order?.oid;
-    const pdfData = (
-      <ReportViewerParameter
-        order={props.order}
-        reportGroup={props.reportGroup}
-        testResult={result}
-        fieldNames={fieldNames}
-        resultFields={resultFields}
-        headings={headings}
-        ref={componentRef as Ref<HTMLDivElement>}
-        consultant={doctorInfo}
-        tests={props.tests}
-        toggle={toggle}
-      />
+    // const previousPath =
+    //   window?.location?.origin +
+    //   ENUM_BASEPATH.PATH +
+    //   "/testReport/" +
+    //   order?.oid;
+    // const pdfData = (
+    //   <ReportViewerParameter
+    //     order={props.order}
+    //     reportGroup={props.reportGroup}
+    //     testResult={result}
+    //     fieldNames={fieldNames}
+    //     resultFields={resultFields}
+    //     headings={headings}
+    //     ref={componentRef as Ref<HTMLDivElement>}
+    //     consultant={doctorInfo}
+    //     tests={props.tests}
+    //     toggle={toggle}
+    //   />
+    // );
+    // const data = ReactDOMServer.renderToStaticMarkup(pdfData);
+    // const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
+    // const win = window.open();
+    // win?.document.write(dataWithHtml);
+    // win?.print();
+    // if (previousPath) router.push(previousPath);
+    router.push(
+      `/report-print/${props.oid}?reportGroup=${
+        props.reportGroup?._id
+      }&mode=view&reportType=${
+        props?.reportGroup?.testResultType
+      }&test=${props?.testIds?.join(",")}`
     );
-    const data = ReactDOMServer.renderToStaticMarkup(pdfData);
-    const dataWithHtml = htmlDocProviderForparameterBased(data, margin);
-    const win = window.open();
-    win?.document.write(dataWithHtml);
-    win?.print();
-    if (previousPath) router.push(previousPath);
   };
 
   useEffect(() => {
@@ -242,15 +255,22 @@ const ForParameterBased = (props: IPropsForParameter) => {
           params: {
             reportGroup: props.reportGroup.label,
             resultType: props.reportGroup.testResultType,
-            ...(reportGroup?.testResultType == ENUM_REPORT_TYPE.DESCRIPTIVE
-              ? { test: tests[0]?.test?._id }
-              : {}),
+            testIds: props?.testIds?.join("'") as unknown as string[],
           },
-        });
+        }).unwrap();
 
-        setResultForHook(reportData.data.data[0]);
+        // Modifying the data
 
-        setResult(reportData.data.data[0]);
+        const modifiedTestData = {
+          ...reportData.data[0],
+          testResult: [].concat(
+            ...reportData?.data?.map((t: any) => t?.testResult)
+          ),
+        };
+
+        setResultForHook(modifiedTestData);
+
+        setResult(modifiedTestData);
       }
     })();
   }, []);
@@ -269,7 +289,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
   if (props.mode == ENUM_MODE.VIEW) {
     return (
       <>
-        <div className="">
+        {/* <div className="">
           <div className="my-5 border  shadow-lg mx-5">
             <div className="bg-[#3498ff] text-white px-2 py-2">
               <h2 className="text-center text-xl font-semibold">
@@ -291,35 +311,35 @@ const ForParameterBased = (props: IPropsForParameter) => {
                     <HeadingOption setToggleP={setToggle} />
                   </div>
                 </div>
-                <div className="flex justify-end mr-9">
-                  <NavLink href={`/testReport/${order.oid}`}>
-                    <Button
-                      className="mb-5 col-span-4 mx-2"
-                      appearance="primary"
-                      color="red"
-                      size="lg"
-                    >
-                      Back
-                    </Button>
-                  </NavLink>
-                  <Button
-                    onClick={handlePrint}
-                    className="mb-5 col-span-4"
-                    appearance="primary"
-                    color="blue"
-                    size="lg"
-                  >
-                    Print
-                  </Button>
-                </div>
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="">
           <div className="my-5 border  shadow-lg mx-5">
             <div className="bg-[#3498ff] text-white px-2 py-2">
               <h2 className="text-center text-xl font-semibold">Reports</h2>
+            </div>
+            <div className="flex justify-end mr-9 mt-4">
+              <NavLink href={`/testReport/${order.oid}`}>
+                <Button
+                  className="mb-5 col-span-4 mx-2"
+                  appearance="primary"
+                  color="red"
+                  size="lg"
+                >
+                  Back
+                </Button>
+              </NavLink>
+              <Button
+                onClick={handlePrint}
+                className="mb-5 col-span-4"
+                appearance="primary"
+                color="blue"
+                size="lg"
+              >
+                Print
+              </Button>
             </div>
             <div className="p-2 flex items-center justify-center flex-col">
               <ReportViewerParameter
@@ -332,7 +352,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
                 ref={componentRef as Ref<HTMLDivElement>}
                 consultant={doctorInfo}
                 tests={props.tests}
-                toggle={toggle}
+                toggle={true}
               />
             </div>
           </div>

@@ -13,24 +13,34 @@ import {
 } from "../comment/typesAdInitialData";
 import Tiptap from "../tiptap/TipTap";
 import RModal from "../ui/Modal";
+import { useGetReportMarginQuery } from "@/redux/api/reportMargin/reportMargin.api";
 
 const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
   const [margins, setMargins] = useState([0, 0, 0, 0]);
   const [width, setWidth] = useState(270);
+  const {
+    data: reportMargin,
+    isLoading: reportMarginLoading,
+    isFetching: reportMarginFetching,
+  } = useGetReportMarginQuery(undefined);
   useEffect(() => {
-    const storedMargin = JSON.parse(localStorage.getItem("p") as string) ?? [
-      0, 0, 0, 0,
-    ];
-    if (storedMargin) {
-      setMargins(storedMargin);
-      if (storedMargin[1] || storedMargin[3]) {
-        const left = Number(storedMargin[1] ?? 0) / 2.19;
-        const right = Number(storedMargin[3] ?? 0) / 2.19;
-        const width = 270 - Math.max(left + right - 50 / 2.19, 0);
+    if (!reportMarginFetching && !reportMarginLoading && reportMargin) {
+      if (reportMargin?.data[0]) {
+        const left = Number(reportMargin?.data[0]?.left ?? 0) * 25.4;
+        const right = Number(reportMargin?.data[0]?.right ?? 0) * 25.4;
+        const width = 270 - Math.max(left + right - 23, 0);
+
+        const storedMargins = [
+          Number(reportMargin?.data[0]?.top ?? 0) * 96,
+          Number(reportMargin?.data[0]?.right ?? 0) * 96,
+          Number(reportMargin?.data[0]?.bottom ?? 0) * 96,
+          Number(reportMargin?.data[0]?.left ?? 0) * 96,
+        ];
         setWidth(width);
+        setMargins(storedMargins);
       }
     }
-  }, [setMargins]);
+  }, [setMargins, reportMargin, reportMarginFetching, reportMarginFetching]);
 
   console.log(margins);
   const { data, open, setData, setOpen, mode, setMode } = props;

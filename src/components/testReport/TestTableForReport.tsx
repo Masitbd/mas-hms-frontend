@@ -129,15 +129,7 @@ const TestTableForReport = (props: { data: IOrderData }) => {
         />
       </NavLink>
     );
-    if (testResultType == ENUM_REPORT_TYPE.PARAMETER && status == "pending") {
-      return component;
-    }
-
-    if (testResultType !== ENUM_REPORT_TYPE.PARAMETER) {
-      return component;
-    } else {
-      return <></>;
-    }
+    return component;
   };
 
   const otherButtonProvider = (rowData: any) => {
