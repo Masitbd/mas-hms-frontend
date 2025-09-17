@@ -28,6 +28,7 @@ const ReportViewerParameter = React.forwardRef(
       resultFields: IResultField[];
       consultant: IDoctor;
       tests: ITestsFromOrder[];
+      toggle: boolean;
     },
     ref: LegacyRef<HTMLDivElement>
   ) => {
@@ -48,44 +49,9 @@ const ReportViewerParameter = React.forwardRef(
           }}
         >
           <thead>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div
-                style={{
-                  border: "3px solid #4b5563", // stone-700
-                  borderRadius: "8px",
-                  padding: "10px 20px",
-                  fontSize: "1.25rem", // text-xl
-                  fontFamily: "serif",
-                  fontWeight: "bold",
-                }}
-              >
-                {params.reportGroup.label}
-              </div>
-            </div>
-            {params?.testResult?.analyzerMachine ? (
-              <div
-                style={{
-                  border: "1px solid black",
-                  borderRadius: "8px",
-                  textAlign: "center",
-                  margin: "20px 0",
-                  fontFamily: "monospace",
-                  padding: "1rem 2.5rem",
-                }}
-              >
-                {params.testResult.analyzerMachine}
-              </div>
-            ) : null}
-
             <div>
               <PatientInformaiton
-                order={order}
+                order={order as IOrderData & { refBy: IDoctor }}
                 testResult={testResult}
                 consultant={
                   { data: params.consultant } as unknown as {
@@ -94,7 +60,45 @@ const ReportViewerParameter = React.forwardRef(
                 }
                 reportGroup={params.reportGroup._id}
                 tests={params.tests}
+                reportGroupData={params.reportGroup}
               />
+            </div>
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    border: "3px solid #4b5563", // stone-700
+                    borderRadius: "8px",
+                    padding: "5px 10px",
+                    fontSize: "1rem", // text-xl
+                    fontFamily: "serif",
+                    fontWeight: "bold",
+                    marginBottom: "5px",
+                  }}
+                >
+                  {params.reportGroup.label}
+                </div>
+              </div>
+              {params?.testResult?.analyzerMachine ? (
+                <div
+                  style={{
+                    border: "1px solid black",
+                    borderRadius: "8px",
+                    textAlign: "center",
+                    margin: "10px 0",
+                    fontFamily: "monospace",
+                    padding: ".5rem 2.5rem",
+                  }}
+                >
+                  {params.testResult.analyzerMachine}
+                </div>
+              ) : null}
             </div>
           </thead>
           <tbody>
@@ -114,7 +118,11 @@ const ReportViewerParameter = React.forwardRef(
                     return (
                       <td
                         key={field}
-                        style={{ padding: "8px", border: "1px solid black" }}
+                        style={{
+                          padding: "2px 4px",
+                          border: ".001px solid black",
+                          fontSize: ".950rem",
+                        }}
                       >
                         <span style={{ fontWeight: "bold" }}>
                           {camelToFlat(field)}{" "}
@@ -133,21 +141,25 @@ const ReportViewerParameter = React.forwardRef(
               if (!doesHaveResult) return null;
               return (
                 <>
-                  <tr>
-                    <th
-                      style={{
-                        textTransform: "uppercase",
-                        fontFamily: "serif",
-                        fontWeight: "bold",
-                        fontSize: "1.125rem",
-                        textAlign: "left",
-                        border: "1px solid black",
-                        padding: "8px",
-                      }}
-                    >
-                      {heading}:
-                    </th>
-                  </tr>
+                  {params?.toggle ? (
+                    <tr>
+                      <th
+                        style={{
+                          textTransform: "uppercase",
+                          fontFamily: "serif",
+                          fontWeight: "bold",
+                          fontSize: ".800rem",
+                          textAlign: "left",
+                          border: ".001px dotted black",
+                          padding: "2px",
+                        }}
+                      >
+                        {heading}:
+                      </th>
+                    </tr>
+                  ) : (
+                    <></>
+                  )}
                   <tr
                     style={{
                       display: "grid",
@@ -165,8 +177,8 @@ const ReportViewerParameter = React.forwardRef(
                                 fieldName === "result" ? (
                                   <td
                                     style={{
-                                      border: "1px solid black",
-                                      padding: "8px",
+                                      // border: ".001px dotted black",
+                                      padding: "1px !important",
                                     }}
                                   >
                                     <div
@@ -176,7 +188,8 @@ const ReportViewerParameter = React.forwardRef(
                                         whiteSpace: "pre-wrap",
                                         overflowWrap: "break-word",
                                         overflow: "auto",
-                                        padding: "8px",
+                                        padding: "1px",
+                                        fontSize: ".800rem",
                                       }}
                                       dangerouslySetInnerHTML={{
                                         __html: resultField?.result,
@@ -187,8 +200,9 @@ const ReportViewerParameter = React.forwardRef(
                               ) : (
                                 <td
                                   style={{
-                                    border: "1px solid black",
-                                    padding: "8px",
+                                    borderBottom: ".1rem dotted gray ",
+                                    padding: "2px 4px",
+                                    fontSize: ".800rem",
                                   }}
                                 >
                                   <div key={fieldName}>
@@ -207,7 +221,7 @@ const ReportViewerParameter = React.forwardRef(
                                     </span>
                                     <span
                                       style={{
-                                        fontSize: "0.875rem",
+                                        fontSize: ".800rem",
                                         fontFamily: "monospace",
                                       }}
                                     >

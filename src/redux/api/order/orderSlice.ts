@@ -74,7 +74,12 @@ const order = baseApi.injectEndpoints({
       invalidatesTags: ["order", "singleOrder", "single-order-payment-info"],
     }),
     singleStatusChanger: build.mutation({
-      query: (data: { oid: string; status: string; reportGroup: string }) => ({
+      query: (data: {
+        oid: string;
+        status: string;
+        reportGroup: string;
+        test?: string;
+      }) => ({
         url: `/order/statusChange/${data.oid}`,
         method: "POST",
         body: data,

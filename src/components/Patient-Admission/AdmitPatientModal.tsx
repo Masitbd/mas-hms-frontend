@@ -32,12 +32,7 @@ const patientModel = Schema.Model({
   allocatedBed: StringType().isRequired("This field is required."),
   refDoct: StringType().isRequired("This field is required."),
   assignDoct: StringType().isRequired("This field is required."),
-  phone: NumberType()
-    .isRequired("This field is required.")
-    .addRule((value: string | number): boolean => {
-      const phoneNumber = value.toString();
-      return phoneNumber.length === 11;
-    }, "Phone number must be 11 digits."),
+  phone: StringType().isRequired("This field is required."),
 });
 
 const AdmitPatientModal = () => {
@@ -68,6 +63,7 @@ const AdmitPatientModal = () => {
   }, []);
 
   const handleSubmit = async () => {
+    console.log(data);
     formRef.current
       ?.checkAsync()
       .then(async (result: { hasError: boolean; formError: any }) => {

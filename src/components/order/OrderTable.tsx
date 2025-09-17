@@ -35,6 +35,8 @@ import { useLazyGetSingleVacuumTubeQuery } from "@/redux/api/vacuumTube/vacuumTu
 import StatusTagProvider from "../ui/StatusTagProvider";
 import { camelToFlat } from "@/utils/CamelToFlat";
 import EditIcon from "@rsuite/icons/Edit";
+import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
+import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 
 const { Column, HeaderCell, Cell } = Table;
 const OrderTable = ({
@@ -247,10 +249,10 @@ const OrderTable = ({
           </Cell>
         </Column>
         <Column flexGrow={1}>
-          <HeaderCell>Delivery Date</HeaderCell>
+          <HeaderCell>Order Date</HeaderCell>
           <Cell>
             {(rowData) => {
-              const date = new Date(rowData?.deliveryTime);
+              const date = new Date(rowData?.createdAt);
               return <>{date?.toLocaleDateString()}</>;
             }}
           </Cell>
@@ -285,18 +287,25 @@ const OrderTable = ({
                   }}
                   size="sm"
                 />
-                <Button
-                  className="ml-2"
-                  color="blue"
-                  appearance="primary"
-                  startIcon={<EditIcon />}
-                  onClick={() => {
-                    if (patchHandler) {
-                      patchHanlders(rowdate?.oid, ENUM_MODE.EDIT);
-                    }
-                  }}
-                  size="sm"
-                />
+                <AuthCheckerForComponent
+                  requiredPermission={[
+                    ENUM_USER_PEMISSION.SUPER_ADMIN,
+                    ENUM_USER_PEMISSION.ADMIN,
+                  ]}
+                >
+                  <Button
+                    className="ml-2"
+                    color="blue"
+                    appearance="primary"
+                    startIcon={<EditIcon />}
+                    onClick={() => {
+                      if (patchHandler) {
+                        patchHanlders(rowdate?.oid, ENUM_MODE.EDIT);
+                      }
+                    }}
+                    size="sm"
+                  />
+                </AuthCheckerForComponent>
               </>
             )}
           </Cell>

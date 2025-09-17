@@ -13,6 +13,7 @@ import {
 } from "./initialDataAndTypes";
 import { ENUM_MODE } from "@/enum/Mode";
 import { NavLink } from "@/utils/Navlink";
+import { useGetReportMarginQuery } from "@/redux/api/reportMargin/reportMargin.api";
 
 const Comment = (props: {
   result: ITestResultForParameter | ITEstREsultForMicroBio;
@@ -25,6 +26,32 @@ const Comment = (props: {
   const [comment, setComment] = useState(props?.result?.comment);
 
   // For doctors seal
+  const [margins, setMargins] = useState([0, 0, 0, 0]);
+  const [width, setWidth] = useState(270);
+  const {
+    data: reportMargin,
+    isLoading: reportMarginLoading,
+    isFetching: reportMarginFetching,
+  } = useGetReportMarginQuery(undefined);
+  useEffect(() => {
+    if (!reportMarginFetching && !reportMarginLoading && reportMargin) {
+      if (reportMargin?.data[0]) {
+        const left = Number(reportMargin?.data[0]?.left ?? 0) * 25.4;
+        const right = Number(reportMargin?.data[0]?.right ?? 0) * 25.4;
+        const width = 270 - Math.max(left + right - 23, 0);
+
+        const storedMargins = [
+          Number(reportMargin?.data[0]?.top ?? 0) * 96,
+          Number(reportMargin?.data[0]?.right ?? 0) * 96,
+          Number(reportMargin?.data[0]?.bottom ?? 0) * 96,
+          Number(reportMargin?.data[0]?.left ?? 0) * 96,
+        ];
+        setWidth(width);
+        setMargins(storedMargins);
+      }
+    }
+  }, [setMargins, reportMargin, reportMarginFetching, reportMarginFetching]);
+
   const [seal, setSeal] = useState(props?.result?.seal);
   const [defaultSeal, setDefaultSeal] = useState<IDoctorSeal>();
   const { data: sealData, isLoading: sealDataLoading } =
@@ -103,7 +130,6 @@ const Comment = (props: {
                     value: cd?.comment,
                   }))}
                   onSelect={(p) => {
-                    console.log(p);
                     setComment(p);
                   }}
                 />
@@ -118,7 +144,7 @@ const Comment = (props: {
         </Accordion.Panel>
         <Accordion.Panel eventKey={2}>
           <div className="w-full border border-stone-200 rounded-md p-10">
-            <div style={{ width: "270mm" }} className="!font-mono">
+            <div style={{ width: `${width}mm` }} className="!font-mono">
               <Tiptap data={seal} setData={setSeal} />
             </div>
             <div>

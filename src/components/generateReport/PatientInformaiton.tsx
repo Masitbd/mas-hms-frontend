@@ -5,7 +5,12 @@ import {
   ITestResultForParameter,
   ITestsFromOrder,
 } from "./initialDataAndTypes";
-import { IDoctor, ISpecimen, ITest } from "@/types/allDepartmentInterfaces";
+import {
+  IDoctor,
+  IReportGroup,
+  ISpecimen,
+  ITest,
+} from "@/types/allDepartmentInterfaces";
 import { useGetSingleReportTypeQuery } from "@/redux/api/reportType/reportType";
 
 const PatientInformaiton = ({
@@ -14,12 +19,14 @@ const PatientInformaiton = ({
   consultant,
   reportGroup,
   tests,
+  reportGroupData,
 }: {
-  order: IOrderData;
+  order: IOrderData & { refBy: IDoctor };
   testResult?: ITestResultForParameter | ITEstREsultForMicroBio;
   consultant?: { data: { data: IDoctor } };
   reportGroup?: string;
   tests?: ITestsFromOrder[];
+  reportGroupData: IReportGroup;
 }) => {
   const specimen = new Set();
 
@@ -39,54 +46,90 @@ const PatientInformaiton = ({
           padding: "8px",
           display: "grid",
           gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "8px",
+          gap: "1px 1px",
           margin: "20px 0",
           borderRadius: "8px",
           fontFamily: "serif",
           width: "100%",
+          fontSize: ".950rem",
         }}
       >
         <div>
           <span style={{ fontWeight: "bold" }}>ID: </span>
           <span style={{ fontFamily: "serif" }}>{order.oid}</span>
         </div>
+        <div style={{ textAlign: "right" }}>
+          <span style={{ fontWeight: "bold" }}>Report Date: </span>
+          {new Date(
+            testResult?.createdAt as unknown as Date
+          )?.toLocaleDateString("en-GB")}
+        </div>
         <div>
           <span style={{ fontWeight: "bold" }}>Name: </span>
           {order.patient?.name}
         </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Age: </span>
-          {order.patient?.age} Year(s)
+        <div
+          style={{
+            textAlign: "right",
+            display: "flex",
+            justifyContent: "flex-end",
+            gap: "20px",
+          }}
+        >
+          <div>
+            <span style={{ fontWeight: "bold" }}>Age: </span>
+            {order.patient?.age}
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <span style={{ fontWeight: "bold" }}>Sex: </span>
+            {order.patient?.gender}
+          </div>
         </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Sex: </span>
-          {order.patient?.gender}
-        </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Consultant: </span>
-          {order?.consultant &&
-          typeof order?.consultant === "object" &&
-          order?.consultant?.title &&
-          order?.consultant?.name
-            ? order?.consultant?.title + " " + order?.consultant?.name
-            : " "}
-        </div>
-        <div>
+        {specimen.size > 0 ? (
+          <div>
+            <span style={{ fontWeight: "bold" }}>
+              Specimen:{" "}
+              <span style={{ fontWeight: "normal" }}>
+                {Array.from(specimen as unknown as string[])?.join(", ")}
+              </span>
+            </span>
+          </div>
+        ) : (
+          <></>
+        )}
+        <div
+          style={
+            specimen?.size > 0 ? { textAlign: "right" } : { textAlign: "left" }
+          }
+        >
           <span style={{ fontWeight: "bold" }}>Receiving Date: </span>
-          {new Date(order.createdAt as Date).toDateString()}
+          {new Date(order.createdAt as Date)?.toLocaleDateString("en-GB")}
         </div>
-        <div>
-          <span style={{ fontWeight: "bold" }}>Report Date: </span>
-          {new Date(testResult?.createdAt as unknown as Date).toDateString()}
+        {order?.consultant ? (
+          <div style={{ gridColumn: "span 2" }}>
+            <span style={{ fontWeight: "bold", gridColumn: "2" }}>
+              Consultant:{" "}
+            </span>
+            {order?.consultant &&
+            typeof order?.consultant === "object" &&
+            order?.consultant?.title &&
+            order?.consultant?.name
+              ? order?.consultant?.title + " " + order?.consultant?.name
+              : " "}
+          </div>
+        ) : (
+          <></>
+        )}
+
+        {/* <div>
+          <span style={{ fontWeight: "bold" }}>Report Category: </span>
+          {reportGroupData?.label}
         </div>
         <div>
           <span style={{ fontWeight: "bold" }}>
-            Specimen:{" "}
-            <span style={{ fontWeight: "normal" }}>
-              {Array.from(specimen as unknown as string[])?.join(", ")}
-            </span>
+            {order?.refBy ? order?.refBy?.code : <></>}
           </span>
-        </div>
+        </div> */}
       </div>
     </>
   );

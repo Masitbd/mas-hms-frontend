@@ -15,11 +15,11 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Button, Table } from "rsuite";
 import CheckIcon from "@rsuite/icons/Check";
-import VisibleIcon from "@rsuite/icons/Visible";
-import Swal from "sweetalert2";
+
 import TestTable from "../../../components/TestTable";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import { ENUM_MODE } from "@/enum/Mode";
+import swal from "sweetalert";
 
 const TestReportSelector = ({
   searchParams,
@@ -39,9 +39,20 @@ const TestReportSelector = ({
     reportGroup: searchParam.get("reportGroup") as string,
     page: searchParam.get("page") as "delivery" | "generateReport",
   };
+
+  // ✅ Extract primitives (stable deps)
+  const oid = searchParam.get("oid") || "";
+  const mode = searchParam.get("mode") || "";
+  const reportGroup = searchParam.get("reportGroup") || "";
+  const page =
+    (searchParam.get("page") as "delivery" | "generateReport") ||
+    "generateReport";
   // For status change
-  const [changeStatus, { isLoading: statusLoading }] =
-    useSingleStatusChangerMutation();
+  const [
+    changeStatus,
+    { isLoading: statusLoading, isError: statusChangerError },
+  ] = useSingleStatusChangerMutation();
+
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
 
   const router = useRouter();
@@ -57,17 +68,6 @@ const TestReportSelector = ({
     isFetching: orderDataFetching,
   } = useGetSingleOrderQuery(searchParams?.oid);
 
-  useEffect(() => {
-    if (
-      reportGroupData?.data?.testResultType == ENUM_REPORT_TYPE.PARAMETER &&
-      searchParams?.page !== "delivery"
-    ) {
-      router.push(
-        `/generateReport/${searchParams.oid}?reportGroup=${searchParams.reportGroup}&mode=${searchParams.mode}&reportType=${reportGroupData?.data?.testResultType}`
-      );
-    }
-  }, [reportGroupData, reportGroupFetching, reportGroupLoading]);
-
   // for updating the delivery status
   const [test, setTest] = useState();
   const statusChangeHandler = async (props: {
@@ -81,32 +81,44 @@ const TestReportSelector = ({
         oid: searchParams.oid as string,
         status: "delivered",
         reportGroup: reportGroupData?.data?.label,
-        ...(props?.reportType !== ENUM_REPORT_TYPE.PARAMETER
-          ? { test: props?.test }
-          : {}),
+        test: props?.test,
       }).unwrap();
       if (result?.success) {
-        Swal.fire("Success", "Report Status Changed Successfully", "success");
+        swal("Success", "Report Status Changed Successfully", "success");
       }
     } catch (error) {
       console.error(error);
-      Swal.fire("Error", error as string, "error");
+      swal("Error", error as string, "error");
     } finally {
       router.push(`/testReport/${searchParams?.oid}`);
     }
   };
-  useEffect(() => {
-    if (
-      reportGroupData?.data?.testResultType == ENUM_REPORT_TYPE.PARAMETER &&
-      searchParams?.page == "delivery"
-    ) {
-      statusChangeHandler({
-        oid: searchParams?.oid,
-        reportGroupLabel: reportGroupData?.data?.label,
-        reportType: reportGroupData?.data?.testResultType,
-      });
-    }
-  }, [searchParams, test, reportGroupData]);
+  // useEffect(() => {
+  //   if (
+  //     reportGroupData?.data?.testResultType == ENUM_REPORT_TYPE.PARAMETER &&
+  //     searchParams?.page == "delivery" &&
+  //     reportGroupData?.data &&
+  //     !statusLoading
+  //   ) {
+  //     if (!statusChangerError && !statusLoading) {
+  //       statusChangeHandler({
+  //         oid: searchParams?.oid,
+  //         reportGroupLabel: reportGroupData?.data?.label,
+  //         reportType: reportGroupData?.data?.testResultType,
+  //       });
+  //     } else {
+  //       router.push(`/testReport/${searchParams?.oid}`);
+  //     }
+  //   }
+  // }, [
+  //   reportGroupData?.data,
+  //   reportGroupData?.data?.testResultType,
+  //   page,
+  //   oid,
+  //   changeStatus,
+  //   statusLoading,
+  //   router,
+  // ]);
 
   const filteredTests = orderData?.data[0]?.tests?.filter(
     (t: ITestsFromOrder & { test: ITest }) => {
@@ -117,40 +129,29 @@ const TestReportSelector = ({
       const isUpdateMode = searchParams?.mode === ENUM_MODE.EDIT;
       const viewMode = searchParams?.mode === ENUM_MODE.VIEW;
       const testStatus = t.status;
-
-      if (isParameter) {
-        return (
-          t.test.reportGroup?.toString() === searchParams?.reportGroup &&
-          testStatus !== "refunded" &&
-          testStatus !== "tube" &&
-          t.status !== "delivered"
-        );
-      }
-
-      if (isDeliveryPage && !isParameter) {
+      if (isDeliveryPage) {
         return (
           t.test.reportGroup?.toString() === searchParams?.reportGroup &&
           testStatus === "completed"
         );
       }
 
-      if (isNewMode && !isParameter) {
+      if (isNewMode) {
         return (
           t.test.reportGroup?.toString() === searchParams?.reportGroup &&
           testStatus === "pending"
         );
       }
 
-      if (isUpdateMode && !isParameter) {
+      if (isUpdateMode) {
         return (
           t.test.reportGroup?.toString() === searchParams?.reportGroup &&
           testStatus === "completed" &&
           t.status !== "delivered"
         );
       }
-      console.log(!isParameter);
 
-      if (viewMode && !isParameter) {
+      if (viewMode) {
         return (
           t.test.reportGroup?.toString() === searchParams?.reportGroup &&
           (testStatus === "completed" || testStatus == "delivered")
@@ -160,7 +161,18 @@ const TestReportSelector = ({
     }
   );
 
-  console.log(filteredTests);
+  // For selected tests
+  const [testIds, setTestIds] = useState([]);
+  const navigationHandler = () => {
+    router.push(
+      `/generateReport/${searchParams.oid}?reportGroup=${
+        searchParams.reportGroup
+      }&mode=${searchParams.mode}&reportType=${
+        reportGroupData?.data?.testResultType
+      }&test=${testIds?.join(",")}`
+    );
+  };
+
   if (
     reportGroupLoading ||
     reportGroupFetching ||
@@ -190,6 +202,9 @@ const TestReportSelector = ({
             statusLoading={statusLoading}
             reportGroupLoading={reportGroupLoading}
             orderDataLoading={orderDataLoading}
+            testIds={testIds}
+            setTestIds={setTestIds}
+            page={page}
           />
         </div>
         <div className="p-2">
@@ -204,6 +219,16 @@ const TestReportSelector = ({
                 Back
               </Button>
             </NavLink>
+
+            <Button
+              appearance="primary"
+              color="blue"
+              size="lg"
+              disabled={!testIds?.length as boolean}
+              onClick={() => navigationHandler()}
+            >
+              Next
+            </Button>
           </div>
         </div>
       </div>

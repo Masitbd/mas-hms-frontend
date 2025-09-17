@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { forwardRef, LegacyRef, useRef } from "react";
-import { IOrderData } from "../order/initialDataAndTypes";
+import { IOrderData, ItestInformaiton } from "../order/initialDataAndTypes";
 import {
   IDoctor,
   IReportGroup,
@@ -55,20 +55,25 @@ const ReportViewerMicro = React.forwardRef(
 
     const growth = result?.growth || false;
 
+    const test = order?.tests?.find(
+      (t) =>
+        typeof t.test == "object" && t.test?._id?.toString() == result?.test
+    );
     return (
       <>
         <div ref={ref}>
           <div>
             <PatientInformaiton
-              order={params.order}
+              order={params.order as IOrderData & { refBy: IDoctor }}
               testResult={params.result}
               reportGroup={params.reportGroup._id}
               tests={params.tests}
+              reportGroupData={params?.reportGroup}
             />
           </div>
           <table style={{ width: "100%" }}>
             <tr>
-              <th style={{ paddingTop: "2rem", paddingBottom: "1rem" }}>
+              <th style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
                 <div
                   style={{
                     display: "flex",
@@ -82,13 +87,20 @@ const ReportViewerMicro = React.forwardRef(
                       padding: "0.5rem",
                       border: "1px solid black",
                       borderRadius: "5px",
-                      fontSize: "1.5rem",
+                      fontSize: "1 rem",
                     }}
                   >
                     {params.reportGroup.label}
                   </div>
                 </div>
               </th>
+            </tr>
+            <tr>
+              <td colSpan={4} style={{ fontWeight: "bold", fontSize: "1 rem" }}>
+                <u>
+                  {typeof test?.test == "object" && (test?.test?.label ?? "")}
+                </u>
+              </td>
             </tr>
 
             {!growth ? (
@@ -146,8 +158,8 @@ const ReportViewerMicro = React.forwardRef(
                         <th
                           style={{
                             fontFamily: "serif",
-                            fontSize: "1.5rem",
-                            border: "1px solid black",
+                            fontSize: "1rem",
+                            border: ".5px solid gray",
                             textTransform: "uppercase",
                           }}
                           colSpan={4}
@@ -161,15 +173,15 @@ const ReportViewerMicro = React.forwardRef(
                           gridTemplateColumns: `repeat(12, 1fr)`,
                           textAlign: "left",
                           textTransform: "uppercase",
-                          fontSize: "medium",
+                          fontSize: "1rem",
                           wordWrap: "break-word",
                         }}
                       >
                         <th
                           style={{
                             gridColumn: "span 5",
-                            border: "1px solid black",
-                            padding: "8px",
+                            border: ".5px solid gray",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -177,9 +189,9 @@ const ReportViewerMicro = React.forwardRef(
                         </th>
                         <th
                           style={{
-                            border: "1px solid black",
+                            border: ".5px solid gray",
                             gridColumn: "span 2",
-                            padding: "8px",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -187,9 +199,9 @@ const ReportViewerMicro = React.forwardRef(
                         </th>
                         <th
                           style={{
-                            border: "1px solid black",
+                            border: ".5px solid gray",
                             gridColumn: "span 3",
-                            padding: "8px",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -197,9 +209,9 @@ const ReportViewerMicro = React.forwardRef(
                         </th>
                         <th
                           style={{
-                            border: "1px solid black",
+                            border: ".5px solid gray",
                             gridColumn: "span 2",
-                            padding: "8px",
+                            padding: "1px 4px",
                             textTransform: "uppercase",
                           }}
                         >
@@ -217,7 +229,7 @@ const ReportViewerMicro = React.forwardRef(
                                   display: "grid",
                                   gridTemplateColumns: `repeat(12, 1fr)`,
                                   textAlign: "left",
-                                  fontSize: "medium",
+                                  fontSize: ".800rem",
                                 }}
                               >
                                 {fields.map((field: string) => {
@@ -225,14 +237,14 @@ const ReportViewerMicro = React.forwardRef(
                                     <>
                                       <td
                                         style={{
-                                          border: "1px solid black",
+                                          border: ".5px dashed gray",
                                           gridColumn:
                                             field == fields[0]
                                               ? "span 5"
                                               : field == fields[2]
                                               ? "span 3"
                                               : "span 2",
-                                          padding: "6px",
+                                          padding: "1px 4px",
                                         }}
                                         key={fields[0]}
                                       >

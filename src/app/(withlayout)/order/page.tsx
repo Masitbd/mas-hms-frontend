@@ -138,6 +138,23 @@ const Order = () => {
       );
       return;
     }
+
+    const netPayable = Number(
+      (
+        totalPrice -
+        discountAmount +
+        vatAmount -
+        (data.cashDiscount ? data.cashDiscount : 0)
+      ).toFixed(2)
+    );
+    if (data.paid > netPayable) {
+      toaster.push(
+        <Message type="error">
+          Paid amount cannot be greater than Net Price
+        </Message>
+      );
+      return;
+    }
     const orderData: IOrderData = {
       status: "pending",
       deliveryTime: data.deliveryTime,
