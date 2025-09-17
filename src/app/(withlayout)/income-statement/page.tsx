@@ -3,7 +3,12 @@
 import IncomeShowTable from "@/components/incomeStatement/IncomeShowTable";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 import { useGetIncomeStatementMutation } from "@/redux/api/income-statement/Income.api";
+
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
+
+
 import React, { FormEvent, useEffect, useState } from "react";
+
 import { Button, DatePicker, Form, Message, toaster } from "rsuite";
 
 export interface IFormValues {
@@ -16,10 +21,7 @@ const IncomeStatementPage = () => {
 
   // console.log("data", data);
 
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   const handleChange = (value: Record<string, any>) => {
     setFormValue({

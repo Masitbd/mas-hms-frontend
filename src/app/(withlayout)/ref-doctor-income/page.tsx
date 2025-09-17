@@ -8,13 +8,10 @@ import RefDoctorTable, {
   TGroup,
 } from "@/components/incomeStatement/RefDoctorTable";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const RefDoctorIncomePage = () => {
-  const [isSearchEnable, setIsSearchEnable] = useState(false);
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   // Handle form value change
   const handleChange = (value: Record<string, any>) => {
@@ -31,58 +28,10 @@ const RefDoctorIncomePage = () => {
 
   // Call the query when search is enabled
   const { data: refIncomes } = useGetRefByWiseIncomeStatementQuery(
-    query, // Pass the constructed query object
-    {
-      skip: !isSearchEnable, // Only run the query when search is enabled
-    }
+    query // Pass the constructed query object
   );
 
   const [transformedData, setTransformedData] = useState<TGroup | null>(null);
-
-  // Handle form submission
-  const handleSubmit = async (
-    formValue: Record<string, any> | null,
-    event?: React.FormEvent<HTMLFormElement>
-  ) => {
-    if (formValue) {
-      // Format the dates
-
-      setIsSearchEnable(true);
-    }
-  };
-
-  // Create a map from names to mainDocs
-  // useEffect(() => {
-  //   if (refIncomes?.data?.length > 0) {
-  //     const firstItem = refIncomes.data[0];
-  //     const { mainDocs = [], nameWiseTotalDocs = [] } = firstItem;
-
-  //     // Create a map from refBy (title + name) to an array of mainDocs entries
-  //     const refByToMainDocsMap = new Map();
-  //     mainDocs.forEach((doc: any) => {
-  //       const { title, name } = doc.refBy;
-  //       const refByKey = `${title} ${name}`; // Combine title and name as the key
-
-  //       if (!refByToMainDocsMap.has(refByKey)) {
-  //         refByToMainDocsMap.set(refByKey, []);
-  //       }
-
-  //       refByToMainDocsMap.get(refByKey).push(doc); // Add document to the correct refBy
-  //     });
-
-  //     // Create the new array
-  //     const result: any = Array.from(
-  //       refByToMainDocsMap,
-  //       ([refBy, records]) => ({
-  //         refBy, // e.g., "Dr. Mohammad Abul Hossain"
-  //         records, // All documents associated with this refBy
-  //       })
-  //     );
-
-  //     // Set the transformed data in the state
-  //     setTransformedData(result);
-  //   }
-  // }, [refIncomes]);
 
   useEffect(() => {
     if (refIncomes?.data?.length > 0) {
@@ -139,7 +88,6 @@ const RefDoctorIncomePage = () => {
         <div className="mx-2">
           <Form
             onChange={handleChange}
-            onSubmit={handleSubmit}
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
@@ -168,15 +116,6 @@ const RefDoctorIncomePage = () => {
                 }
               />
             </Form.Group>
-
-            <Button
-              className="max-h-11 mt-5"
-              size="sm"
-              appearance="primary"
-              type="submit"
-            >
-              Search
-            </Button>
           </Form>
 
           {transformedData && (

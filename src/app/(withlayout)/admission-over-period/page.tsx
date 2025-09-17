@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button, DatePicker, Form } from "rsuite";
 import { IFormValues } from "../income-statement/page";
 import AdmitOverPeriodTable from "@/components/Patient-Admission/AdmissionOverPeriodTable";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const overPeriodColumns = [
   { label: "Bill No", field: "regNo" },
@@ -26,10 +27,7 @@ const overPeriodColumns = [
 ];
 
 const AdmissionOverPeriodPage = () => {
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   const handleChange = (value: Record<string, any>) => {
     setFormValue({

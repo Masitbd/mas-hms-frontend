@@ -6,12 +6,10 @@ import { Button, DatePicker, Form } from "rsuite";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 import DueListLedger from "@/components/indoorFinancial/DueListLedger";
 import { useGetIndoorDueLedgerQuery } from "@/redux/api/income-statement/Income.api";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const DueListPage = () => {
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   const handleChange = (value: Record<string, any>) => {
     setFormValue({

@@ -208,7 +208,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
             >
               {group?.user}
             </div>
-            <h2 className="font-semibold text-lg my-3">Due Collection</h2>
+            <h2 className="font-semibold text-lg my-3">Due Collection </h2>
             {group?.dewBills?.map((dueBill, ptindex) => (
               <div
                 key={ptindex}

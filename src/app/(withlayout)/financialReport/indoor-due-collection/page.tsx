@@ -6,12 +6,10 @@ import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
 import { useGetIndoorDuecollectionLedgerQuery } from "@/redux/api/income-statement/Income.api";
 import { Button, DatePicker, Form } from "rsuite";
 import DueCollectionTable from "@/components/indoorFinancial/DueCollectionTable";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const IndoordueCollectionStatementPage = () => {
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   const handleChange = (value: Record<string, any>) => {
     setFormValue({

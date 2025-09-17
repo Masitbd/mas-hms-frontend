@@ -1,48 +1,47 @@
 "use client";
 
-import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
-import { useGetIndoorEmpDetailsLedgerQuery } from "@/redux/api/income-statement/Income.api";
-import { useState } from "react";
-import { Button, DatePicker, Form } from "rsuite";
-import { IFormValues } from "../../income-statement/page";
-import EmpDetailsTable from "@/components/indoorFinancial/EmpLedgerDetailsTable";
-import { currentDefaultDate } from "@/utils/currentDefaultDate";
+import React, { useState } from "react";
+import { DatePicker, Form } from "rsuite";
+import { IFormValues } from "../income-statement/page";
 
-const IndoorEmpLedgerSummeryPage = () => {
+import { useGetEmployeeLedgerQuery } from "@/redux/api/financialReport/financialReportSlice";
+import EmployeeLedgerTable from "@/components/incomeStatement/EmployeeLedger";
+import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
+import { useGetOutdoorDueStatementQuery } from "@/redux/api/income-statement/Income.api";
+import OutDueStatementTable from "@/components/incomeStatement/OutDoorDueStatement";
+
+const DueCollectionStatementPage = () => {
   const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
+  // Handle form value change
   const handleChange = (value: Record<string, any>) => {
     setFormValue({
-      startDate: value.startDate || null,
+      startDate: value.startDate,
       endDate: value.endDate || null,
     });
   };
 
-  const formattedStartDate = formatDate(formValue.startDate);
-  const formattedEndDate = formatDate(formValue.endDate);
+  // Query object
+  const query: Record<string, any> = {};
+  if (formValue.startDate) query.startDate = formatDate(formValue.startDate);
+  if (formValue.endDate) query.endDate = formatDate(formValue.endDate);
 
-  const queryDate: Record<string, any> = {
-    // startDate: formattedStartDate,
-    // endDate: formattedEndDate,
-  };
-
-  if (formValue.startDate) queryDate.startDate = formattedStartDate;
-  if (formValue.endDate) queryDate.endDate = formattedEndDate;
-
-  const { data, isLoading } = useGetIndoorEmpDetailsLedgerQuery(queryDate);
-
+  // Call the query when search is enabled
+  const { data } = useGetOutdoorDueStatementQuery(query);
 
   return (
-    <div>
+    <div className="">
       <div className="my-5 border  shadow-lg mx-5">
         <div className="bg-[#3498ff] text-white px-2 py-2">
           <h2 className="text-center text-xl font-semibold">
-            Indoor Employee Ledger Details
+            Due Collection Statement
           </h2>
         </div>
-        <div className="px-2">
+        <div className="mx-2">
           <Form
             onChange={handleChange}
+            // onSubmit={handleSubmit}
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
@@ -71,20 +70,11 @@ const IndoorEmpLedgerSummeryPage = () => {
                 }
               />
             </Form.Group>
-
-            <Button
-              className="max-h-11 mt-5"
-              size="sm"
-              appearance="primary"
-              type="submit"
-            >
-              Search
-            </Button>
           </Form>
 
-          {data && data?.data?.length > 0 && (
-            <EmpDetailsTable
-              data={data.data}
+          {data && data?.data && (
+            <OutDueStatementTable
+              data={data?.data}
               startDate={formValue.startDate}
               endDate={formValue.endDate}
             />
@@ -95,4 +85,4 @@ const IndoorEmpLedgerSummeryPage = () => {
   );
 };
 
-export default IndoorEmpLedgerSummeryPage;
+export default DueCollectionStatementPage;

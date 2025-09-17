@@ -7,13 +7,10 @@ import { IFormValues } from "../income-statement/page";
 import { useGetClientWiseIncomeStatementQuery } from "@/redux/api/financialReport/financialReportSlice";
 import ClientIncomeTable from "@/components/incomeStatement/ClientIncomeTable";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const ClientWiseIncomeStatement = () => {
-  const [isSearchEnable, setIsSearchEnable] = useState(false);
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   // Handle form value change
   const handleChange = (value: Record<string, any>) => {
@@ -30,23 +27,12 @@ const ClientWiseIncomeStatement = () => {
 
   // Call the query when search is enabled
   const { data: clientIncomes } = useGetClientWiseIncomeStatementQuery(
-    query, // Pass the constructed query object
-    {
-      skip: !isSearchEnable, // Only run the query when search is enabled
-    }
+    query // Pass the constructed query object
   );
 
   const [transformedData, setTransformedData] = useState([]);
 
   // Handle form submission
-  const handleSubmit = async (
-    formValue: Record<string, any> | null,
-    event?: React.FormEvent<HTMLFormElement>
-  ) => {
-    if (formValue) {
-      setIsSearchEnable(true);
-    }
-  };
 
   // Create a map from names to mainDocs
   useEffect(() => {
@@ -86,7 +72,6 @@ const ClientWiseIncomeStatement = () => {
         <div className="mx-2">
           <Form
             onChange={handleChange}
-            onSubmit={handleSubmit}
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
@@ -119,15 +104,6 @@ const ClientWiseIncomeStatement = () => {
                 />
               </Form.Group>
             </div>
-
-            <Button
-              className="max-h-11 mt-5"
-              size="sm"
-              appearance="primary"
-              type="submit"
-            >
-              Search
-            </Button>
           </Form>
 
           {clientIncomes && clientIncomes?.data?.length > 0 && (

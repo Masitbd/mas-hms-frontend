@@ -17,6 +17,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 type TRecord = {
   oid: string; // Order ID
   uuid?: string; // Optional UUID (may or may not exist)
+  name?: string; // Optional UUID (may or may not exist)
   amount: number; // Amount for the record
   totalPaid: number; // Total paid in the record
   date: string; // Date as a string (ISO format)
@@ -24,6 +25,7 @@ type TRecord = {
 
 // Type for each user
 type TUser = {
+  name: string;
   postedBy: string; // The person who posted the record
   totalPaid: number; // Total amount paid by the user
   records: TRecord[]; // Array of records associated with the user
@@ -38,7 +40,7 @@ type TGroup = {
 // Main data type (array of groups)
 
 interface IncomeShowTableProps {
-  data: TGroup[];
+  data: { records: TGroup[]; grandTotal: number }[];
   startDate: Date | null;
   endDate: Date | null;
 }
@@ -89,7 +91,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         : null;
 
     // Prepare and validate data
-    const preparedData = data?.map((group) => ({
+    const preparedData = data[0]?.records?.map((group) => ({
       ...group,
       users: group.users?.map((user) => ({
         ...user,
@@ -115,11 +117,12 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
         // Static Table Header
         {
           table: {
-            widths: [150, 150, 150], // Fixed column widths
+            widths: [100, 150, 100, 100], // Fixed column widths
             headerRows: 1,
             body: [
               [
                 { text: "Time", style: "tableHeader" },
+                { text: "P.Name", style: "tableHeader" },
                 { text: "Particular", style: "tableHeader" },
                 { text: "Debit", style: "tableHeader" },
               ],
@@ -137,17 +140,18 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
           },
           ...group?.users?.map((user) => [
             {
-              text: ` ${user?.postedBy ?? " "}`,
+              text: ` ${user?.name ?? " "}`,
               style: "nameHeader",
               margin: [0, 10, 0, 10],
             },
 
             {
               table: {
-                widths: [150, 150, 150], // Fixed column widths
+                widths: [100, 150, 100, 100], // Fixed column widths
                 body: [
                   ...user?.records?.map((record) => [
                     record?.date ?? " ", // Safeguard for date
+                    record?.name ?? " ", // Safeguard for oid
                     record?.oid ?? " ", // Safeguard for oid
                     Number(record?.amount ?? 0).toFixed(2) ?? "0", // Ensure amount is formatted correctly
                   ]),
@@ -163,6 +167,13 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
             },
           ]),
         ]),
+
+        {
+          text: `Grand Total: ${Number(data?.[0]?.grandTotal ?? 0).toFixed(2)}`,
+          style: "grandTotalHeader",
+          margin: [0, 20, 0, 0],
+          alignment: "right",
+        },
       ],
       styles: {
         header: {
@@ -223,12 +234,13 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
       </div>
 
       <div className="w-full">
-        <div className="grid grid-cols-3 bg-gray-100 font-semibold text-center p-2">
+        <div className="grid grid-cols-4 bg-gray-100 font-semibold text-center p-2">
           <div>Time</div>
+          <div>P.Name</div>
           <div>Particular</div>
           <div>Debit</div>
         </div>
-        {data.map((group, groupIndex) => (
+        {data[0]?.records?.map((group, groupIndex) => (
           <div key={groupIndex} className="mb-8">
             {/* Group Date Row */}
             <div className="text-lg font-semibold p-2 mb-2 text-blue-700">
@@ -240,7 +252,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
               <div key={userIndex} className="border-t">
                 {/* User Header */}
                 <div className=" font-semibold p-2 border">
-                  Name: {user?.postedBy}
+                  Name: {user?.name}
                 </div>
 
                 {/* Records Table */}
@@ -251,9 +263,10 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   {user.records.map((record, recordIndex) => (
                     <div
                       key={recordIndex}
-                      className="grid grid-cols-3 text-center p-2 border-b"
+                      className="grid grid-cols-4 text-center p-2 border-b"
                     >
                       <div>{record?.date.slice(0, 10)}</div>
+                      <div>{record?.name}</div>
                       <div>{record?.oid}</div>
                       <div>{record?.amount || 0}</div>
                     </div>
@@ -261,12 +274,16 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
                 </div>
 
                 <div className="p-2 border text-violet-700 font-semibold grid col-span-2 justify-end">
-                  Total: {user.totalPaid}
+                  Total Paid: {user.totalPaid}
                 </div>
               </div>
             ))}
           </div>
         ))}
+
+        <p className="flex justify-end font-bold text-xl text-purple-500">
+          Grand Total: {data[0]?.grandTotal}
+        </p>
       </div>
 
       <button

@@ -6,15 +6,12 @@ import { IFormValues } from "../income-statement/page";
 import { useGetEmployeeIncomeStatementQuery } from "@/redux/api/income-statement/Income.api";
 import EmployeeIncomeShowTable from "@/components/incomeStatement/EmployeeIncomeTable";
 import { formatDate } from "@/components/incomeStatement/incomeStatementUtils";
+import { currentDefaultDate } from "@/utils/currentDefaultDate";
 
 const EmployeeIncmeStatementPage = () => {
-  const [isSearchEnable, setIsSearchEnable] = useState(false);
   const query: Record<string, any> = {};
 
-  const [formValue, setFormValue] = useState<IFormValues>({
-    startDate: null,
-    endDate: null,
-  });
+  const [formValue, setFormValue] = useState<IFormValues>(currentDefaultDate);
 
   const handleChange = (value: Record<string, any>) => {
     setFormValue({
@@ -26,21 +23,11 @@ const EmployeeIncmeStatementPage = () => {
   if (formValue.startDate) query.startDate = formatDate(formValue.startDate);
   if (formValue.endDate) query.endDate = formatDate(formValue.endDate);
 
-  const { data: employeeIncome } = useGetEmployeeIncomeStatementQuery(query, {
-    skip: !isSearchEnable,
-  });
+  const { data: employeeIncome } = useGetEmployeeIncomeStatementQuery(query);
 
   // console.log(employeeIncome, "income res");
 
   // Handle form submission
-  const handleSubmit = async (
-    formValue: Record<string, any> | null,
-    event?: React.FormEvent<HTMLFormElement>
-  ) => {
-    if (formValue) {
-      setIsSearchEnable(true);
-    }
-  };
 
   return (
     <div className="">
@@ -53,7 +40,6 @@ const EmployeeIncmeStatementPage = () => {
         <div className="mx-2">
           <Form
             onChange={handleChange}
-            onSubmit={handleSubmit}
             formValue={formValue}
             className="grid grid-cols-3 gap-10 justify-center  w-full"
           >
@@ -82,15 +68,6 @@ const EmployeeIncmeStatementPage = () => {
                 }
               />
             </Form.Group>
-
-            <Button
-              className="max-h-11 mt-5"
-              size="sm"
-              appearance="primary"
-              type="submit"
-            >
-              Search
-            </Button>
           </Form>
 
           {employeeIncome && employeeIncome?.data?.length > 0 && (
