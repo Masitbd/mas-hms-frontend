@@ -207,7 +207,10 @@ const TestInformation = (params: IParamsForTestInformation) => {
                     </div> */}
                     {rowData.status == "pending" && (
                       <AuthCheckerForComponent
-                        requiredPermission={[ENUM_USER_PEMISSION.MANAGE_ORDER]}
+                        requiredPermission={[
+                          ENUM_USER_PEMISSION.SUPER_ADMIN,
+                          ENUM_USER_PEMISSION.ADMIN,
+                        ]}
                       >
                         <Button
                           className="ml-2 "
