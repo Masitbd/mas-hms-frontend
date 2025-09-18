@@ -73,7 +73,7 @@ const ReportViewerMicro = React.forwardRef(
           </div>
           <table style={{ width: "100%" }}>
             <tr>
-              <th style={{ paddingTop: "1rem", paddingBottom: "1rem" }}>
+              <th style={{ paddingTop: ".1rem", paddingBottom: ".1rem" }}>
                 <div
                   style={{
                     display: "flex",
@@ -84,7 +84,7 @@ const ReportViewerMicro = React.forwardRef(
                 >
                   <div
                     style={{
-                      padding: "0.5rem",
+                      padding: "0.3rem",
                       border: "1px solid black",
                       borderRadius: "5px",
                       fontSize: "1 rem",
@@ -237,7 +237,7 @@ const ReportViewerMicro = React.forwardRef(
                                     <>
                                       <td
                                         style={{
-                                          border: ".5px dashed gray",
+                                          borderBottom: ".5px dotted gray",
                                           gridColumn:
                                             field == fields[0]
                                               ? "span 5"

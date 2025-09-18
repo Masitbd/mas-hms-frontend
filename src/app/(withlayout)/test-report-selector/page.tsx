@@ -162,7 +162,7 @@ const TestReportSelector = ({
   );
 
   // For selected tests
-  const [testIds, setTestIds] = useState([]);
+  const [testIds, setTestIds] = useState<string[]>([]);
   const navigationHandler = () => {
     router.push(
       `/generateReport/${searchParams.oid}?reportGroup=${
@@ -173,6 +173,11 @@ const TestReportSelector = ({
     );
   };
 
+  useEffect(() => {
+    if (reportGroupData?.data?.testResultType == "parameter" && filteredTests) {
+      setTestIds([...filteredTests?.map((d: any) => d?.test?._id as any)]);
+    }
+  }, [orderData]);
   if (
     reportGroupLoading ||
     reportGroupFetching ||
