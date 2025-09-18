@@ -448,7 +448,6 @@ export const printInvoice = async ({
     },
   };
 
-  console.log(dd);
   pdfMake.createPdf(dd as unknown as TDocumentDefinitions).print();
 };
 
