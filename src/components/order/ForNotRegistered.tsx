@@ -20,16 +20,9 @@ const ForNotRegistered = (param: param) => {
     name: StringType().isRequired("This field is required."),
     age: StringType().isRequired("This field is required."),
     gender: StringType().isRequired("This field is required."),
-    phone: NumberType()
-      .isRequired("This field is required.")
-      .addRule((value: string | number): boolean => {
-        const phoneNumber = value.toString();
-        if (phoneNumber.length <= 10 && phoneNumber.length >= 10) {
-          return false;
-        }
-        return true;
-      }, "Phone number must be 11 digits."),
+    consultant: StringType().isRequired("This field is required."),
   });
+
   return (
     <Form
       className="contents patient-information-not-reg"

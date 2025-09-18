@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Table, Button, Checkbox } from "rsuite";
 import { NavLink } from "@/utils/Navlink";
 import TestStatusElement from "@/components/testReport/TestStatusElement";
@@ -28,7 +28,7 @@ interface TestTableProps {
   statusLoading: boolean;
   reportGroupLoading: boolean;
   orderDataLoading: boolean;
-  setTestIds: Dispatch<SetStateAction<never[]>>;
+  setTestIds: Dispatch<SetStateAction<string[]>>;
   testIds: string[];
   page: string;
 }
@@ -46,9 +46,8 @@ const TestTable: React.FC<TestTableProps> = ({
   setTestIds,
   page,
 }) => {
-  console.log(reportGroupData);
   return (
-    <Table loading={loading} data={data}>
+    <Table loading={loading} data={data} autoHeight>
       <Column flexGrow={2}>
         <HeaderCell>Report Name</HeaderCell>
         <Cell dataKey="test.label" />
@@ -136,6 +135,7 @@ const TestTable: React.FC<TestTableProps> = ({
                       );
                     }
                   }}
+                  defaultChecked
                 />
               );
             }}

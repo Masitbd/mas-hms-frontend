@@ -74,7 +74,10 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     if (mode == ENUM_MODE.NEW) {
       const postResult = await post(data);
       if ("data" in postResult) {
-        swal("Success", "Data Posted Successfully", { icon: "success" });
+        swal("Success", "Data Posted Successfully", {
+          icon: "success",
+          timer: 1000,
+        });
         router.push(
           `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}`
         );
@@ -83,7 +86,10 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
     if (mode == ENUM_MODE.EDIT) {
       const data = await patchReport(result);
       if ("data" in data) {
-        swal("Success", "Data updated successfully", { icon: "success" });
+        swal("Success", "Data updated successfully", {
+          icon: "success",
+          timer: 1000,
+        });
         router.push(
           `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}`
         );
