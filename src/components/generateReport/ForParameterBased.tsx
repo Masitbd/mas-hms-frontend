@@ -130,6 +130,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
       icon: "success",
       text: text,
       title: "Success",
+      timer: 1000,
     });
   };
 
