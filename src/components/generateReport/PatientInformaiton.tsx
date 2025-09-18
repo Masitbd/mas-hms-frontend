@@ -66,7 +66,10 @@ const PatientInformaiton = ({
         </div>
         <div>
           <span style={{ fontWeight: "bold" }}>Name: </span>
-          {order.patient?.name}
+          <span style={{ textTransform: "uppercase" }}>
+            {" "}
+            {order.patient?.name}
+          </span>
         </div>
         <div
           style={{
