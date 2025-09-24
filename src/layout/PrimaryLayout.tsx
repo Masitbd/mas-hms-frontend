@@ -17,6 +17,20 @@ export default function PrimaryLayout({
   if (noNav.includes(pathname)) {
     return (
       <html lang="en">
+        <link
+          rel="preload"
+          href="/fonts/ArialRegular.woff"
+          as="font"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/ArialBold.woff"
+          as="font"
+          type="font/woff"
+          crossOrigin="anonymous"
+        />
         <body className={inter.className}>{children}</body>
       </html>
     );
@@ -24,6 +38,20 @@ export default function PrimaryLayout({
 
   return (
     <html lang="en">
+      <link
+        rel="preload"
+        href="/fonts/ArialRegular.woff"
+        as="font"
+        type="font/woff"
+        crossOrigin="anonymous"
+      />
+      <link
+        rel="preload"
+        href="/fonts/ArialBold.woff"
+        as="font"
+        type="font/woff"
+        crossOrigin="anonymous"
+      />
       <body className={inter.className}>
         <div className="">{children}</div>
         {/* <Footer /> */}

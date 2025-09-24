@@ -28,7 +28,7 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
       if (reportMargin?.data[0]) {
         const left = Number(reportMargin?.data[0]?.left ?? 0) * 25.4;
         const right = Number(reportMargin?.data[0]?.right ?? 0) * 25.4;
-        const width = 270 - Math.max(left + right - 23, 0);
+        const width = 260 - Math.max(left + right - 23, 0);
 
         const storedMargins = [
           Number(reportMargin?.data[0]?.top ?? 0) * 96,
@@ -121,8 +121,12 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
               <div className="my-5">
                 <h3>Seal Information</h3>
                 <div
-                  style={{ width: `${width}mm`, fontFamily: "!monospace" }}
-                  className="!font-mono"
+                  style={{
+                    width: `${width}mm`,
+                    fontFamily: "!monospace",
+                    fontSize: "medium",
+                  }}
+                  className="!font-mono font-medium"
                 >
                   <Tiptap data={data.seal} setData={setSeal} />
                 </div>

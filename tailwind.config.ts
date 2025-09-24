@@ -15,6 +15,7 @@ const config: Config = {
       },
       fontFamily: {
         customFont: ["custom", "Roboto"],
+        arial: ["var(--font-arial)"],
       },
     },
   },
