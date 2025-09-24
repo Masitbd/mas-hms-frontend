@@ -77,10 +77,11 @@ const ReportViewerParameter = React.forwardRef(
                     borderRadius: "8px",
                     padding: "5px 10px",
                     fontSize: "1rem", // text-xl
-                    fontFamily: "serif",
+
                     fontWeight: "bold",
                     marginBottom: "5px",
                   }}
+                  className="font-arial"
                 >
                   {params.reportGroup.label}
                 </div>
@@ -92,9 +93,10 @@ const ReportViewerParameter = React.forwardRef(
                     borderRadius: "8px",
                     textAlign: "center",
                     margin: "10px 0",
-                    fontFamily: "monospace",
+
                     padding: ".5rem 2.5rem",
                   }}
+                  className="font-arial"
                 >
                   {params.testResult.analyzerMachine}
                 </div>
@@ -110,6 +112,7 @@ const ReportViewerParameter = React.forwardRef(
                     gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
                     backgroundColor: "#e7e7e7",
                   }}
+                  className="font-arial"
                 >
                   {fieldNames?.map((field) => {
                     if (field === "defaultValue") {
@@ -123,6 +126,7 @@ const ReportViewerParameter = React.forwardRef(
                           border: ".001px solid black",
                           fontSize: ".950rem",
                         }}
+                        className="font-arial"
                       >
                         <span style={{ fontWeight: "bold" }}>
                           {camelToFlat(field)}{" "}
@@ -146,13 +150,14 @@ const ReportViewerParameter = React.forwardRef(
                       <th
                         style={{
                           textTransform: "uppercase",
-                          fontFamily: "serif",
+
                           fontWeight: "bold",
-                          fontSize: ".800rem",
+                          fontSize: ".850rem",
                           textAlign: "left",
                           border: ".001px dotted black",
                           padding: "2px",
                         }}
+                        className="font-arial"
                       >
                         {heading}:
                       </th>
@@ -166,6 +171,7 @@ const ReportViewerParameter = React.forwardRef(
                       gridTemplateColumns: `repeat(${fieldsLength}, 1fr)`,
                       fontSize: "medium",
                     }}
+                    className="font-arial"
                   >
                     {resultFields.map((resultField: IResultField) => {
                       if (resultField.investigation === heading) {
@@ -184,12 +190,12 @@ const ReportViewerParameter = React.forwardRef(
                                     <div
                                       style={{
                                         gridColumn: "span 2",
-                                        fontFamily: "serif",
+
                                         whiteSpace: "pre-wrap",
                                         overflowWrap: "break-word",
                                         overflow: "auto",
                                         padding: "1px",
-                                        fontSize: ".800rem",
+                                        fontSize: ".850rem",
                                       }}
                                       dangerouslySetInnerHTML={{
                                         __html: resultField?.result,
@@ -202,18 +208,18 @@ const ReportViewerParameter = React.forwardRef(
                                   style={{
                                     borderBottom: ".1rem dotted gray ",
                                     padding: "2px 4px",
-                                    fontSize: ".800rem",
+                                    fontSize: ".850rem",
                                   }}
                                 >
                                   <div key={fieldName}>
                                     <span
                                       style={{
-                                        fontFamily: "serif",
                                         fontWeight:
                                           fieldName === "result"
                                             ? "900"
                                             : "normal",
                                       }}
+                                      className="font-arial"
                                     >
                                       {resultField[fieldName]
                                         ? resultField[fieldName] + "   "
@@ -221,9 +227,9 @@ const ReportViewerParameter = React.forwardRef(
                                     </span>
                                     <span
                                       style={{
-                                        fontSize: ".800rem",
-                                        fontFamily: "monospace",
+                                        fontSize: ".850rem",
                                       }}
+                                      className="font-arial"
                                     >
                                       {fieldName === "result"
                                         ? resultField?.unit
@@ -251,9 +257,10 @@ const ReportViewerParameter = React.forwardRef(
                   padding: "10px",
                   margin: "20px 0",
                   borderRadius: "8px",
-                  fontFamily: "monospace",
+
                   pageBreakInside: "avoid",
                 }}
+                className="font-arial"
               >
                 <td
                   colSpan={Number(fieldsLength ?? 0)}
@@ -289,7 +296,7 @@ const ReportViewerParameter = React.forwardRef(
               // position: "fixed",
               bottom: 0,
               width: "100%",
-              fontSize: "small",
+              fontSize: "medium",
             }}
             id="seals"
           >
