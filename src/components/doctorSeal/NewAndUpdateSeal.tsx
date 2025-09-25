@@ -1,4 +1,5 @@
 import { ENUM_MODE } from "@/enum/Mode";
+import "../generateReport/TextEditor.css";
 import {
   usePatchSealMutation,
   usePostSealMutation,
@@ -17,7 +18,7 @@ import { useGetReportMarginQuery } from "@/redux/api/reportMargin/reportMargin.a
 
 const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
   const [margins, setMargins] = useState([0, 0, 0, 0]);
-  const [width, setWidth] = useState(270);
+  const [width, setWidth] = useState(210);
   const {
     data: reportMargin,
     isLoading: reportMarginLoading,
@@ -28,7 +29,7 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
       if (reportMargin?.data[0]) {
         const left = Number(reportMargin?.data[0]?.left ?? 0) * 25.4;
         const right = Number(reportMargin?.data[0]?.right ?? 0) * 25.4;
-        const width = 260 - Math.max(left + right - 23, 0);
+        const width = 210 - Math.max(left + right - 23, 0);
 
         const storedMargins = [
           Number(reportMargin?.data[0]?.top ?? 0) * 96,
@@ -124,9 +125,12 @@ const NewAndUpdateSeal = (props: IPropsForNewAndUpdate<IDoctorSeal>) => {
                   style={{
                     width: `${width}mm`,
                     fontFamily: "!monospace",
-                    fontSize: "medium",
+                    fontSize: "12px",
+                    lineHeight: "5px",
+                    transform: "scale(1.5)",
+                    transformOrigin: "top left",
                   }}
-                  className="!font-mono font-medium"
+                  className="!font-mono font-medium trans"
                 >
                   <Tiptap data={data.seal} setData={setSeal} />
                 </div>

@@ -3,6 +3,7 @@ import {
   useGetSealQuery,
   useLazyGetSealQuery,
 } from "@/redux/api/doctorSeal/doctorSealSlice";
+import "./TextEditor.css";
 import { useEffect, useState } from "react";
 import { Accordion, Button, SelectPicker } from "rsuite";
 import { IComment, IDoctorSeal } from "../comment/typesAdInitialData";
@@ -27,7 +28,7 @@ const Comment = (props: {
 
   // For doctors seal
   const [margins, setMargins] = useState([0, 0, 0, 0]);
-  const [width, setWidth] = useState(270);
+  const [width, setWidth] = useState(210);
   const {
     data: reportMargin,
     isLoading: reportMarginLoading,
@@ -38,7 +39,7 @@ const Comment = (props: {
       if (reportMargin?.data[0]) {
         const left = Number(reportMargin?.data[0]?.left ?? 0) * 25.4;
         const right = Number(reportMargin?.data[0]?.right ?? 0) * 25.4;
-        const width = 260 - Math.max(left + right - 23, 0);
+        const width = 210 - Math.max(left + right - 23, 0);
 
         const storedMargins = [
           Number(reportMargin?.data[0]?.top ?? 0) * 96,
@@ -145,7 +146,11 @@ const Comment = (props: {
         <Accordion.Panel eventKey={2}>
           <div className="w-full border border-stone-200 rounded-md p-10">
             <div
-              style={{ width: `${width}mm`, fontSize: "medium" }}
+              style={{
+                width: `${width}mm`,
+                fontSize: "12px",
+                lineHeight: "5px",
+              }}
               className="!font-mono"
             >
               <Tiptap data={seal} setData={setSeal} />

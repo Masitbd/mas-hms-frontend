@@ -38,6 +38,8 @@ const ReportViewerParameter = React.forwardRef(
       fieldsLength = "1";
     }
 
+    console.log(resultFields);
+
     return (
       <>
         <table
@@ -294,9 +296,10 @@ const ReportViewerParameter = React.forwardRef(
               // breakBefore: "always",
               // maxHeight: "200px",
               // position: "fixed",
+
               bottom: 0,
               width: "100%",
-              fontSize: "medium",
+              fontSize: "small",
             }}
             id="seals"
           >
@@ -306,10 +309,13 @@ const ReportViewerParameter = React.forwardRef(
                 // overflowWrap: "break-word",
                 // overflow: "auto",
                 fontFamily: "monospace",
+                fontSize: "12px",
+                lineHeight: "5px",
               }}
               dangerouslySetInnerHTML={{
                 __html: params?.testResult?.seal,
               }}
+              className="tiptap ProseMirror"
             />
           </div>
         ) : null}

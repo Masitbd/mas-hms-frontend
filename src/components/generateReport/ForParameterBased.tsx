@@ -88,6 +88,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
             onCreate={(value) => {
               setDefaultValue([...defaultValue, value]);
             }}
+            onClean={() => resultSetter(rowData._id, result, "", setResult)}
           />
         </>
       );

@@ -24,6 +24,16 @@ const group = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["group"],
     }),
+    changeHeaderVisibility: build.mutation({
+      query: ({ data, id }) => ({
+        url: `/reportTypeGroup/change-header-visibility/${id}`,
+        method: "PATCH",
+        body: data,
+        data: data,
+        contentType: "application/json",
+      }),
+      invalidatesTags: ["group"],
+    }),
 
     getGroup: build.query({
       query: (data: { department?: string; reportGroup?: string }) => ({
@@ -50,4 +60,5 @@ export const {
   usePostGroupMutation,
   usePatchGroupMutation,
   useLazyGetGroupQuery,
+  useChangeHeaderVisibilityMutation,
 } = group;

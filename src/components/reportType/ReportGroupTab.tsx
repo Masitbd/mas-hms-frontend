@@ -48,6 +48,7 @@ import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
 import { Textarea } from "../companyInfo/TextArea";
 import Swal from "sweetalert2";
+import VisibilitySelectPicker from "./VisibilitySelectPicker";
 type searchOption = {
   reportGroup: string;
   department: string;
@@ -305,7 +306,10 @@ const ReportGroupTab = () => {
         >
           {groupData?.data.length > 0
             ? groupData?.data.map(
-                (data: Partial<IReportGroupFormData>, index: number) => (
+                (
+                  data: Partial<IReportGroupFormData & { isHidden: boolean }>,
+                  index: number
+                ) => (
                   <Tabs.Tab eventKey={data?._id} title={data.group} key={index}>
                     <>
                       <div className="border border-stone-200 py-5 px-3 mr-5 rounded-md relative">
@@ -334,7 +338,7 @@ const ReportGroupTab = () => {
                                 />
                               </AuthCheckerForComponent>
                             </div>
-                            <div className="grid grid-cols-3 gap-5">
+                            <div className="grid grid-cols-4 gap-5">
                               <div className="flex flex-col">
                                 <div className="font-bold">Group</div>
                                 <div>{data?.group}</div>
@@ -350,6 +354,17 @@ const ReportGroupTab = () => {
                               <div className="flex flex-col capitalize">
                                 <div className="font-bold">Report Type</div>
                                 <div>{data?.resultType}</div>
+                              </div>
+                              <div className="flex flex-col capitalize">
+                                <div className="font-bold">
+                                  Header Visibility
+                                </div>
+                                <div>
+                                  <VisibilitySelectPicker
+                                    id={data?._id as string}
+                                    isHidden={data?.isHidden ?? false}
+                                  />
+                                </div>
                               </div>
                             </div>
                           </>
