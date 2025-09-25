@@ -1,0 +1,54 @@
+import { Extension } from "@tiptap/core";
+
+declare module "@tiptap/core" {
+  interface Commands<ReturnType> {
+    fontSize: {
+      /** Set font size like '28px', '1.25rem', '14pt' */
+      setFontSize: (fontSize: string | number) => ReturnType;
+      /** Remove font-size from current selection */
+      unsetFontSize: () => ReturnType;
+    };
+  }
+}
+
+const FontSize = Extension.create({
+  name: "fontSize",
+
+  addGlobalAttributes() {
+    return [
+      {
+        // we store the size on the TextStyle mark
+        types: ["textStyle"],
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: (element) => element.style.fontSize || null,
+            renderHTML: (attributes) => {
+              if (!attributes.fontSize) return {};
+              return { style: `font-size: ${attributes.fontSize}` };
+            },
+          },
+        },
+      },
+    ];
+  },
+
+  addCommands() {
+    return {
+      setFontSize:
+        (fontSize) =>
+        ({ chain }) =>
+          chain().setMark("textStyle", { fontSize }).run(),
+
+      unsetFontSize:
+        () =>
+        ({ chain }) =>
+          chain()
+            .setMark("textStyle", { fontSize: null })
+            .removeEmptyTextStyle()
+            .run(),
+    };
+  },
+});
+
+export default FontSize;

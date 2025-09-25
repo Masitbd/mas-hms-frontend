@@ -306,7 +306,7 @@ const ReportViewerMicro = React.forwardRef(
                 style={{
                   bottom: 0,
                   width: "100%",
-                  fontSize: "medium",
+                  fontSize: "small",
                 }}
                 id="seals"
               >

@@ -8,6 +8,7 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
 import MenuBar from "../testReport/TestView/MenuBar";
+import FontSize from "./FontSize";
 
 const Tiptap = (props: { data: any; setData: any }) => {
   const [data, setData] = useState(props.data);
@@ -32,6 +33,7 @@ const Tiptap = (props: { data: any; setData: any }) => {
     TextAlign.configure({
       types: ["heading", "paragraph"],
     }),
+    FontSize,
   ];
   const editor = useEditor({
     extensions: extensions,
@@ -58,7 +60,7 @@ const Tiptap = (props: { data: any; setData: any }) => {
   }, [data, editor, props.data]);
 
   return (
-    <div className="border-stone-200 border-4 p-2">
+    <div className="border-stone-200 border-4 p-8">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>

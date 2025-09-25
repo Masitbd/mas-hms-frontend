@@ -4,7 +4,7 @@ import "./TestViewD.css";
 interface MenuBarProps {
   editor: Editor | null;
 }
-const MenuBar = ({ editor }: MenuBarProps) => {
+const MenuBar = ({ editor }: any) => {
   // const { editor } = useCurrentEditor();
   // const dispatch = useAppDispatch();
 
@@ -12,13 +12,33 @@ const MenuBar = ({ editor }: MenuBarProps) => {
     return null;
   }
 
-  // editor.on("update", ({ editor }) => {
-  //   console.log(editor)
-  //   dispatch(setDocxContent(editor.getHTML()));
-  // });
+  const STEP = 1;
+  const MIN_PX = 8;
+  const MAX_PX = 96;
+  const DEFAULT_PX = 10;
 
+  const getActiveFontSizePx = () => {
+    const v = editor.getAttributes("textStyle")?.fontSize as string | undefined;
+    if (!v || v === "mixed") return DEFAULT_PX;
+    const n = parseFloat(v.replace(/[^\d.]/g, ""));
+    return Number.isFinite(n) ? Math.round(n) : DEFAULT_PX;
+  };
+
+  const setPx = (px: number) =>
+    editor.chain().focus().setFontSize(`${px}px`).run();
+
+  const incFont = () => {
+    const next = Math.min(getActiveFontSizePx() + STEP, MAX_PX);
+    setPx(next);
+  };
+
+  const decFont = () => {
+    const next = Math.max(getActiveFontSizePx() - STEP, MIN_PX);
+    setPx(next);
+  };
+  console.log(editor.getAttributes("textStyle").fontSize);
   return (
-    <div className="flex gap-2 mb-4 ml-6">
+    <div className="grid grid-cols-6 my-8 gap-3">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={!editor.can().chain().focus().toggleBold().run()}
@@ -113,7 +133,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           <path d="M19 4H9.5a4.5 4.5 0 0 0 0 9H13" />
         </svg>
       </button>
-      <button
+      {/* <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={`flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1${
           editor.isActive("heading", { level: 1 }) ? "is-active" : ""
@@ -262,7 +282,7 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           <path d="M4 10h2" />
           <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
         </svg>
-      </button>
+      </button> */}
 
       <button
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
@@ -425,7 +445,10 @@ const MenuBar = ({ editor }: MenuBarProps) => {
         </svg>
       </button>
 
-      <button onClick={() => editor.chain().focus().unsetTextAlign().run()}>
+      <button
+        onClick={() => editor.chain().focus().unsetTextAlign().run()}
+        className="flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -442,6 +465,89 @@ const MenuBar = ({ editor }: MenuBarProps) => {
           <path d="M22 21H7" />
           <path d="m5 11 9 9" />
         </svg>
+      </button>
+
+      <button
+        onClick={decFont}
+        className="flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1"
+        title="Decrease font size"
+        aria-label="Decrease font size"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {/* A glyph */}
+          <path d="M4 18l4-12 4 12" />
+          <path d="M5.5 13h4.9" />
+          {/* minus sign */}
+          <line x1="15" y1="12" x2="21" y2="12" />
+        </svg>
+      </button>
+
+      <button
+        className="flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1"
+        disabled
+      >
+        {editor?.getAttributes("textStyle")?.fontSize ?? "10px"}
+      </button>
+      {/* Increase font size */}
+      <button
+        onClick={incFont}
+        className="flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1"
+        title="Increase font size"
+        aria-label="Increase font size"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          {/* A glyph */}
+          <path d="M4 18l4-12 4 12" />
+          <path d="M5.5 13h4.9" />
+          {/* plus sign */}
+          <line x1="18" y1="9" x2="18" y2="15" />
+          <line x1="15" y1="12" x2="21" y2="12" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus()?.unsetFontSize().run()}
+        className="flex gap-2 border-gray-500 border items-center rounded-lg px-2 py-1 hover:bg-gray-100 active:scale-[.98] transition"
+        title="Reset"
+        aria-label="Reset"
+        data-test-id="reset"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-rotate-ccw"
+        >
+          <polyline points="1 4 1 10 7 10" />
+          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+        </svg>
+        <span className="text-sm font-medium">Reset</span>
       </button>
     </div>
   );
