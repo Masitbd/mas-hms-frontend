@@ -48,6 +48,7 @@ export const useCleanedTests = (params: {
     "updatedAt",
     "__v",
     "testId",
+    "isHidden",
   ];
   let modifiedTest;
   let specimen: string[] = [];
