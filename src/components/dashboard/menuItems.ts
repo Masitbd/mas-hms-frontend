@@ -176,6 +176,15 @@ export const financialReportItem = [
     ],
   },
   {
+    key: "24.1",
+    title: "Refund Statement",
+    href: "/refund-statement",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
     key: "25",
     title: "Tests",
     href: "/financialReport/tests",
