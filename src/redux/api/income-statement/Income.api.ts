@@ -57,6 +57,13 @@ const incomeApi = baseApi.injectEndpoints({
         params: args,
       }),
     }),
+    getOutdoorRefundStatement: build.query({
+      query: (args) => ({
+        url: "/income-statemnet/refund-statement",
+        method: "GET",
+        params: args,
+      }),
+    }),
 
     // ! Indoor statement
 
@@ -118,6 +125,7 @@ export const {
   useGetEmployeeIncomeStatementSummeryQuery,
   useGetDueDetailsQuery,
   useGetOutdoorDueStatementQuery,
+  useGetOutdoorRefundStatementQuery,
   useGetLastTEDaysIncomeQuery,
   useGetIndoorIncomeLedgerQuery,
   useGetIndoorDueLedgerQuery,
