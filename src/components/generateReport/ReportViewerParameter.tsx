@@ -33,12 +33,24 @@ const ReportViewerParameter = React.forwardRef(
     ref: LegacyRef<HTMLDivElement>
   ) => {
     const { order, testResult, headings, fieldNames, resultFields } = params;
+
+    const headerVisibilityStatus = (heading: string, testId: string) => {
+      const test = order?.tests?.find(
+        (t) =>
+          typeof t?.test == "object" &&
+          t.test?._id?.toString() == testId?.toString()
+      ) as unknown as ITestsFromOrder;
+
+      const testAccordingtoTheHeaading = test?.test?.resultFields?.find(
+        (tr) => tr?.investigation == heading
+      );
+
+      return testAccordingtoTheHeaading?.isHidden;
+    };
     let fieldsLength = fieldNames.length.toString();
     if (params.reportGroup.testResultType == "descriptive") {
       fieldsLength = "1";
     }
-
-    console.log(resultFields);
 
     return (
       <>
@@ -147,7 +159,7 @@ const ReportViewerParameter = React.forwardRef(
               if (!doesHaveResult) return null;
               return (
                 <>
-                  {params?.toggle ? (
+                  {!headerVisibilityStatus(heading, doesHaveResult?.testId) ? (
                     <tr>
                       <th
                         style={{

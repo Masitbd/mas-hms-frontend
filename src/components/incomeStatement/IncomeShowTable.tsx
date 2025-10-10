@@ -23,6 +23,8 @@ type TRecord = {
   totalAmount: number;
   paid: number;
   vat: number;
+  due: number;
+  dueAmount: number;
 };
 
 type TGroup = {
@@ -133,17 +135,13 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                     record.totalDis,
                     record.totalPrice - record.totalDis,
                     record.vat,
-                    record.totalAmount -
-                      (record?.totalDis ?? 0) +
-                      (record.vat ?? 0),
-                    record.paid,
-                    Math.max(
-                      0,
-                      record.totalAmount -
-                        record.paid -
+                    record?.totalPrice > 0
+                      ? record.totalPrice -
                         (record?.totalDis ?? 0) +
                         (record.vat ?? 0)
-                    ),
+                      : 0,
+                    record.paid,
+                    Math.max(0, record.dueAmount),
                   ]),
                 // Summary Row
                 [
@@ -171,7 +169,6 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   ),
                   "",
                   group.records.reduce(
-
                     (acc, record) =>
                       acc +
                       record.totalAmount -
@@ -265,13 +262,12 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
           // Calculate totals for this group
           const totals = group.records.reduce(
             (acc, record) => {
-              acc.totalAmount += record.totalAmount + record?.vat;
               acc.paid += record.paid;
               acc.totalDiscount += record.totalDis;
-
               acc.totalPrice += record.totalPrice;
 
               acc.vat += record.vat;
+              acc.dueAmount += record?.dueAmount;
 
               return acc;
             },
@@ -279,10 +275,9 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
               totalAmount: 0,
               paid: 0,
               totalDiscount: 0,
-
+              dueAmount: 0,
               totalPrice: 0,
               vat: 0,
-
             }
           );
           console.log(totals);
@@ -315,9 +310,11 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                       <div>{record.totalDis}</div>
                       <div>{record.totalPrice - record.totalDis}</div>
                       <div>{record.vat}</div>
-                      <div>{record.totalAmount + record.vat}</div>
+                      <div>
+                        {record.totalPrice + record.vat - record.totalDis}
+                      </div>
                       <div>{record.paid}</div>
-                      <div>{record.totalAmount + record.vat - record.paid}</div>
+                      <div>{record.dueAmount}</div>
                     </div>
                   ))}
 
@@ -332,11 +329,11 @@ const IncomeShowTable: React.FC<IncomeShowTableProps> = ({
                   <div>{totals.totalPrice - totals.totalDiscount}</div>
                   <div></div>
 
-                  <div>{totals.totalAmount}</div>
-                  <div></div>
-                  <div>{totals.totalAmount + totals.vat}</div>
+                  <div>
+                    {totals.totalPrice + totals.vat - totals.totalDiscount}
+                  </div>
                   <div>{totals.paid}</div>
-                  <div>{totals.totalAmount + totals.vat - totals.paid}</div>
+                  <div>{totals.dueAmount}</div>
                 </div>
               </div>
             </div>
