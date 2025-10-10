@@ -68,9 +68,9 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
   const generatePDF = () => {
     // Prepare the data
     const documentDefinition: any = {
-      pageOrientation: "landscape",
+      pageOrientation: "portrait",
       defaultStyle: {
-        fontSize: 12,
+        fontSize: 10,
       },
       pageMargins: infoHeader ? [20, 20, 20, 20] : pageMargin,
       content: [
