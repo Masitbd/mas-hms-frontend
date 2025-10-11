@@ -447,8 +447,71 @@ export const printInvoice = async ({
         "https://res.cloudinary.com/dfnp7ac6l/image/upload/v1751428068/357234fab793f067aa9445a45bf154e0_jvnrj2.png",
     },
   };
+  function printPdfBlobSameTab(pdfBlob: Blob) {
+    const blobUrl = URL.createObjectURL(pdfBlob);
 
-  pdfMake.createPdf(dd as unknown as TDocumentDefinitions).print();
+    const iframe = document.createElement("iframe");
+    // Keep it invisible but present in the DOM
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    iframe.src = blobUrl;
+
+    const cleanUp = () => {
+      URL.revokeObjectURL(blobUrl);
+      iframe.remove();
+    };
+
+    const triggerPrint = () => {
+      const w = iframe.contentWindow as Window | null;
+      if (!w) {
+        cleanUp();
+        return;
+      }
+
+      const after = () => setTimeout(cleanUp, 300);
+
+      // Use separate guards (not `else if`) so TS doesn't narrow to `never`
+      if ("onafterprint" in w) {
+        (w as Window & { onafterprint: (() => void) | null }).onafterprint =
+          after;
+      }
+
+      if (typeof w.matchMedia === "function") {
+        const mql: MediaQueryList = w.matchMedia("print");
+        const onChange = (e: MediaQueryListEvent) => {
+          if (!e.matches) after();
+        };
+
+        if ("addEventListener" in mql) {
+          mql.addEventListener("change", onChange);
+        } else if ("addListener" in mql) {
+          // Older API (cast for TS)
+          (
+            mql as unknown as {
+              addListener: (cb: (e: MediaQueryListEvent) => void) => void;
+            }
+          ).addListener(onChange);
+        }
+      }
+
+      // Small delay helps some PDF viewers fully initialize
+      setTimeout(() => {
+        w.focus();
+        w.print();
+      }, 100);
+    };
+
+    iframe.addEventListener("load", () => setTimeout(triggerPrint, 200));
+    document.body.appendChild(iframe);
+  }
+
+  pdfMake.createPdf(dd as unknown as TDocumentDefinitions).getBlob((result) => {
+    printPdfBlobSameTab(result);
+  });
 };
 
 // journal Entry post helper
