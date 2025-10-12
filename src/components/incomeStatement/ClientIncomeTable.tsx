@@ -241,7 +241,7 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
       </div>
 
       <div className="w-full">
-        <div className="grid grid-cols-10 bg-gray-100 font-semibold text-center p-2">
+        <div className="grid grid-cols-9 bg-gray-100 font-semibold p-2">
           <div>Date</div>
           <div>Bill No</div>
           <div>Bill Amount</div>
@@ -304,7 +304,7 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
                 </div>
               ))}
 
-              <div className="grid grid-cols-9 border border-black bg-gray-200 font-semibold ">
+              <div className="grid grid-cols-9 gap-2 border border-black bg-gray-200 font-semibold">
                 <div>Total</div>
                 <div></div>
                 <div>{totals?.totalPrice}</div>
