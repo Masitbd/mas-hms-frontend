@@ -266,7 +266,7 @@ const Order = () => {
   };
   useEffect(() => {
     if (isSuccess) {
-      swal("Success", "Order Posted Successfully", "success");
+      swal("Success", "Order Posted Successfully", "success", { timer: 1000 });
       setModalOpen(!modalOpen);
       setData(initialData);
       setMode(ENUM_MODE.NEW);
