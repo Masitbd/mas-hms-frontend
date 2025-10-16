@@ -112,6 +112,7 @@ const EmployeeLedgerPage = () => {
               data={transformedData}
               startDate={formValue.startDate}
               endDate={formValue.endDate}
+              rawData={employeeLdgers}
             />
           )}
         </div>

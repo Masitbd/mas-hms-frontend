@@ -8,6 +8,7 @@ import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGener
 import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
+import { computeGrandTotalForEmployeeLedger } from "./incomeStatementUtils";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -30,12 +31,14 @@ interface IncomeShowTableProps {
   data: TGroup[];
   startDate: Date | null;
   endDate: Date | null;
+  rawData: any;
 }
 
 const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
   data,
   startDate,
   endDate,
+  rawData,
 }) => {
   //
 
@@ -183,7 +186,9 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
                   margin: [0, 10, 0, 10],
                 },
                 {
-                  text: calculateTotal() + " TK",
+                  text:
+                    computeGrandTotalForEmployeeLedger(rawData?.data)
+                      .grandTotal + " TK",
                   style: {
                     fontSize: 15,
                     alignment: "right",
@@ -202,6 +207,8 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
     // Open the print dialog
     pdfMake.createPdf(documentDefinition).print();
   };
+
+  console.log(rawData);
 
   return (
     <div className="p-5">
@@ -292,11 +299,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
         <div className="col-span-7 text-right font-bold">Grand Total</div>
         <div className="text-center col-span-3 font-bold">
           {(function () {
-            const totalData = data[data?.length - 1];
-            const total =
-              Number(totalData?.dewBills[0]?.amount ?? 0) +
-              Number(totalData?.newBills[0]?.amount ?? 0);
-            return <>{total}</>;
+            return computeGrandTotalForEmployeeLedger(rawData?.data).grandTotal;
           })()}
         </div>
       </div>
