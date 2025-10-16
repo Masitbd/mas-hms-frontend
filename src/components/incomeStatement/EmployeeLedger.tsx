@@ -66,6 +66,13 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
 
   // pdf
   const generatePDF = () => {
+    const calculateTotal = () => {
+      const totalData = data[data?.length - 1];
+      const total =
+        Number(totalData?.dewBills[0]?.amount ?? 0) +
+        Number(totalData?.newBills[0]?.amount ?? 0);
+      return total ?? 0;
+    };
     // Prepare the data
     const documentDefinition: any = {
       pageOrientation: "portrait",
@@ -79,9 +86,9 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
           text: `Employee Income Ledger: Between ${
             startDate ? moment(startDate).format("YYYY-MM-DD") : "N/A"
           } to ${endDate ? moment(endDate).format("YYYY-MM-DD") : "N/A"}`,
-          style: "subheader",
+          // style: "subheader",
           alignment: "center",
-          margin: [0, 0, 0, 5],
+          margin: [0, 0, 0, 0],
         },
 
         // Static Table Header
@@ -91,7 +98,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
           {
             text: group?.user || "No Name",
             style: "groupHeader",
-            margin: [0, 20, 0, 5],
+            margin: [0, 5, 0, 5],
           },
           {
             table: {
@@ -161,6 +168,34 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
             },
           },
         ]),
+        {
+          table: {
+            widths: ["*", "*"], // Single column table
+            body: [
+              [
+                {
+                  text: "Grand Total",
+                  style: {
+                    fontSize: 15,
+                    alignment: "right",
+                    bold: true,
+                  },
+                  margin: [0, 10, 0, 10],
+                },
+                {
+                  text: calculateTotal() + " TK",
+                  style: {
+                    fontSize: 15,
+                    alignment: "right",
+                    bold: true,
+                  },
+                  margin: [0, 10, 0, 10],
+                },
+              ],
+            ],
+          },
+          layout: "noBorders",
+        },
       ],
     };
 
@@ -251,6 +286,19 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
             ))}
           </div>
         ))}
+      </div>
+
+      <div className="grid grid-cols-10">
+        <div className="col-span-7 text-right font-bold">Grand Total</div>
+        <div className="text-center col-span-3 font-bold">
+          {(function () {
+            const totalData = data[data?.length - 1];
+            const total =
+              Number(totalData?.dewBills[0]?.amount ?? 0) +
+              Number(totalData?.newBills[0]?.amount ?? 0);
+            return <>{total}</>;
+          })()}
+        </div>
       </div>
 
       <button
