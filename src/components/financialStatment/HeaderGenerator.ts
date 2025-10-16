@@ -16,46 +16,69 @@ async function imageToBase64(url: string) {
 }
 
 export const FinancialReportHeaderGenerator = async (params: ICompanyInfo) => {
-  const header = [];
+  const mainTest = [];
 
   if (params) {
     let imageData = {};
-    let otherInfo = [];
-    if (params?.photoUrl) {
-      const logoUrl = await imageToBase64(params?.photoUrl)
-        .then((data) => data)
-        .catch((err) => console.log(err));
+    const photoGenerator = async () => {
+      if (params?.photoUrl) {
+        const logoUrl = await imageToBase64(params?.photoUrl)
+          .then((data) => data)
+          .catch((err) => console.log(err));
 
-      if (logoUrl) {
-        imageData = {
-          image: logoUrl,
-          fit: [50, 50],
-          alignment: "center",
-        };
-        header.push(imageData);
+        if (logoUrl) {
+          imageData = {
+            image: logoUrl,
+            fit: [50, 50],
+            alignment: "center",
+          };
+          return imageData;
+        } else {
+          return { text: "logo", color: "white", fontsize: 1 };
+        }
       }
-    }
+    };
+
+    const bodySection = [];
+
     if (params?.name)
-      header.push({
+      bodySection.push({
         text: params?.name,
         style: { fontSize: 16, bold: true },
         alignment: "center",
       });
 
     if (params?.address) {
-      header.push({
+      bodySection.push({
         text: params?.address,
         alignment: "center",
       });
     }
 
     if (params?.phone)
-      header.push({
+      bodySection.push({
         text: "HelpLine: " + params?.phone,
         alignment: "center",
-        margin: [0, 0, 0, 20],
+        margin: [0, 0, 0, 5],
       });
+
+    const test = {
+      table: {
+        widths: params?.photoUrl ? ["15%", "80%"] : ["2%", "98%"],
+        body: [
+          [
+            params?.photoUrl
+              ? await photoGenerator()
+              : { text: "logo", color: "black", fontsize: 15 },
+            bodySection,
+          ],
+        ],
+      },
+      layout: "noBorders",
+    };
+
+    mainTest.push(test);
   }
 
-  return header;
+  return mainTest as { text?: string; image?: string }[];
 };

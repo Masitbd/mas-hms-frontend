@@ -62,7 +62,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
   useEffect(() => {
     const generateHeader = async () => {
       const header = await FinancialReportHeaderGenerator(comapnyInfo?.data);
-      setInfoHeader(header); // Set the state with the generated header
+      setInfoHeader(header as { text?: string; image?: string }[]); // Set the state with the generated header
     };
 
     if (comapnyInfo?.data) {
@@ -86,7 +86,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
             )} to ${formatDateString(endDate)}`,
             style: "subheader",
             alignment: "center",
-            margin: [0, 0, 0, 20],
+            margin: [0, 0, 0, 5],
           }
         : null;
 
