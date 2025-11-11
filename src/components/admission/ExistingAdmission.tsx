@@ -16,6 +16,7 @@ import {
   useGetIndoorPateintHospitalBillDetailsQuery,
   useGetIndoorPateintHospitalBillsummeryQuery,
 } from "@/redux/api/income-statement/Income.api";
+import { useSearchParams } from "next/navigation";
 import { Button } from "rsuite";
 import Swal from "sweetalert2";
 
@@ -23,8 +24,8 @@ export type TParams = {
   params: { id: string };
 };
 
-const AdmissionDetilsPage = ({ params }: TParams) => {
-  const { id } = params;
+const AdmissionDetilsPage = () => {
+  const id = useSearchParams().get("id");
 
   const { data: employees } = useGetEmployeeQuery(undefined);
 

@@ -1,10 +1,13 @@
 "use client";
 import Loading from "@/app/loading";
 import ForMicrobiology from "@/components/generateReport/ForMicrobiology";
+import ForMicrobiologyPrint from "@/components/generateReport/ForMicrobiologyPrint";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
+import ForParameterBasedPrint from "@/components/generateReport/ForParameterBasedPrint";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
 import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
+
 import { ENUM_REPORT_TYPE } from "@/enum/ENUMReportType";
 import { ENUM_TEST_STATUS } from "@/enum/testStatusEnum";
 import AuthCheckerForComponent from "@/lib/AuthCkeckerForComponent";
@@ -15,9 +18,16 @@ import {
 import { useGetSingleReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { useGetReportMarginQuery } from "@/redux/api/reportMargin/reportMargin.api";
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
-import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
 
-const GenerateReport = (props: IPropsForGenerateReport) => {
+const GenerateReport = () => {
+  const oid = useSearchParams().get("oid") as string;
+  const reportGroup = useSearchParams().get("reportGroup") as string;
+  const mode = useSearchParams().get("mode") as string;
+  const test = useSearchParams().get("test") as string;
+  const reportType = useSearchParams().get("reportType") as string;
+
   const {
     data: marginData,
     isLoading: marginDataLoading,
@@ -27,56 +37,60 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
     data: orderData,
     isLoading: OrderDataLoading,
     refetch,
-  } = useGetSingleOrderQuery(props.params.oid, {
+  } = useGetSingleOrderQuery(oid as string, {
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
 
   const { data: reportGroupData, isLoading: reportGroupDataLoading } =
-    useGetSingleReportGroupQuery(props.searchParams.reportGroup);
+    useGetSingleReportGroupQuery(reportGroup as string);
 
   const [testresultType, setTestResultType] = useState("");
   const [testsAccordingResultType, setTestAccordignResultType] = useState([]);
+  const [margins, setMargins] = useState([0, 0, 0, 0]);
 
   let resultGeneratorComponent;
   switch (testresultType) {
     case "parameter":
       resultGeneratorComponent = (
-        <ForParameterBased
+        <ForParameterBasedPrint
           oid={orderData?.data[0]?.oid}
           tests={testsAccordingResultType}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={JSON.parse(JSON.stringify(orderData?.data[0]))}
-          mode={props.searchParams.mode}
+          mode={mode}
           refeatch={refetch}
-          testIds={props.searchParams.test?.split(",")}
+          testIds={test?.split(",")}
+          margins={margins}
         />
       );
       break;
 
     case "descriptive":
       resultGeneratorComponent = (
-        <ForParameterBased
+        <ForParameterBasedPrint
           oid={orderData?.data[0]?.oid}
           tests={testsAccordingResultType}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={JSON.parse(JSON.stringify(orderData?.data[0]))}
-          mode={props.searchParams.mode}
+          mode={mode}
           refeatch={refetch}
-          testIds={props.searchParams.test?.split(",")}
+          testIds={test?.split(",")}
+          margins={margins}
         />
       );
       break;
 
     case "bacterial":
       resultGeneratorComponent = (
-        <ForMicrobiology
-          mode={props.searchParams.mode}
+        <ForMicrobiologyPrint
+          mode={mode}
           oid={orderData?.data[0]?.oid}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={orderData?.data[0]}
-          test={props.searchParams?.test as string}
+          test={test as string}
           tests={testsAccordingResultType}
+          margins={margins}
         />
       );
       break;
@@ -88,11 +102,11 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
 
   useEffect(() => {
     if (orderData?.data?.length > 0 && reportGroupData?.data?._id) {
-      const testDataForParameter = props?.searchParams?.test?.split(",");
+      const testDataForParameter = test?.split(",");
 
       const filteredTest = orderData?.data[0]?.tests.filter(
         (test: { test: ITest; status: string }) => {
-          if (props?.searchParams?.reportType == ENUM_REPORT_TYPE.PARAMETER) {
+          if (reportType == ENUM_REPORT_TYPE.PARAMETER) {
             return (
               testDataForParameter?.includes(
                 test.test?._id?.toString() as string
@@ -103,7 +117,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           } else {
           }
           return (
-            test.test?._id == props?.searchParams?.test &&
+            test.test?._id == (test as unknown as string) &&
             test.status !== "tube" &&
             test.status !== ENUM_TEST_STATUS.REFUNDED
           );
@@ -111,6 +125,16 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
       );
       setTestAccordignResultType(filteredTest);
       setTestResultType(reportGroupData?.data?.testResultType);
+    }
+
+    if (marginData?.data?.length && marginData?.data[0]) {
+      const storedMargins = [
+        Number(marginData?.data[0]?.top ?? 0) * 96,
+        Number(marginData?.data[0]?.right ?? 0) * 96,
+        Number(marginData?.data[0]?.bottom ?? 0) * 96,
+        Number(marginData?.data[0]?.left ?? 0) * 96,
+      ];
+      setMargins(storedMargins);
     }
   }, [
     orderData,
@@ -141,4 +165,13 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
   }
 };
 
-export default GenerateReport;
+const MainPage = () => {
+  return (
+    <>
+      <Suspense fallback={<Loading></Loading>}>
+        <GenerateReport></GenerateReport>
+      </Suspense>
+    </>
+  );
+};
+export default MainPage;

@@ -1,7 +1,6 @@
 "use client";
 
 import { useGetDetailsAdmissionQuery } from "@/redux/api/admission.api";
-import { TParams } from "../../[id]/page";
 import { Button, SelectPicker, Table } from "rsuite";
 import Column from "rsuite/esm/Table/TableColumn";
 import { Cell, HeaderCell } from "rsuite-table";
@@ -9,10 +8,10 @@ import { useState, useEffect } from "react";
 import { discountOption } from "@/components/order/FInancialSection";
 import { useUpdateDisCountPaymentMutation } from "@/redux/api/payment.api";
 import Swal from "sweetalert2";
+import { useSearchParams } from "next/navigation";
 
-const AdmissionEditPage = ({ params }: TParams) => {
-  const { id } = params;
-
+const AdmissionEditPage = () => {
+  const id = useSearchParams().get("id");
   const { data: detailsAdmission, isLoading } = useGetDetailsAdmissionQuery(
     id,
     {

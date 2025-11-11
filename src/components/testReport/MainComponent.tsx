@@ -7,18 +7,21 @@ import {
   useGetSingleOrderQuery,
 } from "@/redux/api/order/orderSlice";
 import { NavLink } from "@/utils/Navlink";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef } from "react";
 import { Button, Divider } from "rsuite";
 
-const Page = ({ params }: { params: { oid: string } }) => {
+const MainComponent = () => {
+  const oid = useSearchParams().get("oid");
   const {
     data: orderData,
     isLoading: orderDataLoading,
     isError: orderDataError,
     isFetching,
     refetch,
-  } = useGetSingleOrderQuery(params.oid, { refetchOnMountOrArgChange: true });
+  } = useGetSingleOrderQuery(oid as string, {
+    refetchOnMountOrArgChange: true,
+  });
   useEffect(() => {
     refetch();
   }, []);
@@ -81,4 +84,4 @@ const Page = ({ params }: { params: { oid: string } }) => {
   );
 };
 
-export default Page;
+export default MainComponent;

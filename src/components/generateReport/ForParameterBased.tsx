@@ -323,7 +323,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
               <h2 className="text-center text-xl font-semibold">Reports</h2>
             </div>
             <div className="flex justify-end mr-9 mt-4">
-              <NavLink href={`/testReport/${order.oid}`}>
+              <NavLink href={`/testReport/old?oid=${order.oid}`}>
                 <Button
                   className="mb-5 col-span-4 mx-2"
                   appearance="primary"
@@ -473,7 +473,9 @@ const ForParameterBased = (props: IPropsForParameter) => {
                   appearance="primary"
                   color="red"
                   size="lg"
-                  onClick={() => router.push(`/testReport/${order.oid}`)}
+                  onClick={() =>
+                    router.push(`/testReport/old?oid=${order.oid}`)
+                  }
                 >
                   Cancel
                 </Button>

@@ -8,9 +8,9 @@ const testReportSlice = baseApi.injectEndpoints({
         method: "post",
         body: data,
         data: data,
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["testReport"]
+      invalidatesTags: ["testReport"],
     }),
     patchTestReport: build.mutation({
       query: ({ data, id }) => ({
@@ -18,36 +18,36 @@ const testReportSlice = baseApi.injectEndpoints({
         method: "patch",
         body: data,
         data: data,
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["testReport"]
+      invalidatesTags: ["testReport"],
     }),
     deleteTestReport: build.mutation({
       query: (id) => ({
         url: `/testReport/${id}`,
         method: "delete",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      invalidatesTags: ["testReport"]
+      invalidatesTags: ["testReport"],
     }),
     getSingleTestReport: build.query({
       query: (id) => ({
         url: `/testReport/${id}`,
         method: "get",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      providesTags: ["testReport"]
+      providesTags: ["testReport"],
     }),
     getTestReports: build.query({
       query: (data?: any) => ({
         url: `/testReport`,
         params: data,
         method: "get",
-        contentType: "application/json"
+        contentType: "application/json",
       }),
-      providesTags: ["testReport"]
-    })
-  })
+      providesTags: ["testReport"],
+    }),
+  }),
 });
 
 export const {
@@ -55,5 +55,5 @@ export const {
   usePatchTestReportMutation,
   useGetSingleTestReportQuery,
   useGetTestReportsQuery,
-  useDeleteTestReportMutation
+  useDeleteTestReportMutation,
 } = testReportSlice;

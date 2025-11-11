@@ -4,15 +4,17 @@ import Loading from "@/app/loading";
 import InvestigationInformation from "@/components/labelPrinting/InvestigationInformation";
 import PatientInformation from "@/components/labelPrinting/PatientInformation";
 import { useGetSingleOrderQuery } from "@/redux/api/order/orderSlice";
+import { useSearchParams } from "next/navigation";
 import React from "react";
 import { Table } from "rsuite";
 
-const TestsForLabel = ({ params }: { params: { oid: string } }) => {
+const TestsForLabel = () => {
+  const oid = useSearchParams().get("oid");
   const {
     data: orderData,
     isLoading: OrderDataLoading,
     isFetching: orderDataFetching,
-  } = useGetSingleOrderQuery(params.oid);
+  } = useGetSingleOrderQuery(oid as string);
 
   if (orderDataFetching || OrderDataLoading) {
     return <Loading />;

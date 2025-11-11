@@ -1,9 +1,7 @@
 "use client";
 import Loading from "@/app/loading";
 import ForMicrobiology from "@/components/generateReport/ForMicrobiology";
-import ForMicrobiologyPrint from "@/components/generateReport/ForMicrobiologyPrint";
 import ForParameterBased from "@/components/generateReport/ForParameterBased";
-import ForParameterBasedPrint from "@/components/generateReport/ForParameterBasedPrint";
 import { IPropsForGenerateReport } from "@/components/generateReport/initialDataAndTypes";
 import ForDescriptiveBased from "@/components/Test/TestForDescriptive";
 import { ENUM_USER_PEMISSION } from "@/constants/permissionList";
@@ -29,7 +27,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
     data: orderData,
     isLoading: OrderDataLoading,
     refetch,
-  } = useGetSingleOrderQuery(props.params.oid, {
+  } = useGetSingleOrderQuery(props.searchParams.oid, {
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
@@ -39,13 +37,12 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
 
   const [testresultType, setTestResultType] = useState("");
   const [testsAccordingResultType, setTestAccordignResultType] = useState([]);
-  const [margins, setMargins] = useState([0, 0, 0, 0]);
 
   let resultGeneratorComponent;
   switch (testresultType) {
     case "parameter":
       resultGeneratorComponent = (
-        <ForParameterBasedPrint
+        <ForParameterBased
           oid={orderData?.data[0]?.oid}
           tests={testsAccordingResultType}
           reportGroup={reportGroupData?.data as IReportGroup}
@@ -53,14 +50,13 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           mode={props.searchParams.mode}
           refeatch={refetch}
           testIds={props.searchParams.test?.split(",")}
-          margins={margins}
         />
       );
       break;
 
     case "descriptive":
       resultGeneratorComponent = (
-        <ForParameterBasedPrint
+        <ForParameterBased
           oid={orderData?.data[0]?.oid}
           tests={testsAccordingResultType}
           reportGroup={reportGroupData?.data as IReportGroup}
@@ -68,21 +64,19 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           mode={props.searchParams.mode}
           refeatch={refetch}
           testIds={props.searchParams.test?.split(",")}
-          margins={margins}
         />
       );
       break;
 
     case "bacterial":
       resultGeneratorComponent = (
-        <ForMicrobiologyPrint
+        <ForMicrobiology
           mode={props.searchParams.mode}
           oid={orderData?.data[0]?.oid}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={orderData?.data[0]}
           test={props.searchParams?.test as string}
           tests={testsAccordingResultType}
-          margins={margins}
         />
       );
       break;
@@ -117,16 +111,6 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
       );
       setTestAccordignResultType(filteredTest);
       setTestResultType(reportGroupData?.data?.testResultType);
-    }
-
-    if (marginData?.data?.length && marginData?.data[0]) {
-      const storedMargins = [
-        Number(marginData?.data[0]?.top ?? 0) * 96,
-        Number(marginData?.data[0]?.right ?? 0) * 96,
-        Number(marginData?.data[0]?.bottom ?? 0) * 96,
-        Number(marginData?.data[0]?.left ?? 0) * 96,
-      ];
-      setMargins(storedMargins);
     }
   }, [
     orderData,

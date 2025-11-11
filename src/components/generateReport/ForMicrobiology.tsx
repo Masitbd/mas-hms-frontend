@@ -225,7 +225,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
             <div className="p-2">
               {" "}
               <div className="flex justify-end mr-9">
-                <NavLink href={`/testReport/${order.oid}`}>
+                <NavLink href={`/testReport/old?oid=${order.oid}`}>
                   <Button
                     className="mb-5 col-span-4 mx-2"
                     appearance="primary"
@@ -297,7 +297,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
               color="red"
               onClick={() => {
                 setResult(InitialValueForMicro);
-                router.push(`/testReport/${order.oid}`);
+                router.push(`/testReport/old?oid=${order.oid}`);
               }}
               loading={postLoading || patchLoading}
             >

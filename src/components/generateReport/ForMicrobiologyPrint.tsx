@@ -147,7 +147,7 @@ img.ProseMirror-separator { display:inline !important; border:none !important; m
     content: () => componentRef.current,
     documentTitle: `Report_${props?.oid ?? ""}`,
     pageStyle: styles, // ensures @page margins/styles apply in print window
-    onAfterPrint: () => router.push(`/testReport/${props?.oid}`),
+    onAfterPrint: () => router.push(`/testReport/old?oid=${props?.oid}`),
     removeAfterPrint: true,
   });
 

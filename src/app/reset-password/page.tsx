@@ -6,7 +6,11 @@ import React, { useEffect, useState } from "react";
 import { Button, Input } from "rsuite";
 import swal from "sweetalert";
 
-const ResetPassword = ({ params }: { params: { token: string } }) => {
+const ResetPassword = (params: {
+  searchParams: {
+    token: string;
+  };
+}) => {
   const router = useRouter();
 
   const [post, { isLoading: passwordResetLoading }] =
@@ -22,7 +26,7 @@ const ResetPassword = ({ params }: { params: { token: string } }) => {
   const postHandler = async () => {
     const data = {
       newPassword: firstPassword,
-      token: params.token,
+      token: params.searchParams.token,
     };
     try {
       const result = await post(data).unwrap();
