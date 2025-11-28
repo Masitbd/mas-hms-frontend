@@ -15,9 +15,15 @@ import {
 import { useGetSingleReportGroupQuery } from "@/redux/api/reportGroup/reportGroupSlice";
 import { useGetReportMarginQuery } from "@/redux/api/reportMargin/reportMargin.api";
 import { IReportGroup, ITest } from "@/types/allDepartmentInterfaces";
-import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { Suspense, useEffect, useState } from "react";
 
-const GenerateReport = (props: IPropsForGenerateReport) => {
+const MainComponent = () => {
+  const reportGroup = useSearchParams().get("reportGroup") as string;
+  const mode = useSearchParams().get("mode") as string;
+  const test = useSearchParams().get("test") as string;
+  const reportType: string = useSearchParams().get("reportType") as string;
+  const oid: string = useSearchParams().get("oid") as string;
   const {
     data: marginData,
     isLoading: marginDataLoading,
@@ -27,13 +33,13 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
     data: orderData,
     isLoading: OrderDataLoading,
     refetch,
-  } = useGetSingleOrderQuery(props.searchParams.oid, {
+  } = useGetSingleOrderQuery(oid, {
     refetchOnFocus: true,
     refetchOnReconnect: true,
   });
 
   const { data: reportGroupData, isLoading: reportGroupDataLoading } =
-    useGetSingleReportGroupQuery(props.searchParams.reportGroup);
+    useGetSingleReportGroupQuery(reportGroup);
 
   const [testresultType, setTestResultType] = useState("");
   const [testsAccordingResultType, setTestAccordignResultType] = useState([]);
@@ -47,9 +53,9 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           tests={testsAccordingResultType}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={JSON.parse(JSON.stringify(orderData?.data[0]))}
-          mode={props.searchParams.mode}
+          mode={mode}
           refeatch={refetch}
-          testIds={props.searchParams.test?.split(",")}
+          testIds={test?.split(",")}
         />
       );
       break;
@@ -61,9 +67,9 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           tests={testsAccordingResultType}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={JSON.parse(JSON.stringify(orderData?.data[0]))}
-          mode={props.searchParams.mode}
+          mode={mode}
           refeatch={refetch}
-          testIds={props.searchParams.test?.split(",")}
+          testIds={test?.split(",")}
         />
       );
       break;
@@ -71,11 +77,11 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
     case "bacterial":
       resultGeneratorComponent = (
         <ForMicrobiology
-          mode={props.searchParams.mode}
+          mode={mode}
           oid={orderData?.data[0]?.oid}
           reportGroup={reportGroupData?.data as IReportGroup}
           order={orderData?.data[0]}
-          test={props.searchParams?.test as string}
+          test={test as string}
           tests={testsAccordingResultType}
         />
       );
@@ -88,11 +94,11 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
 
   useEffect(() => {
     if (orderData?.data?.length > 0 && reportGroupData?.data?._id) {
-      const testDataForParameter = props?.searchParams?.test?.split(",");
+      const testDataForParameter = test?.split(",");
 
       const filteredTest = orderData?.data[0]?.tests.filter(
         (test: { test: ITest; status: string }) => {
-          if (props?.searchParams?.reportType == ENUM_REPORT_TYPE.PARAMETER) {
+          if (reportType == ENUM_REPORT_TYPE.PARAMETER) {
             return (
               testDataForParameter?.includes(
                 test.test?._id?.toString() as string
@@ -103,7 +109,7 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
           } else {
           }
           return (
-            test.test?._id == props?.searchParams?.test &&
+            test.test?._id == (test as unknown as string) &&
             test.status !== "tube" &&
             test.status !== ENUM_TEST_STATUS.REFUNDED
           );
@@ -139,6 +145,14 @@ const GenerateReport = (props: IPropsForGenerateReport) => {
       </AuthCheckerForComponent>
     );
   }
+};
+
+const GenerateReport = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <MainComponent />
+    </Suspense>
+  );
 };
 
 export default GenerateReport;

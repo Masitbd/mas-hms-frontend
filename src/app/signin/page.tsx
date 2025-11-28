@@ -129,7 +129,8 @@ const LoginPage = () => {
       console.log();
       toaster.push(
         <Message type="error" className="text-center">
-          Login Failed! <br /> Check User Id And Password and try again.
+          Login Failed! <br /> Check User Id And Password and try again.Error$
+          {loginError}
         </Message>
       );
       dispatch(setLoading(false));

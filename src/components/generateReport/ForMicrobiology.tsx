@@ -79,7 +79,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
           timer: 1000,
         });
         router.push(
-          `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}`
+          `/report-print?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}&oid=${props.oid}`
         );
       }
     }
@@ -91,7 +91,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
           timer: 1000,
         });
         router.push(
-          `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}`
+          `/report-print?reportGroup=${props.reportGroup?._id}&mode=view&reportType=${props?.reportGroup?.testResultType}&test=${props?.test}&oid=${props.oid}`
         );
       }
     }
@@ -204,7 +204,7 @@ const ForMicrobiology = (props: IPropsForMicroBiology) => {
 
     // if (previousPath) router.push(previousPath);
     router.push(
-      `/report-print/${props.oid}?reportGroup=${props.reportGroup?._id}&mode=view&reportType=bacterial&test=${props?.test}`
+      `/report-print?reportGroup=${props.reportGroup?._id}&mode=view&reportType=bacterial&test=${props?.test}&oid=${props.oid}`
     );
   };
 

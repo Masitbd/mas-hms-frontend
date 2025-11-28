@@ -165,9 +165,9 @@ const TestReportSelector = ({
   const [testIds, setTestIds] = useState<string[]>([]);
   const navigationHandler = () => {
     router.push(
-      `/generateReport/${searchParams.oid}?reportGroup=${
-        searchParams.reportGroup
-      }&mode=${searchParams.mode}&reportType=${
+      `/generateReport?reportGroup=${searchParams.reportGroup}&mode=${
+        searchParams.mode
+      }&reportType=${
         reportGroupData?.data?.testResultType
       }&test=${testIds?.join(",")}&oid=${searchParams.oid}`
     );

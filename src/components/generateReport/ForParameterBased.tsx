@@ -145,11 +145,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
       if ("data" in data) {
         swalButtonHandler(" Report Updated Successfully.");
         router.push(
-          `/report-print/${props.oid}?reportGroup=${
+          `/report-print?reportGroup=${
             props.reportGroup?._id
           }&mode=view&reportType=${
             props?.reportGroup?.testResultType
-          }&test=${props?.testIds?.join(",")}`
+          }&test=${props?.testIds?.join(",")}&oid=${props.oid}`
         );
       }
     }
@@ -162,11 +162,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
         swalButtonHandler(" Report Posted Successfully.");
 
         router.push(
-          `/report-print/${props.oid}?reportGroup=${
+          `/report-print?reportGroup=${
             props.reportGroup?._id
           }&mode=view&reportType=${
             props?.reportGroup?.testResultType
-          }&test=${props?.testIds?.join(",")}`
+          }&test=${props?.testIds?.join(",")}&oid=${props.oid}`
         );
       }
     }
@@ -241,11 +241,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
     // win?.print();
     // if (previousPath) router.push(previousPath);
     router.push(
-      `/report-print/${props.oid}?reportGroup=${
+      `/report-print?reportGroup=${
         props.reportGroup?._id
       }&mode=view&reportType=${
         props?.reportGroup?.testResultType
-      }&test=${props?.testIds?.join(",")}`
+      }&test=${props?.testIds?.join(",")}&oid=${props.oid}`
     );
   };
 

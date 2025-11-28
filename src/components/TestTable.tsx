@@ -69,7 +69,7 @@ const TestTable: React.FC<TestTableProps> = ({
                 {searchParams?.page !== "delivery" ? (
                   <NavLink
                     className="mr-2"
-                    href={`/generateReport/${searchParams.oid}?reportGroup=${searchParams.reportGroup}&mode=${searchParams.mode}&reportType=${reportGroupData?.data?.testResultType}&test=${rowData?.test?._id}&oid=${searchParams.oid}`}
+                    href={`/generateReport?reportGroup=${searchParams.reportGroup}&mode=${searchParams.mode}&reportType=${reportGroupData?.data?.testResultType}&test=${rowData?.test?._id}&oid=${searchParams.oid}`}
                   >
                     <Button
                       // eslint-disable-next-line react/no-children-prop
