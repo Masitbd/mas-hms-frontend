@@ -5,6 +5,7 @@ import { TransactionRecord } from "./Types";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { TDocumentDefinitions } from "pdfmake/interfaces";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const pdfDataProvider = (params: IPatient) => {
@@ -238,5 +239,5 @@ export const printOrderSummery = (data: {
     },
   };
 
-  pdfMake.createPdf(dd as TDocumentDefinitions).print();
+  pdfPrintingHelper(dd as TDocumentDefinitions);
 };

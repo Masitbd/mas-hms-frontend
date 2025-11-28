@@ -6,6 +6,7 @@ import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import { convertNumberToWords } from "@/utils/convertnumberToword";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -620,7 +621,7 @@ const HospitalBillDetails = ({ data }: { data: any }) => {
       },
     };
 
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

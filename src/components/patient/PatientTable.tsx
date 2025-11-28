@@ -17,6 +17,7 @@ import { pdfDataProvider } from "./Functions";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import { TDocumentDefinitions } from "pdfmake/interfaces";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const { Column, HeaderCell, Cell } = Table;
@@ -76,7 +77,7 @@ const PatientTable = ({
       return;
     }
     const pdfData = pdfDataProvider(data?.data);
-    pdfMake.createPdf(pdfData as unknown as TDocumentDefinitions).print();
+    pdfPrintingHelper(pdfData as unknown as TDocumentDefinitions);
   };
 
   return (

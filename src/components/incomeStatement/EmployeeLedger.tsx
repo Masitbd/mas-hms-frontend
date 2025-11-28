@@ -9,6 +9,7 @@ import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import { computeGrandTotalForEmployeeLedger } from "./incomeStatementUtils";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -205,7 +206,7 @@ const EmployeeLedgerTable: React.FC<IncomeShowTableProps> = ({
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   console.log(rawData);

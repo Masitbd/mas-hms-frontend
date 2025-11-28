@@ -7,6 +7,7 @@ import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGenerator";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -129,7 +130,7 @@ const AdmitOverPeriodTable: React.FC<AdmitOverPeriodTableProps> = ({
       },
     };
 
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (
