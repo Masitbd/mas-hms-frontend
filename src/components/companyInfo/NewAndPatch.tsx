@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import RModal from "../ui/Modal";
 import { Checkbox, Form, Message, toaster } from "rsuite";
 import LogoUploader from "./LogoUploader";
@@ -25,6 +31,7 @@ interface IProps {
     photoUrl?: string;
     default: boolean;
     publicId?: string;
+    photo?: string;
   };
   setOpen: Dispatch<SetStateAction<boolean>>;
   setData: Dispatch<SetStateAction<any>>;
@@ -47,54 +54,27 @@ const NewAndPatch = (props: IProps) => {
   const uploaderRef = useRef<React.MutableRefObject<UploaderInstance>>();
   const [imageData, setImageData] = useState();
   const [imageUploadLoading, setImageUploadLoading] = useState(false);
+
+  // For turning the image data to a base 64 data
+  const toBase64 = (file: Blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
+
   const okHandler = async () => {
     let reFindedData = { ...data };
 
-    // 1. Sending the image to the cloudinary
-    const cloudinarySecret = await getSecret(undefined).unwrap();
-    if ("data" in cloudinarySecret && imageData) {
-      setImageUploadLoading(true);
-      const formData = new FormData();
-      // 2. cloudinarySecret  for upload
-      const { cloudName, apiKey, timestamp, signature } =
-        cloudinarySecret?.data;
-      formData.append("file", imageData);
-      formData.append("timestamp", timestamp);
-      formData.append("api_key", apiKey);
-      formData.append("signature", signature);
-
-      // 3. uploader for claudinary
-      const uploadRes = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
+    if (mode == ENUM_MODE.NEW || mode == ENUM_MODE.EDIT) {
+      if (imageData) {
+        const base64ImageData = await toBase64(imageData as unknown as Blob);
+        if (base64ImageData) {
+          reFindedData = { ...data, photo: base64ImageData as string };
         }
-      );
-      if (!uploadRes.ok) {
-        setImageUploadLoading(false);
-        toaster.push(
-          <Message type="error">
-            {" "}
-            Faild to upload Image. Please try again leter.
-          </Message>
-        );
-        return;
-      }
-
-      // 4. Fail safe
-      const imageUrl = await uploadRes.json();
-      setImageUploadLoading(false);
-
-      if (imageUrl?.secure_url) {
-        reFindedData = {
-          ...data,
-          photoUrl: imageUrl?.secure_url,
-          publicId: imageUrl?.public_id,
-        };
       }
     }
-
     if (mode == ENUM_MODE.NEW) {
       const result = await post(reFindedData);
       if ("data" in result) {
@@ -182,7 +162,7 @@ const NewAndPatch = (props: IProps) => {
               </Form.Group>
               <div>
                 <LogoUploader
-                  defaultImage={data?.photoUrl as string}
+                  defaultImage={data?.photo as string}
                   image={imageData}
                   forwordedRef={
                     uploaderRef as unknown as React.MutableRefObject<UploaderInstance>

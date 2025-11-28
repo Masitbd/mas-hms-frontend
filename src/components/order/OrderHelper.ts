@@ -27,6 +27,7 @@ export const printInvoice = async ({
   companyInfo: any;
   data: any;
 }) => {
+  const mode = "online";
   var dd = {
     pageSize: "A5", // Set page size to A4
     pageMargins: [20, 10, 20, 50],
@@ -83,12 +84,12 @@ export const printInvoice = async ({
     content: [
       {
         table: {
-          widths: companyInfo?.data?.photoUrl ? ["15%", "80%"] : ["2%", "98%"],
+          widths: companyInfo?.data?.photo ? ["15%", "80%"] : ["2%", "98%"],
           body: [
             [
-              companyInfo?.data?.photoUrl
+              companyInfo?.data?.photo
                 ? {
-                    image: "logo",
+                    image: companyInfo?.data?.photo,
                     fit: [60, 60],
                   }
                 : { text: "logo", color: "white", fontsize: 1 },
@@ -472,73 +473,82 @@ export const printInvoice = async ({
     //   console.log("opened");
     // });
   }
-  // function printPdfBlobSameTab(pdfBlob: Blob) {
-  //   const blobUrl = URL.createObjectURL(pdfBlob);
 
-  //   const iframe = document.createElement("iframe");
-  //   // Keep it invisible but present in the DOM
-  //   iframe.style.position = "fixed";
-  //   iframe.style.right = "0";
-  //   iframe.style.bottom = "0";
-  //   iframe.style.width = "0";
-  //   iframe.style.height = "0";
-  //   iframe.style.border = "0";
-  //   iframe.src = blobUrl;
+  function printPdfBlobSameTab(pdfBlob: Blob) {
+    const blobUrl = URL.createObjectURL(pdfBlob);
 
-  //   const cleanUp = () => {
-  //     URL.revokeObjectURL(blobUrl);
-  //     iframe.remove();
-  //   };
+    const iframe = document.createElement("iframe");
+    // Keep it invisible but present in the DOM
+    iframe.style.position = "fixed";
+    iframe.style.right = "0";
+    iframe.style.bottom = "0";
+    iframe.style.width = "0";
+    iframe.style.height = "0";
+    iframe.style.border = "0";
+    iframe.src = blobUrl;
 
-  //   const triggerPrint = () => {
-  //     const w = iframe.contentWindow as Window | null;
-  //     if (!w) {
-  //       cleanUp();
-  //       return;
-  //     }
+    const cleanUp = () => {
+      URL.revokeObjectURL(blobUrl);
+      iframe.remove();
+    };
 
-  //     const after = () => setTimeout(cleanUp, 300);
+    const triggerPrint = () => {
+      const w = iframe.contentWindow as Window | null;
+      if (!w) {
+        cleanUp();
+        return;
+      }
 
-  //     // Use separate guards (not `else if`) so TS doesn't narrow to `never`
-  //     if ("onafterprint" in w) {
-  //       (w as Window & { onafterprint: (() => void) | null }).onafterprint =
-  //         after;
-  //     }
+      const after = () => setTimeout(cleanUp, 300);
 
-  //     if (typeof w.matchMedia === "function") {
-  //       const mql: MediaQueryList = w.matchMedia("print");
-  //       const onChange = (e: MediaQueryListEvent) => {
-  //         if (!e.matches) after();
-  //       };
+      // Use separate guards (not `else if`) so TS doesn't narrow to `never`
+      if ("onafterprint" in w) {
+        (w as Window & { onafterprint: (() => void) | null }).onafterprint =
+          after;
+      }
 
-  //       if ("addEventListener" in mql) {
-  //         mql.addEventListener("change", onChange);
-  //       } else if ("addListener" in mql) {
-  //         // Older API (cast for TS)
-  //         (
-  //           mql as unknown as {
-  //             addListener: (cb: (e: MediaQueryListEvent) => void) => void;
-  //           }
-  //         ).addListener(onChange);
-  //       }
-  //     }
+      if (typeof w.matchMedia === "function") {
+        const mql: MediaQueryList = w.matchMedia("print");
+        const onChange = (e: MediaQueryListEvent) => {
+          if (!e.matches) after();
+        };
 
-  //     // Small delay helps some PDF viewers fully initialize
-  //     setTimeout(() => {
-  //       w.focus();
-  //       w.print();
-  //     }, 100);
-  //   };
+        if ("addEventListener" in mql) {
+          mql.addEventListener("change", onChange);
+        } else if ("addListener" in mql) {
+          // Older API (cast for TS)
+          (
+            mql as unknown as {
+              addListener: (cb: (e: MediaQueryListEvent) => void) => void;
+            }
+          ).addListener(onChange);
+        }
+      }
 
-  //   iframe.addEventListener("load", () => setTimeout(triggerPrint, 200));
-  //   document.body.appendChild(iframe);
-  // }
+      // Small delay helps some PDF viewers fully initialize
+      setTimeout(() => {
+        w.focus();
+        w.print();
+      }, 100);
+    };
 
-  pdfMake
-    .createPdf(dd as unknown as TDocumentDefinitions)
-    .getBuffer((result) => {
-      printPdfInTauri(result);
-    });
+    iframe.addEventListener("load", () => setTimeout(triggerPrint, 200));
+    document.body.appendChild(iframe);
+  }
+
+  if (mode == "online") {
+    pdfMake
+      .createPdf(dd as unknown as TDocumentDefinitions)
+      .getBlob((result) => {
+        printPdfBlobSameTab(result);
+      });
+  } else {
+    pdfMake
+      .createPdf(dd as unknown as TDocumentDefinitions)
+      .getBuffer((result) => {
+        printPdfInTauri(result);
+      });
+  }
 };
 
 // journal Entry post helper

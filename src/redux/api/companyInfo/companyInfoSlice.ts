@@ -87,4 +87,6 @@ export const {
   useLazyGetCreatableQuery,
   useDeleteCompanyInfoMutation,
   useGetDefaultQuery,
+  useGetSingleCompanyInfoQuery,
+  useLazyGetSingleCompanyInfoQuery,
 } = companyInfo;
