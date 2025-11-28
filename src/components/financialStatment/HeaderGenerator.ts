@@ -21,14 +21,10 @@ export const FinancialReportHeaderGenerator = async (params: ICompanyInfo) => {
   if (params) {
     let imageData = {};
     const photoGenerator = async () => {
-      if (params?.photoUrl) {
-        const logoUrl = await imageToBase64(params?.photoUrl)
-          .then((data) => data)
-          .catch((err) => console.log(err));
-
-        if (logoUrl) {
+      if (params?.photo) {
+        if (params.photo) {
           imageData = {
-            image: logoUrl,
+            image: params.photo,
             fit: [50, 50],
             alignment: "center",
           };
@@ -64,12 +60,12 @@ export const FinancialReportHeaderGenerator = async (params: ICompanyInfo) => {
 
     const test = {
       table: {
-        widths: params?.photoUrl ? ["15%", "80%"] : ["2%", "98%"],
+        widths: params?.photo ? ["15%", "80%"] : ["2%", "98%"],
         body: [
           [
-            params?.photoUrl
+            params?.photo
               ? await photoGenerator()
-              : { text: "logo", color: "black", fontsize: 15 },
+              : { text: "logo", color: "white", fontsize: 15 },
             bodySection,
           ],
         ],
