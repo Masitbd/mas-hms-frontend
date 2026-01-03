@@ -21,6 +21,7 @@ const ForNotRegistered = (param: param) => {
     age: StringType().isRequired("This field is required."),
     gender: StringType().isRequired("This field is required."),
     consultant: StringType().isRequired("This field is required."),
+    phone: StringType().isRequired("This field is required."),
   });
 
   return (
