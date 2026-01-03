@@ -14,6 +14,7 @@ import pdfMake from "pdfmake/build/pdfmake";
 import { useGetDefaultQuery } from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const EmployeePerformance = () => {
@@ -215,7 +216,7 @@ const EmployeePerformance = () => {
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

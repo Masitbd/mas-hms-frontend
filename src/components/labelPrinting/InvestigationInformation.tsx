@@ -6,6 +6,7 @@ import { ITestsFromOrder } from "../generateReport/initialDataAndTypes";
 import { ITest } from "@/types/allDepartmentInterfaces";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import pdfMake from "pdfmake/build/pdfmake";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const InvestigationInformation = (params: { order: IOrderData }) => {
@@ -161,7 +162,7 @@ const InvestigationInformation = (params: { order: IOrderData }) => {
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   // For label printing
@@ -241,7 +242,7 @@ const InvestigationInformation = (params: { order: IOrderData }) => {
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

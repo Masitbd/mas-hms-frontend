@@ -90,7 +90,7 @@ const TestReportSelector = ({
       console.error(error);
       swal("Error", error as string, "error");
     } finally {
-      router.push(`/testReport/${searchParams?.oid}`);
+      router.push(`/testReport/old?oid=/${searchParams?.oid}`);
     }
   };
   // useEffect(() => {
@@ -165,11 +165,11 @@ const TestReportSelector = ({
   const [testIds, setTestIds] = useState<string[]>([]);
   const navigationHandler = () => {
     router.push(
-      `/generateReport/${searchParams.oid}?reportGroup=${
-        searchParams.reportGroup
-      }&mode=${searchParams.mode}&reportType=${
+      `/generateReport?reportGroup=${searchParams.reportGroup}&mode=${
+        searchParams.mode
+      }&reportType=${
         reportGroupData?.data?.testResultType
-      }&test=${testIds?.join(",")}`
+      }&test=${testIds?.join(",")}&oid=${searchParams.oid}`
     );
   };
 
@@ -214,7 +214,7 @@ const TestReportSelector = ({
         </div>
         <div className="p-2">
           <div className="p-2 flex items-end justify-end">
-            <NavLink href={`/testReport/${searchParams.oid}`}>
+            <NavLink href={`/testReport/old?oid=/${searchParams?.oid}`}>
               <Button
                 className="mb-5 col-span-4 mx-2"
                 appearance="primary"

@@ -75,7 +75,7 @@ const OrderTable = () => {
             <Cell>
               {(rowData) => (
                 <>
-                  <NavLink href={`/testReport/${rowData.oid}`}>
+                  <NavLink href={`/testReport/old?oid=${rowData.oid}`}>
                     <Button appearance="primary" color="green" size="sm">
                       <VisibleIcon className="text-lg" />
                     </Button>

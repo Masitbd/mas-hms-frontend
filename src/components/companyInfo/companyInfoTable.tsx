@@ -12,6 +12,7 @@ import swal from "sweetalert";
 import {
   useDeleteCompanyInfoMutation,
   useGetCompnayInofQuery,
+  useLazyGetSingleCompanyInfoQuery,
 } from "@/redux/api/companyInfo/companyInfoSlice";
 import VisibleIcon from "@rsuite/icons/Visible";
 import EditIcon from "@rsuite/icons/Edit";
@@ -61,6 +62,25 @@ const CompnayInfoTable = () => {
       }
     }
   };
+
+  // for handling data fetching for Modal
+  const [
+    getSingleCompanyInfo,
+    {
+      isLoading: singleCompanyInfoLoading,
+      isFetching: singleCompanyInfoFetching,
+    },
+  ] = useLazyGetSingleCompanyInfoQuery();
+  const viewAndEditButtonHandler = async (mode: ENUM_MODE, id: string) => {
+    try {
+      const defaultCompanyInfo = await getSingleCompanyInfo(id).unwrap();
+      if (defaultCompanyInfo?.data) {
+        setMode(mode);
+        setFormData(defaultCompanyInfo?.data);
+        setOpen(true);
+      }
+    } catch (error) {}
+  };
   return (
     <div className="my-5">
       <div className="grid grid-cols-12 gap-5 my-5">
@@ -87,7 +107,13 @@ const CompnayInfoTable = () => {
       <Table
         data={companyInfoData?.data}
         autoHeight
-        loading={companyInfoLoading || companyInfoFeatching || deleteLoading}
+        loading={
+          companyInfoLoading ||
+          companyInfoFeatching ||
+          deleteLoading ||
+          singleCompanyInfoFetching ||
+          singleCompanyInfoLoading
+        }
         wordWrap={"break-all"}
       >
         <Column flexGrow={2}>
@@ -122,11 +148,12 @@ const CompnayInfoTable = () => {
                     <Button
                       appearance="primary"
                       color="green"
-                      onClick={() => {
-                        setMode(ENUM_MODE.EDIT);
-                        setFormData(rowData);
-                        setOpen(true);
-                      }}
+                      onClick={() =>
+                        viewAndEditButtonHandler(
+                          ENUM_MODE.EDIT,
+                          rowData?._id as string
+                        )
+                      }
                       startIcon={<EditIcon />}
                       size="sm"
                     />
@@ -134,11 +161,12 @@ const CompnayInfoTable = () => {
                     <Button
                       appearance="primary"
                       color="blue"
-                      onClick={() => {
-                        setMode(ENUM_MODE.VIEW);
-                        setFormData(rowData);
-                        setOpen(true);
-                      }}
+                      onClick={() =>
+                        viewAndEditButtonHandler(
+                          ENUM_MODE.VIEW,
+                          rowData?._id as string
+                        )
+                      }
                       startIcon={<VisibleIcon />}
                       size="sm"
                     />

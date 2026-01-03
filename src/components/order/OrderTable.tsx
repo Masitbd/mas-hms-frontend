@@ -253,7 +253,16 @@ const OrderTable = ({
           <Cell>
             {(rowData) => {
               const date = new Date(rowData?.createdAt);
-              return <>{date?.toLocaleDateString()}</>;
+              return (
+                <>
+                  {date?.toLocaleDateString("en-GB", {
+                    timeZone: "Asia/Dhaka",
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                  })}
+                </>
+              );
             }}
           </Cell>
         </Column>

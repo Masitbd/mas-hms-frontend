@@ -10,6 +10,7 @@ import {
 } from "@/redux/api/companyInfo/companyInfoSlice";
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -216,7 +217,7 @@ const ClientIncomeTable: React.FC<IncomeShowTableProps> = ({
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

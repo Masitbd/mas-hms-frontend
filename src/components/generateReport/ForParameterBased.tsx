@@ -145,11 +145,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
       if ("data" in data) {
         swalButtonHandler(" Report Updated Successfully.");
         router.push(
-          `/report-print/${props.oid}?reportGroup=${
+          `/report-print?reportGroup=${
             props.reportGroup?._id
           }&mode=view&reportType=${
             props?.reportGroup?.testResultType
-          }&test=${props?.testIds?.join(",")}`
+          }&test=${props?.testIds?.join(",")}&oid=${props.oid}`
         );
       }
     }
@@ -162,11 +162,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
         swalButtonHandler(" Report Posted Successfully.");
 
         router.push(
-          `/report-print/${props.oid}?reportGroup=${
+          `/report-print?reportGroup=${
             props.reportGroup?._id
           }&mode=view&reportType=${
             props?.reportGroup?.testResultType
-          }&test=${props?.testIds?.join(",")}`
+          }&test=${props?.testIds?.join(",")}&oid=${props.oid}`
         );
       }
     }
@@ -241,11 +241,11 @@ const ForParameterBased = (props: IPropsForParameter) => {
     // win?.print();
     // if (previousPath) router.push(previousPath);
     router.push(
-      `/report-print/${props.oid}?reportGroup=${
+      `/report-print?reportGroup=${
         props.reportGroup?._id
       }&mode=view&reportType=${
         props?.reportGroup?.testResultType
-      }&test=${props?.testIds?.join(",")}`
+      }&test=${props?.testIds?.join(",")}&oid=${props.oid}`
     );
   };
 
@@ -323,7 +323,7 @@ const ForParameterBased = (props: IPropsForParameter) => {
               <h2 className="text-center text-xl font-semibold">Reports</h2>
             </div>
             <div className="flex justify-end mr-9 mt-4">
-              <NavLink href={`/testReport/${order.oid}`}>
+              <NavLink href={`/testReport/old?oid=${order.oid}`}>
                 <Button
                   className="mb-5 col-span-4 mx-2"
                   appearance="primary"
@@ -473,7 +473,9 @@ const ForParameterBased = (props: IPropsForParameter) => {
                   appearance="primary"
                   color="red"
                   size="lg"
-                  onClick={() => router.push(`/testReport/${order.oid}`)}
+                  onClick={() =>
+                    router.push(`/testReport/old?oid=${order.oid}`)
+                  }
                 >
                   Cancel
                 </Button>

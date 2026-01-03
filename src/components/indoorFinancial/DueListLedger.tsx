@@ -11,6 +11,7 @@ import { FinancialReportHeaderGenerator } from "../financialStatment/HeaderGener
 import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import DueCollectionModal from "../Patient-Admission/DueCollectionModal";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -173,7 +174,7 @@ const DueListLedger: React.FC<IncomeShowTableProps> = ({
       },
     };
 
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

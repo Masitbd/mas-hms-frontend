@@ -95,6 +95,15 @@ export const financialReportItem = [
     ],
   },
   {
+    key: "25",
+    title: "Doctor Performance - Order Wise",
+    href: "/financialReport/doctorsPerformance/orderWise",
+    requiredPermission: [
+      ENUM_USER_PEMISSION.SUPER_ADMIN,
+      ENUM_USER_PEMISSION.GET_FINANCIAL_REPORT,
+    ],
+  },
+  {
     key: "17",
     title: "Income Statement",
     href: "/income-statement",

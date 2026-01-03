@@ -20,6 +20,7 @@ import {
 } from "@/redux/api/companyInfo/companyInfoSlice";
 import { FinancialReportHeaderGenerator } from "@/components/financialStatment/HeaderGenerator";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -263,7 +264,7 @@ const SIngleReport = () => {
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

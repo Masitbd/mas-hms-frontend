@@ -1,0 +1,20 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "enables the default permissions",
+  "windows": [
+    "main",
+    "invoice-print"
+  ],
+  "permissions": [
+    "core:default",
+    "core:webview:allow-create-webview-window",
+    "core:event:default",
+    "log:default",
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [{ "name": "binaries/my-server", "sidecar": true, "args": true }]
+    },
+    { "identifier": "shell:allow-kill" }
+  ]
+}

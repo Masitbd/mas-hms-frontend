@@ -34,3 +34,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+
+# tauri
+src-tauri/logs
+src-tauri/target
+out
+src-tauri/binaries

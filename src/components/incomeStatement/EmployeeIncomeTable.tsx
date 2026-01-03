@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 // Type for individual records associated with each user
@@ -209,7 +210,7 @@ const EmployeeIncomeShowTable: React.FC<IncomeShowTableProps> = ({
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

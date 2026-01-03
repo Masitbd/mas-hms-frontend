@@ -10,6 +10,7 @@ import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSl
 
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 type TRecord = {
@@ -231,7 +232,7 @@ const OutDueStatementTable: React.FC<IncomeShowTableProps> = ({
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   return (

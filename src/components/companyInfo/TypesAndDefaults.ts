@@ -6,6 +6,7 @@ export type ICompanyInfo = {
   default: boolean;
   photoUrl?: string;
   publicId?: string;
+  photo?: string;
 };
 
 export const DefaultCompanyData: ICompanyInfo = {

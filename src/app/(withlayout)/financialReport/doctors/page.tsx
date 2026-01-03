@@ -12,6 +12,7 @@ import { FinancialReportHeaderGenerator } from "@/components/financialStatment/H
 import { useGetMarginDataQuery } from "@/redux/api/miscellaneous/miscellaneousSlice";
 import { useGetEmployeeQuery } from "@/redux/api/employee/employeeSlice";
 import { IEmployeeRegistration } from "@/components/employee/TypesAndDefaults";
+import { pdfPrintingHelper } from "@/utils/PdfPrintingHelper";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 const AllDoctors = () => {
@@ -129,7 +130,7 @@ const AllDoctors = () => {
     };
 
     // Open the print dialog
-    pdfMake.createPdf(documentDefinition).print();
+    pdfPrintingHelper(documentDefinition);
   };
 
   // Processing data for table and pdf

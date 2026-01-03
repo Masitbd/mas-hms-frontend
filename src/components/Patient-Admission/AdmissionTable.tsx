@@ -103,13 +103,13 @@ const AdmissionTable = ({
               {(rowData) => (
                 <div className="flex">
                   <Button appearance="link">
-                    <Link href={`/admission/${rowData._id}`}>
+                    <Link href={`/admission/old?id=${rowData._id}`}>
                       <VisibleIcon className="text-lg" />
                     </Link>
                   </Button>
 
                   <Button appearance="ghost" color="green">
-                    <Link href={`/admission/edit/${rowData._id}`}>
+                    <Link href={`/admission/edit?id=${rowData._id}`}>
                       <EditIcon color="green" />
                     </Link>
                   </Button>

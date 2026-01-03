@@ -8,12 +8,12 @@ import { IOrderData } from "../order/initialDataAndTypes";
 import { ISensitivity } from "../bactrologicalInfo/typesAndInitialData";
 
 export type IPropsForGenerateReport = {
-  params: { oid: string };
   searchParams: {
     reportGroup: string;
     mode: string;
     test?: string;
     reportType: string;
+    oid: string;
   };
 };
 
