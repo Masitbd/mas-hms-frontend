@@ -44,7 +44,7 @@ const financialReport = baseApi.injectEndpoints({
       }),
     }),
     getDeptWiseDoctorPerformance: build.query({
-      query: (data: { from: Date; to: Date; refBy: string }) => ({
+      query: (data: { from: Date; to: Date; refBy: string; type: string }) => ({
         url: `/financialReport/doctorsPerformance/deptWise/${data.refBy}`,
         method: "get",
         params: data,
@@ -52,7 +52,7 @@ const financialReport = baseApi.injectEndpoints({
       }),
     }),
     getTestWiseDoctorPerformance: build.query({
-      query: (data: { from: Date; to: Date; refBy: string }) => ({
+      query: (data: { from: Date; to: Date; refBy: string; type: string }) => ({
         url: `/financialReport/doctorsPerformance/testWise/${data.refBy}`,
         method: "get",
         params: data,

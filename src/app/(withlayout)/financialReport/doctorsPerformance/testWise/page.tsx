@@ -29,6 +29,7 @@ const TestWiseDoctorsPerformance = () => {
   const { data: doctorsData, isLoading: isDoctorDataLoading } =
     useGetDoctorQuery(undefined);
   const [refby, setRefBY] = useState<string>("");
+  const [doctorType, setDoctorType] = useState<string>("refBy");
   const { Cell, Column, ColumnGroup, HeaderCell } = Table;
   const [date, setDate] = useState<IdefaultDate>(defaultDate as IdefaultDate);
   const dateChangeHandler = (value: Partial<IdefaultDate>) => {
@@ -49,6 +50,7 @@ const TestWiseDoctorsPerformance = () => {
           from: date.from,
           to: date.to,
           refBy: refby,
+          type: doctorType,
         });
 
         if ("data" in data) {
@@ -56,7 +58,7 @@ const TestWiseDoctorsPerformance = () => {
         }
       })();
     }
-  }, [refby, date]);
+  }, [refby, date, doctorType]);
 
   const { data: comapnyInfo } = useGetDefaultQuery(undefined);
 
@@ -94,7 +96,9 @@ const TestWiseDoctorsPerformance = () => {
       content: [
         ...(infoHeader ? infoHeader?.map((item) => item) : []),
         {
-          text: `RefBy And Department Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          text: `${
+            doctorType === "refBy" ? "RefBy" : "Consultant"
+          } And Department Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
           style: "subheader",
           alignment: "center",
           margin: [0, 0, 0, 20],
@@ -181,6 +185,24 @@ const TestWiseDoctorsPerformance = () => {
           </h2>
         </div>
         <div className="px-2 mb-5 py-2 grid grid-cols-12 gap-5">
+          {/* selector for doctor type */}
+          <div className="col-span-3">
+            <h3>Type</h3>
+            <div>
+              <SelectPicker
+                data={[
+                  { label: "Refer By", value: "refBy" },
+                  { label: "Consultant", value: "consultant" },
+                ]}
+                onChange={(
+                  value: string | null,
+                  event: SyntheticEvent<Element, Event>
+                ) => setDoctorType(value as string)}
+                block
+                value={doctorType}
+              />
+            </div>
+          </div>
           <div className="col-span-3">
             <h3>Doctors</h3>
             <div>

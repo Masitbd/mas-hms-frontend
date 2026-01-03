@@ -182,7 +182,15 @@ const TestInformation = (params: IParamsForTestInformation) => {
                   return (
                     <>
                       <span>
-                        {new Date(rowData.deliveryTime).toLocaleDateString()}
+                        {new Date(rowData.deliveryTime).toLocaleDateString(
+                          "en-GB",
+                          {
+                            timeZone: "Asia/Dhaka",
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                          }
+                        )}
                       </span>
                     </>
                   );

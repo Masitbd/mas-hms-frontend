@@ -172,11 +172,15 @@ export const printInvoice = async ({
               text: [
                 { text: "Billing Date: ", bold: true },
                 {
-                  text: `${new Date(
-                    data.createdAt
-                  ).toLocaleDateString()} ${new Date(
-                    data?.createdAt
-                  ).toLocaleTimeString()}`,
+                  text: `${new Date(data.createdAt).toLocaleDateString(
+                    "en-GB",
+                    {
+                      timeZone: "Asia/Dhaka",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    }
+                  )} ${new Date(data?.createdAt).toLocaleTimeString()}`,
                 },
               ],
               style: "info",
