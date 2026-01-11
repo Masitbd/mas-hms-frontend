@@ -57,7 +57,7 @@ const OrderWiseDoctorPerformance = () => {
   const { data: performanceDataNew } = useGetOrderDoctorPerformanceQuery(
     query,
     {
-      skip: !query.from || !query.to || !query?.type,
+      skip: !query.from || !query.to || !query?.type || !query?.refBy,
     }
   );
   const [performanceData, setPerformanceData] = useState([]);
@@ -121,7 +121,7 @@ const OrderWiseDoctorPerformance = () => {
         {
           text: `${
             doctorType === "refBy" ? "RefBy" : "Consultant"
-          }  Order Wise Income Statement: Between ${date.from.toLocaleDateString()} to  ${date.to.toLocaleDateString()}`,
+          }  Order Wise Income Statement: Between ${query?.from?.toLocaleDateString()} to  ${query?.to?.toLocaleDateString()}`,
           style: "subheader",
           alignment: "center",
           margin: [0, 0, 0, 20],
@@ -321,11 +321,9 @@ const OrderWiseDoctorPerformance = () => {
                   event: SyntheticEvent<Element, Event>
                 ) => {
                   if (value) {
-                    queryHandler(
-                      "from",
-                      value.setHours(0, 0, 0, 0) as unknown as string,
-                      "add"
-                    );
+                    const dateValue = value;
+                    dateValue.setUTCHours(0, 0, 0, 0).toLocaleString("en-GB");
+                    queryHandler("from", dateValue as unknown as string, "add");
                   }
                 }}
                 oneTap
@@ -342,7 +340,7 @@ const OrderWiseDoctorPerformance = () => {
                   event: SyntheticEvent<Element, Event>
                 ) => {
                   if (value) {
-                    value.setHours(23, 59, 59, 999);
+                    value.setUTCHours(23, 59, 59, 999);
                     queryHandler("to", value as unknown as string, "add");
                   }
                 }}
@@ -375,8 +373,8 @@ const OrderWiseDoctorPerformance = () => {
                   Doctor Performance- Order wise
                 </h3>
                 <h4 className="text-center text-lg font-serif">
-                  From <b> {new Date(date.from).toLocaleDateString()} </b> To{" "}
-                  <b>{new Date(date.to).toLocaleDateString()}</b>
+                  From <b> {new Date(query?.from).toLocaleDateString()} </b> To{" "}
+                  <b>{new Date(query?.to).toLocaleDateString()}</b>
                 </h4>
                 {/* main data */}
                 {performanceDataNew?.data
